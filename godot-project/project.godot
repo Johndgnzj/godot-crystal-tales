@@ -74,6 +74,13 @@ battle_auto={
 ]
 }
 
+[autoload]
+
+; CORE-2 新增（原 CORE-1 骨架尚未包含 [autoload] 區塊；註冊 autoload 屬於後續 CORE 任務的標準做法，
+; 不算越界改動 CORE-1 的檔案範圍，見 ../TASKS/00_核心任務.md CORE-2 段落與 commit message 說明）。
+; ContentDB 是 CONTENT.json 的唯讀查詢介面，見 godot-project/autoload/content_db.gd 檔頭註解。
+ContentDB="*res://autoload/content_db.gd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

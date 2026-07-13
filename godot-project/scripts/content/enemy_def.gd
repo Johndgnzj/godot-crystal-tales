@@ -1,0 +1,37 @@
+class_name EnemyDef
+extends Resource
+## 對應 CONTENT.json 的 enemies[] 元素。
+
+@export var id: String = ""
+@export var display_name: String = ""   ## 來源 JSON key: "name"
+@export var sprite: String = ""
+@export var hp: float = 0.0
+@export var atk: float = 0.0
+@export var def_stat: float = 0.0       ## 來源 JSON key: "def"（GDScript 保留字，改名避開）
+@export var spd: float = 0.0
+@export var exp: int = 0
+@export var gold: int = 0
+@export var big: bool = false           ## boss/大型敵人旗標
+@export var all_attack: bool = false    ## 來源 JSON key: "allAttack"
+@export var healer: bool = false
+@export var drops: Array = []           ## Array[Dictionary]，每個元素 {id, rate}
+@export var foe_skills: Array = []      ## 來源 JSON key: "foeSkills"，Array[Dictionary] {name,target,mult}
+
+
+static func from_dict(d: Dictionary) -> EnemyDef:
+	var result := EnemyDef.new()
+	result.id = d.get("id", "")
+	result.display_name = d.get("name", "")
+	result.sprite = d.get("sprite", "")
+	result.hp = float(d.get("hp", 0))
+	result.atk = float(d.get("atk", 0))
+	result.def_stat = float(d.get("def", 0))
+	result.spd = float(d.get("spd", 0))
+	result.exp = int(d.get("exp", 0))
+	result.gold = int(d.get("gold", 0))
+	result.big = bool(d.get("big", false))
+	result.all_attack = bool(d.get("allAttack", false))
+	result.healer = bool(d.get("healer", false))
+	result.drops = d.get("drops", [])
+	result.foe_skills = d.get("foeSkills", [])
+	return result
