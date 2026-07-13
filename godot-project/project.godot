@@ -86,6 +86,15 @@ ContentDB="*res://autoload/content_db.gd"
 GameState="*res://autoload/game_state.gd"
 SceneRouter="*res://autoload/scene_router.gd"
 
+; MOD-A 新增：DialogueSystem 是 NPC 對話（DLG）／過場劇情（CUTS）的全域引擎，見
+; scripts/dialogue/dialogue_system.gd 檔頭註解。比照既有 ContentDB/GameState/SceneRouter 的
+; autoload 慣例（單一實例、載入一次 resources/content/dialogue.json、對外提供固定路徑可呼叫的
+; API），讓任何世界場景／MOD-B 的 NPC 互動腳本／MOD-H 的地圖場景都能直接呼叫
+; `DialogueSystem.open_npc_dialogue(npc_id)` 等函式，不需要各自 instantiate 一份重複載入資料。
+; 理由與 CORE-2 當初新增 [autoload] 區塊的先例相同：只新增一行登記，不動其他 CORE/MOD 任務已完成的
+; 內容。見 TASKS/01_對話劇情.md。
+DialogueSystem="*res://scripts/dialogue/dialogue_system.gd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

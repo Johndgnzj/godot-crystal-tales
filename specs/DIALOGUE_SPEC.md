@@ -1,10 +1,18 @@
 # 規格：對話／過場／觸發／撿取資料格式
 
-- Spec 版本: v1.0
+- Spec 版本: v1.1
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py` L930-990（DLG/CUTS 定義）、L1270-1274（matchWhen）、
-  L1516（openOwnerDlg）、L2298-2392（出口/觸發區/BossMark/pickups）
+  L1516（openOwnerDlg）、L1620-1625/L1676-1709（劇情佇列播放與收尾）、L2298-2392（出口/觸發區/BossMark/
+  pickups）
 - 狀態: 定案
 - 用途: MOD-A（對話/劇情）、MOD-B（撿取/觸發）實作依據
+- v1.1 變更記錄（2026-07-13，MOD-A 認領實作時發現並補回）：
+  1. D-3 原本只寫了 `once`/`lines` 兩個欄位，實際回讀 `build_cq2.py` L991-1011 與 L1685-1706 收尾邏輯
+     後發現 CUTS 條目還有 `battle`/`transfer`/`setstep`/`party` 四個既有欄位（`demon_pre`/`demon_post`/
+     `town_start` 三個實例都有用到），本次補齊到 D-3。
+  2. D-8「待確認事項」的兩項在本次實作時定案：CUTS `lines` 改用 `Array[Dictionary{speaker,text}]`（不是
+     陣列的陣列）；`action` 完整副作用已逐條核對並實作在
+     `godot-project/scripts/dialogue/dialogue_system.gd` 的 `_run_action()`，不再只列 id 清單。
 
 ## D-1　共用旗標比對器 `matchWhen(f, w)`（L1270-1274）
 
@@ -59,14 +67,42 @@ CUTS = {
     "lines": [
       ["說話者", "台詞"],       // 說話者為空字串 "" 代表旁白/系統提示（無名字框）
       ...
-    ]
+    ],
+    "battle": "<可選，播完立即觸發的 encounter id，見 CONTENT.json encounters>",
+    "transfer": ["<目標場景>", "<目標場景的出生點 id>"],  // 可選，播完立即切換場景
+    "setstep": <可選，整數，播完寫入 flags.step>,
+    "party": ["<member id>", ...]  // 可選，播完套用的隊伍組成（已在隊上的成員保留原資料，新成員用樣板建立）
   }
 }
 ```
 
+- **`battle`/`transfer`/`setstep`/`party` 四個欄位是 v1.0 版本漏記的既有欄位**（2026-07-13 MOD-A 認領
+  實作時回讀原始碼發現，見 v1.1 變更記錄），目前只有 3 個 CUTS 實例用到：`demon_pre`（`battle:
+  "prologue_demon"`）、`demon_post`（`transfer:["Town","home"], setstep:3`）、`town_start`
+  （`party:["ludo","marin"], setstep:4`）。四個欄位彼此不是互斥的（`once`/`setstep`/`party` 可以跟
+  `battle`/`transfer` 同時出現），但 `battle` 與 `transfer` 目前資料裡沒有同時出現在同一條目的案例
+  （語意上也不合理——不會播完過場同時「開戰」又「切場景」）。
 - 播放機制：觸發時 `st.queue.push(cut_id)`，世界場景每幀從 `queue` 頭部取出播放（`st.cut`/`st.cutIdx`
-  維護目前播放到第幾句）。播放完畢的判斷靠 `once` 旗標寫回 `g_flags`，下次不再重複觸發。
-- 觸發來源只有一種：`CFG.triggers` 陣列裡 `t.cut` 有值的項目（見 D-4），沒有「NPC 對話觸發過場」這種路徑。
+  維護目前播放到第幾句）。播放完畢後（L1685-1706）依序處理：
+  1. 若有 `once`：寫 `flags[once]=1`。
+  2. 若有 `setstep`：寫 `flags.step = setstep`。
+  3. 若有 `party`：依陣列 id 順序重建隊伍——原本在隊上的成員保留其存檔資料（等級/裝備/hp...），新成員
+     呼叫 `mkMember(id)`（即 GDevelop 端的樣板建立＋`derive()`）建立。
+  4. 若有 `battle`：寫 `g_returnScene/g_returnX/g_returnY`（記錄過場觸發當下的場景與玩家座標，供戰敗/
+     逃走返回用，語意同 D-6）→ `replaceScene("Battle")`，**不再處理後續的 `transfer`**（`return`）。
+  5. 否則若有 `transfer`：寫 `g_spawn` → `replaceScene(transfer[0])`，**同樣直接 return**。
+  6. 都沒有的話（純敘事過場，如 `prologue_town`/`cave_intro`）：留在原場景，佇列繼續處理下一筆
+     （若有）。
+- 播放完畢的判斷靠 `once` 旗標寫回 `g_flags`，下次不再重複觸發。
+- 觸發來源已知兩種：`CFG.triggers` 陣列裡 `t.cut` 有值的項目（見 D-4，最常見）；以及戰鬥結算的特殊分支
+  （L1436-1439）——序章魔影戰勝利後（`res==="story"` 且在 Cave 場景）自動 `queue.push("demon_post")`；
+  二章洞熊被擊退回到 Mine 場景時（`ch2===2` 且 `!c_mine_after`）`queue.push("mine_after")`；戰敗
+  （`res==="lose"`）則是不經 CUTS 表、直接組一句固定旁白 push `"__lose__"`（見下方特例）。**沒有「NPC
+  對話觸發過場」這種路徑**——DLG 的 `action` 只會改旗標/道具/金幣，不會 push 過場佇列。
+- **`__lose__` 特例**（L1439/L1623）：不是 `CUTS` 表裡的 key，是戰敗時寫死的一句話
+  `"你們在芳蕾鎮教堂的祭壇前醒來……蓋婭女神接住了倒下的旅人。（隊伍已完全恢復）"`，沒有 `once`/`battle`/
+  `transfer`/`setstep`，播放前 GDevelop 端已經呼叫過 `healAll()`。Godot 端對應
+  `DialogueSystem.play_defeat_narration()`。
 
 ## D-4　場景觸發區 `CFG.triggers`（L2318-2331）
 
@@ -135,20 +171,28 @@ pickups: [
   `foot=(0,0,0,0)` 會被 build 腳本當成整格是牆，這是地圖生成的坑，不是本規格的一部分，記錄在
   `TASKS/08_地圖管線.md` 供 MOD-H 注意。
 
-## D-8　Godot 端資料結構建議（MOD-A/MOD-B 實作起點）
+## D-8　Godot 端資料結構（MOD-A 實作定案，2026-07-13）
 
-- `DialogueEntry`（`class_name`, `extends Resource`）：`when: String`, `speaker: String`,
-  `lines: PackedStringArray`, `action: String`。
-- `CutsceneEntry`：`once: String`, `lines: Array[Array]`（或 `Array[Dictionary{speaker,text}]`，實作時
-  二選一定案並回填本文件）。
-- `TriggerZone` / `ExitZone` / `PickupZone`：對應 D-4/D-5/D-7 三種資料，建議各自用 `Area2D` +
-  自訂 Resource 儲存規則參數，判定邏輯收斂在各自的 MOD-B 腳本裡，不要散落在場景腳本各處（對應現況「每幀跑一大段
-  if」的技術債，Godot 版用 Area2D 的 `body_entered` 訊號取代逐幀矩形比對）。
-- `FlagMatcher.matches()` 純函式（見 D-1）供以上三種都呼叫。
+- `DialogueEntry`（`class_name`, `extends Resource`，`godot-project/scripts/dialogue/dialogue_entry.gd`）：
+  `when: String`, `speaker: String`, `lines: PackedStringArray`, `action: String`（空字串＝無 action）。
+- `CutsceneEntry`（`godot-project/scripts/dialogue/cutscene_entry.gd`）：`once: String`,
+  `lines: Array`（元素是 `Dictionary{speaker:String, text:String}`——**已定案用 Dictionary 陣列**，
+  不是陣列的陣列，理由：Godot 端用欄位名稱存取比索引 `[0]`/`[1]` 可讀），`battle: String`,
+  `transfer: PackedStringArray`（`[to_scene, spawn_id]`），`setstep: int`（`-1` 表示未設定，因為 0 是
+  合法的 step 值不能借用當 sentinel），`party: PackedStringArray`。
+- `godot-project/resources/content/dialogue.json`：`{dlg: {npc_id: [DialogueEntry...]}, cuts: {cut_id:
+  CutsceneEntry}}`，由 `godot-project/scripts/dialogue/extract_dialogue.py` 對 `build_cq2.py` 做
+  AST 解析＋`ast.literal_eval()` 抽取（不是手動轉寫），欄位轉寫規則見該腳本檔頭。
+- `DialogueSystem`（autoload，`godot-project/scripts/dialogue/dialogue_system.gd`）：
+  `open_npc_dialogue(npc_id)`／`play_cutscene(cut_id)`／`advance()`／`show_message(speaker, lines)`／
+  `play_defeat_narration()`，透過 signal（`dialogue_line_changed`/`cutscene_line_changed`/
+  `shop_requested`/`battle_requested`/`scene_transfer_requested`）跟 UI／世界場景／其他 MOD 溝通，見該
+  檔案檔頭完整說明。action 副作用完整實作在 `_run_action()`，逐條對照 `build_cq2.py` L1758-1779。
+- `TriggerZone` / `ExitZone` / `PickupZone`：對應 D-4/D-5/D-7 三種資料（MOD-B 範圍），建議各自用
+  `Area2D` + 自訂 Resource 儲存規則參數，判定邏輯收斂在各自的 MOD-B 腳本裡，不要散落在場景腳本各處
+  （對應現況「每幀跑一大段 if」的技術債，Godot 版用 Area2D 的 `body_entered` 訊號取代逐幀矩形比對）。
+- `FlagMatcher.matches()` 純函式（見 D-1，MOD-B 建立）供以上三種都呼叫。
 
 ## 待確認事項
 
-- CUTS 的 `lines` 結構（陣列的陣列 `[speaker, text]`）在 Godot 端要不要改成 `Dictionary` 陣列，MOD-A 實作
-  時定案並回填本節版本。
-- 各 `action` id 的完整副作用（金幣/道具/旗標異動明細）尚未逐條抄錄進本文件，避免與 `TASKS/01_對話劇情.md`
-  重複維護；MOD-A 認領時要回 build_cq2.py 原始碼逐一核對，不要憑對話文字內容猜測。
+（v1.0 列出的兩項已在 v1.1／MOD-A 實作時定案，見上方 D-3/D-8 內文與版本記錄，本節暫無新的待確認事項。）

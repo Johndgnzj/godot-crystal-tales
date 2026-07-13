@@ -1,0 +1,606 @@
+{
+  "_meta": {
+    "generated_by": "godot-project/scripts/dialogue/extract_dialogue.py",
+    "source": "gd-crystal-tales/projects/crystal-quest/scripts/build_cq2.py",
+    "extracted_at": "2026-07-13T17:52:26+00:00",
+    "dlg_npc_count": 10,
+    "dlg_entry_count": 38,
+    "cuts_count": 8,
+    "note": "DialogueSystem 只讀取 dlg/cuts 兩個頂層 key，_meta 是抽取溯源用，會被忽略。"
+  },
+  "dlg": {
+    "tina": [
+      {
+        "when": "step==0",
+        "speaker": "緹娜",
+        "lines": [
+          "這不是路德嗎？要去礦山見習？",
+          "等你正式登錄的那天，公會隨時歡迎你。"
+        ],
+        "action": null
+      },
+      {
+        "when": "ch1==2",
+        "speaker": "緹娜",
+        "lines": [
+          "委託完成確認——哥布林頭目討伐！",
+          "報酬 200 金幣已支付。你們是本鎮的驕傲！",
+          "（第一章完──「重返礦山」即將開放）"
+        ],
+        "action": "ch1_reward"
+      },
+      {
+        "when": "ch1==1",
+        "speaker": "緹娜",
+        "lines": [
+          "委託進行中：討伐東之森深處的哥布林頭目。",
+          "牠就在森林最東邊的空地，小心點！"
+        ],
+        "action": null
+      },
+      {
+        "when": "ch2>=1",
+        "speaker": "緹娜",
+        "lines": [
+          "礦坑的委託，是老葛雷私下拜託你們的吧？",
+          "那些失蹤的礦工……公會這邊也一直很掛心。",
+          "小心點，別逞強——活著回來才是好冒險者。"
+        ],
+        "action": null
+      },
+      {
+        "when": "ch1==3",
+        "speaker": "緹娜",
+        "lines": [
+          "哥布林頭目的委託已經結案囉，辛苦了！",
+          "接下來想找活兒的話，水井旁的老葛雷正在找人幫忙。"
+        ],
+        "action": null
+      },
+      {
+        "when": "reg==1",
+        "speaker": "緹娜",
+        "lines": [
+          "有新委託喔——農家回報東之森的哥布林越來越囂張，",
+          "牠們的頭目就盤踞在森林深處。",
+          "【委託】討伐哥布林頭目（報酬 200G）。接受嗎？就當你接受了！",
+          "頭目比雜魚強得多——建議練到 Lv5、跟漢克拿把好劍再去。"
+        ],
+        "action": "ch1_take"
+      },
+      {
+        "when": "step>=3",
+        "speaker": "緹娜",
+        "lines": [
+          "歡迎來到冒險者公會！要登錄成為冒險者嗎？",
+          "……路德和瑪琳，兩位都登錄完成！",
+          "從今天起你們就是 F 級冒險者了。委託隨時來找我。"
+        ],
+        "action": "register"
+      }
+    ],
+    "dora": [
+      {
+        "when": "step==0",
+        "speaker": "朵拉",
+        "lines": [
+          "要跟亞倫先生出門？路上小心。",
+          "回來我煮好吃的等你們。"
+        ],
+        "action": null
+      },
+      {
+        "when": "always",
+        "speaker": "朵拉",
+        "lines": [
+          "累了吧？床鋪都幫你們鋪好了。",
+          "（隊伍完全恢復了！）"
+        ],
+        "action": "heal"
+      }
+    ],
+    "sister": [
+      {
+        "when": "ch2>=2",
+        "speaker": "希雅修女",
+        "lines": [
+          "你們從礦山帶回來的……不只是疲憊。",
+          "那是亡者未能安息的哀嘆。願蓋婭女神接引他們。",
+          "（隊伍完全恢復了！）",
+          "……路德，女神在你身上的記號，又亮了一分。"
+        ],
+        "action": "heal"
+      },
+      {
+        "when": "step>=3",
+        "speaker": "希雅修女",
+        "lines": [
+          "蓋婭女神看顧著每一位旅人。",
+          "……女神在你身上留了記號呢。願風平息。",
+          "（隊伍完全恢復了！）"
+        ],
+        "action": "heal"
+      }
+    ],
+    "barton": [
+      {
+        "when": "step==0",
+        "speaker": "巴頓鎮長",
+        "lines": [
+          "聽說亞倫先生要帶你去礦山見習？",
+          "好好跟著學，別亂跑。"
+        ],
+        "action": null
+      },
+      {
+        "when": "ch2>=3",
+        "speaker": "巴頓鎮長",
+        "lines": [
+          "礦工失蹤的事……我早該多過問一句的。",
+          "孩子，你們比這鎮上所有大人都勇敢。",
+          "把礦山看到的一切，原原本本告訴大城的人吧。"
+        ],
+        "action": null
+      },
+      {
+        "when": "ch1==3",
+        "speaker": "巴頓鎮長",
+        "lines": [
+          "哥布林的事多虧你們了。",
+          "但礦山的異變……我總覺得沒那麼簡單。"
+        ],
+        "action": null
+      },
+      {
+        "when": "always",
+        "speaker": "巴頓鎮長",
+        "lines": [
+          "礦山最近不太平靜，連老獵人都不敢靠近。",
+          "亞倫先生的事……我很遺憾。孩子，別勉強自己。"
+        ],
+        "action": null
+      }
+    ],
+    "hank": [
+      {
+        "when": "gotSword==1",
+        "speaker": "漢克",
+        "lines": [
+          "要補貨就直說，鐵匠鋪隨時開著。"
+        ],
+        "action": "shop_hank"
+      },
+      {
+        "when": "ch1>=1",
+        "speaker": "漢克",
+        "lines": [
+          "……路德，你也要出去闖了啊。",
+          "拿去，我打的劍。別死在外面。",
+          "（獲得『鐵劍』！開啟 選單→裝備 分頁換上它）",
+          "往後要打點裝備，儘管來鐵匠鋪。"
+        ],
+        "action": "shop_hank_gift"
+      },
+      {
+        "when": "reg==1",
+        "speaker": "漢克",
+        "lines": [
+          "冒險者？裝備可不能馬虎。",
+          "來，看看我的貨。"
+        ],
+        "action": "shop_hank"
+      },
+      {
+        "when": "step==0",
+        "speaker": "漢克",
+        "lines": [
+          "哼，礦山？",
+          "……跟緊亞倫先生，別給他添麻煩。"
+        ],
+        "action": null
+      },
+      {
+        "when": "always",
+        "speaker": "漢克",
+        "lines": [
+          "冒險者？哼，那不是鬧著玩的。",
+          "你亞倫大哥那麼強的人都……算了。要去就去吧。"
+        ],
+        "action": null
+      }
+    ],
+    "martha": [
+      {
+        "when": "gotRing==0",
+        "speaker": "瑪莎",
+        "lines": [
+          "你這孩子，越來越像年輕時的你爸了。",
+          "這枚戒指你戴著——是我年輕時你爸打的，保平安。",
+          "（獲得『活力戒指』！開啟 選單→裝備 可以裝上）"
+        ],
+        "action": "give_ring"
+      },
+      {
+        "when": "always",
+        "speaker": "瑪莎",
+        "lines": [
+          "你這孩子，越來越像年輕時的你爸了。",
+          "路上一定要吃飽穿暖，聽到沒？"
+        ],
+        "action": null
+      }
+    ],
+    "gid": [
+      {
+        "when": "gotPotion==1",
+        "speaker": "吉德",
+        "lines": [
+          "歡迎光臨！補給要趁早，這是老冒險者的鐵則。"
+        ],
+        "action": "shop_gid"
+      },
+      {
+        "when": "always",
+        "speaker": "吉德",
+        "lines": [
+          "藥水備齊再出門，這是老冒險者的鐵則！",
+          "（先送你 2 瓶藥水，別客氣。）",
+          "要看看我店裡的商品嗎？"
+        ],
+        "action": "shop_gid_gift"
+      }
+    ],
+    "gray": [
+      {
+        "when": "relic==1",
+        "speaker": "老葛雷",
+        "lines": [
+          "這頂頭盔……是阿吉的！你們在裡頭找到的？",
+          "（老葛雷的手抖個不停）……謝謝你們，把他的東西帶了回來。",
+          "這是我僅有的一點謝禮，別嫌少。",
+          "（獲得 100 金幣）"
+        ],
+        "action": "relic_turnin"
+      },
+      {
+        "when": "ch2==3",
+        "speaker": "老葛雷",
+        "lines": [
+          "那些孩子……總算能入土為安了。",
+          "你們替這座礦山、也替我這老頭子，了了一樁心事。",
+          "剩下的——深處那股邪氣的源頭，就拜託你們了。"
+        ],
+        "action": null
+      },
+      {
+        "when": "ch2==2",
+        "speaker": "老葛雷",
+        "lines": [
+          "你們臉色不對……在裡頭看到什麼了？",
+          "……戴著礦工帽、掄著鎬子的骷髏？那就是我那些老夥計沒錯了。",
+          "（老葛雷沉默了好久）謝謝你們告訴我真相。這點心意收下。",
+          "聽說深處的落石被你們清開了？那底下的東西，才是禍首。快去回報鎮長吧。"
+        ],
+        "action": "ch2_report"
+      },
+      {
+        "when": "ch2==1",
+        "speaker": "老葛雷",
+        "lines": [
+          "礦坑外圍就從鎮北的舊軌道進去。",
+          "失蹤的老夥計要是還在……不，你們親眼去看看吧。",
+          "（記得先把裝備和藥水在鎮上備齊）"
+        ],
+        "action": null
+      },
+      {
+        "when": "ch1==3",
+        "speaker": "老葛雷",
+        "lines": [
+          "解決了哥布林？好身手。",
+          "那……礦坑的事，能拜託你們嗎？我的老夥計們一個接一個失蹤，",
+          "官府當是逃工不管，可我知道——他們絕不會丟下家人跑掉。",
+          "【委託】重返北方礦山外圍，查明礦工失蹤的真相。接下嗎？就當你們答應了。"
+        ],
+        "action": "ch2_take"
+      },
+      {
+        "when": "step==0",
+        "speaker": "老葛雷",
+        "lines": [
+          "那礦坑二十年前就封了……最近夜裡卻有聲音。",
+          "要進去？……跟緊亞倫先生。"
+        ],
+        "action": null
+      },
+      {
+        "when": "always",
+        "speaker": "老葛雷",
+        "lines": [
+          "那礦坑二十年前就封了……最近夜裡卻有聲音。",
+          "你們就是在裡面出事的吧。唉，可憐的亞倫先生。"
+        ],
+        "action": null
+      }
+    ],
+    "mira": [
+      {
+        "when": "mira2==2",
+        "speaker": "米拉",
+        "lines": [
+          "那些鏡草夠我熬好一陣子的藥了，真是幫了大忙！",
+          "路上也別忘了照顧自己的傷。"
+        ],
+        "action": null
+      },
+      {
+        "when": "herb==3",
+        "speaker": "米拉",
+        "lines": [
+          "三株鏡草都採齊了？太好了！",
+          "來，這些藥水你們拿去——採藥的謝禮。",
+          "（獲得『藥水』×3！）"
+        ],
+        "action": "mira_reward"
+      },
+      {
+        "when": "mira2==1",
+        "speaker": "米拉",
+        "lines": [
+          "東之森裡三株會發光的『鏡草』，就麻煩你們了。",
+          "它們喜歡長在水邊和大石頭旁。"
+        ],
+        "action": null
+      },
+      {
+        "when": "gotEar==0",
+        "speaker": "米拉",
+        "lines": [
+          "東之森的藥草最近都採不到了……草叢裡老是冒出怪物。",
+          "你們要進森林嗎？能不能順手幫我採三株『鏡草』回來？",
+          "對了，這耳環是我在森林邊撿到的，先送你們——就當訂金。",
+          "（獲得『凝神耳環』！）",
+          "（【支線】到東之森採集鏡草×3）"
+        ],
+        "action": "mira_start"
+      },
+      {
+        "when": "always",
+        "speaker": "米拉",
+        "lines": [
+          "鏡草要三株才夠熬一鍋藥。",
+          "東之森的水邊和大石頭旁比較好找。"
+        ],
+        "action": null
+      }
+    ],
+    "guard": [
+      {
+        "when": "ch1==3",
+        "speaker": "羅素隊長",
+        "lines": [
+          "南方大道還在封鎖中。",
+          "等王都的指示一到就放行——你們的事蹟我會寫進報告。"
+        ],
+        "action": null
+      },
+      {
+        "when": "always",
+        "speaker": "羅素隊長",
+        "lines": [
+          "前方道路因魔物騷動封閉中，王都的援軍還沒到。",
+          "想去大城的話，再等等吧。"
+        ],
+        "action": null
+      }
+    ]
+  },
+  "cuts": {
+    "prologue_town": {
+      "once": "c_pro_town",
+      "lines": [
+        {
+          "speaker": "瑪琳",
+          "text": "路德！聽說你要跟亞倫先生去礦山見習？"
+        },
+        {
+          "speaker": "路德",
+          "text": "嗯！我很快就回來——等著聽我的冒險故事吧！"
+        },
+        {
+          "speaker": "亞倫",
+          "text": "（在鎮北等著）……準備好了就從北邊出口出發。想先逛逛鎮子也行。"
+        },
+        {
+          "speaker": "",
+          "text": "（可以先和鎮民聊聊。準備好了就走北邊出口前往礦山）"
+        }
+      ],
+      "battle": null,
+      "transfer": null,
+      "setstep": null,
+      "party": null
+    },
+    "mine_intro": {
+      "once": "c_mine_intro",
+      "lines": [
+        {
+          "speaker": "亞倫",
+          "text": "跟緊我，路德。礦山不是給小孩玩的地方。"
+        },
+        {
+          "speaker": "路德",
+          "text": "我、我才不是小孩！我十五歲了！"
+        },
+        {
+          "speaker": "亞倫",
+          "text": "……哼。前面的碎石地會竄出魔物，正好給你練練手。"
+        },
+        {
+          "speaker": "",
+          "text": "（教學：走進碎石地會遭遇戰鬥。方向鍵移動，往北邊的礦坑口前進）"
+        }
+      ],
+      "battle": null,
+      "transfer": null,
+      "setstep": null,
+      "party": null
+    },
+    "cave_intro": {
+      "once": "c_cave_intro",
+      "lines": [
+        {
+          "speaker": "亞倫",
+          "text": "……深處的氣息不對勁。跟在我身後，別亂跑。"
+        },
+        {
+          "speaker": "路德",
+          "text": "（好冷……這裡真的只是廢棄礦坑嗎？）"
+        }
+      ],
+      "battle": null,
+      "transfer": null,
+      "setstep": null,
+      "party": null
+    },
+    "demon_pre": {
+      "once": "c_demon",
+      "lines": [
+        {
+          "speaker": "？？？",
+          "text": "（低沉的咆哮迴盪在洞穴深處──）"
+        },
+        {
+          "speaker": "亞倫",
+          "text": "趴下！路德──這傢伙不是這裡該有的東西！"
+        },
+        {
+          "speaker": "",
+          "text": "（撐過 3 回合！）"
+        }
+      ],
+      "battle": "prologue_demon",
+      "transfer": null,
+      "setstep": null,
+      "party": null
+    },
+    "demon_post": {
+      "once": null,
+      "lines": [
+        {
+          "speaker": "亞倫",
+          "text": "（擋在路德身前）……快跑！把這裡的事告訴鎮上的人！"
+        },
+        {
+          "speaker": "路德",
+          "text": "亞倫大哥──！！"
+        },
+        {
+          "speaker": "",
+          "text": "──三天後，芳蕾鎮。"
+        }
+      ],
+      "battle": null,
+      "transfer": [
+        "Town",
+        "home"
+      ],
+      "setstep": 3,
+      "party": null
+    },
+    "town_start": {
+      "once": "c_town",
+      "lines": [
+        {
+          "speaker": "瑪琳",
+          "text": "路德！你總算肯出房門了。"
+        },
+        {
+          "speaker": "瑪琳",
+          "text": "……亞倫先生的事，不是你的錯。"
+        },
+        {
+          "speaker": "路德",
+          "text": "瑪琳。我決定了——我要成為真正的冒險者，查出那天的真相。"
+        },
+        {
+          "speaker": "瑪琳",
+          "text": "一個人？想得美。要去，就一起去。"
+        },
+        {
+          "speaker": "",
+          "text": "（瑪琳加入了隊伍！先去公會找緹娜登錄吧）"
+        }
+      ],
+      "battle": null,
+      "transfer": null,
+      "setstep": 4,
+      "party": [
+        "ludo",
+        "marin"
+      ]
+    },
+    "mine_truth": {
+      "once": "c_mine_truth",
+      "lines": [
+        {
+          "speaker": "路德",
+          "text": "（這裡的空氣……比序章那次更冷了。）"
+        },
+        {
+          "speaker": "瑪琳",
+          "text": "路德，那邊有東西在動——是礦工？他們還活著？！"
+        },
+        {
+          "speaker": "路德",
+          "text": "不對……瑪琳，退後！牠的臉……牠根本沒有臉！"
+        },
+        {
+          "speaker": "瑪琳",
+          "text": "拿著鎬子、戴著礦工帽的骷髏……老葛雷說的失蹤礦工，難道就是……"
+        },
+        {
+          "speaker": "路德",
+          "text": "（他們早就死了。是有人……把他們變成了這個樣子。）"
+        },
+        {
+          "speaker": "",
+          "text": "（深處的舊礦道被落石半掩，一頭巨影在崩石後低吼——先解決擋路的東西）"
+        }
+      ],
+      "battle": null,
+      "transfer": null,
+      "setstep": null,
+      "party": null
+    },
+    "mine_after": {
+      "once": "c_mine_after",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "（洞熊倒下，崩石隨著牠的重量嘩啦鬆開，露出一道向下的黑暗礦道）"
+        },
+        {
+          "speaker": "瑪琳",
+          "text": "這股味道……和那天，我們遇上那東西的時候一模一樣。"
+        },
+        {
+          "speaker": "路德",
+          "text": "下面有東西。骷髏、洞熊……都是被它從這裡……"
+        },
+        {
+          "speaker": "路德",
+          "text": "（亞倫大哥……當年擋在我面前的，是不是也和這底下的東西有關？）"
+        },
+        {
+          "speaker": "",
+          "text": "（深處的路開了。先回鎮上把所見告訴老葛雷與鎮長吧）"
+        }
+      ],
+      "battle": null,
+      "transfer": null,
+      "setstep": null,
+      "party": null
+    }
+  }
+}
