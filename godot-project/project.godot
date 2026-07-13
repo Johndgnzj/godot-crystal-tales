@@ -1,13 +1,20 @@
 ; Engine configuration file.
-; 對應 GDevelop 版 game.json properties（windowWidth/Height, scaleMode, pixelsRounding）
-; 見 ../../CLAUDE.md「Godot 版本與技術選型」一節。CORE-1 任務產出，實際玩法內容待 CORE/MOD 任務展開。
+; 對應 GDevelop 版 game.json properties（windowWidth/Height, scaleMode, antialiasingMode, pixelsRounding）。
+; 見 ../CLAUDE.md「Godot 版本與技術選型」一節。CORE-1 任務產出，實際玩法內容待 CORE/MOD 任務展開。
+;
+; window/stretch/mode 決定：採用 "viewport"（而非 canvas_items）—— 本專案是 tile-based 像素風 JRPG，
+; viewport 模式以固定基準解析度整張畫面算圖後再整體縮放＋nearest filter，行為最接近 GDevelop 版
+; scaleMode:nearest 的效果，避免 canvas_items 模式下每個節點各自縮放造成的 tile 接縫/次像素抖動。
+; 註：CLAUDE.md 原文寫「stretch mode 待 CORE-1 實測決定」，但 CORE-1 執行當下環境內沒有可用的 Godot
+; 執行檔可以實機開專案測試（見任務報告），這個決定是依 Godot 官方文件＋社群慣例做的書面判斷，尚未實機驗證，
+; 之後拿到可用的 Godot 編輯器時應該實際開專案確認縮放/像素對齊行為，如與預期不符再回來調整。
 
 config_version=5
 
 [application]
 
-config/name="水晶戰記 Crystal Tale"
-config/description="GDevelop → Godot 遷移準備骨架（見 ../CLAUDE.md）"
+config/name="水晶奇譚 Crystal Tales"
+config/description="GDevelop → Godot 遷移專案（見 ../CLAUDE.md）。CORE-1 骨架，玩法內容待 CORE/MOD 任務展開。"
 run/main_scene="res://scenes/title/title.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
@@ -17,9 +24,61 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
+window/handheld/orientation="landscape"
+
+[input]
+
+move_up={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194320,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+move_down={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194322,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+move_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194319,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+move_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194321,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+menu_toggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":77,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+stat_str={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":49,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+stat_agi={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":50,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+stat_int={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":51,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+battle_auto={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":65,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
 
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
+anti_aliasing/quality/msaa_2d=0

@@ -68,8 +68,12 @@ godot-crystal-tales/
 - **語言：GDScript**（不用 C#）——理由：GDevelop 端邏輯本來就是動態語言(JS)風格、資料驅動；GDScript 生態與
   debug 工具鏈更輕量，團隊目前是 John + AI agent 協作，不需要 C# 的型別工程量。
 - **渲染：2D，像素風**，比照 GDevelop 設定：`windowWidth=1280 windowHeight=720`，`scaleMode: nearest`
-  （對應 Godot 的 `Viewport` texture filter = Nearest，`stretch mode = viewport` 或 `canvas_items` 待
-  CORE-1 實測決定）。
+  （對應 Godot 的 `Viewport` texture filter = Nearest；`stretch mode` **CORE-1 決定採用 `viewport`**——
+  tile-based 像素風遊戲用 `viewport` 模式整張畫面以固定基準解析度算圖後再整體縮放＋nearest filter，避免
+  `canvas_items` 模式下各節點各自縮放造成的 tile 接縫/次像素抖動。**注意**：CORE-1 執行當下環境內沒有可用的
+  Godot 執行檔可以實機開專案測試（多方管道嘗試下載皆被網路政策擋下，見 `TASKS/00_核心任務.md` CORE-1 狀態
+  說明），這個決定是依 Godot 官方文件＋社群慣例做的書面判斷、**尚未實機驗證**，之後拿到可用的 Godot 編輯器
+  時應實際開專案確認縮放/像素對齊行為，如與預期不符再回來調整）。
 - **狀態管理：Autoload 單例**取代 GDevelop 的全域變數（`g_party`/`g_flags`/…），詳見 `specs/SAVE_SCHEMA.md`。
 - **場景切換**：用 `get_tree().change_scene_to_file()` 或自訂 `SceneRouter` autoload，取代 GDevelop 的
   `replaceScene` + `g_result`/`g_returnScene` 機制（規格照搬，實作方式改用 Godot Signal）。
