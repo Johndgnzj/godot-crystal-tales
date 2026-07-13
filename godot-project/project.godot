@@ -1,0 +1,25 @@
+; Engine configuration file.
+; 對應 GDevelop 版 game.json properties（windowWidth/Height, scaleMode, pixelsRounding）
+; 見 ../../CLAUDE.md「Godot 版本與技術選型」一節。CORE-1 任務產出，實際玩法內容待 CORE/MOD 任務展開。
+
+config_version=5
+
+[application]
+
+config/name="水晶戰記 Crystal Tale"
+config/description="GDevelop → Godot 遷移準備骨架（見 ../CLAUDE.md）"
+run/main_scene="res://scenes/title/title.tscn"
+config/features=PackedStringArray("4.3", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
