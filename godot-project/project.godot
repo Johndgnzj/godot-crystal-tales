@@ -109,6 +109,12 @@ InputBridge="*res://autoload/input_bridge.gd"
 ; 呼叫存檔，這裡正式註冊後那段程式碼會自動生效，不需要回頭改 dialogue_system.gd。
 SaveManager="*res://autoload/save_manager.gd"
 
+; CORE-7 新增：DebugHooks 是自動化測試的除錯查詢點（GDevelop window.__W/__B/__forceEnc 的 Godot 等價
+; 物），見 godot-project/tests/debug_hooks.gd 檔頭與 ../TASKS/00_核心任務.md CORE-7 段落。只在 debug
+; build 啟用（release 匯出不暴露內部狀態）。理由與 CORE-2/CORE-3/CORE-6/MOD-A 同例：只新增一行登記，
+; 不動其他 CORE/MOD 任務已完成的內容。
+DebugHooks="*res://tests/debug_hooks.gd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
