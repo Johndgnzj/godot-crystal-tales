@@ -72,7 +72,8 @@ static func derive(member: Dictionary) -> Dictionary:
 	# 刻意精確複製這個差異（用 null 判斷，不是「空 Dictionary 視為未設定」，避免誤觸發重算把玩家手動清空
 	# 的技能表洗掉）。
 	var sk_val = member.get("sk", null)
-	if sk_val == null or sk_val == false:
+	# JS `if(!m.sk)`：dict（含空 {}）為 truthy 保留、null/非 dict 才重算。用型別判斷避免 Dictionary==bool 型別錯誤。
+	if not (sk_val is Dictionary):
 		var sk: Dictionary = {}
 		var cls: String = String(member.get("cls", ""))
 		var lv: int = int(member.get("lv", 1))
