@@ -1,0 +1,438 @@
+[gd_scene load_steps=26 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/world_scene.gd" id="1_ws"]
+[ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="2_pc"]
+[ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="3_ez"]
+[ext_resource type="Script" path="res://scripts/world/trigger_zone.gd" id="4_tz"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="7_dlg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(640, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
+size = Vector2(576, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5"]
+size = Vector2(64, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6"]
+size = Vector2(32, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7"]
+size = Vector2(32, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8"]
+size = Vector2(160, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_9"]
+size = Vector2(32, 320)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_10"]
+size = Vector2(32, 352)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_11"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_12"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_13"]
+size = Vector2(1344, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_14"]
+size = Vector2(1408, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_15"]
+size = Vector2(32, 960)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_16"]
+size = Vector2(51.200000000000045, 144)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_17"]
+size = Vector2(144, 57.6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18"]
+size = Vector2(144, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_19"]
+size = Vector2(38.4, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_20"]
+size = Vector2(22, 14)
+
+[node name="Town" type="Node2D"]
+script = ExtResource("1_ws")
+scene_id = "Town"
+map_w = 42
+map_h = 30
+ground_tiles = PackedInt32Array(15, 1, 16, 1, 1, 1, 15, 2, 1, 1, 16, 1, 1, 16, 1, 16, 1, 1, 16, 1, 20, 26, 26, 21, 2, 1, 16, 15, 1, 16, 1, 15, 1, 16, 1, 15, 15, 15, 1, 15, 1, 15, 1, 15, 1, 15, 15, 16, 1, 16, 1, 1, 16, 1, 16, 1, 1, 1, 15, 2, 1, 1, 20, 26, 26, 21, 1, 1, 1, 1, 15, 16, 15, 1, 1, 16, 2, 2, 1, 1, 15, 1, 1, 16, 1, 16, 16, 16, 16, 15, 1, 16, 1, 15, 1, 16, 1, 1, 1, 16, 1, 2, 1, 1, 20, 26, 26, 21, 1, 2, 16, 1, 2, 1, 1, 16, 2, 16, 1, 16, 15, 15, 15, 1, 15, 1, 1, 1, 16, 2, 1, 1, 16, 1, 16, 16, 1, 2, 16, 15, 1, 15, 16, 1, 16, 1, 20, 26, 26, 21, 16, 1, 16, 1, 1, 15, 16, 2, 1, 15, 2, 1, 1, 2, 1, 16, 1, 16, 16, 16, 15, 15, 15, 15, 1, 1, 1, 1, 1, 16, 15, 1, 1, 1, 1, 2, 1, 15, 20, 26, 26, 21, 1, 1, 1, 1, 1, 15, 15, 15, 16, 15, 16, 2, 15, 16, 1, 1, 2, 1, 1, 15, 1, 1, 1, 16, 1, 1, 15, 16, 15, 15, 16, 1, 15, 15, 1, 1, 15, 1, 20, 26, 26, 21, 15, 1, 1, 2, 1, 1, 1, 15, 1, 1, 16, 1, 15, 1, 16, 15, 1, 1, 1, 15, 1, 16, 15, 16, 1, 1, 15, 1, 1, 1, 15, 1, 16, 16, 1, 1, 16, 16, 20, 26, 26, 21, 2, 15, 16, 15, 1, 16, 2, 15, 2, 15, 2, 1, 2, 1, 15, 15, 1, 2, 2, 16, 1, 15, 1, 15, 1, 1, 16, 1, 2, 15, 1, 16, 1, 16, 15, 2, 1, 16, 20, 26, 26, 21, 15, 1, 1, 16, 15, 1, 16, 2, 16, 1, 16, 16, 15, 16, 1, 1, 16, 1, 16, 1, 16, 15, 16, 15, 1, 1, 1, 15, 1, 16, 16, 1, 16, 15, 15, 15, 2, 1, 20, 26, 26, 21, 16, 1, 2, 15, 1, 1, 15, 15, 1, 1, 2, 2, 1, 15, 1, 16, 1, 16, 2, 1, 1, 1, 16, 1, 1, 2, 1, 1, 16, 15, 1, 15, 16, 1, 1, 1, 1, 1, 20, 26, 26, 21, 16, 1, 15, 16, 15, 15, 1, 15, 15, 1, 16, 1, 16, 1, 1, 2, 16, 1, 1, 2, 15, 16, 1, 16, 16, 16, 1, 15, 1, 15, 16, 1, 1, 1, 1, 15, 17, 17, 17, 17, 17, 17, 17, 17, 1, 16, 1, 15, 15, 16, 1, 1, 15, 2, 15, 2, 1, 1, 2, 1, 16, 16, 1, 1, 16, 1, 1, 16, 16, 15, 1, 2, 2, 16, 16, 16, 16, 1, 17, 17, 17, 17, 17, 17, 17, 17, 1, 16, 2, 16, 15, 1, 15, 15, 1, 15, 15, 1, 1, 16, 15, 1, 1, 1, 1, 2, 15, 1, 1, 15, 2, 1, 1, 1, 1, 1, 1, 15, 1, 2, 17, 17, 17, 17, 17, 17, 17, 17, 1, 16, 1, 1, 1, 1, 16, 1, 1, 16, 1, 1, 15, 15, 2, 1, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 17, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 17, 17, 17, 17, 17, 17, 17, 17, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 17, 17, 17, 17, 17, 17, 17, 17, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 17, 17, 17, 17, 17, 17, 17, 17, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1, 16, 1, 1, 2, 15, 15, 16, 16, 2, 16, 2, 2, 1, 15, 15, 1, 1, 17, 17, 17, 17, 17, 17, 17, 17, 1, 16, 1, 15, 1, 1, 2, 2, 15, 1, 15, 16, 1, 1, 15, 16, 16, 16, 15, 15, 15, 1, 15, 1, 16, 1, 1, 2, 1, 1, 15, 1, 15, 15, 2, 16, 20, 26, 26, 21, 1, 2, 16, 1, 15, 1, 2, 1, 2, 16, 1, 16, 1, 1, 15, 16, 1, 15, 2, 15, 1, 15, 2, 15, 1, 1, 1, 16, 1, 1, 1, 16, 1, 16, 1, 15, 1, 16, 20, 26, 26, 21, 1, 16, 15, 15, 16, 16, 2, 16, 1, 2, 1, 16, 16, 16, 16, 1, 1, 1, 16, 1, 16, 16, 16, 1, 1, 16, 1, 2, 15, 15, 16, 1, 1, 16, 1, 1, 15, 15, 20, 26, 26, 21, 15, 15, 1, 16, 2, 16, 1, 1, 2, 1, 16, 1, 2, 1, 1, 16, 1, 15, 2, 2, 15, 1, 15, 2, 1, 15, 1, 1, 2, 1, 15, 1, 1, 1, 1, 1, 15, 1, 20, 26, 26, 21, 1, 16, 1, 15, 1, 1, 1, 1, 15, 16, 15, 1, 1, 2, 1, 15, 1, 2, 16, 15, 1, 16, 16, 1, 15, 15, 16, 1, 16, 1, 1, 1, 16, 16, 16, 1, 16, 15, 20, 26, 26, 21, 1, 16, 1, 1, 1, 16, 14, 14, 14, 14, 14, 14, 14, 14, 15, 1, 1, 16, 1, 1, 1, 1, 16, 1, 15, 1, 1, 15, 1, 16, 15, 16, 1, 1, 1, 15, 1, 15, 20, 26, 26, 21, 15, 1, 2, 16, 2, 2, 14, 14, 14, 14, 14, 14, 14, 14, 1, 1, 1, 15, 16, 1, 1, 1, 15, 1, 1, 16, 15, 15, 16, 16, 1, 16, 1, 16, 16, 16, 1, 16, 20, 26, 26, 21, 15, 16, 15, 1, 1, 15, 14, 14, 14, 14, 14, 14, 14, 14, 1, 1, 2, 1, 16, 15, 1, 15, 1, 1, 16, 16, 1, 1, 2, 15, 16, 2, 2, 1, 16, 15, 16, 1, 20, 26, 26, 21, 1, 1, 16, 1, 1, 1, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 1, 15, 15, 15, 1, 1, 16, 1, 1, 16, 2, 15, 1, 1, 16, 2, 2, 1, 1, 15, 15, 20, 26, 26, 21, 1, 15, 15, 1, 1, 2, 14, 14, 14, 14, 14, 14, 14, 14, 1, 1, 1, 15, 2, 1, 1, 2, 1, 15, 1, 16, 1, 1, 2, 16, 1, 15, 1, 1, 15, 16, 1, 1, 20, 26, 26, 21, 1, 15, 1, 16, 1, 1, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 1, 1, 16, 1, 16, 1, 2, 2, 16, 1, 15, 16, 1, 1, 16, 15, 15, 1, 16, 16, 15, 20, 26, 26, 21, 16, 16, 15, 2, 1, 16, 1, 15, 1, 16, 2, 2, 1, 1, 16, 1, 2, 1, 2, 1, 15, 1, 1, 15, 16, 1, 15, 15, 16, 16, 1, 1, 16, 1, 1, 1, 1, 2, 20, 26, 26, 21, 1, 1, 2, 2, 16, 2, 1, 2, 1, 1, 1, 15, 1, 1, 15, 15, 16, 15)
+blk_rows = PackedStringArray("111111111111111111110000111111111111111111", "110000000010000000010000010000000000000001", "110000000010000000010000010000000000000011", "110000000010000000010000010000000000000001", "101000000000000000000000000000000000000001", "100000000000000000000000000000000000000001", "110011111000111110000000000011111000000001", "100011111000111110010000000011111001111101", "101011011000110110000000000011011001111101", "100000000010000000000000000000000001101101", "100000000000000000000000000000000000000001", "100000000000000000110000000000000000000001", "100000000000000000000000000000000000000001", "100000000000000000000000000000000000000000", "100000000000000000000000000000000000000000", "100000000000000000000000000000000000000000", "100000000000000000000000000000000000000000", "100000000000000000000000000000000001010001", "110000000000000000000000000000001000000011", "100000000000000000000000000000000000000001", "100000000000000000000000100000000000000001", "101000000000000000000000000000111111110001", "110011111000111110000000000101000000000011", "100011111000111110000000000000000000000001", "100011011000110110000000000000000000000001", "100000000000000000100000000000000000000001", "111000000000000000000000000010000000000011", "100000000000000000000000000000000000000001", "110000000010000000010000010010010000010001", "111111111111111111111111111111111111111111")
+enc_rows = PackedStringArray("000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000")
+spawns = {"home": Vector2(512, 438), "fromForest": Vector2(1280, 502), "fromMine": Vector2(704, 118), "shrine": Vector2(992, 374)}
+enc_group = ""
+bgm = "bgm_town.mp3"
+cut_on_enter = [{"cut": "prologue_town", "step": 0}, {"cut": "town_start", "step": 3}]
+npc_list = [{"id": "gray", "sprite": "gray", "x": 17, "y": 13, "face": "Right"}, {"id": "mira", "sprite": "villager", "x": 32, "y": 24, "face": "Down"}, {"id": "guard", "sprite": "guard", "x": 21, "y": 27, "face": "Down"}]
+prop_list = [{"tex": "res://assets/props/extc_guild.png", "x": 128, "y": 47, "w": 160, "h": 217}, {"tex": "res://assets/props/extc_inn.png", "x": 384, "y": 47, "w": 160, "h": 217}, {"tex": "res://assets/props/extc_shrine.png", "x": 896, "y": 88, "w": 160, "h": 176}, {"tex": "res://assets/props/extc_mayor.png", "x": 1120, "y": 136, "w": 160, "h": 160}, {"tex": "res://assets/props/extc_shop.png", "x": 128, "y": 585, "w": 160, "h": 191}, {"tex": "res://assets/props/extc_smithy.png", "x": 384, "y": 568, "w": 160, "h": 208}, {"tex": "res://assets/props/well.png", "x": 580, "y": 328, "w": 0, "h": 0}, {"tex": "res://assets/props/board.png", "x": 320, "y": 288, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 960, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 992, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 1024, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 1056, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 1088, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 1120, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 1152, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/fence.png", "x": 1184, "y": 672, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 0, "y": 8, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 0, "y": 808, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 288, "y": 8, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 288, "y": 808, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 576, "y": 8, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 576, "y": 808, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 768, "y": 8, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 768, "y": 808, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 864, "y": 808, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 960, "y": 808, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 1152, "y": 808, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 1248, "y": -24, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 0, "y": 104, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 0, "y": 488, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 1248, "y": 488, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 0, "y": 616, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 1248, "y": 616, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 0, "y": 744, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 1248, "y": 744, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 992, "y": 488, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 32, "y": 168, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 928, "y": 710, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 864, "y": 710, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 608, "y": 230, "w": 0, "h": 0}, {"tex": "res://assets/props/rock.png", "x": 64, "y": 838, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 576, "y": 806, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 1152, "y": 456, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 32, "y": 40, "w": 0, "h": 0}, {"tex": "res://assets/props/rock.png", "x": 896, "y": 838, "w": 0, "h": 0}, {"tex": "res://assets/props/rock.png", "x": 1120, "y": 550, "w": 0, "h": 0}, {"tex": "res://assets/props/tree.png", "x": 736, "y": 552, "w": 0, "h": 0}, {"tex": "res://assets/props/rock.png", "x": 64, "y": 678, "w": 0, "h": 0}, {"tex": "res://assets/props/stall.png", "x": 576, "y": 236, "w": 0, "h": 0}, {"tex": "res://assets/props/stall.png", "x": 672, "y": 428, "w": 0, "h": 0}, {"tex": "res://assets/props/lamp.png", "x": 576, "y": 292, "w": 0, "h": 0}, {"tex": "res://assets/props/lamp.png", "x": 768, "y": 292, "w": 0, "h": 0}, {"tex": "res://assets/props/lamp.png", "x": 576, "y": 516, "w": 0, "h": 0}, {"tex": "res://assets/props/lamp.png", "x": 768, "y": 484, "w": 0, "h": 0}, {"tex": "res://assets/props/lamp.png", "x": 864, "y": 388, "w": 0, "h": 0}, {"tex": "res://assets/props/flowerbed.png", "x": 704, "y": 390, "w": 0, "h": 0}, {"tex": "res://assets/props/flowerbed.png", "x": 608, "y": 550, "w": 0, "h": 0}, {"tex": "res://assets/props/flowerbed.png", "x": 896, "y": 582, "w": 0, "h": 0}, {"tex": "res://assets/props/crate.png", "x": 320, "y": 708, "w": 0, "h": 0}, {"tex": "res://assets/props/barrel.png", "x": 320, "y": 350, "w": 0, "h": 0}, {"tex": "res://assets/props/laundry.png", "x": 320, "y": 820, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 768, "y": 198, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 768, "y": 646, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 928, "y": 774, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 832, "y": 614, "w": 0, "h": 0}, {"tex": "res://assets/props/bush.png", "x": 1088, "y": 518, "w": 0, "h": 0}]
+chest_list = []
+tileset_path = "res://resources/map/tileset_world.tres"
+atlas_path = "res://assets/map/atlas.png"
+
+[node name="Ground" type="TileMapLayer" parent="."]
+
+[node name="Collision" type="StaticBody2D" parent="."]
+
+[node name="Col0" type="CollisionShape2D" parent="Collision"]
+position = Vector2(320, 16)
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Col1" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1056, 16)
+shape = SubResource("RectangleShape2D_2")
+
+[node name="Col2" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1328, 48)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col3" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1312, 80)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col4" type="CollisionShape2D" parent="Collision"]
+position = Vector2(32, 80)
+shape = SubResource("RectangleShape2D_5")
+
+[node name="Col5" type="CollisionShape2D" parent="Collision"]
+position = Vector2(336, 80)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Col6" type="CollisionShape2D" parent="Collision"]
+position = Vector2(624, 80)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Col7" type="CollisionShape2D" parent="Collision"]
+position = Vector2(816, 80)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Col8" type="CollisionShape2D" parent="Collision"]
+position = Vector2(80, 144)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col9" type="CollisionShape2D" parent="Collision"]
+position = Vector2(16, 160)
+shape = SubResource("RectangleShape2D_7")
+
+[node name="Col10" type="CollisionShape2D" parent="Collision"]
+position = Vector2(32, 208)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col11" type="CollisionShape2D" parent="Collision"]
+position = Vector2(208, 224)
+shape = SubResource("RectangleShape2D_8")
+
+[node name="Col12" type="CollisionShape2D" parent="Collision"]
+position = Vector2(464, 224)
+shape = SubResource("RectangleShape2D_8")
+
+[node name="Col13" type="CollisionShape2D" parent="Collision"]
+position = Vector2(624, 240)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col14" type="CollisionShape2D" parent="Collision"]
+position = Vector2(976, 224)
+shape = SubResource("RectangleShape2D_8")
+
+[node name="Col15" type="CollisionShape2D" parent="Collision"]
+position = Vector2(80, 272)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col16" type="CollisionShape2D" parent="Collision"]
+position = Vector2(160, 272)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col17" type="CollisionShape2D" parent="Collision"]
+position = Vector2(256, 272)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col18" type="CollisionShape2D" parent="Collision"]
+position = Vector2(416, 272)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col19" type="CollisionShape2D" parent="Collision"]
+position = Vector2(512, 272)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col20" type="CollisionShape2D" parent="Collision"]
+position = Vector2(928, 272)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col21" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1024, 272)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col22" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1200, 256)
+shape = SubResource("RectangleShape2D_8")
+
+[node name="Col23" type="CollisionShape2D" parent="Collision"]
+position = Vector2(336, 304)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col24" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1152, 304)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col25" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1248, 304)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col26" type="CollisionShape2D" parent="Collision"]
+position = Vector2(608, 368)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col27" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1328, 256)
+shape = SubResource("RectangleShape2D_9")
+
+[node name="Col28" type="CollisionShape2D" parent="Collision"]
+position = Vector2(16, 400)
+shape = SubResource("RectangleShape2D_10")
+
+[node name="Col29" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1136, 560)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col30" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1200, 560)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col31" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1328, 560)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col32" type="CollisionShape2D" parent="Collision"]
+position = Vector2(32, 592)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col33" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1040, 592)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col34" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1312, 592)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col35" type="CollisionShape2D" parent="Collision"]
+position = Vector2(784, 656)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col36" type="CollisionShape2D" parent="Collision"]
+position = Vector2(16, 656)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Col37" type="CollisionShape2D" parent="Collision"]
+position = Vector2(80, 688)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col38" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1088, 688)
+shape = SubResource("RectangleShape2D_11")
+
+[node name="Col39" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1328, 656)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Col40" type="CollisionShape2D" parent="Collision"]
+position = Vector2(32, 720)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col41" type="CollisionShape2D" parent="Collision"]
+position = Vector2(880, 720)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col42" type="CollisionShape2D" parent="Collision"]
+position = Vector2(944, 720)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col43" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1312, 720)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col44" type="CollisionShape2D" parent="Collision"]
+position = Vector2(208, 736)
+shape = SubResource("RectangleShape2D_8")
+
+[node name="Col45" type="CollisionShape2D" parent="Collision"]
+position = Vector2(464, 736)
+shape = SubResource("RectangleShape2D_8")
+
+[node name="Col46" type="CollisionShape2D" parent="Collision"]
+position = Vector2(160, 784)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col47" type="CollisionShape2D" parent="Collision"]
+position = Vector2(256, 784)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col48" type="CollisionShape2D" parent="Collision"]
+position = Vector2(416, 784)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col49" type="CollisionShape2D" parent="Collision"]
+position = Vector2(512, 784)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col50" type="CollisionShape2D" parent="Collision"]
+position = Vector2(16, 784)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Col51" type="CollisionShape2D" parent="Collision"]
+position = Vector2(592, 816)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col52" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1328, 784)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Col53" type="CollisionShape2D" parent="Collision"]
+position = Vector2(48, 848)
+shape = SubResource("RectangleShape2D_12")
+
+[node name="Col54" type="CollisionShape2D" parent="Collision"]
+position = Vector2(912, 848)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col55" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1312, 848)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col56" type="CollisionShape2D" parent="Collision"]
+position = Vector2(16, 880)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col57" type="CollisionShape2D" parent="Collision"]
+position = Vector2(32, 912)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Col58" type="CollisionShape2D" parent="Collision"]
+position = Vector2(336, 912)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col59" type="CollisionShape2D" parent="Collision"]
+position = Vector2(624, 912)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col60" type="CollisionShape2D" parent="Collision"]
+position = Vector2(816, 912)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col61" type="CollisionShape2D" parent="Collision"]
+position = Vector2(912, 912)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col62" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1008, 912)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col63" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1200, 912)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Col64" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1328, 896)
+shape = SubResource("RectangleShape2D_7")
+
+[node name="Col65" type="CollisionShape2D" parent="Collision"]
+position = Vector2(672, 944)
+shape = SubResource("RectangleShape2D_13")
+
+[node name="Col66" type="CollisionShape2D" parent="Collision"]
+position = Vector2(672, -16)
+shape = SubResource("RectangleShape2D_14")
+
+[node name="Col67" type="CollisionShape2D" parent="Collision"]
+position = Vector2(672, 976)
+shape = SubResource("RectangleShape2D_14")
+
+[node name="Col68" type="CollisionShape2D" parent="Collision"]
+position = Vector2(-16, 480)
+shape = SubResource("RectangleShape2D_15")
+
+[node name="Col69" type="CollisionShape2D" parent="Collision"]
+position = Vector2(1360, 480)
+shape = SubResource("RectangleShape2D_15")
+
+[node name="Zones" type="Node2D" parent="."]
+
+[node name="Exit0" type="Area2D" parent="Zones"]
+position = Vector2(1318.4, 472)
+script = ExtResource("3_ez")
+to_scene = "Forest"
+spawn_id = "fromTown"
+has_min_step = true
+min_step = 3
+deny_msg = "瑪琳：先跟亞倫先生去礦山吧！（往北）"
+push_offset = Vector2(-24, 0)
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/Exit0"]
+shape = SubResource("RectangleShape2D_16")
+
+[node name="Exit1" type="Area2D" parent="Zones"]
+position = Vector2(696, -3.1999999999999993)
+script = ExtResource("3_ez")
+to_scene = "Mine"
+spawn_id = "fromTown"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/Exit1"]
+shape = SubResource("RectangleShape2D_17")
+
+[node name="Trigger0" type="Area2D" parent="Zones"]
+position = Vector2(696, 928)
+script = ExtResource("4_tz")
+msg = "南方大道封鎖中（找羅素隊長打聽）"
+has_min_step = true
+min_step = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/Trigger0"]
+shape = SubResource("RectangleShape2D_18")
+
+[node name="Trigger1" type="Area2D" parent="Zones"]
+position = Vector2(19.2, 464)
+script = ExtResource("4_tz")
+msg = "西邊瀰漫著不自然的濃霧……現在進不去"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/Trigger1"]
+shape = SubResource("RectangleShape2D_19")
+
+[node name="YSort" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="YSort" groups=["player"]]
+position = Vector2(512, 438)
+script = ExtResource("2_pc")
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/Player"]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_20")
+
+[node name="Camera2D" type="Camera2D" parent="YSort/Player"]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="Prompt" type="Label" parent="HUD"]
+offset_left = 240.0
+offset_top = 500.0
+offset_right = 1040.0
+offset_bottom = 532.0
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+text = ""
+
+[node name="DialogueBox" parent="." instance=ExtResource("7_dlg")]
