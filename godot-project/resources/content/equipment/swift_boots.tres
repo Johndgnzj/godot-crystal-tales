@@ -10,6 +10,7 @@ slot = "boots"
 desc = "輕量化的軟皮靴，步伐輕盈、易於閃避。"
 buy = 60
 sell = 18
+rarity = "uncommon"
 stats = {
 "dodge": 4.0
 }

@@ -13,3 +13,4 @@ count = 4
 effect = "單體回復 60 HP。"
 buy = 30
 sell = 9
+icon = "res://assets/battle/Red_Potion.png"

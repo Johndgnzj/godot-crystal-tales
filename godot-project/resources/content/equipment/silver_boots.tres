@@ -11,6 +11,7 @@ desc = "鑲銀的輕靴，兼顧閃避與防護。"
 buy = 80
 sell = 24
 tier = 2
+rarity = "rare"
 stats = {
 "dodge": 3.0,
 "pdef": 2.0

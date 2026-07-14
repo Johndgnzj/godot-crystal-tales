@@ -12,3 +12,4 @@ power = 50.0
 effect = "復活一名戰鬥不能的同伴，並回復其 50% HP。"
 buy = 100
 sell = 30
+rarity = "uncommon"

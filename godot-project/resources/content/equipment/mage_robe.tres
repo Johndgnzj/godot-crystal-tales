@@ -11,6 +11,7 @@ desc = "織入符文的法師長袍，擴充魔力並提升法術威力。"
 buy = 190
 sell = 57
 tier = 2
+rarity = "rare"
 stats = {
 "matk": 3.0,
 "mp": 15.0,

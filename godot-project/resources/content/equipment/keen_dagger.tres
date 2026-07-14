@@ -11,6 +11,7 @@ desc = "刃薄如紙的匕首，靈巧者的利器，會心一擊機率極高。
 buy = 150
 sell = 45
 tier = 2
+rarity = "epic"
 stats = {
 "crit": 8.0,
 "patk": 4.0

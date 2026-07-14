@@ -139,6 +139,13 @@ def main() -> int:
     # ---- 第 2 層：.gd 欄位對應邏輯 vs 來源實際 schema ----
     print("\n=== 第 2 層：*_def.gd 靜態掃描的 JSON key 讀取 vs CONTENT.json 實際欄位 ===")
 
+    # icon/rarity 是道具武器設計.md 新增的 Godot 端原生欄位，GDevelop 的 CONTENT.json 從未有過也不會有
+    # （不是要抄錄的既有規則，是新設計），從 typo 檢查排除，避免每次跑這支腳本都誤報「疑似打錯字」。
+    GODOT_NATIVE_EXTRA_KEYS = {
+        "items": {"icon", "rarity"},
+        "equipment": {"icon", "rarity"},
+    }
+
     list_categories = ["party", "equipment", "skills", "items", "enemies", "chests"]
     dict_of_dict_categories = ["shops"]
     flat_dict_categories = ["derived", "pacing"]
@@ -146,7 +153,7 @@ def main() -> int:
     for cat in list_categories:
         gd_keys = extract_keys_used_by_gdscript(CATEGORY_FILES[cat])
         src_keys = source_keys_for_list(source[cat])
-        typo_candidates = gd_keys - src_keys
+        typo_candidates = gd_keys - src_keys - GODOT_NATIVE_EXTRA_KEYS.get(cat, set())
         unread = src_keys - gd_keys
         if typo_candidates:
             fail(f"{cat}: .gd 讀取了來源從未出現過的 key（疑似打錯字）: {sorted(typo_candidates)}")

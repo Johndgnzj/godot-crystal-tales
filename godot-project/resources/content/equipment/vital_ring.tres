@@ -10,6 +10,7 @@ slot = "acc"
 desc = "溫熱的紅玉戒指，配戴時體力更加充沛。"
 buy = 80
 sell = 24
+rarity = "uncommon"
 stats = {
 "hp": 20.0
 }

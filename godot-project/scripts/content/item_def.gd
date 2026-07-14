@@ -13,6 +13,8 @@ extends Resource
 @export var effect: String = ""
 @export var buy: int = 0
 @export var sell: int = 0
+@export var icon: String = ""           ## res:// 圖示路徑；留空＝美術尚未產出，UI 端 fallback 用 cat 預設圖示
+@export_enum("common", "uncommon", "rare", "unique") var rarity: String = "common"  ## 稀有度色階，見 道具武器設計.md
 
 
 static func from_dict(d: Dictionary) -> ItemDef:
@@ -27,4 +29,6 @@ static func from_dict(d: Dictionary) -> ItemDef:
 	result.effect = d.get("effect", "")
 	result.buy = int(d.get("buy", 0))
 	result.sell = int(d.get("sell", 0))
+	result.icon = d.get("icon", "")
+	result.rarity = d.get("rarity", "common")
 	return result

@@ -12,3 +12,4 @@ power = 150.0
 effect = "單體回復 150 HP。"
 buy = 90
 sell = 27
+rarity = "uncommon"

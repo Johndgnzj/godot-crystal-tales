@@ -15,6 +15,8 @@ const STAT_KEYS := ["patk", "pdef", "matk", "mdef", "hp", "mp", "crit", "dodge"]
 @export var sell: int = 0
 @export var tier: int = 1               ## 未標示視為 1（第一章基礎裝備）
 @export var stats: Dictionary = {}      ## 見 STAT_KEYS
+@export var icon: String = ""           ## res:// 圖示路徑；留空＝美術尚未產出，UI 端 fallback 用 slot 預設圖示
+@export_enum("common", "uncommon", "rare", "epic") var rarity: String = "common"  ## 稀有度色階，見 道具武器設計.md
 
 
 static func from_dict(d: Dictionary) -> EquipmentDef:
@@ -29,6 +31,8 @@ static func from_dict(d: Dictionary) -> EquipmentDef:
 	for key in STAT_KEYS:
 		if d.has(key):
 			result.stats[key] = d[key]
+	result.icon = d.get("icon", "")
+	result.rarity = d.get("rarity", "common")
 	return result
 
 

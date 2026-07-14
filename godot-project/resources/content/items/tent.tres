@@ -11,3 +11,4 @@ kind = "rest"
 effect = "於野外休息點使用，全隊回復全部 HP／MP。"
 buy = 120
 sell = 36
+rarity = "uncommon"

@@ -10,3 +10,4 @@ cat = "material"
 effect = "洞熊的厚實毛皮，是製甲的好材料。"
 buy = 30
 sell = 10
+rarity = "uncommon"

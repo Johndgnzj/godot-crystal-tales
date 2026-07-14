@@ -11,6 +11,7 @@ desc = "漢克精心鍛造的鋼劍，鋒利沉穩，第二章的主力武器。
 buy = 260
 sell = 78
 tier = 2
+rarity = "epic"
 stats = {
 "patk": 10.0
 }
