@@ -2,11 +2,16 @@
 
 - Spec 版本: v1.1
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py` L1275-1296（存檔）、L1608-1618（openChest 寫入
-  g_chests）、DEV_開發指南.md L65-71（跨場景狀態）
+  g_chests）、L1425-1440/L2812-2821/L3366-3393（SceneRouter 交握機制）、DEV_開發指南.md L65-71
+  （跨場景狀態）
 - 狀態: 定案
-- 用途: CORE-3（存檔系統）、CORE-4（全域狀態 Autoload）實作依據
-- v1.1 變更（CORE-4 執行時定案回填，2026-07-14）：`g_chests` 精確型別由「存疑」改為定案：**字串陣列**
-  （已開啟寶箱 id 清單），見下方「待確認事項」。
+- 用途: CORE-3（存檔系統）、CORE-4（全域狀態 Autoload）、CORE-5（場景轉場）實作依據
+- v1.1 變更（2026-07-14，CORE-4/CORE-5 平行開工各自認領實作時補齊，合併時彙整為同一版本紀錄）：
+  1. （CORE-4）`g_chests` 精確型別由「存疑」改為定案：**字串陣列**（已開啟寶箱 id 清單），見下方
+     「待確認事項」。
+  2. （CORE-5）「Godot 端對應設計」補上 `SceneRouter` 場景轉場暫態值的交握機制（出生點定位規則、
+     `result` 值集合、`lose` 特例）。原本 v1.0 只寫了「改用 Signal/SceneRouter 參數」一句話，沒有
+     講清楚場景端要怎麼配合讀取，本次補齊。兩項變更皆非破壞性（欄位名稱不變）。
 
 ## GDevelop 現況
 
@@ -70,6 +75,37 @@
   - 室內存檔存門口外座標的規則照搬。
 - **場景轉場暫態值**（`g_encounter`/`g_returnScene`/`g_returnX/Y`/`g_result`/`g_spawn`）改用 Godot
   Signal 傳遞或 `SceneRouter` autoload 的參數，**不要**塞進存檔／`GameState` 的持久化欄位裡（對應 CORE-5）。
+  `GameState` 仍然提供這五個欄位當作暫態儲存槽（`encounter`/`return_scene`/`return_x`/`return_y`/
+  `result`/`spawn`，不持久化，`SaveManager.save_game()` 不寫入這幾個欄位），`SceneRouter` 讀寫它們。
+
+  **`SceneRouter` 交握機制（CORE-5 定案，`godot-project/autoload/scene_router.gd`）**：
+
+  - `go_to(scene_path, spawn_id)`／`start_battle(encounter_id, return_scene, return_x, return_y)`／
+    `battle_result(result)` 三個函式簽名維持不變（MOD-A/MOD-B 已在呼叫）。`scene_path`／
+    `to_scene`／`return_scene` 三個參數統一吃 GDevelop `CFG.SCENE` 的邏輯場景名稱字串（`"Town"`／
+    `"Forest"`／`"Forest2"`／`"Mine"`／`"Cave"`／`"Battle"`／`"Title"`，不是 `res://` 路徑），
+    `SceneRouter` 內部有一張 `SCENE_PATHS` 對照表轉成實際場景檔路徑，MOD-H 建立場景檔時只需要
+    更新這張表。
+  - **出生點定位規則**（照抄 build_cq2.py L1425-1432，取代原本「待補」狀態）：世界場景 `_ready()`
+    要呼叫 `SceneRouter.should_use_return_position()`——回傳 `true` 時用
+    `GameState.return_x`/`return_y` 定位玩家；回傳 `false` 時改用 `GameState.spawn` 字串查場景
+    自己的出生點表。判斷式＝`GameState.result` 屬於 `["win","flee","story","resume"]` **且**
+    `GameState.return_x >= 0`（`-1` 是「沒有 return 座標」的哨兵值，對應原始碼 `clrTransient()`）。
+  - 場景讀完定位資訊後，**要自行**把 `GameState.spawn = ""` 與 `GameState.result = ""` 清空（對應
+    原始碼 L1434/L1440 無條件清空），避免暫態值被下一次進場誤用。`SceneRouter` 本身不清空這兩個
+    欄位——切場景是非同步的（`change_scene_to_file()`），沒辦法代為判斷「場景何時讀完」。
+  - **`result` 值集合**：`win`/`lose`/`flee`/`story`/`resume`（同上表）。`lose`（隊伍全滅）是特例：
+    `battle_result("lose")` 內部會強制把 `GameState.return_scene` 蓋成 `"Town"`、
+    `GameState.spawn` 蓋成 `"shrine"`（照抄 build_cq2.py L2814 的寫死規則），所以戰敗一律走
+    spawn 分支重生在芳蕾鎮教堂，不會用 return_x/y。這個規則收斂在 `SceneRouter.battle_result()`
+    裡，MOD-E（戰鬥結算，尚未開工）呼叫 `battle_result("lose")` 時不用自己重複這段特例判斷。
+  - **`resume`（讀檔）流程**：`SaveManager`（CORE-3）設定 `GameState.result = "resume"` 與
+    `GameState.return_x`/`return_y` = 存檔座標後，呼叫 `SceneRouter.go_to(存檔場景, "")`——
+    `go_to()` 只會覆寫 `GameState.spawn`，不會動 `result`/`return_x`/`return_y`，兩者合成即可
+    重現原始碼 `loadSave()`（L3387-3393）的行為，不需要在 `SceneRouter` 上新增第四個公開函式。
+  - 已用 Python 邏輯交叉驗證（一般出口、boss 觸發＋勝利/戰敗、CUTS battle/transfer、resume 讀檔
+    共 6 個情境）確認跟上述 GDevelop 原始碼行為一致；**沒有可用的 Godot 執行檔可以實機驗證**（同
+    CORE-1 已知環境限制）。
 
 ## 待確認事項（實作前需與 John 對過，暫列此處避免遺漏）
 
