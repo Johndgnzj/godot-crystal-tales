@@ -1,0 +1,28 @@
+[gd_resource type="Theme" format=3]
+
+; MOD-D UI tokens 集中定義（見 ../TASKS/04_選單UI.md 產出清單第 1 項）。
+; 各 UI 場景（hud/menu_root/shop/dialogue_box）的根 Control 引用本資源，腳本一律用
+; get_theme_color("<name>","CQ") / get_theme_font_size("<name>","CQ") 讀取，不各自寫死顏色。
+;
+; accent 青 = #AADCEB（John 於 Claude Design 原型選定；build_cq2.py L1831-1832 C_ACC="170;220;235"）。
+; gold = 金幣/警示（C_GOLD="255;225;120"）、dim = 次要文字（C_DIM="120;130;150"）。
+; text = 一般列文字（build_cq2 renderPanel 預設 "235;235;245"）。
+; warn/good/hp/mp 對應 build_cq2 選單裡出現的固定色字串（見各 rows.push 的 c 欄位）。
+
+[resource]
+default_font_size = 22
+Label/colors/font_color = Color(0.9216, 0.9216, 0.9608, 1)
+CQ/colors/accent = Color(0.6667, 0.8627, 0.9216, 1)
+CQ/colors/gold = Color(1, 0.8824, 0.4706, 1)
+CQ/colors/dim = Color(0.4706, 0.5098, 0.5882, 1)
+CQ/colors/text = Color(0.9216, 0.9216, 0.9608, 1)
+CQ/colors/warn = Color(1, 0.5882, 0.5882, 1)
+CQ/colors/good = Color(0.5882, 0.902, 0.5882, 1)
+CQ/colors/hp = Color(0.4196, 0.851, 0.451, 1)
+CQ/colors/mp = Color(0.4, 0.6196, 0.949, 1)
+CQ/colors/panel_bg = Color(0.0627, 0.0745, 0.1098, 0.94)
+CQ/colors/bar_bg = Color(0.1451, 0.1686, 0.2196, 1)
+CQ/colors/row_hi = Color(0.6667, 0.8627, 0.9216, 0.2)
+CQ/font_sizes/title = 30
+CQ/font_sizes/row = 22
+CQ/font_sizes/hint = 20

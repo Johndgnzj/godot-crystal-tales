@@ -1,22 +1,25 @@
 extends CanvasLayer
-## dialogue_box.tscn 的控制腳本 —— MOD-A 的最簡陋堪用版對話框。
+## dialogue_box.tscn 的控制腳本 —— 對話框 UI。
 ##
-## 只做「顯示說話者名字/台詞、逐句推進」，沒有美術（面板/立繪/淡入淡出），對應 CLAUDE.md 對 MOD-A
-## 的指示「簡陋版即可，MOD-D 之後會換裝」與 TASKS/11_並行協作規則.md 衝突矩陣「MOD-A 若比 MOD-D
-## 早完工，可先做最簡陋版本頂著，之後由 MOD-D 換裝」。
+## 由 MOD-A 建立的最簡陋堪用版，MOD-D 在此做「視覺換裝」：套用 ui_theme（統一面板底/accent 青名字）、
+## 加上底部面板框與推進指示符（▽）。**對外契約完全不變**（見 TASKS/04_選單UI.md 開工前說明）：
+## - 場景路徑維持 res://scenes/ui/dialogue_box.tscn（world_scene.tscn/MOD-H 以 instance 引用）。
+## - 根節點仍是 CanvasLayer。
+## - 仍純粹訂閱 DialogueSystem 的既有 signal（dialogue_started/line_changed/ended、
+##   cutscene_started/line_changed/ended）來更新畫面，不碰 DialogueSystem 內部狀態、不改其介面。
+## 只有內部節點結構與視覺換新（MOD-A 檔頭與 01_對話劇情.md 都明示 MOD-D 可直接重做節點結構）。
 ##
-## 純粹訂閱 DialogueSystem 的 signal 來更新畫面／決定顯示與否，不直接碰 DialogueSystem 的內部狀態，
-## 也不假設呼叫端有 InputBridge（CORE-6 尚未完成）——推進輸入直接用 Godot 內建 `ui_accept` action
-## 與滑鼠/觸控點按，之後 CORE-6 做好可以在這裡換成 InputBridge.is_action_hit() 等價呼叫，不影響
-## DialogueSystem 那一側的介面。
+## 推進輸入維持 event 驅動（ui_accept＋滑鼠左鍵＋觸控點按），涵蓋 InputBridge 沒有處理的滑鼠/觸控點按；
+## 對話推進在 GDevelop 版本來就吃「點畫面任一處」，故保留 _unhandled_input 事件式判斷。
 
-@onready var _panel: Panel = $Panel
-@onready var _speaker_label: Label = $Panel/SpeakerLabel
-@onready var _text_label: Label = $Panel/TextLabel
+@onready var _box: Control = $Box
+@onready var _speaker_label: Label = $Box/SpeakerLabel
+@onready var _text_label: Label = $Box/TextLabel
 
 
 func _ready() -> void:
-	_panel.visible = false
+	_box.visible = false
+	_speaker_label.add_theme_color_override("font_color", _box.get_theme_color("accent", "CQ"))
 	DialogueSystem.dialogue_started.connect(_on_started)
 	DialogueSystem.dialogue_line_changed.connect(_on_line_changed)
 	DialogueSystem.dialogue_ended.connect(_on_ended)
@@ -41,23 +44,23 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_started(_npc_id: String, _entry: DialogueEntry) -> void:
-	_panel.visible = true
+	_box.visible = true
 
 
 func _on_cutscene_started(_cut_id: String) -> void:
-	_panel.visible = true
+	_box.visible = true
 	_speaker_label.visible = false  # 過場旁白（speaker==""）常見，line_changed 會再依內容切回顯示
 
 
 func _on_line_changed(speaker: String, text: String) -> void:
 	_speaker_label.visible = speaker != ""
 	_speaker_label.text = speaker
-	_text_label.text = text + "　▽"   # ▽ 對應 build_cq2.py 逐句推進提示符（L1680/L1752）
+	_text_label.text = text
 
 
 func _on_ended(_npc_id: String) -> void:
-	_panel.visible = false
+	_box.visible = false
 
 
 func _on_cutscene_ended(_cut_id: String) -> void:
-	_panel.visible = false
+	_box.visible = false
