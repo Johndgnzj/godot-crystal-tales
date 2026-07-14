@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "shadowdance_armor"
+display_name = "影舞輕鎧"
+slot = "armor"
+desc = "傳說中舞者刺客的輕鎧，幾乎能與影子融為一體。"
+buy = 500
+sell = 150
+tier = 2
+stats = {
+"dodge": 10.0,
+"pdef": 4.0
+}
+rarity = "epic"
+attr_type = "agi"

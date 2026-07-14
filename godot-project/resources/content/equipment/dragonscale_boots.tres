@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "dragonscale_boots"
+display_name = "龍鱗戰靴"
+slot = "boots"
+desc = "鑲著龍鱗碎片的戰靴，幾乎刀槍不入。"
+buy = 390
+sell = 117
+tier = 2
+stats = {
+"pdef": 8.0
+}
+rarity = "epic"
+attr_type = "str"

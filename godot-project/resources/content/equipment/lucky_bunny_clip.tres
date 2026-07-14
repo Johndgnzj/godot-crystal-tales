@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "lucky_bunny_clip"
+display_name = "幸運兔耳夾"
+slot = "acc"
+desc = "造型可愛的兔耳髮夾，據說幸運女神特別眷顧。"
+buy = 95
+sell = 28
+stats = {
+"crit": 2.0,
+"dodge": 2.0
+}
+rarity = "uncommon"

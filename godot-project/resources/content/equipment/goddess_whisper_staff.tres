@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "goddess_whisper_staff"
+display_name = "女神低語法杖"
+slot = "weapon"
+desc = "傳說能聽見女神低語的至聖法杖，魔力近乎無盡。"
+buy = 750
+sell = 225
+tier = 2
+stats = {
+"matk": 20.0,
+"mp": 40.0
+}
+rarity = "epic"
+attr_type = "int"

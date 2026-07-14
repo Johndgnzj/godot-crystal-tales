@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "dragonscale_mail"
+display_name = "龍鱗甲"
+slot = "armor"
+desc = "以巨龍鱗片編織的甲冑，刀劍難以穿透。"
+buy = 460
+sell = 138
+tier = 2
+stats = {
+"pdef": 15.0
+}
+rarity = "epic"
+attr_type = "str"

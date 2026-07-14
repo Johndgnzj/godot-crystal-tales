@@ -17,6 +17,8 @@ const STAT_KEYS := ["patk", "pdef", "matk", "mdef", "hp", "mp", "crit", "dodge"]
 @export var stats: Dictionary = {}      ## 見 STAT_KEYS
 @export var icon: String = ""           ## res:// 圖示路徑；留空＝美術尚未產出，UI 端 fallback 用 slot 預設圖示
 @export_enum("common", "uncommon", "rare", "epic") var rarity: String = "common"  ## 稀有度色階，見 道具武器設計.md
+@export_enum("", "str", "agi", "int") var attr_type: String = ""  ## 力量/敏捷/法力型分類，僅 weapon/armor/boots
+## 適用（同一部位下的三型是平行的養成路線，非戰力高低之分；acc/wrist 不分型，留空）。見 道具武器設計.md。
 
 
 static func from_dict(d: Dictionary) -> EquipmentDef:
@@ -33,6 +35,7 @@ static func from_dict(d: Dictionary) -> EquipmentDef:
 			result.stats[key] = d[key]
 	result.icon = d.get("icon", "")
 	result.rarity = d.get("rarity", "common")
+	result.attr_type = d.get("attr_type", "")
 	return result
 
 

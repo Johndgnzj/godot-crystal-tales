@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "bronze_sword"
+display_name = "銅劍"
+slot = "weapon"
+desc = "略帶青綠鏽斑的銅劍，比短劍扎實一些。"
+buy = 70
+sell = 21
+stats = {
+"patk": 4.0
+}
+attr_type = "str"

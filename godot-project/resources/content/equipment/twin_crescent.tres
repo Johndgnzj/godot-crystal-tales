@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "twin_crescent"
+display_name = "雙月刃"
+slot = "weapon"
+desc = "一體成形的雙刃彎刀，出手角度難以預測。"
+buy = 120
+sell = 36
+stats = {
+"crit": 7.0,
+"patk": 3.0
+}
+rarity = "uncommon"
+attr_type = "agi"

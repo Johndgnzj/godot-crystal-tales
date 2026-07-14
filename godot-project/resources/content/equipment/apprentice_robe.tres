@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "apprentice_robe"
+display_name = "學徒長袍"
+slot = "armor"
+desc = "魔法學徒的入門長袍，勉強能穩定魔力波動。"
+buy = 45
+sell = 14
+stats = {
+"matk": 1.0,
+"mp": 5.0
+}
+attr_type = "int"

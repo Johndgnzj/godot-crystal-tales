@@ -16,3 +16,4 @@ stats = {
 "dodge": 3.0,
 "pdef": 2.0
 }
+attr_type = "agi"

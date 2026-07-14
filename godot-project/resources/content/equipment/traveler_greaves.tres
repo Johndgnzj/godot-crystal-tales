@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "traveler_greaves"
+display_name = "行者重靴"
+slot = "boots"
+desc = "厚實的皮革重靴，長途跋涉更耐磨損。"
+buy = 70
+sell = 21
+stats = {
+"pdef": 3.0
+}
+rarity = "uncommon"
+attr_type = "str"

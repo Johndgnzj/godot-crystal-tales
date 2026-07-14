@@ -143,7 +143,7 @@ def main() -> int:
     # （不是要抄錄的既有規則，是新設計），從 typo 檢查排除，避免每次跑這支腳本都誤報「疑似打錯字」。
     GODOT_NATIVE_EXTRA_KEYS = {
         "items": {"icon", "rarity"},
-        "equipment": {"icon", "rarity"},
+        "equipment": {"icon", "rarity", "attr_type"},
     }
 
     list_categories = ["party", "equipment", "skills", "items", "enemies", "chests"]

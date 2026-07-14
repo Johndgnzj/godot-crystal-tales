@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "windspirit_garb"
+display_name = "風靈之衣"
+slot = "armor"
+desc = "傳聞由風之精靈織就，穿上者身法快若疾風。"
+buy = 680
+sell = 204
+tier = 2
+stats = {
+"dodge": 13.0,
+"pdef": 5.0
+}
+rarity = "epic"
+attr_type = "agi"

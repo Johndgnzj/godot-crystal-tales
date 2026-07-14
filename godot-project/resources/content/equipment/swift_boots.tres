@@ -14,3 +14,4 @@ rarity = "uncommon"
 stats = {
 "dodge": 4.0
 }
+attr_type = "agi"

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "honed_knife"
+display_name = "磨尖小刀"
+slot = "weapon"
+desc = "刻意磨薄的小刀，找破綻的手感更順了。"
+buy = 65
+sell = 20
+stats = {
+"crit": 5.0,
+"patk": 1.0
+}
+attr_type = "agi"

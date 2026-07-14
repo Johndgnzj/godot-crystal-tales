@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "plate_cuirass"
+display_name = "板金胸甲"
+slot = "armor"
+desc = "厚重的板金打造，正面幾乎無懈可擊。"
+buy = 320
+sell = 96
+tier = 2
+stats = {
+"pdef": 12.0
+}
+rarity = "rare"
+attr_type = "str"

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "crystal_focus"
+display_name = "水晶魔導器"
+slot = "weapon"
+desc = "鑲嵌小型水晶的魔導器，共鳴後威力倍增。"
+buy = 190
+sell = 57
+stats = {
+"matk": 8.0,
+"mp": 15.0
+}
+rarity = "uncommon"
+attr_type = "int"

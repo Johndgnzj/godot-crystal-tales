@@ -17,3 +17,4 @@ stats = {
 "mp": 15.0,
 "pdef": 3.0
 }
+attr_type = "int"

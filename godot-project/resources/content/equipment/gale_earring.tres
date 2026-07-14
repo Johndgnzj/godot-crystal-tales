@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "gale_earring"
+display_name = "疾風耳環"
+slot = "acc"
+desc = "風系法師贈與的耳環，行動間帶著一絲疾風。"
+buy = 65
+sell = 20
+stats = {
+"dodge": 3.0
+}
+rarity = "uncommon"

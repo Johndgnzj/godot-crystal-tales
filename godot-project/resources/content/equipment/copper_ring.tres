@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "copper_ring"
+display_name = "銅戒指"
+slot = "acc"
+desc = "普通的銅戒指，稍微增添臂力。"
+buy = 25
+sell = 8
+stats = {
+"patk": 1.0
+}

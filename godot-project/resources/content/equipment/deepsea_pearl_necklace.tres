@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "deepsea_pearl_necklace"
+display_name = "深海珍珠項鍊"
+slot = "acc"
+desc = "來自深海的珍珠，能抵禦魔法侵擾。"
+buy = 210
+sell = 63
+tier = 2
+stats = {
+"mdef": 5.0,
+"mp": 10.0
+}
+rarity = "rare"

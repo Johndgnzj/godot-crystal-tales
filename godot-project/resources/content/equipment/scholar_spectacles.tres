@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "scholar_spectacles"
+display_name = "學者眼鏡"
+slot = "acc"
+desc = "學者用的老花眼鏡，意外對魔力集中有幫助。"
+buy = 80
+sell = 24
+stats = {
+"matk": 3.0
+}
+rarity = "uncommon"

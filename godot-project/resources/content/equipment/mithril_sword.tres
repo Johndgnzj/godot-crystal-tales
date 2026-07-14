@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "mithril_sword"
+display_name = "秘銀劍"
+slot = "weapon"
+desc = "混入秘銀的合金劍，輕盈卻更具穿透力。"
+buy = 340
+sell = 102
+tier = 2
+stats = {
+"patk": 13.0
+}
+rarity = "rare"
+attr_type = "str"

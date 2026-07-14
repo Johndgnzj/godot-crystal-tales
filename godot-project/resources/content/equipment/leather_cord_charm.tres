@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "leather_cord_charm"
+display_name = "皮繩護符"
+slot = "acc"
+desc = "簡單的皮繩護符，聊表心意的防護。"
+buy = 22
+sell = 7
+stats = {
+"pdef": 1.0
+}

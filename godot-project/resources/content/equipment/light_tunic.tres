@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "light_tunic"
+display_name = "輕布衣"
+slot = "armor"
+desc = "剪裁貼身的輕薄布衣，方便靈活行動。"
+buy = 30
+sell = 9
+stats = {
+"dodge": 1.0,
+"pdef": 1.0
+}
+attr_type = "agi"

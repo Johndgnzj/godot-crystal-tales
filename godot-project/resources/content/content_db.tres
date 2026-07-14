@@ -529,6 +529,7 @@ sell = 12
 stats = {
 "patk": 2.0
 }
+attr_type = "str"
 
 [sub_resource type="Resource" id="Resource_csqks"]
 script = ExtResource("5_vtoea")
@@ -542,6 +543,7 @@ stats = {
 "crit": 4.0,
 "patk": 1.0
 }
+attr_type = "agi"
 
 [sub_resource type="Resource" id="Resource_1msp4"]
 script = ExtResource("5_vtoea")
@@ -554,6 +556,7 @@ sell = 36
 stats = {
 "patk": 6.0
 }
+attr_type = "str"
 
 [sub_resource type="Resource" id="Resource_e6sw3"]
 script = ExtResource("5_vtoea")
@@ -566,6 +569,7 @@ sell = 10
 stats = {
 "pdef": 2.0
 }
+attr_type = "str"
 
 [sub_resource type="Resource" id="Resource_7idvq"]
 script = ExtResource("5_vtoea")
@@ -578,6 +582,7 @@ sell = 27
 stats = {
 "pdef": 5.0
 }
+attr_type = "str"
 
 [sub_resource type="Resource" id="Resource_ydp3b"]
 script = ExtResource("5_vtoea")
@@ -590,6 +595,7 @@ sell = 4
 stats = {
 "pdef": 1.0
 }
+attr_type = "str"
 
 [sub_resource type="Resource" id="Resource_i8tu0"]
 script = ExtResource("5_vtoea")
@@ -602,6 +608,7 @@ sell = 18
 stats = {
 "dodge": 4.0
 }
+attr_type = "agi"
 
 [sub_resource type="Resource" id="Resource_uvrlw"]
 script = ExtResource("5_vtoea")
@@ -703,6 +710,8 @@ tier = 2
 stats = {
 "patk": 10.0
 }
+rarity = "rare"
+attr_type = "str"
 
 [sub_resource type="Resource" id="Resource_e8jw0"]
 script = ExtResource("5_vtoea")
@@ -717,6 +726,8 @@ stats = {
 "crit": 8.0,
 "patk": 4.0
 }
+rarity = "rare"
+attr_type = "agi"
 
 [sub_resource type="Resource" id="Resource_c1ck4"]
 script = ExtResource("5_vtoea")
@@ -730,6 +741,7 @@ tier = 2
 stats = {
 "pdef": 9.0
 }
+attr_type = "str"
 
 [sub_resource type="Resource" id="Resource_epqbo"]
 script = ExtResource("5_vtoea")
@@ -745,6 +757,7 @@ stats = {
 "mp": 15.0,
 "pdef": 3.0
 }
+attr_type = "int"
 
 [sub_resource type="Resource" id="Resource_j8bx3"]
 script = ExtResource("5_vtoea")
@@ -773,6 +786,7 @@ stats = {
 "dodge": 3.0,
 "pdef": 2.0
 }
+attr_type = "agi"
 
 [sub_resource type="Resource" id="Resource_or0i1"]
 script = ExtResource("5_vtoea")
@@ -788,6 +802,1388 @@ stats = {
 "pdef": 3.0
 }
 
+
+[sub_resource type="Resource" id="Resource_gen_28e25"]
+script = ExtResource("5_vtoea")
+id = "bronze_sword"
+display_name = "銅劍"
+slot = "weapon"
+desc = "略帶青綠鏽斑的銅劍，比短劍扎實一些。"
+buy = 70
+sell = 21
+stats = {
+"patk": 4.0
+}
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_569b8"]
+script = ExtResource("5_vtoea")
+id = "refined_steel_sword"
+display_name = "精鋼劍"
+slot = "weapon"
+desc = "反覆回火打造的精鋼劍身，刃口更持久鋒利。"
+buy = 180
+sell = 54
+stats = {
+"patk": 8.0
+}
+rarity = "uncommon"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_9f48a"]
+script = ExtResource("5_vtoea")
+id = "mithril_sword"
+display_name = "秘銀劍"
+slot = "weapon"
+desc = "混入秘銀的合金劍，輕盈卻更具穿透力。"
+buy = 340
+sell = 102
+tier = 2
+stats = {
+"patk": 13.0
+}
+rarity = "rare"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_de479"]
+script = ExtResource("5_vtoea")
+id = "dragonfang_sword"
+display_name = "龍牙劍"
+slot = "weapon"
+desc = "以巨龍遺牙磨製劍鋒，據說能撕裂厚甲。"
+buy = 480
+sell = 144
+tier = 2
+stats = {
+"patk": 16.0
+}
+rarity = "epic"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_c3e26"]
+script = ExtResource("5_vtoea")
+id = "sacred_greatsword"
+display_name = "聖銀大劍"
+slot = "weapon"
+desc = "教會秘藏的聖銀大劍，唯有力量足夠者能揮動。"
+buy = 650
+sell = 195
+tier = 2
+stats = {
+"patk": 20.0
+}
+rarity = "epic"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_9b633"]
+script = ExtResource("5_vtoea")
+id = "honed_knife"
+display_name = "磨尖小刀"
+slot = "weapon"
+desc = "刻意磨薄的小刀，找破綻的手感更順了。"
+buy = 65
+sell = 20
+stats = {
+"crit": 5.0,
+"patk": 1.0
+}
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_d4640"]
+script = ExtResource("5_vtoea")
+id = "shadow_claw"
+display_name = "影襲爪"
+slot = "weapon"
+desc = "貼合指節的鋼爪，適合貼身連續突刺。"
+buy = 90
+sell = 27
+stats = {
+"crit": 6.0,
+"patk": 2.0
+}
+rarity = "uncommon"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_6f1a8"]
+script = ExtResource("5_vtoea")
+id = "twin_crescent"
+display_name = "雙月刃"
+slot = "weapon"
+desc = "一體成形的雙刃彎刀，出手角度難以預測。"
+buy = 120
+sell = 36
+stats = {
+"crit": 7.0,
+"patk": 3.0
+}
+rarity = "uncommon"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_09aa9"]
+script = ExtResource("5_vtoea")
+id = "shade_shortblade"
+display_name = "幽影短刃"
+slot = "weapon"
+desc = "吸光的暗色刃面，揮動間幾乎無聲。"
+buy = 220
+sell = 66
+tier = 2
+stats = {
+"crit": 10.0,
+"patk": 5.0
+}
+rarity = "rare"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_25060"]
+script = ExtResource("5_vtoea")
+id = "windfang_dagger"
+display_name = "破空迅牙"
+slot = "weapon"
+desc = "削鐵如泥的迅捷短劍，一擊直取要害。"
+buy = 380
+sell = 114
+tier = 2
+stats = {
+"crit": 13.0,
+"patk": 6.0
+}
+rarity = "epic"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_f73cd"]
+script = ExtResource("5_vtoea")
+id = "nightfall_edge"
+display_name = "絕命夜刃"
+slot = "weapon"
+desc = "傳說中刺客一族的夜刃，見血封喉。"
+buy = 520
+sell = 156
+tier = 2
+stats = {
+"crit": 16.0,
+"patk": 8.0
+}
+rarity = "epic"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_47214"]
+script = ExtResource("5_vtoea")
+id = "apprentice_wand"
+display_name = "見習法杖"
+slot = "weapon"
+desc = "學徒用的簡易法杖，勉強能引導魔力。"
+buy = 55
+sell = 16
+stats = {
+"matk": 2.0,
+"mp": 5.0
+}
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_17617"]
+script = ExtResource("5_vtoea")
+id = "oak_wand"
+display_name = "橡木短杖"
+slot = "weapon"
+desc = "橡木削製的短杖，適合初階咒語施放。"
+buy = 85
+sell = 26
+stats = {
+"matk": 4.0,
+"mp": 8.0
+}
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_7594d"]
+script = ExtResource("5_vtoea")
+id = "rune_staff"
+display_name = "符文法杖"
+slot = "weapon"
+desc = "刻滿符文的法杖，魔力導引效率更好。"
+buy = 135
+sell = 40
+stats = {
+"matk": 6.0,
+"mp": 11.0
+}
+rarity = "uncommon"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_83565"]
+script = ExtResource("5_vtoea")
+id = "crystal_focus"
+display_name = "水晶魔導器"
+slot = "weapon"
+desc = "鑲嵌小型水晶的魔導器，共鳴後威力倍增。"
+buy = 190
+sell = 57
+stats = {
+"matk": 8.0,
+"mp": 15.0
+}
+rarity = "uncommon"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_c5ab6"]
+script = ExtResource("5_vtoea")
+id = "sage_staff"
+display_name = "賢者長杖"
+slot = "weapon"
+desc = "賢者議會認證的長杖，法力運行更加穩定。"
+buy = 290
+sell = 87
+tier = 2
+stats = {
+"matk": 10.0,
+"mp": 20.0
+}
+rarity = "rare"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_bbef4"]
+script = ExtResource("5_vtoea")
+id = "starlight_staff"
+display_name = "星辰法杖"
+slot = "weapon"
+desc = "杖頭封存著星辰碎光，夜間施法尤其強大。"
+buy = 400
+sell = 120
+tier = 2
+stats = {
+"matk": 13.0,
+"mp": 26.0
+}
+rarity = "rare"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_9088a"]
+script = ExtResource("5_vtoea")
+id = "abyssal_scepter"
+display_name = "深淵權杖"
+slot = "weapon"
+desc = "來歷不明的黑色權杖，蘊藏著深不見底的魔力。"
+buy = 560
+sell = 168
+tier = 2
+stats = {
+"matk": 16.0,
+"mp": 32.0
+}
+rarity = "epic"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_a504c"]
+script = ExtResource("5_vtoea")
+id = "goddess_whisper_staff"
+display_name = "女神低語法杖"
+slot = "weapon"
+desc = "傳說能聽見女神低語的至聖法杖，魔力近乎無盡。"
+buy = 750
+sell = 225
+tier = 2
+stats = {
+"matk": 20.0,
+"mp": 40.0
+}
+rarity = "epic"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_a9df8"]
+script = ExtResource("5_vtoea")
+id = "hardened_vest"
+display_name = "硬皮背心"
+slot = "armor"
+desc = "加了硬化處理的皮背心，抵禦鈍器更有效。"
+buy = 60
+sell = 18
+stats = {
+"pdef": 4.0
+}
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_46c10"]
+script = ExtResource("5_vtoea")
+id = "riveted_cuirass"
+display_name = "鉚釘胸甲"
+slot = "armor"
+desc = "以鉚釘固定的胸甲，防禦扎實，需要練習才能靈活行動。"
+buy = 140
+sell = 42
+stats = {
+"pdef": 7.0
+}
+rarity = "uncommon"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_e7b4c"]
+script = ExtResource("5_vtoea")
+id = "plate_cuirass"
+display_name = "板金胸甲"
+slot = "armor"
+desc = "厚重的板金打造，正面幾乎無懈可擊。"
+buy = 320
+sell = 96
+tier = 2
+stats = {
+"pdef": 12.0
+}
+rarity = "rare"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_2e6bb"]
+script = ExtResource("5_vtoea")
+id = "dragonscale_mail"
+display_name = "龍鱗甲"
+slot = "armor"
+desc = "以巨龍鱗片編織的甲冑，刀劍難以穿透。"
+buy = 460
+sell = 138
+tier = 2
+stats = {
+"pdef": 15.0
+}
+rarity = "epic"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_f80b4"]
+script = ExtResource("5_vtoea")
+id = "paladin_plate"
+display_name = "聖騎士鎧"
+slot = "armor"
+desc = "聖騎士團傳承的全身鎧甲，守護之力驚人。"
+buy = 640
+sell = 192
+tier = 2
+stats = {
+"pdef": 19.0
+}
+rarity = "epic"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_1dcab"]
+script = ExtResource("5_vtoea")
+id = "light_tunic"
+display_name = "輕布衣"
+slot = "armor"
+desc = "剪裁貼身的輕薄布衣，方便靈活行動。"
+buy = 30
+sell = 9
+stats = {
+"dodge": 1.0,
+"pdef": 1.0
+}
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_f92db"]
+script = ExtResource("5_vtoea")
+id = "leather_bodysuit"
+display_name = "皮革緊身衣"
+slot = "armor"
+desc = "貼合身形的皮革緊身衣，不影響身手。"
+buy = 55
+sell = 16
+stats = {
+"dodge": 2.0,
+"pdef": 1.0
+}
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_9dfde"]
+script = ExtResource("5_vtoea")
+id = "ranger_coat"
+display_name = "遊俠外套"
+slot = "armor"
+desc = "遊俠慣穿的多層外套，兼顧輕便與防護。"
+buy = 95
+sell = 28
+stats = {
+"dodge": 3.0,
+"pdef": 2.0
+}
+rarity = "uncommon"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_ad6f2"]
+script = ExtResource("5_vtoea")
+id = "nightwalker_garb"
+display_name = "夜行輕甲"
+slot = "armor"
+desc = "為潛行設計的輕甲，行動間幾乎不發出聲響。"
+buy = 150
+sell = 45
+stats = {
+"dodge": 4.0,
+"pdef": 2.0
+}
+rarity = "uncommon"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_56d6f"]
+script = ExtResource("5_vtoea")
+id = "gale_wrap"
+display_name = "疾風束衣"
+slot = "armor"
+desc = "以特殊纖維編織，穿上後步伐輕若疾風。"
+buy = 260
+sell = 78
+tier = 2
+stats = {
+"dodge": 6.0,
+"pdef": 3.0
+}
+rarity = "rare"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_7ad84"]
+script = ExtResource("5_vtoea")
+id = "phantom_cloak_armor"
+display_name = "幻影披風甲"
+slot = "armor"
+desc = "披風下若隱若現的輕甲，模糊敵人的視線判斷。"
+buy = 360
+sell = 108
+tier = 2
+stats = {
+"dodge": 8.0,
+"pdef": 3.0
+}
+rarity = "rare"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_6cb4f"]
+script = ExtResource("5_vtoea")
+id = "shadowdance_armor"
+display_name = "影舞輕鎧"
+slot = "armor"
+desc = "傳說中舞者刺客的輕鎧，幾乎能與影子融為一體。"
+buy = 500
+sell = 150
+tier = 2
+stats = {
+"dodge": 10.0,
+"pdef": 4.0
+}
+rarity = "epic"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_7a1d0"]
+script = ExtResource("5_vtoea")
+id = "windspirit_garb"
+display_name = "風靈之衣"
+slot = "armor"
+desc = "傳聞由風之精靈織就，穿上者身法快若疾風。"
+buy = 680
+sell = 204
+tier = 2
+stats = {
+"dodge": 13.0,
+"pdef": 5.0
+}
+rarity = "epic"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_a8461"]
+script = ExtResource("5_vtoea")
+id = "apprentice_robe"
+display_name = "學徒長袍"
+slot = "armor"
+desc = "魔法學徒的入門長袍，勉強能穩定魔力波動。"
+buy = 45
+sell = 14
+stats = {
+"matk": 1.0,
+"mp": 5.0
+}
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_de572"]
+script = ExtResource("5_vtoea")
+id = "warded_robe"
+display_name = "織符長袍"
+slot = "armor"
+desc = "縫入基礎防護符文的長袍，兼顧法力與安全。"
+buy = 75
+sell = 22
+stats = {
+"matk": 2.0,
+"mp": 8.0
+}
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_176e5"]
+script = ExtResource("5_vtoea")
+id = "starweave_robe"
+display_name = "星紋披袍"
+slot = "armor"
+desc = "織入星紋圖案的披袍，據說能安定心神。"
+buy = 120
+sell = 36
+stats = {
+"matk": 2.0,
+"mp": 11.0,
+"pdef": 1.0
+}
+rarity = "uncommon"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_09eba"]
+script = ExtResource("5_vtoea")
+id = "arcane_robe"
+display_name = "秘術長袍"
+slot = "armor"
+desc = "秘術師公會特製的長袍，法力運轉更為順暢。"
+buy = 165
+sell = 50
+stats = {
+"matk": 3.0,
+"mp": 13.0,
+"pdef": 2.0
+}
+rarity = "uncommon"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_19eab"]
+script = ExtResource("5_vtoea")
+id = "sage_robe"
+display_name = "賢者長袍"
+slot = "armor"
+desc = "賢者議會的正式禮袍，法力儲備遠勝常人。"
+buy = 300
+sell = 90
+tier = 2
+stats = {
+"matk": 4.0,
+"mp": 19.0,
+"pdef": 3.0
+}
+rarity = "rare"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_50b50"]
+script = ExtResource("5_vtoea")
+id = "starlight_robe"
+display_name = "星輝法袍"
+slot = "armor"
+desc = "綴滿星輝碎片的法袍，施法時彷彿夜空流轉。"
+buy = 440
+sell = 132
+tier = 2
+stats = {
+"matk": 6.0,
+"mp": 24.0,
+"pdef": 4.0
+}
+rarity = "epic"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_9a291"]
+script = ExtResource("5_vtoea")
+id = "profound_arcane_robe"
+display_name = "深奧秘法袍"
+slot = "armor"
+desc = "封存深奧咒文的至高法袍，魔力近乎無窮。"
+buy = 600
+sell = 180
+tier = 2
+stats = {
+"matk": 8.0,
+"mp": 30.0,
+"pdef": 5.0
+}
+rarity = "epic"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_a5408"]
+script = ExtResource("5_vtoea")
+id = "studded_boots"
+display_name = "釘底靴"
+slot = "boots"
+desc = "鞋底加了鐵釘的靴子，踩踏更穩固。"
+buy = 35
+sell = 10
+stats = {
+"pdef": 2.0
+}
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_66b04"]
+script = ExtResource("5_vtoea")
+id = "traveler_greaves"
+display_name = "行者重靴"
+slot = "boots"
+desc = "厚實的皮革重靴，長途跋涉更耐磨損。"
+buy = 70
+sell = 21
+stats = {
+"pdef": 3.0
+}
+rarity = "uncommon"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_6da2c"]
+script = ExtResource("5_vtoea")
+id = "iron_ringed_boots"
+display_name = "鐵環靴"
+slot = "boots"
+desc = "鞋面嵌著鐵環的靴子，多一分踢擊的分量。"
+buy = 110
+sell = 33
+stats = {
+"pdef": 4.0
+}
+rarity = "uncommon"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_ef3f4"]
+script = ExtResource("5_vtoea")
+id = "steel_greaves"
+display_name = "精鋼護靴"
+slot = "boots"
+desc = "精鋼打造的護靴，正面防禦相當可靠。"
+buy = 190
+sell = 57
+tier = 2
+stats = {
+"pdef": 5.0
+}
+rarity = "rare"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_adc60"]
+script = ExtResource("5_vtoea")
+id = "bedrock_boots"
+display_name = "磐石戰靴"
+slot = "boots"
+desc = "沉重如磐石的戰靴，站得穩、扛得住。"
+buy = 270
+sell = 81
+tier = 2
+stats = {
+"pdef": 6.0
+}
+rarity = "rare"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_60a5d"]
+script = ExtResource("5_vtoea")
+id = "dragonscale_boots"
+display_name = "龍鱗戰靴"
+slot = "boots"
+desc = "鑲著龍鱗碎片的戰靴，幾乎刀槍不入。"
+buy = 390
+sell = 117
+tier = 2
+stats = {
+"pdef": 8.0
+}
+rarity = "epic"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_9a9f7"]
+script = ExtResource("5_vtoea")
+id = "titan_greaves"
+display_name = "泰坦之靴"
+slot = "boots"
+desc = "傳說巨人族工匠打造的戰靴，穿上者步履如山。"
+buy = 520
+sell = 156
+tier = 2
+stats = {
+"pdef": 10.0
+}
+rarity = "epic"
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_gen_683d4"]
+script = ExtResource("5_vtoea")
+id = "soft_leather_shoes"
+display_name = "軟皮鞋"
+slot = "boots"
+desc = "柔軟合腳的皮鞋，走起路來輕巧不少。"
+buy = 20
+sell = 6
+stats = {
+"dodge": 1.0
+}
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_1eafc"]
+script = ExtResource("5_vtoea")
+id = "lightstep_boots"
+display_name = "輕步靴"
+slot = "boots"
+desc = "特別減重處理的靴子，適合需要靈活走位的人。"
+buy = 38
+sell = 11
+stats = {
+"dodge": 2.0
+}
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_0cced"]
+script = ExtResource("5_vtoea")
+id = "hunter_shortboots"
+display_name = "獵人短靴"
+slot = "boots"
+desc = "獵人常穿的短靴，方便隨時變換方向。"
+buy = 55
+sell = 16
+stats = {
+"dodge": 3.0
+}
+rarity = "uncommon"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_f0d37"]
+script = ExtResource("5_vtoea")
+id = "swiftwind_boots"
+display_name = "迅風靴"
+slot = "boots"
+desc = "鞋底刻著風紋的輕靴，踏步彷彿乘風而行。"
+buy = 150
+sell = 45
+tier = 2
+stats = {
+"dodge": 6.0
+}
+rarity = "rare"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_fe049"]
+script = ExtResource("5_vtoea")
+id = "phantom_dash_boots"
+display_name = "幻影疾靴"
+slot = "boots"
+desc = "傳說刺客穿用的疾靴，殘影令人難以捕捉行蹤。"
+buy = 260
+sell = 78
+tier = 2
+stats = {
+"dodge": 8.0
+}
+rarity = "epic"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_0729e"]
+script = ExtResource("5_vtoea")
+id = "windgod_boots"
+display_name = "風神之靴"
+slot = "boots"
+desc = "相傳源自風神庇佑的靴子，步伐快得幾乎脫離塵世。"
+buy = 360
+sell = 108
+tier = 2
+stats = {
+"dodge": 10.0
+}
+rarity = "epic"
+attr_type = "agi"
+
+[sub_resource type="Resource" id="Resource_gen_789c7"]
+script = ExtResource("5_vtoea")
+id = "cloth_soft_shoes"
+display_name = "布面軟鞋"
+slot = "boots"
+desc = "布面軟鞋，能稍微緩和魔力波動的干擾。"
+buy = 25
+sell = 8
+stats = {
+"mdef": 1.0,
+"mp": 3.0
+}
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_e06f3"]
+script = ExtResource("5_vtoea")
+id = "warded_soft_boots"
+display_name = "符紋軟靴"
+slot = "boots"
+desc = "縫上簡易防護符紋的軟靴。"
+buy = 45
+sell = 14
+stats = {
+"mdef": 2.0,
+"mp": 5.0
+}
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_ecd4a"]
+script = ExtResource("5_vtoea")
+id = "arcane_slippers"
+display_name = "秘法便鞋"
+slot = "boots"
+desc = "秘術師常穿的便鞋，有助於魔力循環。"
+buy = 80
+sell = 24
+stats = {
+"mdef": 3.0,
+"mp": 8.0
+}
+rarity = "uncommon"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_671dc"]
+script = ExtResource("5_vtoea")
+id = "starweave_boots"
+display_name = "星紋靴"
+slot = "boots"
+desc = "織有星紋圖案的靴子，安神定氣。"
+buy = 125
+sell = 38
+stats = {
+"mdef": 4.0,
+"mp": 11.0
+}
+rarity = "uncommon"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_3d5cd"]
+script = ExtResource("5_vtoea")
+id = "sage_soft_boots"
+display_name = "賢者軟靴"
+slot = "boots"
+desc = "賢者議會配發的軟靴，法力保護更為周全。"
+buy = 210
+sell = 63
+tier = 2
+stats = {
+"mdef": 5.0,
+"mp": 15.0
+}
+rarity = "rare"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_aa041"]
+script = ExtResource("5_vtoea")
+id = "moonlight_boots"
+display_name = "月光靴"
+slot = "boots"
+desc = "月光下若隱若現的靴子，據說能安撫躁動的魔力。"
+buy = 290
+sell = 87
+tier = 2
+stats = {
+"mdef": 6.0,
+"mp": 19.0
+}
+rarity = "rare"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_f564f"]
+script = ExtResource("5_vtoea")
+id = "starlight_boots"
+display_name = "星輝法靴"
+slot = "boots"
+desc = "綴著星輝碎片的法靴，抵禦魔法攻擊效果顯著。"
+buy = 420
+sell = 126
+tier = 2
+stats = {
+"mdef": 8.0,
+"mp": 24.0
+}
+rarity = "epic"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_bafcb"]
+script = ExtResource("5_vtoea")
+id = "profound_arcane_boots"
+display_name = "深奧秘靴"
+slot = "boots"
+desc = "封存古老咒文的至高法靴，魔力屏障近乎完美。"
+buy = 560
+sell = 168
+tier = 2
+stats = {
+"mdef": 10.0,
+"mp": 30.0
+}
+rarity = "epic"
+attr_type = "int"
+
+[sub_resource type="Resource" id="Resource_gen_4f4b4"]
+script = ExtResource("5_vtoea")
+id = "copper_ring"
+display_name = "銅戒指"
+slot = "acc"
+desc = "普通的銅戒指，稍微增添臂力。"
+buy = 25
+sell = 8
+stats = {
+"patk": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_5da1a"]
+script = ExtResource("5_vtoea")
+id = "wooden_bead_bracelet"
+display_name = "木珠手鍊"
+slot = "acc"
+desc = "手工串製的木珠手鍊，安定心神。"
+buy = 25
+sell = 8
+stats = {
+"mp": 5.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_db63f"]
+script = ExtResource("5_vtoea")
+id = "rabbit_foot_charm"
+display_name = "兔腳吊飾"
+slot = "acc"
+desc = "傳統上被認為能帶來好運的兔腳吊飾。"
+buy = 20
+sell = 6
+stats = {
+"dodge": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_dac37"]
+script = ExtResource("5_vtoea")
+id = "worn_pocketwatch"
+display_name = "磨損懷錶"
+slot = "acc"
+desc = "老舊的懷錶，指針早已停擺，但戴著讓人心安。"
+buy = 20
+sell = 6
+stats = {
+"hp": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_6fc94"]
+script = ExtResource("5_vtoea")
+id = "shell_necklace"
+display_name = "貝殼項鍊"
+slot = "acc"
+desc = "海貝串成的項鍊，聽說有守護的力量。"
+buy = 22
+sell = 7
+stats = {
+"mdef": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_df06f"]
+script = ExtResource("5_vtoea")
+id = "leather_cord_charm"
+display_name = "皮繩護符"
+slot = "acc"
+desc = "簡單的皮繩護符，聊表心意的防護。"
+buy = 22
+sell = 7
+stats = {
+"pdef": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_dd725"]
+script = ExtResource("5_vtoea")
+id = "silver_rim_brooch"
+display_name = "銀邊胸針"
+slot = "acc"
+desc = "鑲銀邊的胸針，微微提升魔力集中。"
+buy = 28
+sell = 8
+stats = {
+"matk": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_95989"]
+script = ExtResource("5_vtoea")
+id = "polished_stone_ring"
+display_name = "磨亮石戒"
+slot = "acc"
+desc = "打磨光滑的石戒，據說能穩定手感。"
+buy = 24
+sell = 7
+stats = {
+"crit": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_76d2c"]
+script = ExtResource("5_vtoea")
+id = "hemp_bracelet"
+display_name = "麻繩手環"
+slot = "acc"
+desc = "簡樸的麻繩手環，冒險者間流行的護身小物。"
+buy = 18
+sell = 5
+stats = {
+"hp": 5.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_fc5a9"]
+script = ExtResource("5_vtoea")
+id = "bronze_bell_earring"
+display_name = "銅鈴耳墜"
+slot = "acc"
+desc = "叮噹作響的銅鈴耳墜，據說能分散敵人注意力。"
+buy = 32
+sell = 10
+stats = {
+"mp": 3.0,
+"dodge": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_gen_c1f85"]
+script = ExtResource("5_vtoea")
+id = "hawkeye_badge"
+display_name = "鷹眼徽章"
+slot = "acc"
+desc = "刻有鷹眼圖騰的徽章，讓人下手更準。"
+buy = 60
+sell = 18
+stats = {
+"crit": 3.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_cd472"]
+script = ExtResource("5_vtoea")
+id = "gale_earring"
+display_name = "疾風耳環"
+slot = "acc"
+desc = "風系法師贈與的耳環，行動間帶著一絲疾風。"
+buy = 65
+sell = 20
+stats = {
+"dodge": 3.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_930b9"]
+script = ExtResource("5_vtoea")
+id = "steady_pendant"
+display_name = "沉穩護腕墜"
+slot = "acc"
+desc = "沉甸甸的墜飾，攻防都穩了幾分。"
+buy = 85
+sell = 26
+stats = {
+"pdef": 2.0,
+"mdef": 2.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_f50c8"]
+script = ExtResource("5_vtoea")
+id = "scholar_spectacles"
+display_name = "學者眼鏡"
+slot = "acc"
+desc = "學者用的老花眼鏡，意外對魔力集中有幫助。"
+buy = 80
+sell = 24
+stats = {
+"matk": 3.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_c0c07"]
+script = ExtResource("5_vtoea")
+id = "lifestone_necklace"
+display_name = "生命石項鍊"
+slot = "acc"
+desc = "鑲著暗紅色石頭的項鍊，能感受到微弱的生命波動。"
+buy = 75
+sell = 22
+stats = {
+"hp": 15.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_c6753"]
+script = ExtResource("5_vtoea")
+id = "manacrystal_ring"
+display_name = "法力晶環"
+slot = "acc"
+desc = "鑲嵌小水晶的戒指，能小幅蓄積法力。"
+buy = 78
+sell = 23
+stats = {
+"mp": 15.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_8575c"]
+script = ExtResource("5_vtoea")
+id = "warrior_armlet"
+display_name = "戰士臂環"
+slot = "acc"
+desc = "老兵留下的臂環，戴上後揮擊更有力。"
+buy = 82
+sell = 25
+stats = {
+"patk": 3.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_1d00b"]
+script = ExtResource("5_vtoea")
+id = "lucky_bunny_clip"
+display_name = "幸運兔耳夾"
+slot = "acc"
+desc = "造型可愛的兔耳髮夾，據說幸運女神特別眷顧。"
+buy = 95
+sell = 28
+stats = {
+"crit": 2.0,
+"dodge": 2.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_71cbe"]
+script = ExtResource("5_vtoea")
+id = "guardian_emblem"
+display_name = "守護胸章"
+slot = "acc"
+desc = "刻著守護紋樣的胸章，防禦更紮實。"
+buy = 70
+sell = 21
+stats = {
+"pdef": 3.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_24045"]
+script = ExtResource("5_vtoea")
+id = "rune_gloves"
+display_name = "魔紋手套"
+slot = "acc"
+desc = "繡有魔紋的手套，施法時更加得心應手。"
+buy = 100
+sell = 30
+stats = {
+"matk": 2.0,
+"mp": 8.0
+}
+rarity = "uncommon"
+
+[sub_resource type="Resource" id="Resource_gen_06d75"]
+script = ExtResource("5_vtoea")
+id = "dragonbreath_charm"
+display_name = "龍息護符"
+slot = "acc"
+desc = "封存一絲龍息餘威的護符，攻擊更具威力。"
+buy = 220
+sell = 66
+tier = 2
+stats = {
+"patk": 5.0,
+"crit": 3.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_0ceed"]
+script = ExtResource("5_vtoea")
+id = "deepsea_pearl_necklace"
+display_name = "深海珍珠項鍊"
+slot = "acc"
+desc = "來自深海的珍珠，能抵禦魔法侵擾。"
+buy = 210
+sell = 63
+tier = 2
+stats = {
+"mdef": 5.0,
+"mp": 10.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_c0fdc"]
+script = ExtResource("5_vtoea")
+id = "forest_spirit_ring"
+display_name = "森林精靈之戒"
+slot = "acc"
+desc = "森林精靈贈與的戒指，蘊含生生不息的力量。"
+buy = 230
+sell = 69
+tier = 2
+stats = {
+"hp": 25.0,
+"mp": 10.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_5947e"]
+script = ExtResource("5_vtoea")
+id = "swiftshadow_band"
+display_name = "疾影之環"
+slot = "acc"
+desc = "刻著奔跑紋樣的指環，身法飄忽如影。"
+buy = 240
+sell = 72
+tier = 2
+stats = {
+"dodge": 6.0,
+"crit": 3.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_bb873"]
+script = ExtResource("5_vtoea")
+id = "ironwill_medal"
+display_name = "鋼鐵意志徽"
+slot = "acc"
+desc = "象徵不屈意志的勳章，扛得住也撐得久。"
+buy = 250
+sell = 75
+tier = 2
+stats = {
+"pdef": 5.0,
+"hp": 15.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_74dd1"]
+script = ExtResource("5_vtoea")
+id = "starlight_pendant"
+display_name = "星辰墜飾"
+slot = "acc"
+desc = "封存星光的墜飾，魔力與防護兼備。"
+buy = 245
+sell = 74
+tier = 2
+stats = {
+"matk": 5.0,
+"mdef": 3.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_8d42c"]
+script = ExtResource("5_vtoea")
+id = "sage_ring"
+display_name = "賢者之戒"
+slot = "acc"
+desc = "賢者議會的認證信物，法力供給源源不絕。"
+buy = 260
+sell = 78
+tier = 2
+stats = {
+"matk": 4.0,
+"mp": 20.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_e8880"]
+script = ExtResource("5_vtoea")
+id = "battlefield_medal"
+display_name = "戰場勳章"
+slot = "acc"
+desc = "沙場老兵的勳章，攻守俱佳。"
+buy = 235
+sell = 70
+tier = 2
+stats = {
+"patk": 4.0,
+"pdef": 3.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_75f6e"]
+script = ExtResource("5_vtoea")
+id = "lucky_gold_coin"
+display_name = "幸運金幣"
+slot = "acc"
+desc = "傳說中從未失手的幸運金幣，帶著它總能逢凶化吉。"
+buy = 225
+sell = 68
+tier = 2
+stats = {
+"crit": 4.0,
+"dodge": 4.0
+}
+rarity = "rare"
+
+[sub_resource type="Resource" id="Resource_gen_53e9c"]
+script = ExtResource("5_vtoea")
+id = "goddess_grace_ring"
+display_name = "女神垂憐之戒"
+slot = "acc"
+desc = "傳說受女神垂憐者才能得到的戒指，全面守護配戴者。"
+buy = 480
+sell = 144
+tier = 2
+stats = {
+"hp": 30.0,
+"mp": 20.0,
+"mdef": 3.0
+}
+rarity = "epic"
+
+[sub_resource type="Resource" id="Resource_gen_26961"]
+script = ExtResource("5_vtoea")
+id = "heart_of_chaos"
+display_name = "混沌之心"
+slot = "acc"
+desc = "來歷成謎的黑色寶石，蘊含難以言喻的強大力量。"
+buy = 560
+sell = 168
+tier = 2
+stats = {
+"patk": 6.0,
+"matk": 6.0,
+"crit": 4.0
+}
+rarity = "epic"
+
+[sub_resource type="Resource" id="Resource_gen_dc3eb"]
+script = ExtResource("5_vtoea")
+id = "undying_will_pendant"
+display_name = "不滅意志之心"
+slot = "acc"
+desc = "傳說永不熄滅的意志結晶，守護配戴者直到最後一刻。"
+buy = 520
+sell = 156
+tier = 2
+stats = {
+"hp": 40.0,
+"pdef": 5.0,
+"mdef": 5.0
+}
+rarity = "epic"
+
+[sub_resource type="Resource" id="Resource_gen_aeee1"]
+script = ExtResource("5_vtoea")
+id = "windgod_feather"
+display_name = "疾風之神羽"
+slot = "acc"
+desc = "風神落下的羽毛，賦予配戴者難以捉摸的身法。"
+buy = 500
+sell = 150
+tier = 2
+stats = {
+"dodge": 10.0,
+"crit": 6.0
+}
+rarity = "epic"
+
+[sub_resource type="Resource" id="Resource_gen_ddbdc"]
+script = ExtResource("5_vtoea")
+id = "dragonking_scale"
+display_name = "龍王之鱗"
+slot = "acc"
+desc = "傳說中龍王親賜的鱗片，防禦近乎無懈可擊。"
+buy = 540
+sell = 162
+tier = 2
+stats = {
+"pdef": 8.0,
+"mdef": 8.0
+}
+rarity = "epic"
+
+[sub_resource type="Resource" id="Resource_gen_d7010"]
+script = ExtResource("5_vtoea")
+id = "starlit_relic"
+display_name = "星空秘寶"
+slot = "acc"
+desc = "遠古秘寶，據說封存著整片星空的魔力。"
+buy = 600
+sell = 180
+tier = 2
+stats = {
+"matk": 8.0,
+"mp": 25.0,
+"crit": 3.0
+}
+rarity = "epic"
 [sub_resource type="Resource" id="Resource_x6djv"]
 script = ExtResource("6_gqqnr")
 id = "potion"
@@ -799,6 +2195,7 @@ count = 4
 effect = "單體回復 60 HP。"
 buy = 30
 sell = 9
+icon = "res://assets/battle/Red_Potion.png"
 
 [sub_resource type="Resource" id="Resource_pni1o"]
 script = ExtResource("6_gqqnr")
@@ -810,6 +2207,7 @@ power = 150.0
 effect = "單體回復 150 HP。"
 buy = 90
 sell = 27
+rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_khpay"]
 script = ExtResource("6_gqqnr")
@@ -843,6 +2241,7 @@ power = 50.0
 effect = "復活一名戰鬥不能的同伴，並回復其 50% HP。"
 buy = 100
 sell = 30
+rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_2mls8"]
 script = ExtResource("6_gqqnr")
@@ -853,6 +2252,7 @@ kind = "rest"
 effect = "於野外休息點使用，全隊回復全部 HP／MP。"
 buy = 120
 sell = 36
+rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_iqrol"]
 script = ExtResource("6_gqqnr")
@@ -925,6 +2325,7 @@ cat = "material"
 effect = "洞熊的厚實毛皮，是製甲的好材料。"
 buy = 30
 sell = 10
+rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_q20xv"]
 script = ExtResource("6_gqqnr")
@@ -934,6 +2335,7 @@ cat = "material"
 effect = "蘊含魔力的水晶碎片，稀有；似乎與礦山異變有關。"
 buy = 60
 sell = 20
+rarity = "rare"
 
 [sub_resource type="Resource" id="Resource_544ya"]
 script = ExtResource("6_gqqnr")
@@ -941,6 +2343,7 @@ id = "guild_card"
 display_name = "公會登錄證"
 cat = "key"
 effect = "冒險者公會核發的身分證明（F 級）。序章於緹娜處登錄後取得。"
+rarity = "unique"
 
 [sub_resource type="Resource" id="Resource_001vv"]
 script = ExtResource("6_gqqnr")
@@ -948,6 +2351,7 @@ id = "miner_helmet"
 display_name = "失蹤礦工的頭盔"
 cat = "key"
 effect = "「礦工的遺物」委託道具，需交還委託人（老葛雷）。"
+rarity = "unique"
 
 [sub_resource type="Resource" id="Resource_4o5ij"]
 script = ExtResource("6_gqqnr")
@@ -955,6 +2359,7 @@ id = "goddess_mark"
 display_name = "女神的記號"
 cat = "key"
 effect = "蓋婭女神在路德身上留下的記號（劇情物品，不可販售）。"
+rarity = "unique"
 
 [sub_resource type="Resource" id="Resource_olg13"]
 script = ExtResource("7_phwb1")
@@ -1065,14 +2470,14 @@ script = ExtResource("10_08ale")
 id = "gid"
 display_name = "吉德的道具店"
 greet = "要看看我店裡的商品嗎？"
-sell_ids = ["potion", "hi_potion", "mana_herb", "antidote", "revive_feather", "tent", "lucky_coin", "agate_charm", "vital_ring", "focus_earring"]
+sell_ids = ["potion", "hi_potion", "mana_herb", "antidote", "revive_feather", "tent", "lucky_coin", "agate_charm", "vital_ring", "focus_earring", "copper_ring", "wooden_bead_bracelet", "rabbit_foot_charm", "worn_pocketwatch", "shell_necklace", "leather_cord_charm", "silver_rim_brooch", "polished_stone_ring", "hemp_bracelet", "bronze_bell_earring", "hawkeye_badge", "gale_earring", "steady_pendant", "scholar_spectacles", "lifestone_necklace", "manacrystal_ring", "warrior_armlet", "lucky_bunny_clip", "guardian_emblem", "rune_gloves", "dragonbreath_charm", "deepsea_pearl_necklace", "forest_spirit_ring", "swiftshadow_band", "ironwill_medal", "starlight_pendant", "sage_ring", "battlefield_medal", "lucky_gold_coin", "goddess_grace_ring", "heart_of_chaos", "undying_will_pendant", "windgod_feather", "dragonking_scale", "starlit_relic"]
 
 [sub_resource type="Resource" id="Resource_ov5de"]
 script = ExtResource("10_08ale")
 id = "hank"
 display_name = "漢克的鐵匠鋪"
 greet = "看看我新打的傢伙？"
-sell_ids = ["short_sword", "hunting_knife", "iron_sword", "traveler_garb", "leather_vest", "leather_boots", "swift_boots", "cloth_wraps", "hunter_bracer", "iron_bracer"]
+sell_ids = ["short_sword", "hunting_knife", "iron_sword", "traveler_garb", "leather_vest", "leather_boots", "swift_boots", "cloth_wraps", "hunter_bracer", "iron_bracer", "bronze_sword", "refined_steel_sword", "mithril_sword", "dragonfang_sword", "sacred_greatsword", "honed_knife", "shadow_claw", "twin_crescent", "shade_shortblade", "windfang_dagger", "nightfall_edge", "apprentice_wand", "oak_wand", "rune_staff", "crystal_focus", "sage_staff", "starlight_staff", "abyssal_scepter", "goddess_whisper_staff", "hardened_vest", "riveted_cuirass", "plate_cuirass", "dragonscale_mail", "paladin_plate", "light_tunic", "leather_bodysuit", "ranger_coat", "nightwalker_garb", "gale_wrap", "phantom_cloak_armor", "shadowdance_armor", "windspirit_garb", "apprentice_robe", "warded_robe", "starweave_robe", "arcane_robe", "sage_robe", "starlight_robe", "profound_arcane_robe", "studded_boots", "traveler_greaves", "iron_ringed_boots", "steel_greaves", "bedrock_boots", "dragonscale_boots", "titan_greaves", "soft_leather_shoes", "lightstep_boots", "hunter_shortboots", "swiftwind_boots", "phantom_dash_boots", "windgod_boots", "cloth_soft_shoes", "warded_soft_boots", "arcane_slippers", "starweave_boots", "sage_soft_boots", "moonlight_boots", "starlight_boots", "profound_arcane_boots"]
 
 [sub_resource type="Resource" id="Resource_x4swj"]
 script = ExtResource("11_ksis1")
@@ -1140,7 +2545,7 @@ target = "enemy"
 [resource]
 script = ExtResource("9_vcxsc")
 party = Array[ExtResource("8_j105i")]([SubResource("Resource_pcq0f"), SubResource("Resource_s60oe"), SubResource("Resource_n1ogd")])
-equipment = Array[ExtResource("5_vtoea")]([SubResource("Resource_qyo2q"), SubResource("Resource_csqks"), SubResource("Resource_1msp4"), SubResource("Resource_e6sw3"), SubResource("Resource_7idvq"), SubResource("Resource_ydp3b"), SubResource("Resource_i8tu0"), SubResource("Resource_uvrlw"), SubResource("Resource_tnpb5"), SubResource("Resource_mugyq"), SubResource("Resource_daxiu"), SubResource("Resource_atlte"), SubResource("Resource_dlev1"), SubResource("Resource_4k0mt"), SubResource("Resource_0q8wu"), SubResource("Resource_e8jw0"), SubResource("Resource_c1ck4"), SubResource("Resource_epqbo"), SubResource("Resource_j8bx3"), SubResource("Resource_dpwxo"), SubResource("Resource_or0i1")])
+equipment = Array[ExtResource("5_vtoea")]([SubResource("Resource_qyo2q"), SubResource("Resource_csqks"), SubResource("Resource_1msp4"), SubResource("Resource_e6sw3"), SubResource("Resource_7idvq"), SubResource("Resource_ydp3b"), SubResource("Resource_i8tu0"), SubResource("Resource_uvrlw"), SubResource("Resource_tnpb5"), SubResource("Resource_mugyq"), SubResource("Resource_daxiu"), SubResource("Resource_atlte"), SubResource("Resource_dlev1"), SubResource("Resource_4k0mt"), SubResource("Resource_0q8wu"), SubResource("Resource_e8jw0"), SubResource("Resource_c1ck4"), SubResource("Resource_epqbo"), SubResource("Resource_j8bx3"), SubResource("Resource_dpwxo"), SubResource("Resource_or0i1"), SubResource("Resource_gen_28e25"), SubResource("Resource_gen_569b8"), SubResource("Resource_gen_9f48a"), SubResource("Resource_gen_de479"), SubResource("Resource_gen_c3e26"), SubResource("Resource_gen_9b633"), SubResource("Resource_gen_d4640"), SubResource("Resource_gen_6f1a8"), SubResource("Resource_gen_09aa9"), SubResource("Resource_gen_25060"), SubResource("Resource_gen_f73cd"), SubResource("Resource_gen_47214"), SubResource("Resource_gen_17617"), SubResource("Resource_gen_7594d"), SubResource("Resource_gen_83565"), SubResource("Resource_gen_c5ab6"), SubResource("Resource_gen_bbef4"), SubResource("Resource_gen_9088a"), SubResource("Resource_gen_a504c"), SubResource("Resource_gen_a9df8"), SubResource("Resource_gen_46c10"), SubResource("Resource_gen_e7b4c"), SubResource("Resource_gen_2e6bb"), SubResource("Resource_gen_f80b4"), SubResource("Resource_gen_1dcab"), SubResource("Resource_gen_f92db"), SubResource("Resource_gen_9dfde"), SubResource("Resource_gen_ad6f2"), SubResource("Resource_gen_56d6f"), SubResource("Resource_gen_7ad84"), SubResource("Resource_gen_6cb4f"), SubResource("Resource_gen_7a1d0"), SubResource("Resource_gen_a8461"), SubResource("Resource_gen_de572"), SubResource("Resource_gen_176e5"), SubResource("Resource_gen_09eba"), SubResource("Resource_gen_19eab"), SubResource("Resource_gen_50b50"), SubResource("Resource_gen_9a291"), SubResource("Resource_gen_a5408"), SubResource("Resource_gen_66b04"), SubResource("Resource_gen_6da2c"), SubResource("Resource_gen_ef3f4"), SubResource("Resource_gen_adc60"), SubResource("Resource_gen_60a5d"), SubResource("Resource_gen_9a9f7"), SubResource("Resource_gen_683d4"), SubResource("Resource_gen_1eafc"), SubResource("Resource_gen_0cced"), SubResource("Resource_gen_f0d37"), SubResource("Resource_gen_fe049"), SubResource("Resource_gen_0729e"), SubResource("Resource_gen_789c7"), SubResource("Resource_gen_e06f3"), SubResource("Resource_gen_ecd4a"), SubResource("Resource_gen_671dc"), SubResource("Resource_gen_3d5cd"), SubResource("Resource_gen_aa041"), SubResource("Resource_gen_f564f"), SubResource("Resource_gen_bafcb"), SubResource("Resource_gen_4f4b4"), SubResource("Resource_gen_5da1a"), SubResource("Resource_gen_db63f"), SubResource("Resource_gen_dac37"), SubResource("Resource_gen_6fc94"), SubResource("Resource_gen_df06f"), SubResource("Resource_gen_dd725"), SubResource("Resource_gen_95989"), SubResource("Resource_gen_76d2c"), SubResource("Resource_gen_fc5a9"), SubResource("Resource_gen_c1f85"), SubResource("Resource_gen_cd472"), SubResource("Resource_gen_930b9"), SubResource("Resource_gen_f50c8"), SubResource("Resource_gen_c0c07"), SubResource("Resource_gen_c6753"), SubResource("Resource_gen_8575c"), SubResource("Resource_gen_1d00b"), SubResource("Resource_gen_71cbe"), SubResource("Resource_gen_24045"), SubResource("Resource_gen_06d75"), SubResource("Resource_gen_0ceed"), SubResource("Resource_gen_c0fdc"), SubResource("Resource_gen_5947e"), SubResource("Resource_gen_bb873"), SubResource("Resource_gen_74dd1"), SubResource("Resource_gen_8d42c"), SubResource("Resource_gen_e8880"), SubResource("Resource_gen_75f6e"), SubResource("Resource_gen_53e9c"), SubResource("Resource_gen_26961"), SubResource("Resource_gen_dc3eb"), SubResource("Resource_gen_aeee1"), SubResource("Resource_gen_ddbdc"), SubResource("Resource_gen_d7010")])
 skills = Array[ExtResource("11_ksis1")]([SubResource("Resource_x4swj"), SubResource("Resource_y2ggn"), SubResource("Resource_qgsim"), SubResource("Resource_5234b"), SubResource("Resource_macem")])
 items = Array[ExtResource("6_gqqnr")]([SubResource("Resource_x6djv"), SubResource("Resource_pni1o"), SubResource("Resource_khpay"), SubResource("Resource_cuqn5"), SubResource("Resource_kkpf5"), SubResource("Resource_2mls8"), SubResource("Resource_iqrol"), SubResource("Resource_wfoeg"), SubResource("Resource_ww16q"), SubResource("Resource_yy8o7"), SubResource("Resource_nhh40"), SubResource("Resource_t0u0x"), SubResource("Resource_ldt1x"), SubResource("Resource_x4fll"), SubResource("Resource_q20xv"), SubResource("Resource_544ya"), SubResource("Resource_001vv"), SubResource("Resource_4o5ij")])
 enemies = Array[ExtResource("4_hoq51")]([SubResource("Resource_v4bx3"), SubResource("Resource_2d226"), SubResource("Resource_38aoo"), SubResource("Resource_1f648"), SubResource("Resource_7ak06"), SubResource("Resource_auvyr"), SubResource("Resource_j7mbp"), SubResource("Resource_wykaa"), SubResource("Resource_dfnc1"), SubResource("Resource_sahc2"), SubResource("Resource_vjhig"), SubResource("Resource_hnf0v"), SubResource("Resource_1s8rn"), SubResource("Resource_cs8nw"), SubResource("Resource_f55ks")])

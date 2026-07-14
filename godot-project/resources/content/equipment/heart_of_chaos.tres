@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "heart_of_chaos"
+display_name = "混沌之心"
+slot = "acc"
+desc = "來歷成謎的黑色寶石，蘊含難以言喻的強大力量。"
+buy = 560
+sell = 168
+tier = 2
+stats = {
+"patk": 6.0,
+"matk": 6.0,
+"crit": 4.0
+}
+rarity = "epic"

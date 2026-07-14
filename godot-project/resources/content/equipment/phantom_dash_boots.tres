@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "phantom_dash_boots"
+display_name = "幻影疾靴"
+slot = "boots"
+desc = "傳說刺客穿用的疾靴，殘影令人難以捕捉行蹤。"
+buy = 260
+sell = 78
+tier = 2
+stats = {
+"dodge": 8.0
+}
+rarity = "epic"
+attr_type = "agi"

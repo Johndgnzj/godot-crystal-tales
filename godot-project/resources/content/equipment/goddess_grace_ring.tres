@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "goddess_grace_ring"
+display_name = "女神垂憐之戒"
+slot = "acc"
+desc = "傳說受女神垂憐者才能得到的戒指，全面守護配戴者。"
+buy = 480
+sell = 144
+tier = 2
+stats = {
+"hp": 30.0,
+"mp": 20.0,
+"mdef": 3.0
+}
+rarity = "epic"

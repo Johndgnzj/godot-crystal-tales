@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "starlight_robe"
+display_name = "星輝法袍"
+slot = "armor"
+desc = "綴滿星輝碎片的法袍，施法時彷彿夜空流轉。"
+buy = 440
+sell = 132
+tier = 2
+stats = {
+"matk": 6.0,
+"mp": 24.0,
+"pdef": 4.0
+}
+rarity = "epic"
+attr_type = "int"

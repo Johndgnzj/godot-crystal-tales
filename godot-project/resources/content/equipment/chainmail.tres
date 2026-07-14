@@ -15,3 +15,4 @@ rarity = "rare"
 stats = {
 "pdef": 9.0
 }
+attr_type = "str"

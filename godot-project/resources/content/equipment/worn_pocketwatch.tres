@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "worn_pocketwatch"
+display_name = "磨損懷錶"
+slot = "acc"
+desc = "老舊的懷錶，指針早已停擺，但戴著讓人心安。"
+buy = 20
+sell = 6
+stats = {
+"hp": 3.0
+}

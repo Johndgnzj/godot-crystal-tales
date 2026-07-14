@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "apprentice_wand"
+display_name = "見習法杖"
+slot = "weapon"
+desc = "學徒用的簡易法杖，勉強能引導魔力。"
+buy = 55
+sell = 16
+stats = {
+"matk": 2.0,
+"mp": 5.0
+}
+attr_type = "int"
