@@ -1,0 +1,21 @@
+; MOD-I 手寫（未經編輯器驗證，見 TASKS/09_美術管線.md）：BGM 需循環播放，預先把 loop 設為 true，
+; 避免首次匯入採用預設 loop=false。刻意省略 uid 與 [remap] path——首次在有 Godot 4.3 編輯器的環境
+; 開啟專案時，因 .godot/imported 快取不存在會觸發重新匯入，編輯器會讀取 [params] 並自行補齊
+; uid/path/dest_files。屆時請確認本檔案被編輯器改寫後 loop=true 仍保留。
+
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+
+[deps]
+
+source_file="res://assets/bgm/bgm_town.mp3"
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4
