@@ -13,8 +13,16 @@ extends CanvasLayer
 ## 對話推進在 GDevelop 版本來就吃「點畫面任一處」，故保留 _unhandled_input 事件式判斷。
 
 @onready var _box: Control = $Box
+@onready var _portrait: TextureRect = $Box/Portrait
 @onready var _speaker_label: Label = $Box/SpeakerLabel
 @onready var _text_label: Label = $Box/TextLabel
+
+# 立繪幾何（換算自 build_cq2.py setFace L1417-1420，座標系與 GDevelop 相同＝1280x720）：
+# 目標高 380；等比換寬，過寬（拖擺長袍等）限 470；貼近左緣 x=14；底邊固定在 y=540（對話框上緣附近）。
+const PORTRAIT_H := 380.0
+const PORTRAIT_MAX_W := 470.0
+const PORTRAIT_X := 14.0
+const PORTRAIT_BASELINE_Y := 540.0
 
 
 func _ready() -> void:
@@ -56,6 +64,40 @@ func _on_line_changed(speaker: String, text: String) -> void:
 	_speaker_label.visible = speaker != ""
 	_speaker_label.text = speaker
 	_text_label.text = text
+	_set_portrait(speaker)
+
+
+## 依當前說話者顯示名切換半身立繪（NPC 對話與過場共用；比照 build_cq2.py setFace L1410-1421）。
+## 對照走 PortraitMap（顯示名→立繪 id）；查不到（旁白/無立繪角色）或素材缺檔一律隱藏，不擋對話。
+func _set_portrait(speaker: String) -> void:
+	var pid := PortraitMap.portrait_id(speaker)
+	if pid == "":
+		_portrait.visible = false
+		return
+	var path := "res://assets/ui/portrait_%s.png" % pid
+	if not ResourceLoader.exists(path):
+		push_warning("dialogue_box: 找不到立繪 %s（speaker=%s），改為不顯示" % [path, speaker])
+		_portrait.visible = false
+		return
+	var tex := load(path) as Texture2D
+	if tex == null:
+		push_warning("dialogue_box: 立繪載入失敗 %s（speaker=%s），改為不顯示" % [path, speaker])
+		_portrait.visible = false
+		return
+	# 等比換算尺寸（see build_cq2.py L1417-1420）：先以高 380 算寬，過寬則改以寬 470 回算高。
+	var native := tex.get_size()
+	var h := PORTRAIT_H
+	var w := PORTRAIT_H
+	if native.y > 0.0:
+		var nr: float = native.x / native.y
+		w = round(h * nr)
+		if w > PORTRAIT_MAX_W:
+			w = PORTRAIT_MAX_W
+			h = round(w / nr)
+	_portrait.texture = tex
+	_portrait.size = Vector2(w, h)
+	_portrait.position = Vector2(PORTRAIT_X, PORTRAIT_BASELINE_Y - h)  # 底邊對齊 y=540
+	_portrait.visible = true
 
 
 func _on_ended(_npc_id: String) -> void:

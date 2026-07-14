@@ -1,4 +1,7 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" load_steps=2 format=3]
+
+[sub_resource type="SystemFont" id="SystemFont_cjk"]
+font_names = PackedStringArray("PingFang TC", "PingFang SC", "Heiti TC", "Hiragino Sans GB", "Noto Sans CJK TC", "sans-serif")
 
 ; MOD-D UI tokens 集中定義（見 ../TASKS/04_選單UI.md 產出清單第 1 項）。
 ; 各 UI 場景（hud/menu_root/shop/dialogue_box）的根 Control 引用本資源，腳本一律用
@@ -10,6 +13,7 @@
 ; warn/good/hp/mp 對應 build_cq2 選單裡出現的固定色字串（見各 rows.push 的 c 欄位）。
 
 [resource]
+default_font = SubResource("SystemFont_cjk")
 default_font_size = 22
 Label/colors/font_color = Color(0.9216, 0.9216, 0.9608, 1)
 CQ/colors/accent = Color(0.6667, 0.8627, 0.9216, 1)
