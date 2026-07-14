@@ -81,8 +81,11 @@ battle_auto={
 ; ContentDB 是 CONTENT.json 的唯讀查詢介面，見 godot-project/autoload/content_db.gd 檔頭註解。
 ContentDB="*res://autoload/content_db.gd"
 
-; GameState/SceneRouter 是【暫時性 STUB】，由協調者先行放置以解除 MOD-A/MOD-B 的依賴阻塞，
-; 不是 CORE-4/CORE-5 任務的正式完成——見兩個檔案的檔頭註解與 ../TASKS/00_核心任務.md CORE-4/CORE-5 段落。
+; GameState 原為協調者放置的【暫時性 STUB】，CORE-4 執行時已正式檢視/強化為正式產出（欄位/方法命名
+; 沿用未變，MOD-A/MOD-B 既有呼叫不受影響）——見 godot-project/autoload/game_state.gd 檔頭註解與
+; ../TASKS/00_核心任務.md CORE-4 段落「驗收現況」。
+; SceneRouter 目前仍是【暫時性 STUB】，由協調者先行放置以解除 MOD-A/MOD-B 的依賴阻塞，
+; 不是 CORE-5 任務的正式完成——見該檔案的檔頭註解與 ../TASKS/00_核心任務.md CORE-5 段落。
 GameState="*res://autoload/game_state.gd"
 SceneRouter="*res://autoload/scene_router.gd"
 

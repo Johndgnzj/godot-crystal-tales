@@ -1,9 +1,12 @@
 # 規格：存檔／全域狀態 Schema
 
-- Spec 版本: v1.0
-- 對應 GDevelop 原始碼快照: `scripts/build_cq2.py` L1275-1296（存檔）、DEV_開發指南.md L65-71（跨場景狀態）
+- Spec 版本: v1.1
+- 對應 GDevelop 原始碼快照: `scripts/build_cq2.py` L1275-1296（存檔）、L1608-1618（openChest 寫入
+  g_chests）、DEV_開發指南.md L65-71（跨場景狀態）
 - 狀態: 定案
 - 用途: CORE-3（存檔系統）、CORE-4（全域狀態 Autoload）實作依據
+- v1.1 變更（CORE-4 執行時定案回填，2026-07-14）：`g_chests` 精確型別由「存疑」改為定案：**字串陣列**
+  （已開啟寶箱 id 清單），見下方「待確認事項」。
 
 ## GDevelop 現況
 
@@ -19,7 +22,7 @@
 | `g_eqInv` | JSON array | 裝備袋，裝備 id 陣列（未裝備的庫存） | |
 | `g_itemInv` | JSON object | 背包 `{itemId: count}` | 存取一律走 `invAll/invGet/invAdd/invUse`，Godot 端要保留同樣的介面收斂點 |
 | `g_gold` | number | 金幣 | 唯一非字串型別的全域變數 |
-| `g_chests` | JSON array/object | 已開啟寶箱清單 | |
+| `g_chests` | JSON array | 已開啟寶箱 id 清單（`String[]`） | 見下方型別定案說明 |
 | `g_autoBattle` | number(0/1) | 自動戰鬥開關，存檔內持久化 | |
 | `g_encounter` | string | 觸發中的遭遇 id | 不持久化（場景切換用） |
 | `g_returnScene` / `g_returnX` / `g_returnY` | string/number | 戰鬥結束或讀檔要回到的場景與座標 | 不持久化 |
@@ -71,5 +74,15 @@
 ## 待確認事項（實作前需與 John 對過，暫列此處避免遺漏）
 
 - 是否要支援多存檔槽（GDevelop 版目前只有一槽）？若不需要，Godot 版維持單槽，不要過度設計。
-- `g_chests` 目前型別在原始碼是「陣列/物件」寫法不完全一致，實作 CORE-3 時要回頭讀 build_cq2.py 確認精確
-  型別後在本文件補上範例值，目前先標記為存疑。
+- ~~`g_chests` 目前型別在原始碼是「陣列/物件」寫法不完全一致~~ **已定案（CORE-4，2026-07-14）**：
+  精確型別是 **字串陣列**（已開啟寶箱 id 清單）。依據 `build_cq2.py`：
+  - `openChest()`（L1608-1618）：`var opened=J("g_chests",[]);` 讀出時 fallback 是 `[]`（陣列）；
+    去重用 `for(k=0;k<opened.length;k++)if(opened[k]===C.d.id)dup=true;`（線性掃描陣列元素比對字串，
+    不是物件 key 查找）；寫回用 `opened.push(C.d.id)`（陣列 push 一個 id 字串，不是設物件屬性）。
+  - 地圖 init（L1409-1417）讀取同樣用 `J("g_chests",[])` 陣列 fallback，逐一比對 `_openedSet` 內的
+    id 決定要不要套用 opened 動畫。
+  - 從頭到尾沒有任何地方把 `g_chests` 當物件/字典使用（沒有 `g_chests[someKey]=` 這種寫法）。
+  - Godot 端 `GameState.chests` 因此定案為 `Array`（元素型別 `String`），對應方法
+    `chest_is_opened(id) -> bool` / `chest_mark_opened(id) -> bool`（見
+    `autoload/game_state.gd`，`chest_mark_opened` 內建去重，回傳值代表「是否為新標記」，呼叫端據此
+    決定要不要發獎，等價於原始碼 `if(C.opened)return;` + `dup` 兩層防呆）。
