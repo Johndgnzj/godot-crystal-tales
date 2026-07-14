@@ -74,6 +74,16 @@ var _chest_nodes: Array = []    # [{id, tx, ty, sprite}]
 var _prompt_timer: float = 0.0
 var _missing_textures: int = 0
 
+# UI（選單/HUD）由本控制器在 _ready() 以程式建立，不進 .tscn ext_resource——這樣地圖生成器
+# （gen_maps.py）重生成場景檔時不會覆蓋掉 UI 掛載，也避免與地圖資料工作搶同一個 .tscn。
+var _menu: CanvasLayer = null
+var _hud_full: CanvasLayer = null
+
+# 對話推進與世界互動搶同一個 ui_accept 的協調狀態：對話結束後要求該鍵先放開，才能再次開啟新對話，
+# 否則「結束對話的那一下」會在同一幀被 _update_interactions 當成開啟輸入導致無限重開。
+var _was_busy: bool = false
+var _accept_release_needed: bool = false
+
 
 func _ready() -> void:
 	_player = $YSort/Player
@@ -87,6 +97,7 @@ func _ready() -> void:
 	_setup_followers()
 	_setup_camera_limits()
 	_wire_zones()
+	_setup_ui()
 	_apply_entry_state()
 	_trail.reset(_player.global_position)
 	_setup_encounter_tracker()
@@ -101,9 +112,14 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	# lock 同步：對話/過場進行中鎖移動與 zones（對應 WORLD_JS 的 lock 旗標；選單/商店 lock 屬
-	# MOD-D 範圍，之後由選單系統另外呼叫 world_state.set_lock()）。
-	world_state.set_lock(DialogueSystem.is_busy())
+	# lock 同步：對話/過場進行中，或選單開啟時，鎖移動與 zones（對應 WORLD_JS 的 lock 旗標）。
+	var busy_now: bool = DialogueSystem.is_busy()
+	if _was_busy and not busy_now:
+		# 對話/過場剛結束 → 要求 ui_accept 放開後才能再開新對話（見 _update_interactions 的 release gate）。
+		_accept_release_needed = true
+	_was_busy = busy_now
+	var menu_open: bool = _menu != null and _menu.is_open()
+	world_state.set_lock(busy_now or menu_open)
 	if _tracker != null:
 		# mine_step0 特例每幀重解析（見 encounter_tracker.gd 檔頭「encounter_id 語意」）。
 		_tracker.encounter_id = _resolve_encounter_group()
@@ -368,6 +384,25 @@ func _on_picked_up(msg: String, _sfx_name: String) -> void:
 # 進場交握（scene_router.gd 檔頭「場景端交握約定」）
 # =========================================================================
 
+## 掛載選單與完整 HUD（隊伍血條/金幣/目標/[M]選單提示）。以程式建立而非 .tscn ext_resource，
+## 見 `_menu`/`_hud_full` 欄位註解。世界的 `$HUD/Prompt`（互動提示）是另一個節點，兩者互不影響。
+func _setup_ui() -> void:
+	if ResourceLoader.exists("res://scenes/ui/menu_root.tscn"):
+		var menu: Node = load("res://scenes/ui/menu_root.tscn").instantiate()
+		menu.name = "MenuRootRuntime"
+		add_child(menu)
+		if menu.has_method("set_scene_id"):
+			menu.set_scene_id(scene_id)
+		_menu = menu
+	if ResourceLoader.exists("res://scenes/ui/hud.tscn"):
+		var hud: Node = load("res://scenes/ui/hud.tscn").instantiate()
+		hud.name = "HudFull"
+		add_child(hud)
+		if hud.has_method("set_scene_id"):
+			hud.set_scene_id(scene_id)
+		_hud_full = hud
+
+
 func _apply_entry_state() -> void:
 	var res: String = GameState.result
 	if SceneRouter.should_use_return_position():
@@ -472,9 +507,12 @@ func _update_interactions(delta: float) -> void:
 		if _prompt_timer <= 0.0:
 			$HUD/Prompt.text = ""
 		return
+	# release gate：對話剛結束後，等 ui_accept 放開才解除，避免同一次按壓結束又立刻重開對話。
+	if _accept_release_needed and not Input.is_action_pressed("ui_accept"):
+		_accept_release_needed = false
 	var near_npc := _find_near_npc()
 	var near_chest := _find_near_chest()
-	if InputBridge.is_action_hit("ui_accept"):
+	if not _accept_release_needed and InputBridge.is_action_hit("ui_accept"):
 		if near_npc != "":
 			DialogueSystem.open_npc_dialogue(near_npc)
 			return

@@ -210,9 +210,9 @@ func _tab_chars(ps: Array, enter: bool, up: bool, down: bool, rows: Array, bars:
 			var has_pts := int(mm.get("pts", 0)) > 0 or int(mm.get("spts", 0)) > 0
 			var star := "　★有可分配點數" if has_pts else ""
 			rows.append({"t": ("▶ " if i == sel else "　 ") + String(mm.get("name", "")) + "　" + _cls_name(mm) + "　Lv" + str(mm.get("lv", 1)) + star, "sel": i == sel, "x": 180, "y": y0, "hw": 920})
-			rows.append({"t": "HP " + str(mm.get("hp", 0)) + "/" + str(mm.get("maxhp", 0)), "x": 220, "y": y0 + 30})
+			rows.append({"t": "HP " + _num(mm.get("hp", 0)) + "/" + _num(mm.get("maxhp", 0)), "x": 220, "y": y0 + 30})
 			bars.append({"x": 390, "y": y0 + 38, "w": 170, "cur": mm.get("hp", 0), "max": mm.get("maxhp", 0), "kind": "hp"})
-			rows.append({"t": "MP " + str(mm.get("mp", 0)) + "/" + str(mm.get("maxmp", 0)), "x": 620, "y": y0 + 30})
+			rows.append({"t": "MP " + _num(mm.get("mp", 0)) + "/" + _num(mm.get("maxmp", 0)), "x": 620, "y": y0 + 30})
 			bars.append({"x": 780, "y": y0 + 38, "w": 170, "cur": mm.get("mp", 0), "max": mm.get("maxmp", 0), "kind": "mp"})
 		if enter and sel < ps.size():
 			m_mode = "member"
@@ -271,9 +271,9 @@ func _tab_chars(ps: Array, enter: bool, up: bool, down: bool, rows: Array, bars:
 	if did:
 		Derive.derive(m)
 
-	rows.append({"t": "HP " + str(m.get("hp", 0)) + "/" + str(m.get("maxhp", 0)), "x": 180, "y": 168})
+	rows.append({"t": "HP " + _num(m.get("hp", 0)) + "/" + _num(m.get("maxhp", 0)), "x": 180, "y": 168})
 	bars.append({"x": 330, "y": 176, "w": 170, "cur": m.get("hp", 0), "max": m.get("maxhp", 0), "kind": "hp"})
-	rows.append({"t": "MP " + str(m.get("mp", 0)) + "/" + str(m.get("maxmp", 0)), "x": 560, "y": 168})
+	rows.append({"t": "MP " + _num(m.get("mp", 0)) + "/" + _num(m.get("maxmp", 0)), "x": 560, "y": 168})
 	bars.append({"x": 700, "y": 176, "w": 170, "cur": m.get("mp", 0), "max": m.get("maxmp", 0), "kind": "mp"})
 
 	var pts := int(m.get("pts", 0))
@@ -338,8 +338,8 @@ func _tab_equip(ps: Array, enter: bool, up: bool, down: bool, rows: Array, _bars
 		rows.append({"t": "── 裝備袋（隊伍共用）──", "c": _panel.col_accent})
 		if uniq.size() == 0:
 			rows.append({"t": "（目前沒有備用裝備——多和鎮民聊聊、完成委託會有收穫）", "c": C_EMPTY})
-		var base := max(0, min(eq_sel - 5, uniq.size() - 11))
-		var i := base
+		var base: int = max(0, min(eq_sel - 5, uniq.size() - 11))
+		var i: int = base
 		while i < uniq.size() and i < base + 11:
 			var e: EquipmentDef = ContentDB.get_equipment(String(uniq[i]))
 			var xn := (" ×" + str(cnt[uniq[i]])) if int(cnt[uniq[i]]) > 1 else ""
@@ -459,7 +459,7 @@ func _tab_items(ps: Array, enter: bool, up: bool, down: bool, rows: Array, bars:
 
 	# who 模式：選使用對象
 	var it2: Dictionary = cons[i_sel]
-	var is_mp := it2["meta"].kind == "mp"
+	var is_mp: bool = it2["meta"].kind == "mp"
 	if up and i_who > 0:
 		i_who -= 1
 	if down and i_who < ps.size() - 1:
@@ -470,9 +470,9 @@ func _tab_items(ps: Array, enter: bool, up: bool, down: bool, rows: Array, bars:
 		Derive.derive(mm)
 		var y0 := 224 + i * 64
 		rows.append({"t": ("▶ " if i == i_who else "　 ") + String(mm.get("name", "")) + "　Lv" + str(mm.get("lv", 1)), "sel": i == i_who, "x": 180, "y": y0, "hw": 820})
-		rows.append({"t": "HP " + str(mm.get("hp", 0)) + "/" + str(mm.get("maxhp", 0)), "x": 220, "y": y0 + 30})
+		rows.append({"t": "HP " + _num(mm.get("hp", 0)) + "/" + _num(mm.get("maxhp", 0)), "x": 220, "y": y0 + 30})
 		bars.append({"x": 390, "y": y0 + 38, "w": 150, "cur": mm.get("hp", 0), "max": mm.get("maxhp", 0), "kind": "hp"})
-		rows.append({"t": "MP " + str(mm.get("mp", 0)) + "/" + str(mm.get("maxmp", 0)), "x": 600, "y": y0 + 30})
+		rows.append({"t": "MP " + _num(mm.get("mp", 0)) + "/" + _num(mm.get("maxmp", 0)), "x": 600, "y": y0 + 30})
 		bars.append({"x": 760, "y": y0 + 38, "w": 150, "cur": mm.get("mp", 0), "max": mm.get("maxmp", 0), "kind": "mp"})
 	if enter and i_who < ps.size():
 		var tgt: Dictionary = ps[i_who]

@@ -145,7 +145,7 @@ func load_game() -> bool:
 	if data == null:
 		return false
 
-	GameState.flags = _as_int_dict(data.get("flags", {}))
+	GameState.flags = _load_flags(data.get("flags", {}))
 	GameState.party = _as_array(data.get("party", []))
 	GameState.eq_inv = _as_string_array(data.get("eqInv", []))
 	GameState.item_inv = _as_int_dict(data.get("itemInv", {}))
@@ -203,10 +203,28 @@ func _read_raw() -> Variant:
 	return parsed
 
 
-## Godot 的 JSON.parse_string() 對數字一律可能還原成 float（JSON 規格不分 int/float），flags/背包
-## 這類「value 必須是 int」的欄位（見 game_state.gd flag_set/inv_add 的型別安全設計）讀檔後要重新轉型，
-## 否則後續 matchWhen 之類的 `==` 整數比對可能因為 int/float 混用出錯。key 一律轉 String（JSON 物件
-## key 本來就只能是字串，這裡是防禦性寫法，避免上游資料異常）。
+## flags 專用還原。flags 幾乎都是 int（flag_set 已保證），但 `eqTitle` 是刻意的 String 例外——menu_root.gd
+## 直接寫 `flags["eqTitle"]=<title id>`（String）繞過 flag_set，titles_data.gd 也以 String 讀取（見
+## game_state.gd flags 註解與 titles_data.gd 檔頭）。若比照 item_inv 無差別 int()，`int("t_rookie")` 會變 0，
+## 佩戴的稱號讀檔後遺失、且 titles_data 的 `String(<int>)` 會直接 crash（見 tests/check_save_roundtrip.gd）。
+## 故依 JSON 還原後的型別決定：字串保留字串、其餘轉 int。key 一律轉 String（防上游資料異常）。
+func _load_flags(raw: Variant) -> Dictionary:
+	var out := {}
+	if typeof(raw) != TYPE_DICTIONARY:
+		return out
+	for k in raw.keys():
+		var v: Variant = raw[k]
+		if typeof(v) == TYPE_STRING:
+			out[String(k)] = String(v)
+		else:
+			out[String(k)] = int(v)
+	return out
+
+
+## Godot 的 JSON.parse_string() 對數字一律可能還原成 float（JSON 規格不分 int/float），背包這類
+## 「value 必須是 int」的欄位（見 game_state.gd inv_add 的型別安全設計）讀檔後要重新轉型，否則後續
+## `==` 整數比對可能因為 int/float 混用出錯。key 一律轉 String（JSON 物件 key 本來就只能是字串，這裡
+## 是防禦性寫法，避免上游資料異常）。flags 另走 _load_flags（需保留 eqTitle 的 String 型別）。
 func _as_int_dict(raw: Variant) -> Dictionary:
 	var out := {}
 	if typeof(raw) != TYPE_DICTIONARY:

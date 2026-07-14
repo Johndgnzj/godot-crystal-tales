@@ -51,9 +51,9 @@ func _party_text() -> String:
 			continue
 		if ContentDB.is_loaded:
 			Derive.derive(m)
-		var hp = m.get("hp", 0)
-		var maxhp = m.get("maxhp", hp)
-		parts.append("%s Lv%s %s/%s" % [m.get("name", ""), m.get("lv", 1), hp, maxhp])
+		var hp: int = int(m.get("hp", 0))
+		var maxhp: int = int(m.get("maxhp", hp))
+		parts.append("%s Lv%s %d/%d" % [m.get("name", ""), m.get("lv", 1), hp, maxhp])
 	return "   ".join(parts)
 
 

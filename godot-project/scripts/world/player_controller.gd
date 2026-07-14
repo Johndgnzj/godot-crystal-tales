@@ -23,11 +23,12 @@ class_name PlayerController
 ## 規格來源：TASKS/03_移動碰撞.md；DEV_開發指南.md L55。
 ## 前置依賴：CORE-6 `autoload/input_bridge.gd`（讀 `is_action_held()`，不直接呼叫 `Input.*`）。
 
-## px/s，對應 GDevelop maxSpeed=190。
-@export var max_speed: float = 190.0
+## px/s。GDevelop 原值 190，實測偏慢（2026-07-15 John 回饋），上調到 250；此為 @export，
+## 可在 Player 節點的 Inspector 即時微調到手感對的數字，不必改程式。
+@export var max_speed: float = 250.0
 
-## px/s²，對應 GDevelop acceleration=1200（放開/切換方向時，速度趨近目標值的加速率）。
-@export var acceleration: float = 1200.0
+## px/s²，加速率（放開/切換方向時速度趨近目標值）。隨 max_speed 一併上調讓起步更跟手。
+@export var acceleration: float = 1600.0
 
 ## px/s²，對應 GDevelop deceleration=1500（沒有輸入時，速度趨近 0 的減速率）。
 @export var deceleration: float = 1500.0
