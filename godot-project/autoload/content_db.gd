@@ -1,22 +1,18 @@
 extends Node
-## ContentDB — CONTENT.json 的唯讀查詢介面（autoload 單例，註冊名稱 "ContentDB"）。
+## ContentDB — 內容資料的唯讀查詢介面（autoload 單例，註冊名稱 "ContentDB"）。
 ##
-## 資料流向（見 ../../CLAUDE.md「權威來源與資料流向」與
-## ../../TASKS/00_核心任務.md CORE-2 段落的定案理由）：
-##   ../../../gd-crystal-tales/projects/crystal-quest/CONTENT.json（唯一資料源，唯讀）
-##     -> scripts/content/sync_content.py（同步腳本，帶輕量 schema 檢查）
-##     -> res://resources/content/content.json（同步後的副本，隨 repo 一起 commit）
-##     -> ContentDB._load()（run-time JSON.parse_string，本檔案）
+## 資料真相源：res://resources/content/ 下的原生 .tres（設計員在 Godot 編輯器 Inspector 直接編輯個別實體）。
+## 這些 .tres 由 ContentDatabase 聚合資源 content_db.tres 以 typed @export 陣列引用；本 autoload 只 load()
+## 這一個聚合檔即拿到全部——匯出（.pck）安全（不靠 DirAccess 掃 res:// 目錄）、型別安全。
 ##
-## 決定：run-time 直接 parse JSON，不做 build-time .tres 轉存。理由：CONTENT.json 目前仍隨 GDevelop
-## 端開發頻繁變動（John 常改數值），run-time parse 省去「改完 CONTENT.json 還要在 Godot 編輯器內重新
-## 匯出/儲存 .tres」這道額外同步步驟；.tres 需要 Godot 執行檔才能產生，而這個 CORE-2 執行環境目前拿不到
-## Godot 執行檔（見 CORE-1 驗收現況），run-time parse 也讓「純 Python 腳本驗證資料正確性」變得可行，不用
-## 依賴引擎起得來。缺點（每次啟動要花時間 parse 一次 JSON、拿不到 .tres 的型別檢查與編輯器 Inspector
-## 預覽）在目前資料量級（561 行來源 JSON）下可忽略。之後如果資料量大到影響啟動時間，可以再補一支
-## build-time 轉存腳本，兩者介面（ContentDB 的 get_xxx() API）不需要跟著變。
+## 匯入來源（僅在「要從 GDevelop 重新匯入」時才用）：
+##   ../../../GDevelop/projects/crystal-quest/CONTENT.json 是最初的資料種子
+##     -> scripts/content/sync_content.py -> res://resources/content/content.json
+##     -> scripts/content/build_tres.gd  -> resources/content/**/*.tres ＋ content_db.tres
+## 切斷 GDevelop 臍帶後（2026-07-14，CORE-2 決策更新）：.tres 才是唯一真相源，平時直接編輯 .tres，
+## 不再走 CONTENT.json；content.json / sync_content.py 淪為「重新匯入」的可選工具。
 
-const CONTENT_PATH := "res://resources/content/content.json"
+const DB_PATH := "res://resources/content/content_db.tres"
 
 var is_loaded: bool = false
 
@@ -37,65 +33,40 @@ func _ready() -> void:
 
 
 func _load() -> void:
-	if not FileAccess.file_exists(CONTENT_PATH):
-		push_error("ContentDB: 找不到 %s，請先跑 godot-project/scripts/content/sync_content.py" % CONTENT_PATH)
+	if not ResourceLoader.exists(DB_PATH):
+		push_error("ContentDB: 找不到 %s，請先跑 scripts/content/build_tres.gd 產生 .tres" % DB_PATH)
 		return
-
-	var file := FileAccess.open(CONTENT_PATH, FileAccess.READ)
-	if file == null:
-		push_error("ContentDB: 開檔失敗 %s（error=%s）" % [CONTENT_PATH, FileAccess.get_open_error()])
-		return
-	var text := file.get_as_text()
-	file.close()
-
-	var parsed = JSON.parse_string(text)
-	if typeof(parsed) != TYPE_DICTIONARY:
-		push_error("ContentDB: content.json 格式錯誤，頂層必須是物件")
+	var db: ContentDatabase = load(DB_PATH)
+	if db == null:
+		push_error("ContentDB: 載入 %s 失敗（不是合法 ContentDatabase）" % DB_PATH)
 		return
 
 	_party_members.clear()
-	for entry in parsed.get("party", []):
-		var m := PartyMemberDef.from_dict(entry)
+	for m in db.party:
 		_party_members[m.id] = m
-
-	_derived = DerivedParams.from_dict(parsed.get("derived", {}))
-
 	_equipment.clear()
-	for entry in parsed.get("equipment", []):
-		var e := EquipmentDef.from_dict(entry)
+	for e in db.equipment:
 		_equipment[e.id] = e
-
 	_skills.clear()
-	for entry in parsed.get("skills", []):
-		var s := SkillDef.from_dict(entry)
+	for s in db.skills:
 		_skills[s.id] = s
-
-	_pacing = PacingParams.from_dict(parsed.get("pacing", {}))
-
 	_items.clear()
-	for entry in parsed.get("items", []):
-		var it := ItemDef.from_dict(entry)
+	for it in db.items:
 		_items[it.id] = it
-
 	_enemies.clear()
-	for entry in parsed.get("enemies", []):
-		var en := EnemyDef.from_dict(entry)
+	for en in db.enemies:
 		_enemies[en.id] = en
-
 	_encounters.clear()
-	var encounters_raw: Dictionary = parsed.get("encounters", {})
-	for map_id in encounters_raw.keys():
-		_encounters[map_id] = EncounterDef.from_dict(map_id, encounters_raw[map_id])
-
+	for enc in db.encounters:
+		_encounters[enc.map_id] = enc
 	_shops.clear()
-	var shops_raw: Dictionary = parsed.get("shops", {})
-	for shop_id in shops_raw.keys():
-		_shops[shop_id] = ShopDef.from_dict(shop_id, shops_raw[shop_id])
-
+	for sh in db.shops:
+		_shops[sh.id] = sh
 	_chests.clear()
-	for entry in parsed.get("chests", []):
-		var c := ChestDef.from_dict(entry)
+	for c in db.chests:
 		_chests[c.id] = c
+	_derived = db.derived
+	_pacing = db.pacing
 
 	is_loaded = true
 

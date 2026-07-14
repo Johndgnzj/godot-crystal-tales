@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ChestDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_o1pfa"]
+
+[resource]
+script = ExtResource("1_o1pfa")
+id = "mi_c2"
+map = "mine"
+tx = 45
+ty = 33
+tier = "hidden"
+loot = [{
+"id": "silver_boots",
+"type": "eq"
+}]

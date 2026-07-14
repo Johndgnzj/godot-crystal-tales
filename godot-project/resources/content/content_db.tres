@@ -1,0 +1,1151 @@
+[gd_resource type="Resource" script_class="ContentDatabase" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_vcnnr"]
+[ext_resource type="Script" path="res://scripts/content/derived_params.gd" id="2_1bx6f"]
+[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="3_hsbra"]
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="4_hoq51"]
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="5_vtoea"]
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="6_gqqnr"]
+[ext_resource type="Script" path="res://scripts/content/pacing_params.gd" id="7_phwb1"]
+[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="8_j105i"]
+[ext_resource type="Script" path="res://scripts/content/content_database.gd" id="9_vcxsc"]
+[ext_resource type="Script" path="res://scripts/content/shop_def.gd" id="10_08ale"]
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="11_ksis1"]
+
+[sub_resource type="Resource" id="Resource_4mco2"]
+script = ExtResource("1_vcnnr")
+id = "fo_c1"
+map = "forest"
+tx = 36
+ty = 21
+tier = "common"
+loot = [{
+"count": 1.0,
+"id": "potion",
+"type": "item"
+}]
+
+[sub_resource type="Resource" id="Resource_po4de"]
+script = ExtResource("1_vcnnr")
+id = "fo_c2"
+map = "forest"
+tx = 50
+ty = 5
+tier = "hidden"
+loot = [{
+"id": "hunter_bracer",
+"type": "eq"
+}]
+
+[sub_resource type="Resource" id="Resource_gykii"]
+script = ExtResource("1_vcnnr")
+id = "fo_c3"
+map = "forest"
+tx = 17
+ty = 12
+tier = "rare"
+loot = [{
+"id": "vital_ring",
+"type": "eq"
+}]
+
+[sub_resource type="Resource" id="Resource_3u0vo"]
+script = ExtResource("1_vcnnr")
+id = "f2_c1"
+map = "forest2"
+tx = 35
+ty = 14
+tier = "common"
+loot = [{
+"amount": 30.0,
+"type": "gold"
+}]
+
+[sub_resource type="Resource" id="Resource_eid4v"]
+script = ExtResource("1_vcnnr")
+id = "f2_c2"
+map = "forest2"
+tx = 11
+ty = 23
+tier = "hidden"
+loot = [{
+"count": 3.0,
+"id": "potion",
+"type": "item"
+}]
+
+[sub_resource type="Resource" id="Resource_5urhr"]
+script = ExtResource("1_vcnnr")
+id = "f2_c3"
+map = "forest2"
+tx = 44
+ty = 24
+tier = "rare"
+loot = [{
+"amount": 100.0,
+"type": "gold"
+}, {
+"count": 1.0,
+"id": "crystal_shard",
+"type": "item"
+}]
+
+[sub_resource type="Resource" id="Resource_d2ft4"]
+script = ExtResource("1_vcnnr")
+id = "mi_c1"
+map = "mine"
+tx = 23
+ty = 15
+tier = "common"
+loot = [{
+"amount": 40.0,
+"type": "gold"
+}]
+
+[sub_resource type="Resource" id="Resource_8txt0"]
+script = ExtResource("1_vcnnr")
+id = "mi_c2"
+map = "mine"
+tx = 45
+ty = 33
+tier = "hidden"
+loot = [{
+"id": "silver_boots",
+"type": "eq"
+}]
+
+[sub_resource type="Resource" id="Resource_klaos"]
+script = ExtResource("1_vcnnr")
+id = "mi_c3"
+map = "mine"
+tx = 47
+ty = 2
+tier = "rare"
+loot = [{
+"id": "guardian_pendant",
+"type": "eq"
+}]
+
+[sub_resource type="Resource" id="Resource_lx0cd"]
+script = ExtResource("1_vcnnr")
+id = "ca_c1"
+map = "cave"
+tx = 18
+ty = 30
+tier = "common"
+loot = [{
+"count": 2.0,
+"id": "potion",
+"type": "item"
+}]
+
+[sub_resource type="Resource" id="Resource_jrofq"]
+script = ExtResource("1_vcnnr")
+id = "ca_c2"
+map = "cave"
+tx = 45
+ty = 19
+tier = "hidden"
+loot = [{
+"count": 2.0,
+"id": "hi_potion",
+"type": "item"
+}]
+
+[sub_resource type="Resource" id="Resource_ybc1w"]
+script = ExtResource("1_vcnnr")
+id = "ca_c3"
+map = "cave"
+tx = 33
+ty = 7
+tier = "rare"
+loot = [{
+"amount": 150.0,
+"type": "gold"
+}, {
+"count": 2.0,
+"id": "crystal_shard",
+"type": "item"
+}]
+
+[sub_resource type="Resource" id="Resource_b7rfi"]
+script = ExtResource("2_1bx6f")
+hp_base = 30.0
+hp_per_str = 8.0
+mp_base = 8.0
+mp_per_int = 5.0
+weapon_atk = 6.0
+points_per_level = 3.0
+skill_points_per_level = 1.0
+skill_max_lv = 10.0
+skill_power_per_lv = 0.15
+exp_base = 10.0
+exp_coef = 8.0
+exp_pow = 1.4
+matk_per_int = 2.0
+mdef_per_int = 0.8
+dodge_per_agi = 1.5
+dodge_cap = 30.0
+crit_base = 6.25
+crit_per_agi = 0.15
+
+[sub_resource type="Resource" id="Resource_ll363"]
+script = ExtResource("3_hsbra")
+map_id = "forest"
+formations = [["bird", "gslime"], ["goblin", "goblin"], ["bird", "worm"], ["goblin", "worm", "gslime"]]
+
+[sub_resource type="Resource" id="Resource_7wl3i"]
+script = ExtResource("3_hsbra")
+map_id = "forest2"
+formations = [["goblin", "goblin", "gslime"], ["worm", "worm"], ["bird", "goblin", "worm"], ["goblin", "goblin", "goblin"], ["wolf", "goblin"], ["wolf", "wolf"]]
+
+[sub_resource type="Resource" id="Resource_idhf2"]
+script = ExtResource("3_hsbra")
+map_id = "mine"
+formations = [["wogol", "skeleton"], ["skeleton", "skeleton"], ["orc", "wogol"], ["wolf", "skeleton"], ["bear"]]
+
+[sub_resource type="Resource" id="Resource_olkl2"]
+script = ExtResource("3_hsbra")
+map_id = "cave"
+formations = [["chort", "chort"], ["chort", "skeleton", "wogol"], ["necro", "chort"]]
+
+[sub_resource type="Resource" id="Resource_s2xj1"]
+script = ExtResource("3_hsbra")
+map_id = "tutorial"
+formations = [["bird", "gslime"]]
+
+[sub_resource type="Resource" id="Resource_liudx"]
+script = ExtResource("3_hsbra")
+map_id = "prologue_demon"
+formations = [["shadow_demon"]]
+
+[sub_resource type="Resource" id="Resource_sb6r6"]
+script = ExtResource("3_hsbra")
+map_id = "ch1_boss"
+formations = [["goblin_chief", "goblin", "goblin"]]
+
+[sub_resource type="Resource" id="Resource_vyme8"]
+script = ExtResource("3_hsbra")
+map_id = "ch2_bear"
+formations = [["bear_dire"]]
+
+[sub_resource type="Resource" id="Resource_v4bx3"]
+script = ExtResource("4_hoq51")
+id = "bird"
+display_name = "掠翅鳥"
+sprite = "bird"
+hp = 16.0
+atk = 7.0
+def_stat = 2.0
+spd = 14.0
+exp = 5
+gold = 3
+drops = [{
+"id": "soft_feather",
+"rate": 0.5
+}]
+
+[sub_resource type="Resource" id="Resource_2d226"]
+script = ExtResource("4_hoq51")
+id = "gslime"
+display_name = "綠黏史萊姆"
+sprite = "gslime"
+hp = 26.0
+atk = 6.0
+def_stat = 4.0
+spd = 4.0
+exp = 6
+gold = 4
+drops = [{
+"id": "slime_gel",
+"rate": 0.5
+}]
+
+[sub_resource type="Resource" id="Resource_38aoo"]
+script = ExtResource("4_hoq51")
+id = "worm"
+display_name = "巨牙蟲"
+sprite = "worm"
+hp = 20.0
+atk = 11.0
+def_stat = 3.0
+spd = 7.0
+exp = 8
+gold = 5
+drops = [{
+"id": "worm_carapace",
+"rate": 0.45
+}]
+
+[sub_resource type="Resource" id="Resource_1f648"]
+script = ExtResource("4_hoq51")
+id = "goblin"
+display_name = "哥布林拾荒者"
+sprite = "goblin"
+hp = 22.0
+atk = 9.0
+def_stat = 4.0
+spd = 8.0
+exp = 8
+gold = 7
+drops = [{
+"id": "goblin_fang",
+"rate": 0.4
+}]
+
+[sub_resource type="Resource" id="Resource_7ak06"]
+script = ExtResource("4_hoq51")
+id = "goblin_chief"
+display_name = "哥布林頭目"
+sprite = "maskedorc"
+hp = 600.0
+atk = 26.0
+def_stat = 13.0
+spd = 10.0
+exp = 140
+gold = 150
+big = true
+drops = [{
+"id": "goblin_fang",
+"rate": 1.0
+}, {
+"id": "crystal_shard",
+"rate": 0.25
+}]
+foe_skills = [{
+"mult": 1.9,
+"name": "猛力連擊",
+"target": "one"
+}, {
+"mult": 1.15,
+"name": "亂舞橫掃",
+"target": "all"
+}]
+
+[sub_resource type="Resource" id="Resource_auvyr"]
+script = ExtResource("4_hoq51")
+id = "bear"
+display_name = "洞熊"
+sprite = "bear"
+hp = 70.0
+atk = 16.0
+def_stat = 9.0
+spd = 5.0
+exp = 28
+gold = 18
+drops = [{
+"id": "beast_hide",
+"rate": 0.6
+}]
+
+[sub_resource type="Resource" id="Resource_j7mbp"]
+script = ExtResource("4_hoq51")
+id = "bear_dire"
+display_name = "狂暴洞熊"
+sprite = "bear"
+hp = 960.0
+atk = 36.0
+def_stat = 16.0
+spd = 8.0
+exp = 180
+gold = 100
+big = true
+all_attack = true
+drops = [{
+"id": "beast_hide",
+"rate": 1.0
+}, {
+"id": "crystal_shard",
+"rate": 0.3
+}]
+foe_skills = [{
+"mult": 2.1,
+"name": "狂亂撕咬",
+"target": "one"
+}, {
+"mult": 1.25,
+"name": "震地怒吼",
+"target": "all"
+}]
+
+[sub_resource type="Resource" id="Resource_wykaa"]
+script = ExtResource("4_hoq51")
+id = "wolf"
+display_name = "野狼"
+sprite = "wolf"
+hp = 40.0
+atk = 13.0
+def_stat = 6.0
+spd = 12.0
+exp = 16
+gold = 11
+drops = [{
+"id": "wolf_hide",
+"rate": 0.6
+}, {
+"id": "beast_hide",
+"rate": 0.15
+}]
+
+[sub_resource type="Resource" id="Resource_dfnc1"]
+script = ExtResource("4_hoq51")
+id = "wogol"
+display_name = "礦坑飛魔"
+sprite = "wogol"
+hp = 24.0
+atk = 11.0
+def_stat = 4.0
+spd = 15.0
+exp = 11
+gold = 8
+drops = [{
+"id": "crystal_shard",
+"rate": 0.1
+}]
+
+[sub_resource type="Resource" id="Resource_sahc2"]
+script = ExtResource("4_hoq51")
+id = "skeleton"
+display_name = "骷髏礦工"
+sprite = "skeleton"
+hp = 34.0
+atk = 12.0
+def_stat = 7.0
+spd = 7.0
+exp = 12
+gold = 10
+drops = [{
+"id": "bone_shard",
+"rate": 0.5
+}, {
+"id": "iron_ore",
+"rate": 0.2
+}]
+
+[sub_resource type="Resource" id="Resource_vjhig"]
+script = ExtResource("4_hoq51")
+id = "orc"
+display_name = "獸人挖掘者"
+sprite = "orc"
+hp = 48.0
+atk = 14.0
+def_stat = 9.0
+spd = 6.0
+exp = 18
+gold = 14
+drops = [{
+"id": "iron_ore",
+"rate": 0.4
+}, {
+"id": "bone_shard",
+"rate": 0.15
+}]
+
+[sub_resource type="Resource" id="Resource_hnf0v"]
+script = ExtResource("4_hoq51")
+id = "chort"
+display_name = "暗影小魔"
+sprite = "chort"
+hp = 30.0
+atk = 14.0
+def_stat = 5.0
+spd = 13.0
+exp = 16
+gold = 12
+drops = [{
+"id": "crystal_shard",
+"rate": 0.15
+}]
+
+[sub_resource type="Resource" id="Resource_1s8rn"]
+script = ExtResource("4_hoq51")
+id = "necro"
+display_name = "死靈術士"
+sprite = "necro"
+hp = 60.0
+atk = 13.0
+def_stat = 6.0
+spd = 9.0
+exp = 40
+gold = 35
+healer = true
+drops = [{
+"id": "crystal_shard",
+"rate": 0.5
+}, {
+"id": "mana_herb",
+"rate": 0.3
+}]
+
+[sub_resource type="Resource" id="Resource_cs8nw"]
+script = ExtResource("4_hoq51")
+id = "ogre"
+display_name = "洞窟食人魔"
+sprite = "ogre"
+hp = 1300.0
+atk = 38.0
+def_stat = 18.0
+spd = 6.0
+exp = 400
+gold = 350
+big = true
+all_attack = true
+drops = [{
+"id": "crystal_shard",
+"rate": 1.0
+}, {
+"id": "beast_hide",
+"rate": 0.5
+}]
+foe_skills = [{
+"mult": 2.0,
+"name": "巨槌重砸",
+"target": "one"
+}, {
+"mult": 1.35,
+"name": "崩山地裂",
+"target": "all"
+}]
+
+[sub_resource type="Resource" id="Resource_f55ks"]
+script = ExtResource("4_hoq51")
+id = "shadow_demon"
+display_name = "異變的魔影"
+sprite = "demon"
+hp = 9999.0
+atk = 22.0
+def_stat = 25.0
+spd = 12.0
+big = true
+
+[sub_resource type="Resource" id="Resource_qyo2q"]
+script = ExtResource("5_vtoea")
+id = "short_sword"
+display_name = "短劍"
+slot = "weapon"
+desc = "鎮上鐵匠隨手打的入門短劍，輕便好上手。"
+buy = 40
+sell = 12
+stats = {
+"patk": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_csqks"]
+script = ExtResource("5_vtoea")
+id = "hunting_knife"
+display_name = "獵刀"
+slot = "weapon"
+desc = "處理野味用的獵刀，攻擊低但容易刺中要害。"
+buy = 50
+sell = 15
+stats = {
+"crit": 4.0,
+"patk": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_1msp4"]
+script = ExtResource("5_vtoea")
+id = "iron_sword"
+display_name = "鐵劍"
+slot = "weapon"
+desc = "扎實的全鐵長劍，冒險者的標準配備。"
+buy = 120
+sell = 36
+stats = {
+"patk": 6.0
+}
+
+[sub_resource type="Resource" id="Resource_e6sw3"]
+script = ExtResource("5_vtoea")
+id = "traveler_garb"
+display_name = "旅行衣"
+slot = "armor"
+desc = "耐磨的旅人布衣，擋不了太多但透氣。"
+buy = 35
+sell = 10
+stats = {
+"pdef": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_7idvq"]
+script = ExtResource("5_vtoea")
+id = "leather_vest"
+display_name = "皮革護胸"
+slot = "armor"
+desc = "鞣製皮革製的護胸，兼顧防護與靈活。"
+buy = 90
+sell = 27
+stats = {
+"pdef": 5.0
+}
+
+[sub_resource type="Resource" id="Resource_ydp3b"]
+script = ExtResource("5_vtoea")
+id = "leather_boots"
+display_name = "皮革長靴"
+slot = "boots"
+desc = "結實的皮靴，長途跋涉不磨腳。"
+buy = 15
+sell = 4
+stats = {
+"pdef": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_i8tu0"]
+script = ExtResource("5_vtoea")
+id = "swift_boots"
+display_name = "疾風靴"
+slot = "boots"
+desc = "輕量化的軟皮靴，步伐輕盈、易於閃避。"
+buy = 60
+sell = 18
+stats = {
+"dodge": 4.0
+}
+
+[sub_resource type="Resource" id="Resource_uvrlw"]
+script = ExtResource("5_vtoea")
+id = "cloth_wraps"
+display_name = "布質護腕"
+slot = "wrist"
+desc = "纏在手腕上的粗布，聊勝於無的護具。"
+buy = 15
+sell = 4
+stats = {
+"pdef": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_tnpb5"]
+script = ExtResource("5_vtoea")
+id = "iron_bracer"
+display_name = "鐵護腕"
+slot = "wrist"
+desc = "加了鐵片的護腕，格擋之餘還能增添揮劍力道。"
+buy = 70
+sell = 21
+stats = {
+"patk": 2.0,
+"pdef": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_mugyq"]
+script = ExtResource("5_vtoea")
+id = "hunter_bracer"
+display_name = "獵人護腕"
+slot = "wrist"
+desc = "獵人慣用的護腕，助你抓準破綻、側身避擊。"
+buy = 40
+sell = 12
+stats = {
+"crit": 3.0,
+"dodge": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_daxiu"]
+script = ExtResource("5_vtoea")
+id = "agate_charm"
+display_name = "瑪瑙護符"
+slot = "acc"
+desc = "朵拉塞給瑪琳的瑪瑙護符，能抵禦邪異的力量。"
+buy = 50
+sell = 15
+stats = {
+"mdef": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_atlte"]
+script = ExtResource("5_vtoea")
+id = "vital_ring"
+display_name = "活力戒指"
+slot = "acc"
+desc = "溫熱的紅玉戒指，配戴時體力更加充沛。"
+buy = 80
+sell = 24
+stats = {
+"hp": 20.0
+}
+
+[sub_resource type="Resource" id="Resource_dlev1"]
+script = ExtResource("5_vtoea")
+id = "focus_earring"
+display_name = "凝神耳環"
+slot = "acc"
+desc = "藍晶耳環，凝神靜氣，強化魔力循環。"
+buy = 90
+sell = 27
+stats = {
+"matk": 2.0,
+"mp": 10.0
+}
+
+[sub_resource type="Resource" id="Resource_4k0mt"]
+script = ExtResource("5_vtoea")
+id = "lucky_coin"
+display_name = "幸運銅幣"
+slot = "acc"
+desc = "磨得發亮的老銅幣，據說能招來一點好運。"
+buy = 45
+sell = 13
+stats = {
+"crit": 2.0,
+"dodge": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_0q8wu"]
+script = ExtResource("5_vtoea")
+id = "steel_sword"
+display_name = "鋼劍"
+slot = "weapon"
+desc = "漢克精心鍛造的鋼劍，鋒利沉穩，第二章的主力武器。"
+buy = 260
+sell = 78
+tier = 2
+stats = {
+"patk": 10.0
+}
+
+[sub_resource type="Resource" id="Resource_e8jw0"]
+script = ExtResource("5_vtoea")
+id = "keen_dagger"
+display_name = "銳鋒匕"
+slot = "weapon"
+desc = "刃薄如紙的匕首，靈巧者的利器，會心一擊機率極高。"
+buy = 150
+sell = 45
+tier = 2
+stats = {
+"crit": 8.0,
+"patk": 4.0
+}
+
+[sub_resource type="Resource" id="Resource_c1ck4"]
+script = ExtResource("5_vtoea")
+id = "chainmail"
+display_name = "鎖子甲"
+slot = "armor"
+desc = "細環相扣的鎖子甲，防護扎實但略沉。"
+buy = 200
+sell = 60
+tier = 2
+stats = {
+"pdef": 9.0
+}
+
+[sub_resource type="Resource" id="Resource_epqbo"]
+script = ExtResource("5_vtoea")
+id = "mage_robe"
+display_name = "法師袍"
+slot = "armor"
+desc = "織入符文的法師長袍，擴充魔力並提升法術威力。"
+buy = 190
+sell = 57
+tier = 2
+stats = {
+"matk": 3.0,
+"mp": 15.0,
+"pdef": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_j8bx3"]
+script = ExtResource("5_vtoea")
+id = "steel_bracer"
+display_name = "精鋼護腕"
+slot = "wrist"
+desc = "精鋼打造的護腕，攻防兼備的升級品。"
+buy = 90
+sell = 27
+tier = 2
+stats = {
+"patk": 3.0,
+"pdef": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_dpwxo"]
+script = ExtResource("5_vtoea")
+id = "silver_boots"
+display_name = "銀靴"
+slot = "boots"
+desc = "鑲銀的輕靴，兼顧閃避與防護。"
+buy = 80
+sell = 24
+tier = 2
+stats = {
+"dodge": 3.0,
+"pdef": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_or0i1"]
+script = ExtResource("5_vtoea")
+id = "guardian_pendant"
+display_name = "守護墜飾"
+slot = "acc"
+desc = "刻有守護紋章的墜飾，同時強化物防與魔防。"
+buy = 120
+sell = 36
+tier = 2
+stats = {
+"mdef": 3.0,
+"pdef": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_x6djv"]
+script = ExtResource("6_gqqnr")
+id = "potion"
+display_name = "藥水"
+cat = "consumable"
+kind = "heal"
+power = 60.0
+count = 4
+effect = "單體回復 60 HP。"
+buy = 30
+sell = 9
+
+[sub_resource type="Resource" id="Resource_pni1o"]
+script = ExtResource("6_gqqnr")
+id = "hi_potion"
+display_name = "上級藥水"
+cat = "consumable"
+kind = "heal"
+power = 150.0
+effect = "單體回復 150 HP。"
+buy = 90
+sell = 27
+
+[sub_resource type="Resource" id="Resource_khpay"]
+script = ExtResource("6_gqqnr")
+id = "mana_herb"
+display_name = "魔力草"
+cat = "consumable"
+kind = "mp"
+power = 30.0
+effect = "單體回復 30 MP。"
+buy = 40
+sell = 12
+
+[sub_resource type="Resource" id="Resource_cuqn5"]
+script = ExtResource("6_gqqnr")
+id = "antidote"
+display_name = "解毒草"
+cat = "consumable"
+kind = "cure"
+cure = "poison"
+effect = "解除單體的中毒狀態（狀態異常系統上線後生效）。"
+buy = 15
+sell = 4
+
+[sub_resource type="Resource" id="Resource_kkpf5"]
+script = ExtResource("6_gqqnr")
+id = "revive_feather"
+display_name = "復活羽毛"
+cat = "consumable"
+kind = "revive"
+power = 50.0
+effect = "復活一名戰鬥不能的同伴，並回復其 50% HP。"
+buy = 100
+sell = 30
+
+[sub_resource type="Resource" id="Resource_2mls8"]
+script = ExtResource("6_gqqnr")
+id = "tent"
+display_name = "帳篷"
+cat = "consumable"
+kind = "rest"
+effect = "於野外休息點使用，全隊回復全部 HP／MP。"
+buy = 120
+sell = 36
+
+[sub_resource type="Resource" id="Resource_iqrol"]
+script = ExtResource("6_gqqnr")
+id = "soft_feather"
+display_name = "柔軟羽毛"
+cat = "material"
+effect = "掠翅鳥的輕盈羽毛，煉金與販售的常見素材。"
+buy = 6
+sell = 2
+
+[sub_resource type="Resource" id="Resource_wfoeg"]
+script = ExtResource("6_gqqnr")
+id = "slime_gel"
+display_name = "史萊姆凝膠"
+cat = "material"
+effect = "綠黏史萊姆的黏液，煉金基礎素材。"
+buy = 6
+sell = 2
+
+[sub_resource type="Resource" id="Resource_ww16q"]
+script = ExtResource("6_gqqnr")
+id = "worm_carapace"
+display_name = "蟲甲"
+cat = "material"
+effect = "巨牙蟲的堅硬外殼，可磨成護具塗層。"
+buy = 10
+sell = 3
+
+[sub_resource type="Resource" id="Resource_yy8o7"]
+script = ExtResource("6_gqqnr")
+id = "goblin_fang"
+display_name = "哥布林牙"
+cat = "material"
+effect = "哥布林的獠牙，冒險者最常變賣的素材。"
+buy = 12
+sell = 4
+
+[sub_resource type="Resource" id="Resource_nhh40"]
+script = ExtResource("6_gqqnr")
+id = "bone_shard"
+display_name = "白骨碎片"
+cat = "material"
+effect = "骷髏礦工遺留的骨片，帶著礦坑的塵味。"
+buy = 15
+sell = 5
+
+[sub_resource type="Resource" id="Resource_t0u0x"]
+script = ExtResource("6_gqqnr")
+id = "wolf_hide"
+display_name = "狼皮"
+cat = "material"
+effect = "野狼的毛皮，可製輕甲（第二章素材）。"
+buy = 22
+sell = 7
+
+[sub_resource type="Resource" id="Resource_ldt1x"]
+script = ExtResource("6_gqqnr")
+id = "iron_ore"
+display_name = "鐵礦石"
+cat = "material"
+effect = "未精煉的鐵礦，鐵匠鋪收購，可鍛造武具。"
+buy = 25
+sell = 8
+
+[sub_resource type="Resource" id="Resource_x4fll"]
+script = ExtResource("6_gqqnr")
+id = "beast_hide"
+display_name = "獸皮"
+cat = "material"
+effect = "洞熊的厚實毛皮，是製甲的好材料。"
+buy = 30
+sell = 10
+
+[sub_resource type="Resource" id="Resource_q20xv"]
+script = ExtResource("6_gqqnr")
+id = "crystal_shard"
+display_name = "水晶碎片"
+cat = "material"
+effect = "蘊含魔力的水晶碎片，稀有；似乎與礦山異變有關。"
+buy = 60
+sell = 20
+
+[sub_resource type="Resource" id="Resource_544ya"]
+script = ExtResource("6_gqqnr")
+id = "guild_card"
+display_name = "公會登錄證"
+cat = "key"
+effect = "冒險者公會核發的身分證明（F 級）。序章於緹娜處登錄後取得。"
+
+[sub_resource type="Resource" id="Resource_001vv"]
+script = ExtResource("6_gqqnr")
+id = "miner_helmet"
+display_name = "失蹤礦工的頭盔"
+cat = "key"
+effect = "「礦工的遺物」委託道具，需交還委託人（老葛雷）。"
+
+[sub_resource type="Resource" id="Resource_4o5ij"]
+script = ExtResource("6_gqqnr")
+id = "goddess_mark"
+display_name = "女神的記號"
+cat = "key"
+effect = "蓋婭女神在路德身上留下的記號（劇情物品，不可販售）。"
+
+[sub_resource type="Resource" id="Resource_olg13"]
+script = ExtResource("7_phwb1")
+party_size = 2
+maps = {
+"cave": {
+"battles": 24.0,
+"entryLv": 8.0,
+"targetLv": 11.0
+},
+"forest": {
+"battles": 14.0,
+"entryLv": 1.0,
+"targetLv": 3.0
+},
+"forest2": {
+"battles": 16.0,
+"entryLv": 3.0,
+"targetLv": 5.0
+},
+"mine": {
+"battles": 24.0,
+"entryLv": 5.0,
+"targetLv": 8.0
+},
+"tutorial": {
+"battles": 3.0,
+"entryLv": 1.0,
+"party": 1.0,
+"targetLv": 2.0
+}
+}
+
+[sub_resource type="Resource" id="Resource_pcq0f"]
+script = ExtResource("8_j105i")
+id = "ludo"
+display_name = "路德"
+char_class = "explorer"
+main_attr = "str"
+sprite = "ludo"
+base = {
+"agi": 3.0,
+"int": 2.0,
+"str": 4.0
+}
+growth = {
+"agi": 1.0,
+"int": 1.0,
+"str": 2.0
+}
+start_eq = {
+"armor": "traveler_garb",
+"boots": "leather_boots",
+"weapon": "short_sword",
+"wrist": "cloth_wraps"
+}
+story = ["芳蕾鎮鐵匠漢克與瑪莎的獨生子，十五歲。", "從小聽著往來旅人的冒險故事長大，一心嚮往外面的世界，", "行動總是比思考快半拍，闖禍後道歉的速度倒是全鎮最快。", "十五歲那年，偷跟著借宿鎮上的冒險者亞倫進入北方礦山，", "在深處遭遇了不該存在的魔物——亞倫為掩護他而下落不明。", "「我要成為真正的冒險者，查出那一天的真相。」"]
+
+[sub_resource type="Resource" id="Resource_s60oe"]
+script = ExtResource("8_j105i")
+id = "marin"
+display_name = "瑪琳"
+char_class = "explorer"
+main_attr = "agi"
+sprite = "marin"
+base = {
+"agi": 4.0,
+"int": 3.0,
+"str": 3.0
+}
+growth = {
+"agi": 2.0,
+"int": 1.0,
+"str": 1.0
+}
+start_eq = {
+"acc1": "agate_charm",
+"armor": "traveler_garb",
+"boots": "leather_boots",
+"weapon": "hunting_knife"
+}
+story = ["旅店老闆娘朵拉的女兒，與路德一起長大的青梅竹馬。", "冷靜務實，是路德闖禍前的最後一道煞車——雖然常常煞不住。", "身手靈巧，一手獵刀是幫旅店處理野味時練出來的本事，", "戴著的瑪瑙護符，是母親朵拉在她出發前偷偷塞進行囊的。", "礦山意外後，看著把自己關在房裡的路德，她只說了一句：", "「要去就一起去。你一個人，我不放心。」"]
+
+[sub_resource type="Resource" id="Resource_n1ogd"]
+script = ExtResource("8_j105i")
+id = "aaron"
+display_name = "亞倫"
+char_class = "veteran"
+main_attr = "str"
+sprite = "aaron"
+base = {
+"agi": 24.0,
+"int": 14.0,
+"str": 30.0
+}
+start_level = 20
+start_eq = {
+"armor": "leather_vest",
+"boots": "swift_boots",
+"weapon": "iron_sword",
+"wrist": "iron_bracer"
+}
+story = ["借宿芳蕾鎮的 A 級冒險者。話少，劍快。", "來歷成謎，只知道他一直在調查北方礦山的異變。", "看出路德眼裡的光和「年輕時的某人」很像，", "嘴上嫌麻煩，卻默許了少年的跟隨。", "礦山深處遭遇異變魔影時，他擋在路德身前——", "「快跑！把這裡的事告訴鎮上的人！」", "此後下落不明。他留下的劍術與背影，成了路德的目標。"]
+guest = true
+
+[sub_resource type="Resource" id="Resource_drtlc"]
+script = ExtResource("10_08ale")
+id = "gid"
+display_name = "吉德的道具店"
+greet = "要看看我店裡的商品嗎？"
+sell_ids = ["potion", "hi_potion", "mana_herb", "antidote", "revive_feather", "tent", "lucky_coin", "agate_charm", "vital_ring", "focus_earring"]
+
+[sub_resource type="Resource" id="Resource_ov5de"]
+script = ExtResource("10_08ale")
+id = "hank"
+display_name = "漢克的鐵匠鋪"
+greet = "看看我新打的傢伙？"
+sell_ids = ["short_sword", "hunting_knife", "iron_sword", "traveler_garb", "leather_vest", "leather_boots", "swift_boots", "cloth_wraps", "hunter_bracer", "iron_bracer"]
+
+[sub_resource type="Resource" id="Resource_x4swj"]
+script = ExtResource("11_ksis1")
+id = "power_strike"
+display_name = "強力斬"
+char_class = "explorer"
+mp = 3
+kind = "damage"
+attr = "str"
+mult = 2.0
+flat = 3.0
+target = "enemy"
+
+[sub_resource type="Resource" id="Resource_y2ggn"]
+script = ExtResource("11_ksis1")
+id = "swift_stab"
+display_name = "疾風刺"
+char_class = "explorer"
+unlock_lv = 2
+mp = 4
+kind = "damage"
+attr = "agi"
+mult = 2.1
+flat = 2.0
+target = "enemy"
+
+[sub_resource type="Resource" id="Resource_qgsim"]
+script = ExtResource("11_ksis1")
+id = "heal_wind"
+display_name = "治癒之風"
+char_class = "explorer"
+unlock_lv = 3
+mp = 5
+kind = "heal"
+attr = "int"
+mult = 2.0
+flat = 18.0
+target = "ally"
+
+[sub_resource type="Resource" id="Resource_5234b"]
+script = ExtResource("11_ksis1")
+id = "whirl"
+display_name = "旋風斬"
+char_class = "explorer"
+unlock_lv = 5
+mp = 8
+kind = "damage"
+attr = "str"
+mult = 1.1
+flat = 2.0
+target = "all_enemies"
+
+[sub_resource type="Resource" id="Resource_macem"]
+script = ExtResource("11_ksis1")
+id = "flash"
+display_name = "秘劍・一閃"
+char_class = "veteran"
+mp = 10
+kind = "damage"
+attr = "str"
+mult = 1.8
+flat = 15.0
+target = "enemy"
+
+[resource]
+script = ExtResource("9_vcxsc")
+party = Array[ExtResource("8_j105i")]([SubResource("Resource_pcq0f"), SubResource("Resource_s60oe"), SubResource("Resource_n1ogd")])
+equipment = Array[ExtResource("5_vtoea")]([SubResource("Resource_qyo2q"), SubResource("Resource_csqks"), SubResource("Resource_1msp4"), SubResource("Resource_e6sw3"), SubResource("Resource_7idvq"), SubResource("Resource_ydp3b"), SubResource("Resource_i8tu0"), SubResource("Resource_uvrlw"), SubResource("Resource_tnpb5"), SubResource("Resource_mugyq"), SubResource("Resource_daxiu"), SubResource("Resource_atlte"), SubResource("Resource_dlev1"), SubResource("Resource_4k0mt"), SubResource("Resource_0q8wu"), SubResource("Resource_e8jw0"), SubResource("Resource_c1ck4"), SubResource("Resource_epqbo"), SubResource("Resource_j8bx3"), SubResource("Resource_dpwxo"), SubResource("Resource_or0i1")])
+skills = Array[ExtResource("11_ksis1")]([SubResource("Resource_x4swj"), SubResource("Resource_y2ggn"), SubResource("Resource_qgsim"), SubResource("Resource_5234b"), SubResource("Resource_macem")])
+items = Array[ExtResource("6_gqqnr")]([SubResource("Resource_x6djv"), SubResource("Resource_pni1o"), SubResource("Resource_khpay"), SubResource("Resource_cuqn5"), SubResource("Resource_kkpf5"), SubResource("Resource_2mls8"), SubResource("Resource_iqrol"), SubResource("Resource_wfoeg"), SubResource("Resource_ww16q"), SubResource("Resource_yy8o7"), SubResource("Resource_nhh40"), SubResource("Resource_t0u0x"), SubResource("Resource_ldt1x"), SubResource("Resource_x4fll"), SubResource("Resource_q20xv"), SubResource("Resource_544ya"), SubResource("Resource_001vv"), SubResource("Resource_4o5ij")])
+enemies = Array[ExtResource("4_hoq51")]([SubResource("Resource_v4bx3"), SubResource("Resource_2d226"), SubResource("Resource_38aoo"), SubResource("Resource_1f648"), SubResource("Resource_7ak06"), SubResource("Resource_auvyr"), SubResource("Resource_j7mbp"), SubResource("Resource_wykaa"), SubResource("Resource_dfnc1"), SubResource("Resource_sahc2"), SubResource("Resource_vjhig"), SubResource("Resource_hnf0v"), SubResource("Resource_1s8rn"), SubResource("Resource_cs8nw"), SubResource("Resource_f55ks")])
+encounters = Array[ExtResource("3_hsbra")]([SubResource("Resource_ll363"), SubResource("Resource_7wl3i"), SubResource("Resource_idhf2"), SubResource("Resource_olkl2"), SubResource("Resource_s2xj1"), SubResource("Resource_liudx"), SubResource("Resource_sb6r6"), SubResource("Resource_vyme8")])
+shops = Array[ExtResource("10_08ale")]([SubResource("Resource_drtlc"), SubResource("Resource_ov5de")])
+chests = Array[ExtResource("1_vcnnr")]([SubResource("Resource_4mco2"), SubResource("Resource_po4de"), SubResource("Resource_gykii"), SubResource("Resource_3u0vo"), SubResource("Resource_eid4v"), SubResource("Resource_5urhr"), SubResource("Resource_d2ft4"), SubResource("Resource_8txt0"), SubResource("Resource_klaos"), SubResource("Resource_lx0cd"), SubResource("Resource_jrofq"), SubResource("Resource_ybc1w")])
+derived = SubResource("Resource_b7rfi")
+pacing = SubResource("Resource_olg13")

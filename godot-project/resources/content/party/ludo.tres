@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="PartyMemberDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="1_36kqc"]
+
+[resource]
+script = ExtResource("1_36kqc")
+id = "ludo"
+display_name = "路德"
+char_class = "explorer"
+main_attr = "str"
+sprite = "ludo"
+base = {
+"agi": 3.0,
+"int": 2.0,
+"str": 4.0
+}
+growth = {
+"agi": 1.0,
+"int": 1.0,
+"str": 2.0
+}
+start_eq = {
+"armor": "traveler_garb",
+"boots": "leather_boots",
+"weapon": "short_sword",
+"wrist": "cloth_wraps"
+}
+story = ["芳蕾鎮鐵匠漢克與瑪莎的獨生子，十五歲。", "從小聽著往來旅人的冒險故事長大，一心嚮往外面的世界，", "行動總是比思考快半拍，闖禍後道歉的速度倒是全鎮最快。", "十五歲那年，偷跟著借宿鎮上的冒險者亞倫進入北方礦山，", "在深處遭遇了不該存在的魔物——亞倫為掩護他而下落不明。", "「我要成為真正的冒險者，查出那一天的真相。」"]

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ChestDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_1s4fh"]
+
+[resource]
+script = ExtResource("1_1s4fh")
+id = "fo_c2"
+map = "forest"
+tx = 50
+ty = 5
+tier = "hidden"
+loot = [{
+"id": "hunter_bracer",
+"type": "eq"
+}]

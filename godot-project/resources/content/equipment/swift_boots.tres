@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_hpsti"]
+
+[resource]
+script = ExtResource("1_hpsti")
+id = "swift_boots"
+display_name = "疾風靴"
+slot = "boots"
+desc = "輕量化的軟皮靴，步伐輕盈、易於閃避。"
+buy = 60
+sell = 18
+stats = {
+"dodge": 4.0
+}

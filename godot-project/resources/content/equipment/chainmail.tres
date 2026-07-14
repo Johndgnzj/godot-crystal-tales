@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_jx6en"]
+
+[resource]
+script = ExtResource("1_jx6en")
+id = "chainmail"
+display_name = "鎖子甲"
+slot = "armor"
+desc = "細環相扣的鎖子甲，防護扎實但略沉。"
+buy = 200
+sell = 60
+tier = 2
+stats = {
+"pdef": 9.0
+}

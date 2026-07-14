@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_2txot"]
+
+[resource]
+script = ExtResource("1_2txot")
+id = "lucky_coin"
+display_name = "幸運銅幣"
+slot = "acc"
+desc = "磨得發亮的老銅幣，據說能招來一點好運。"
+buy = 45
+sell = 13
+stats = {
+"crit": 2.0,
+"dodge": 2.0
+}

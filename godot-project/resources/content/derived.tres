@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="DerivedParams" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/derived_params.gd" id="1_55e4v"]
+
+[resource]
+script = ExtResource("1_55e4v")
+hp_base = 30.0
+hp_per_str = 8.0
+mp_base = 8.0
+mp_per_int = 5.0
+weapon_atk = 6.0
+points_per_level = 3.0
+skill_points_per_level = 1.0
+skill_max_lv = 10.0
+skill_power_per_lv = 0.15
+exp_base = 10.0
+exp_coef = 8.0
+exp_pow = 1.4
+matk_per_int = 2.0
+mdef_per_int = 0.8
+dodge_per_agi = 1.5
+dodge_cap = 30.0
+crit_base = 6.25
+crit_per_agi = 0.15

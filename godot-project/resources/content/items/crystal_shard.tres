@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_wham8"]
+
+[resource]
+script = ExtResource("1_wham8")
+id = "crystal_shard"
+display_name = "水晶碎片"
+cat = "material"
+effect = "蘊含魔力的水晶碎片，稀有；似乎與礦山異變有關。"
+buy = 60
+sell = 20

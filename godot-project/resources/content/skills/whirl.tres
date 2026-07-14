@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_pht26"]
+
+[resource]
+script = ExtResource("1_pht26")
+id = "whirl"
+display_name = "旋風斬"
+char_class = "explorer"
+unlock_lv = 5
+mp = 8
+kind = "damage"
+attr = "str"
+mult = 1.1
+flat = 2.0
+target = "all_enemies"

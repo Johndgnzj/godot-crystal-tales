@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_d3urg"]
+
+[resource]
+script = ExtResource("1_d3urg")
+id = "chort"
+display_name = "暗影小魔"
+sprite = "chort"
+hp = 30.0
+atk = 14.0
+def_stat = 5.0
+spd = 13.0
+exp = 16
+gold = 12
+drops = [{
+"id": "crystal_shard",
+"rate": 0.15
+}]

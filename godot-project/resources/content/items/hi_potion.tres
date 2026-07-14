@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_0lpwf"]
+
+[resource]
+script = ExtResource("1_0lpwf")
+id = "hi_potion"
+display_name = "上級藥水"
+cat = "consumable"
+kind = "heal"
+power = 150.0
+effect = "單體回復 150 HP。"
+buy = 90
+sell = 27

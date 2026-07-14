@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="1_yncmq"]
+
+[resource]
+script = ExtResource("1_yncmq")
+map_id = "forest2"
+formations = [["goblin", "goblin", "gslime"], ["worm", "worm"], ["bird", "goblin", "worm"], ["goblin", "goblin", "goblin"], ["wolf", "goblin"], ["wolf", "wolf"]]

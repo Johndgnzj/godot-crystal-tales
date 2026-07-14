@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_bom7n"]
+
+[resource]
+script = ExtResource("1_bom7n")
+id = "shadow_demon"
+display_name = "異變的魔影"
+sprite = "demon"
+hp = 9999.0
+atk = 22.0
+def_stat = 25.0
+spd = 12.0
+big = true

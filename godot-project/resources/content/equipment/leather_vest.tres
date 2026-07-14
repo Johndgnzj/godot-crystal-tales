@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_pesxg"]
+
+[resource]
+script = ExtResource("1_pesxg")
+id = "leather_vest"
+display_name = "皮革護胸"
+slot = "armor"
+desc = "鞣製皮革製的護胸，兼顧防護與靈活。"
+buy = 90
+sell = 27
+stats = {
+"pdef": 5.0
+}

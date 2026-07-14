@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_r2ibi"]
+
+[resource]
+script = ExtResource("1_r2ibi")
+id = "hunter_bracer"
+display_name = "獵人護腕"
+slot = "wrist"
+desc = "獵人慣用的護腕，助你抓準破綻、側身避擊。"
+buy = 40
+sell = 12
+stats = {
+"crit": 3.0,
+"dodge": 1.0
+}

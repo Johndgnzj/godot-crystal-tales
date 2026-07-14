@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_iwqxm"]
+
+[resource]
+script = ExtResource("1_iwqxm")
+id = "bird"
+display_name = "掠翅鳥"
+sprite = "bird"
+hp = 16.0
+atk = 7.0
+def_stat = 2.0
+spd = 14.0
+exp = 5
+gold = 3
+drops = [{
+"id": "soft_feather",
+"rate": 0.5
+}]

@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="PacingParams" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/pacing_params.gd" id="1_isv8w"]
+
+[resource]
+script = ExtResource("1_isv8w")
+party_size = 2
+maps = {
+"cave": {
+"battles": 24.0,
+"entryLv": 8.0,
+"targetLv": 11.0
+},
+"forest": {
+"battles": 14.0,
+"entryLv": 1.0,
+"targetLv": 3.0
+},
+"forest2": {
+"battles": 16.0,
+"entryLv": 3.0,
+"targetLv": 5.0
+},
+"mine": {
+"battles": 24.0,
+"entryLv": 5.0,
+"targetLv": 8.0
+},
+"tutorial": {
+"battles": 3.0,
+"entryLv": 1.0,
+"party": 1.0,
+"targetLv": 2.0
+}
+}

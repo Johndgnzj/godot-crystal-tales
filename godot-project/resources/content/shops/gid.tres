@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ShopDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/shop_def.gd" id="1_ypnh0"]
+
+[resource]
+script = ExtResource("1_ypnh0")
+id = "gid"
+display_name = "吉德的道具店"
+greet = "要看看我店裡的商品嗎？"
+sell_ids = ["potion", "hi_potion", "mana_herb", "antidote", "revive_feather", "tent", "lucky_coin", "agate_charm", "vital_ring", "focus_earring"]

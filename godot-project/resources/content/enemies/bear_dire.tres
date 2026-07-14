@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_6gng3"]
+
+[resource]
+script = ExtResource("1_6gng3")
+id = "bear_dire"
+display_name = "狂暴洞熊"
+sprite = "bear"
+hp = 960.0
+atk = 36.0
+def_stat = 16.0
+spd = 8.0
+exp = 180
+gold = 100
+big = true
+all_attack = true
+drops = [{
+"id": "beast_hide",
+"rate": 1.0
+}, {
+"id": "crystal_shard",
+"rate": 0.3
+}]
+foe_skills = [{
+"mult": 2.1,
+"name": "狂亂撕咬",
+"target": "one"
+}, {
+"mult": 1.25,
+"name": "震地怒吼",
+"target": "all"
+}]

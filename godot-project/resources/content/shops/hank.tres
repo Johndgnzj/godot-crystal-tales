@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ShopDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/shop_def.gd" id="1_cd4qf"]
+
+[resource]
+script = ExtResource("1_cd4qf")
+id = "hank"
+display_name = "漢克的鐵匠鋪"
+greet = "看看我新打的傢伙？"
+sell_ids = ["short_sword", "hunting_knife", "iron_sword", "traveler_garb", "leather_vest", "leather_boots", "swift_boots", "cloth_wraps", "hunter_bracer", "iron_bracer"]

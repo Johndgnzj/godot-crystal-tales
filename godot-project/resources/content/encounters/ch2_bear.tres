@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="1_idv8u"]
+
+[resource]
+script = ExtResource("1_idv8u")
+map_id = "ch2_bear"
+formations = [["bear_dire"]]

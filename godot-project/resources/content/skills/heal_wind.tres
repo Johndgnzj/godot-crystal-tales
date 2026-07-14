@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_gov5n"]
+
+[resource]
+script = ExtResource("1_gov5n")
+id = "heal_wind"
+display_name = "治癒之風"
+char_class = "explorer"
+unlock_lv = 3
+mp = 5
+kind = "heal"
+attr = "int"
+mult = 2.0
+flat = 18.0
+target = "ally"

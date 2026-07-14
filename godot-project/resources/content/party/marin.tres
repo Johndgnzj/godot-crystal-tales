@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="PartyMemberDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="1_4lnas"]
+
+[resource]
+script = ExtResource("1_4lnas")
+id = "marin"
+display_name = "瑪琳"
+char_class = "explorer"
+main_attr = "agi"
+sprite = "marin"
+base = {
+"agi": 4.0,
+"int": 3.0,
+"str": 3.0
+}
+growth = {
+"agi": 2.0,
+"int": 1.0,
+"str": 1.0
+}
+start_eq = {
+"acc1": "agate_charm",
+"armor": "traveler_garb",
+"boots": "leather_boots",
+"weapon": "hunting_knife"
+}
+story = ["旅店老闆娘朵拉的女兒，與路德一起長大的青梅竹馬。", "冷靜務實，是路德闖禍前的最後一道煞車——雖然常常煞不住。", "身手靈巧，一手獵刀是幫旅店處理野味時練出來的本事，", "戴著的瑪瑙護符，是母親朵拉在她出發前偷偷塞進行囊的。", "礦山意外後，看著把自己關在房裡的路德，她只說了一句：", "「要去就一起去。你一個人，我不放心。」"]

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_q6sbh"]
+
+[resource]
+script = ExtResource("1_q6sbh")
+id = "bone_shard"
+display_name = "白骨碎片"
+cat = "material"
+effect = "骷髏礦工遺留的骨片，帶著礦坑的塵味。"
+buy = 15
+sell = 5

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ChestDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_xv64o"]
+
+[resource]
+script = ExtResource("1_xv64o")
+id = "fo_c3"
+map = "forest"
+tx = 17
+ty = 12
+tier = "rare"
+loot = [{
+"id": "vital_ring",
+"type": "eq"
+}]

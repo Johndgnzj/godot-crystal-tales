@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_4pwp8"]
+
+[resource]
+script = ExtResource("1_4pwp8")
+id = "ogre"
+display_name = "洞窟食人魔"
+sprite = "ogre"
+hp = 1300.0
+atk = 38.0
+def_stat = 18.0
+spd = 6.0
+exp = 400
+gold = 350
+big = true
+all_attack = true
+drops = [{
+"id": "crystal_shard",
+"rate": 1.0
+}, {
+"id": "beast_hide",
+"rate": 0.5
+}]
+foe_skills = [{
+"mult": 2.0,
+"name": "巨槌重砸",
+"target": "one"
+}, {
+"mult": 1.35,
+"name": "崩山地裂",
+"target": "all"
+}]

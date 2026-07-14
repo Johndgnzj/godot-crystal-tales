@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_k1iml"]
+
+[resource]
+script = ExtResource("1_k1iml")
+id = "focus_earring"
+display_name = "凝神耳環"
+slot = "acc"
+desc = "藍晶耳環，凝神靜氣，強化魔力循環。"
+buy = 90
+sell = 27
+stats = {
+"matk": 2.0,
+"mp": 10.0
+}

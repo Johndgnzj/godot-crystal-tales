@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_7sjqi"]
+
+[resource]
+script = ExtResource("1_7sjqi")
+id = "vital_ring"
+display_name = "活力戒指"
+slot = "acc"
+desc = "溫熱的紅玉戒指，配戴時體力更加充沛。"
+buy = 80
+sell = 24
+stats = {
+"hp": 20.0
+}

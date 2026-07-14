@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_55id6"]
+
+[resource]
+script = ExtResource("1_55id6")
+id = "agate_charm"
+display_name = "瑪瑙護符"
+slot = "acc"
+desc = "朵拉塞給瑪琳的瑪瑙護符，能抵禦邪異的力量。"
+buy = 50
+sell = 15
+stats = {
+"mdef": 3.0
+}

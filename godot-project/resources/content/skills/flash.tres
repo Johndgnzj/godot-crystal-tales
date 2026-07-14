@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_2vmmj"]
+
+[resource]
+script = ExtResource("1_2vmmj")
+id = "flash"
+display_name = "秘劍・一閃"
+char_class = "veteran"
+mp = 10
+kind = "damage"
+attr = "str"
+mult = 1.8
+flat = 15.0
+target = "enemy"

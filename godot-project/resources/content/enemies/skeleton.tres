@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_3nqsu"]
+
+[resource]
+script = ExtResource("1_3nqsu")
+id = "skeleton"
+display_name = "骷髏礦工"
+sprite = "skeleton"
+hp = 34.0
+atk = 12.0
+def_stat = 7.0
+spd = 7.0
+exp = 12
+gold = 10
+drops = [{
+"id": "bone_shard",
+"rate": 0.5
+}, {
+"id": "iron_ore",
+"rate": 0.2
+}]

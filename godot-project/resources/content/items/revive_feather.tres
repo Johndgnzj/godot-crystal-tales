@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_0bk62"]
+
+[resource]
+script = ExtResource("1_0bk62")
+id = "revive_feather"
+display_name = "復活羽毛"
+cat = "consumable"
+kind = "revive"
+power = 50.0
+effect = "復活一名戰鬥不能的同伴，並回復其 50% HP。"
+buy = 100
+sell = 30

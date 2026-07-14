@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_odtgp"]
+
+[resource]
+script = ExtResource("1_odtgp")
+id = "antidote"
+display_name = "解毒草"
+cat = "consumable"
+kind = "cure"
+cure = "poison"
+effect = "解除單體的中毒狀態（狀態異常系統上線後生效）。"
+buy = 15
+sell = 4

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_ph3pf"]
+
+[resource]
+script = ExtResource("1_ph3pf")
+id = "necro"
+display_name = "死靈術士"
+sprite = "necro"
+hp = 60.0
+atk = 13.0
+def_stat = 6.0
+spd = 9.0
+exp = 40
+gold = 35
+healer = true
+drops = [{
+"id": "crystal_shard",
+"rate": 0.5
+}, {
+"id": "mana_herb",
+"rate": 0.3
+}]

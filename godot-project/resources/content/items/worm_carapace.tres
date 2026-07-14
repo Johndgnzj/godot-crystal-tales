@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_4jsbx"]
+
+[resource]
+script = ExtResource("1_4jsbx")
+id = "worm_carapace"
+display_name = "蟲甲"
+cat = "material"
+effect = "巨牙蟲的堅硬外殼，可磨成護具塗層。"
+buy = 10
+sell = 3

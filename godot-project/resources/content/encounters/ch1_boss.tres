@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="1_mh2j1"]
+
+[resource]
+script = ExtResource("1_mh2j1")
+map_id = "ch1_boss"
+formations = [["goblin_chief", "goblin", "goblin"]]

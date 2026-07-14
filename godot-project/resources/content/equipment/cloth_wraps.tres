@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_vrtge"]
+
+[resource]
+script = ExtResource("1_vrtge")
+id = "cloth_wraps"
+display_name = "布質護腕"
+slot = "wrist"
+desc = "纏在手腕上的粗布，聊勝於無的護具。"
+buy = 15
+sell = 4
+stats = {
+"pdef": 1.0
+}

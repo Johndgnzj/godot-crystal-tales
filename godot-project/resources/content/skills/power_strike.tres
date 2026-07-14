@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_h1c5t"]
+
+[resource]
+script = ExtResource("1_h1c5t")
+id = "power_strike"
+display_name = "強力斬"
+char_class = "explorer"
+mp = 3
+kind = "damage"
+attr = "str"
+mult = 2.0
+flat = 3.0
+target = "enemy"

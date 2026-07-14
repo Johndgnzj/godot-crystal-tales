@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_j54fp"]
+
+[resource]
+script = ExtResource("1_j54fp")
+id = "goblin_fang"
+display_name = "哥布林牙"
+cat = "material"
+effect = "哥布林的獠牙，冒險者最常變賣的素材。"
+buy = 12
+sell = 4

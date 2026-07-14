@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ChestDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_pk21o"]
+
+[resource]
+script = ExtResource("1_pk21o")
+id = "fo_c1"
+map = "forest"
+tx = 36
+ty = 21
+tier = "common"
+loot = [{
+"count": 1.0,
+"id": "potion",
+"type": "item"
+}]

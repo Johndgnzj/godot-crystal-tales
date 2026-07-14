@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ChestDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_w0vn7"]
+
+[resource]
+script = ExtResource("1_w0vn7")
+id = "f2_c3"
+map = "forest2"
+tx = 44
+ty = 24
+tier = "rare"
+loot = [{
+"amount": 100.0,
+"type": "gold"
+}, {
+"count": 1.0,
+"id": "crystal_shard",
+"type": "item"
+}]

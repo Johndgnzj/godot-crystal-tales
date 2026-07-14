@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_i6kga"]
+
+[resource]
+script = ExtResource("1_i6kga")
+id = "steel_bracer"
+display_name = "精鋼護腕"
+slot = "wrist"
+desc = "精鋼打造的護腕，攻防兼備的升級品。"
+buy = 90
+sell = 27
+tier = 2
+stats = {
+"patk": 3.0,
+"pdef": 2.0
+}

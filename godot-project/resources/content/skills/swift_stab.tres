@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_ujo5l"]
+
+[resource]
+script = ExtResource("1_ujo5l")
+id = "swift_stab"
+display_name = "疾風刺"
+char_class = "explorer"
+unlock_lv = 2
+mp = 4
+kind = "damage"
+attr = "agi"
+mult = 2.1
+flat = 2.0
+target = "enemy"

@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_vlmoy"]
+
+[resource]
+script = ExtResource("1_vlmoy")
+id = "goblin_chief"
+display_name = "哥布林頭目"
+sprite = "maskedorc"
+hp = 600.0
+atk = 26.0
+def_stat = 13.0
+spd = 10.0
+exp = 140
+gold = 150
+big = true
+drops = [{
+"id": "goblin_fang",
+"rate": 1.0
+}, {
+"id": "crystal_shard",
+"rate": 0.25
+}]
+foe_skills = [{
+"mult": 1.9,
+"name": "猛力連擊",
+"target": "one"
+}, {
+"mult": 1.15,
+"name": "亂舞橫掃",
+"target": "all"
+}]

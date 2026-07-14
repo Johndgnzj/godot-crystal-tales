@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_tkelc"]
+
+[resource]
+script = ExtResource("1_tkelc")
+id = "iron_sword"
+display_name = "鐵劍"
+slot = "weapon"
+desc = "扎實的全鐵長劍，冒險者的標準配備。"
+buy = 120
+sell = 36
+stats = {
+"patk": 6.0
+}

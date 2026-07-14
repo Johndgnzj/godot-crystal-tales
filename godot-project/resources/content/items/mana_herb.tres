@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_1l4io"]
+
+[resource]
+script = ExtResource("1_1l4io")
+id = "mana_herb"
+display_name = "魔力草"
+cat = "consumable"
+kind = "mp"
+power = 30.0
+effect = "單體回復 30 MP。"
+buy = 40
+sell = 12

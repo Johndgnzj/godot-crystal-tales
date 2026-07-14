@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ChestDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_ll87q"]
+
+[resource]
+script = ExtResource("1_ll87q")
+id = "ca_c2"
+map = "cave"
+tx = 45
+ty = 19
+tier = "hidden"
+loot = [{
+"count": 2.0,
+"id": "hi_potion",
+"type": "item"
+}]

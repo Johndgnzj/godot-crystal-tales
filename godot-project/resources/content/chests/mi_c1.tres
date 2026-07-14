@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ChestDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_tx0qo"]
+
+[resource]
+script = ExtResource("1_tx0qo")
+id = "mi_c1"
+map = "mine"
+tx = 23
+ty = 15
+tier = "common"
+loot = [{
+"amount": 40.0,
+"type": "gold"
+}]

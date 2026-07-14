@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_hspor"]
+
+[resource]
+script = ExtResource("1_hspor")
+id = "miner_helmet"
+display_name = "失蹤礦工的頭盔"
+cat = "key"
+effect = "「礦工的遺物」委託道具，需交還委託人（老葛雷）。"

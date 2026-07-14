@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_06tiq"]
+
+[resource]
+script = ExtResource("1_06tiq")
+id = "goblin"
+display_name = "哥布林拾荒者"
+sprite = "goblin"
+hp = 22.0
+atk = 9.0
+def_stat = 4.0
+spd = 8.0
+exp = 8
+gold = 7
+drops = [{
+"id": "goblin_fang",
+"rate": 0.4
+}]

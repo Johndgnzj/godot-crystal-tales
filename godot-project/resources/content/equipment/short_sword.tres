@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_8rbbl"]
+
+[resource]
+script = ExtResource("1_8rbbl")
+id = "short_sword"
+display_name = "短劍"
+slot = "weapon"
+desc = "鎮上鐵匠隨手打的入門短劍，輕便好上手。"
+buy = 40
+sell = 12
+stats = {
+"patk": 2.0
+}

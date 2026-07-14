@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_pbedy"]
+
+[resource]
+script = ExtResource("1_pbedy")
+id = "tent"
+display_name = "帳篷"
+cat = "consumable"
+kind = "rest"
+effect = "於野外休息點使用，全隊回復全部 HP／MP。"
+buy = 120
+sell = 36

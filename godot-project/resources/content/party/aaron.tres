@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="PartyMemberDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="1_t6ogp"]
+
+[resource]
+script = ExtResource("1_t6ogp")
+id = "aaron"
+display_name = "亞倫"
+char_class = "veteran"
+main_attr = "str"
+sprite = "aaron"
+base = {
+"agi": 24.0,
+"int": 14.0,
+"str": 30.0
+}
+start_level = 20
+start_eq = {
+"armor": "leather_vest",
+"boots": "swift_boots",
+"weapon": "iron_sword",
+"wrist": "iron_bracer"
+}
+story = ["借宿芳蕾鎮的 A 級冒險者。話少，劍快。", "來歷成謎，只知道他一直在調查北方礦山的異變。", "看出路德眼裡的光和「年輕時的某人」很像，", "嘴上嫌麻煩，卻默許了少年的跟隨。", "礦山深處遭遇異變魔影時，他擋在路德身前——", "「快跑！把這裡的事告訴鎮上的人！」", "此後下落不明。他留下的劍術與背影，成了路德的目標。"]
+guest = true

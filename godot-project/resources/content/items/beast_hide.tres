@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_v0nut"]
+
+[resource]
+script = ExtResource("1_v0nut")
+id = "beast_hide"
+display_name = "獸皮"
+cat = "material"
+effect = "洞熊的厚實毛皮，是製甲的好材料。"
+buy = 30
+sell = 10

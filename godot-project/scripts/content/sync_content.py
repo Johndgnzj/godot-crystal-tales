@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """CORE-2 轉存腳本：把 CONTENT.json 同步進 Godot 專案。
 
-決定（見 ../../autoload/content_db.gd 檔頭與 ../../../TASKS/00_核心任務.md CORE-2 段落）：
-run-time 直接 parse JSON，不做 build-time .tres 轉存。所以這支腳本的工作很單純——把
-gd-crystal-tales 那份唯一資料源複製進 Godot 專案內 ContentDB 讀取的位置，過程中做一次輕量 schema
-檢查（頂層分類是否齊全、每個分類的必要欄位是否存在），避免 CONTENT.json 之後改了 schema 卻沒人發現。
+角色（2026-07-14 更新，見 ../../autoload/content_db.gd 檔頭與 CORE-2 spec）：切斷 GDevelop 臍帶後，
+Godot 端的 .tres 才是資料真相源，平時不跑這支。本腳本淪為**可選的「從 GDevelop 重新匯入」工具**——把
+GDevelop 那份 CONTENT.json 複製進 res://resources/content/content.json（帶輕量 schema 檢查），之後再跑
+scripts/content/build_tres.gd 產生 .tres。只有「要把 GDevelop 的新資料拉進來」時才需要這條路。
 
 用法：
     python3 sync_content.py            # 同步 + 檢查
     python3 sync_content.py --check    # 只檢查，不寫檔（CI / pre-commit 用）
 
-不依賴 Godot 執行檔，只用標準函式庫，跟 gd-crystal-tales 那邊 art_v*.py 系列風格一致（純 Python 腳本，
+不依賴 Godot 執行檔，只用標準函式庫，跟 GDevelop 那邊 art_v*.py 系列風格一致（純 Python 腳本，
 無額外套件依賴）。
 """
 
@@ -24,7 +24,7 @@ from pathlib import Path
 
 GODOT_ROOT = Path(__file__).resolve().parents[2]          # .../godot-crystal-tales/godot-project
 WORKSPACE_ROOT = GODOT_ROOT.parent.parent                  # .../ (GDevelop 與 Godot 兩個 repo 的共同上層)
-SOURCE = WORKSPACE_ROOT / "gd-crystal-tales" / "projects" / "crystal-quest" / "CONTENT.json"
+SOURCE = WORKSPACE_ROOT / "GDevelop" / "projects" / "crystal-quest" / "CONTENT.json"
 DEST = GODOT_ROOT / "resources" / "content" / "content.json"
 
 REQUIRED_TOP_KEYS = [

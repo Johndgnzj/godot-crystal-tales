@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_l2a46"]
+
+[resource]
+script = ExtResource("1_l2a46")
+id = "potion"
+display_name = "藥水"
+cat = "consumable"
+kind = "heal"
+power = 60.0
+count = 4
+effect = "單體回復 60 HP。"
+buy = 30
+sell = 9

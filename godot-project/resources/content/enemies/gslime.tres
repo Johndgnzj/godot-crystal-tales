@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_5upil"]
+
+[resource]
+script = ExtResource("1_5upil")
+id = "gslime"
+display_name = "綠黏史萊姆"
+sprite = "gslime"
+hp = 26.0
+atk = 6.0
+def_stat = 4.0
+spd = 4.0
+exp = 6
+gold = 4
+drops = [{
+"id": "slime_gel",
+"rate": 0.5
+}]

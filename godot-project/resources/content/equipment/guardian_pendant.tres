@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_wn5sx"]
+
+[resource]
+script = ExtResource("1_wn5sx")
+id = "guardian_pendant"
+display_name = "守護墜飾"
+slot = "acc"
+desc = "刻有守護紋章的墜飾，同時強化物防與魔防。"
+buy = 120
+sell = 36
+tier = 2
+stats = {
+"mdef": 3.0,
+"pdef": 3.0
+}
