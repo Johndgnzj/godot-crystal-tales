@@ -83,8 +83,12 @@ func _hit(action: String) -> bool:
 
 func _process(_delta: float) -> void:
 	if not _open:
+		# 開選單只吃 menu_toggle(M)，刻意不吃 ui_cancel(Esc)——避免「Esc 關商店」的同一幀，商店已在
+		# 本幀稍早的 _process 關閉、_shop_open() 變 false，導致這裡誤把同一個 Esc 當成開選單（Godot 多
+		# 場景 _process 順序不保證，無法跨場景消費輸入）。build_cq2 原版 Esc/m 皆可開選單，這裡收斂為
+		# 只用 M 開（Esc 仍可關），與 HUD 的「[M]選單」提示一致。見任務報告「已知差異」。
 		if not DialogueSystem.is_busy() and not _shop_open():
-			if _hit("menu_toggle") or _hit("ui_cancel"):
+			if _hit("menu_toggle"):
 				_open_menu()
 		return
 
@@ -123,6 +127,12 @@ func _close_menu() -> void:
 	_open = false
 	_panel.close_panel()
 	menu_closed.emit()
+
+
+## 供商店開啟時強制關閉選單（對應 build_cq2 openShop() 的 st.menu=false，L1298）。
+func force_close() -> void:
+	if _open:
+		_close_menu()
 
 
 func _shop_open() -> bool:
