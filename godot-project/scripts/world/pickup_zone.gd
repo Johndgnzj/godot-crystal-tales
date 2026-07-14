@@ -76,7 +76,6 @@ func _collect() -> void:
 	monitoring = false
 	monitorable = false
 	picked_up.emit(msg, sfx_name)
-	# TODO(CORE-3 依賴缺口): GDevelop 版此處會立即 saveGame()（見 D-7、specs/SAVE_SCHEMA.md 自動存檔
-	# 時機），但 autoload/save_manager.gd 尚未存在（CORE-3 未開工）。依協調者指示不自行發明
-	# SaveManager stub，先留空。CORE-3 完成後在這裡加一行：
-	#     SaveManager.save_game()
+	# CORE-3 完成，SaveManager 已註冊為 autoload：撿取是自動存檔時機之一（見 D-7、
+	# specs/SAVE_SCHEMA.md）。零參數呼叫沿用既有存檔的 scene/x/y，只更新旗標/道具欄位。
+	SaveManager.save_game()
