@@ -1,26 +1,37 @@
-# 水晶戰記 — Godot 遷移準備區
+# 水晶戰記 — Godot 版
 
-這裡不是遊戲本體，是把 `../gd-crystal-tales`（GDevelop 版《水晶戰記 Crystal Tale》）換到 Godot 引擎前的
-**規格與任務準備工作區**。現階段 GDevelop 版仍是唯一可玩版本，本目錄的產出是文件與（未來的）Godot 專案骨架。
+《水晶戰記 Crystal Tale》從 GDevelop 遷移到 **Godot 4.7** 的專案。旁邊的 `../GDevelop/projects/crystal-quest`
+是原 GDevelop 版（規則/資料的原始出處），本 repo 是 Godot 實作。
+
+## 現況（2026-07-14）
+- **可在 Godot 4.7 開啟並通過 headless 冒煙測試**（7 個 autoload 掛載＋11 個場景載入，SMOKE PASS）。
+- 資料層已切成 Godot **原生 `.tres`**（不再依賴 GDevelop 的 CONTENT.json；見下）。
+- 尚未完成：實際玩法端到端驗證（移動/戰鬥/存讀檔）、viewport 視覺確認、部分模組收尾。詳見
+  `godot-project/tests/VERIFICATION_STATUS.md`。
 
 ## 這裡有什麼
 
 | 目錄/檔案 | 內容 |
 |---|---|
-| `CLAUDE.md` | 轉換期規範：目錄結構、Godot 版本/技術選型、程式碼規範、多 subagent 協作總則 |
-| `MIGRATION_OVERVIEW.md` | 可複用 vs 需重寫盤點總表（承接自 GDevelop 現況分析） |
-| `TASKS/` | 拆到可執行程度的任務清單，分「核心 CORE-*」與「模組 MOD-*」兩層 |
-| `specs/` | 從 GDevelop 原始碼（`build_cq2.py`）凍結抄錄出的權威規格：存檔 schema、戰鬥公式、對話系統資料格式 |
-| `godot-project/` | Godot 專案骨架（目錄結構先建好，玩法程式碼待 CORE 任務展開後才動工） |
+| `CLAUDE.md` | 給開發者/AI agent：目錄結構、Godot 技術選型、程式碼規範、協作總則、權威來源 |
+| `設計員指南.md` | **給遊戲設計員（不需寫程式）**：怎麼加/改角色·道具·武器數值、美術、地圖 |
+| `TASKS/` | 可執行任務清單，核心 CORE-* ＋ 模組 MOD-* |
+| `specs/` | 從 GDevelop `build_cq2.py` 凍結抄錄的權威規格：存檔 schema、戰鬥公式、對話格式 |
+| `MIGRATION_OVERVIEW.md` | 可複用 vs 需重寫的盤點總表 |
+| `godot-project/` | Godot 專案本體（`autoload/` 全域單例、`scenes/` 場景、`scripts/` 模組、`resources/content/` 資料 .tres、`assets/` 美術、`tests/` 測試）|
 
 ## 怎麼開始
 
-1. 先讀 `CLAUDE.md`。
-2. 看 `MIGRATION_OVERVIEW.md` 了解整體盤點結論。
-3. 認領任務前讀 `TASKS/11_並行協作規則.md`，確認沒有跟其他進行中任務搶檔案。
-4. 依 `TASKS/00_核心任務.md` 的順序，核心任務要先完成，模組任務（`01`~`09`）才能平行開工。
+**開發者/AI**：讀 `CLAUDE.md` → `MIGRATION_OVERVIEW.md` → 認領任務前讀 `TASKS/11_並行協作規則.md` → 依
+`TASKS/00_核心任務.md` 順序。改任何 `.gd` 後跑冒煙測試：
+```bash
+cd godot-project
+/Applications/Godot.app/Contents/MacOS/Godot --headless -s res://tests/smoke_test.gd --path .
+```
 
-## 現況
+**設計員（做角色/劇情/數值/美術/地圖）**：直接讀 **`設計員指南.md`**，不用碰程式碼。
 
-- 遷移尚未開始寫玩法程式碼，目前是規格/任務準備階段。
-- GDevelop 版本進度見 `../gd-crystal-tales/projects/crystal-quest/ROADMAP_開發計畫.md`（目前約完成到第二章）。
+## 權威來源
+- 數值資料：**Godot 端 `godot-project/resources/content/**/*.tres`**（唯一真相源，設計員在編輯器 Inspector 編輯）。
+- 遊戲規則/公式：`../GDevelop/projects/crystal-quest/scripts/build_cq2.py`（凍結抄錄進 `specs/`）。
+- 美術/音效原始出處：`../GDevelop/projects/crystal-quest/assets/`（已複製進 `godot-project/assets/`）。
