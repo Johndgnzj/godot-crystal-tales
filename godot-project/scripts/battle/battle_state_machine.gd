@@ -713,7 +713,7 @@ func _settle_win() -> void:
 				var did := String(dd.get("id", ""))
 				drop_count[did] = int(drop_count.get(did, 0)) + 1
 	var drop_names: Array = []
-	for did in drop_count.keys():
+	for did: String in drop_count.keys():
 		GameState.inv_add(did, drop_count[did])
 		var item_def: ItemDef = ContentDB.get_item(did)
 		var dnm := item_def.display_name if item_def != null else did

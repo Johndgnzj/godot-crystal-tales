@@ -101,7 +101,7 @@ var loaded_scene: String = ""
 ## 存檔。`scene_name`/`x`/`y` 省略時的 fallback 規則見檔頭「介面設計」一節。
 ## **呼叫端傳入的 x/y 應該已經是校正過的存檔座標**（室內時是門口外座標）——SaveManager 不做這個校正。
 func save_game(scene_name: String = "", x: float = NO_COORD, y: float = NO_COORD) -> void:
-	var prev := _read_raw()
+	var prev: Variant = _read_raw()
 
 	var final_scene := scene_name
 	if final_scene == "" and prev != null:
@@ -141,7 +141,7 @@ func save_game(scene_name: String = "", x: float = NO_COORD, y: float = NO_COORD
 ## **不**呼叫 SceneRouter.go_to()。檔案不存在或 JSON 壞掉（root 不是 Dictionary、parse 失敗）回傳
 ## false，此時不動 GameState 任何欄位。
 func load_game() -> bool:
-	var data := _read_raw()
+	var data: Variant = _read_raw()
 	if data == null:
 		return false
 

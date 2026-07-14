@@ -3,16 +3,15 @@
 - Task 版本: v1.0
 - 對應 GDevelop 系統: gdevelop-mcp（`validate_project`/`preview_scene`）＋ puppeteer E2E（`cq2_e2e.mjs`/
   `cq3_e2e.mjs`）、DEV_開發指南.md L73-79
-- 狀態: **Python 測試聚合可跑（全綠）；GUT/smoke/debug hook 為骨架，待有 Godot 4.3+ 執行檔的環境啟用**
+- 狀態: **Python 聚合全綠（需來源 repo `../gd-crystal-tales` 在場；本機目前未 clone，故 4/5 因找不到來源而 fail）；`smoke_test.gd` 已於 Godot 4.7 實機跑過（SMOKE PASS 20/0）；GUT/debug hook 待 vendor GUT／實機**
 
-本目錄取代 GDevelop 端「開瀏覽器 + puppeteer 按鍵模擬」的驗證管道。因為**目前環境沒有 Godot 4.3+ 執行檔**
-（六種下載管道全被網路政策擋下，見 `../TASKS/00_核心任務.md` CORE-1「驗收現況」，**不要重試下載**），
-測試分成「現在就能跑」與「等有 Godot 才能跑」兩層：
+本目錄取代 GDevelop 端「開瀏覽器 + puppeteer 按鍵模擬」的驗證管道。**Godot 4.7 已就位**（John 本機
+`/Applications/Godot.app/Contents/MacOS/Godot`；PATH 內無 `godot` alias），測試分兩層：
 
 | 層 | 檔案 | 現在可跑？ | 說明 |
 |---|---|---|---|
 | Python 交叉驗證聚合 | `run_all_tests.py` | ✅ 可跑，全綠 | 掃描並執行各模組既有的 `test_*/validate_*/verify_*.py`，這是目前 CI 唯一能真跑的東西 |
-| headless 冒煙測試 | `smoke_test.gd` | ⏸ 骨架 | 純 SceneTree、零外部依賴；load autoload + 8 個場景確認不報錯 |
+| headless 冒煙測試 | `smoke_test.gd` | ✅ 4.7 實機綠 | 純 SceneTree、零外部依賴；load autoload + 8 個場景確認不報錯 |
 | GUT 單元測試 | `gut/test_smoke_gut.gd` + `.gutconfig.json` | ⏸ 骨架 | 需先 vendor GUT addon；斷言/報表更完整 |
 | debug hook | `debug_hooks.gd` | ⏸ 骨架 | GDevelop `window.__W/__B/__forceEnc` 的 Godot 等價 autoload |
 
@@ -48,20 +47,23 @@ python3 tests/run_all_tests.py -k battle # 只跑路徑含 "battle" 的
 
 ---
 
-## 2. 拿到 Godot 4.3+ 執行檔後：啟用 headless 冒煙測試
+## 2. headless 冒煙測試（Godot 4.7 實跑）
 
-`smoke_test.gd` 是純 `SceneTree` 腳本（零外部依賴，`--check-only` 一定剖析得過）：
+`smoke_test.gd` 是純 `SceneTree` 腳本（零外部依賴），跑完會自己 `quit()`：
 
 ```bash
 cd godot-project
+G=/Applications/Godot.app/Contents/MacOS/Godot   # John 本機路徑；PATH 無 godot alias
 
-# (a) 先過語法/場景完整性（不開視窗）——所有 .gd/.tscn 剖析檢查
-godot --headless --check-only --path .
-
-# (b) 跑冒煙測試：autoload 掛載 + 8 個場景載入 + 輕量場景實例化
-godot --headless -s res://tests/smoke_test.gd --path .
+# 跑冒煙測試：autoload 掛載 + 8 個場景載入 + 輕量場景實例化
+"$G" --headless -s res://tests/smoke_test.gd --path .
 # exit 0 = SMOKE PASS；非 0 = 有 autoload/場景失敗
 ```
+
+> ⚠️ **不要用 `godot --headless --check-only --path .` 做全專案剖析**——`--check-only` 不加 `--script`
+> 時會被忽略、直接啟動主場景進主迴圈**卡死不結束**（首次實機踩到的坑）。要逐檔語法檢查用
+> `--check-only --script <單檔>`；全專案的實質剖析/載入驗證就靠上面這支冒煙測試（它會連帶剖析
+> autoloads ＋ 8 個場景的腳本）。
 
 `smoke_test.gd` 檢查：7 個 autoload 掛載、`ContentDB.is_loaded`、`DialogueSystem.is_loaded`、
 `get_enemy("goblin_chief")` 抽查、8 個場景（title/battle/五張 world/dialogue_box）能載入成 `PackedScene`、

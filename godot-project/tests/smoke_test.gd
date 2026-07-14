@@ -2,10 +2,10 @@ extends SceneTree
 
 ## smoke_test.gd — headless 冒煙測試（CORE-7）。
 ##
-## ⚠️ 骨架，尚未實機驗證 ⚠️
-## 這個環境沒有 Godot 4.3+ 執行檔（見 ../TASKS/00_核心任務.md CORE-1「驗收現況」），本腳本從未被引擎跑過，
-## 只做過人工語法/API 名稱核對。等有 Godot 環境時，用下列指令啟用（不需要 GUT addon，這支是純內建
-## SceneTree 腳本，最少依賴）：
+## ✅ 已實機驗證 @ Godot 4.7（2026-07-14，SMOKE PASS 20/0）。
+## 註：首次真機跑時修過一個時序 bug——`-s` 腳本的 _initialize() 早於 autoload 掛上 /root，故檢查移到
+## `await process_frame` 之後、autoload 路徑改相對路徑（見 _run()）。用下列指令跑（不需要 GUT addon，
+## 純內建 SceneTree 腳本，最少依賴）：
 ##
 ##     godot --headless -s res://tests/smoke_test.gd --path .
 ##     # exit code 0 = 全綠；非 0 = 有場景載入/autoload 失敗。適合直接接 CI。
@@ -57,7 +57,13 @@ var _fail := 0
 
 
 func _initialize() -> void:
+	_run()
+
+
+func _run() -> void:
 	print("=== CORE-7 headless smoke test ===")
+	# -s 腳本的 _initialize() 跑在 autoload 掛上 /root 之前，先等一個 frame 讓 autoload 就緒再檢查。
+	await process_frame
 	_check_autoloads()
 	_check_data_layer()
 	_check_scenes_load()
@@ -84,7 +90,7 @@ func _bad(msg: String) -> void:
 func _check_autoloads() -> void:
 	print("\n-- autoloads --")
 	for name in AUTOLOADS:
-		var node := root.get_node_or_null(NodePath("/root/" + name))
+		var node := root.get_node_or_null(NodePath(name))
 		if node == null:
 			_bad("autoload 未掛上：%s（檢查 project.godot [autoload] 有無 %s=\"*%s\"）" % [name, name, AUTOLOADS[name]])
 		else:
@@ -93,7 +99,7 @@ func _check_autoloads() -> void:
 
 func _check_data_layer() -> void:
 	print("\n-- data layer --")
-	var cdb := root.get_node_or_null(^"/root/ContentDB")
+	var cdb := root.get_node_or_null(^"ContentDB")
 	if cdb == null:
 		_bad("ContentDB 不存在，跳過資料層檢查")
 		return
@@ -109,7 +115,7 @@ func _check_data_layer() -> void:
 	else:
 		_bad("ContentDB.get_enemy(\"goblin_chief\") 回 null（id 改了或載入失敗）")
 
-	var dsys := root.get_node_or_null(^"/root/DialogueSystem")
+	var dsys := root.get_node_or_null(^"DialogueSystem")
 	if dsys != null and bool(dsys.get("is_loaded")):
 		_ok("DialogueSystem.is_loaded == true")
 	elif dsys != null:

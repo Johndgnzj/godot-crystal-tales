@@ -63,8 +63,10 @@ godot-crystal-tales/
 
 ## Godot 版本與技術選型（先定案，避免各 subagent各自選版本）
 
-- **引擎版本：Godot 4.3（stable）以上**，不用 4.0-4.2（TileMap → TileMapLayer 破壞性 API 變動已在 4.3 定型，
-  4.4/4.5 若釋出且無重大 breaking change 可跟進，但同一時間全專案只能有一個目標版本）。
+- **引擎版本：Godot 4.7（stable，2026-06-18 釋出）**，不用 4.0-4.2（TileMap → TileMapLayer 破壞性 API 變動已在
+  4.3 定型）。本專案原訂 4.3，2026-07-14 趁遷移早期、程式碼尚少時把目標版本上修到 4.7，換取 4.4~4.7 累積的
+  bug fix／QoL；Godot 4.x feature release 保持向下相容，2D／TileMapLayer 這條線到 4.7 已很成熟。**同一時間全專案
+  只能有一個目標版本**：日後只跟 4.7 的點版（4.7.x），要跨大版升級須另開任務評估 breaking change 後再全專案切換。
 - **語言：GDScript**（不用 C#）——理由：GDevelop 端邏輯本來就是動態語言(JS)風格、資料驅動；GDScript 生態與
   debug 工具鏈更輕量，團隊目前是 John + AI agent 協作，不需要 C# 的型別工程量。
 - **渲染：2D，像素風**，比照 GDevelop 設定：`windowWidth=1280 windowHeight=720`，`scaleMode: nearest`
