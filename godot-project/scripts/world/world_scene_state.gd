@@ -37,14 +37,11 @@ class_name WorldSceneState
 ## 透過 `set_lock()`/`enter_building()`/`exit_building()` 改變時，重新計算 `is_gate_open()`
 ## （`not lock and not inside`）並寫回每個已註冊 zone 的 `enabled` 屬性。
 ##
-## **`trigger_zone.gd` 缺口**（MOD-B 擁有，本檔案不代為修改，只記錄）：`trigger_zone.gd` 目前沒有
-## `enabled` export（它只在 `body_entered` 當下判定一次，見該檔案檔頭最後一段），所以
-## `register_gated_zone()` 對它是不會生效的——`_apply_gate()` 用 `"enabled" in zone` 動態檢查屬性
-## 是否存在，沒有這個屬性的節點會被靜靜跳過（不會報錯，但也不會被鎖住）。這代表**如果對話進行中或玩家
-## 在室內，`TriggerZone` 節點目前仍然可能被觸發**，跟 GDevelop 原始碼 `!lock&&!st.inside` 閘門同時
-## 涵蓋 `CFG.exits`**與**`CFG.triggers`（build_cq2.py:2305-2332）的行為不一致。這是留給協調者決定的
-## 缺口（可能是幫 `trigger_zone.gd` 補一個 `enabled` export 並在 `_on_body_entered()` 開頭加一行
-## `if not enabled: return`，或另開任務）——依任務指示不直接修改 MOD-B 擁有的檔案。
+## **`trigger_zone.gd` 缺口（已補齊，2026-07-14）**：MOD-C 完成當下 `trigger_zone.gd` 還沒有
+## `enabled` export，`register_gated_zone()` 對它不會生效。協調者合併時補上了同款 `@export var
+## enabled: bool = true` + `_on_body_entered()` 開頭的 `if not enabled: return`（跟 exit_zone.gd/
+## pickup_zone.gd 同一套寫法），現在三個 zone 腳本的閘門行為一致，`_apply_gate()` 的 `"enabled" in
+## zone` 動態檢查對三者都會生效，不需要呼叫端額外處理。
 
 signal lock_changed(locked: bool)
 signal inside_changed(is_inside: bool)

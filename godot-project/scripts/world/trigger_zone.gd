@@ -40,6 +40,11 @@ class_name TriggerZone
 @export var has_min_step: bool = false
 @export var min_step: int = 0
 
+## 是否啟用，跟 exit_zone.gd/pickup_zone.gd 同一套約定（`!lock && !st.inside` 閘門）。由
+## world_scene_state.gd 的 register_gated_zone() 自動同步，見 TASKS/03_移動碰撞.md「已知缺口」——
+## 這是本檔案原本缺少、MOD-C 完成後回補的欄位，補齊後三個 zone 腳本的閘門行為才一致。
+@export var enabled: bool = true
+
 signal cutscene_requested(cut_id: String)
 signal message_requested(msg: String)
 
@@ -51,7 +56,7 @@ func _ready() -> void:
 
 
 func _on_body_entered(body: Node) -> void:
-	if not body.is_in_group("player"):
+	if not enabled or not body.is_in_group("player"):
 		return
 	var frame: int = Engine.get_physics_frames()
 	if TriggerZone._last_trigger_frame == frame:
