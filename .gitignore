@@ -1,0 +1,7 @@
+# API 金鑰等機密 —— 絕不進 git
+.env
+.env.*
+!.env.example
+
+# Claude Code 專案 MCP 設定（含機器絕對路徑，各機器自備）
+.mcp.json
