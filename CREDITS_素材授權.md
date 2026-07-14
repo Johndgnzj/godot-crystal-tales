@@ -1,0 +1,105 @@
+> **[Godot 遷移副本說明]** 本檔案於 **2026-07-14** 隨 `godot-project/assets/` 的資產一併從
+> `gd-crystal-tales/projects/crystal-quest/CREDITS_素材授權.md` 複製而來（MOD-I 任務）。
+> 自複製日起，GDevelop 版與 Godot 版的資產各自演進時，兩邊的授權文件需**分別維護**——
+> Godot 端動任何素材，改的是本檔案；GDevelop 端的更新不會自動同步過來。
+> 文中提及的 `tools/`、`design/`、`art_v*.py`、`build_cq2.py` 等路徑為 GDevelop 端工作區路徑，
+> 生成腳本依 TASKS/09 決議留在 GDevelop 端，Godot 專案只消費產出的 PNG/音檔。
+
+# 素材授權標註（水晶戰記）
+
+## 角色
+LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld-demo/CREDITS_素材授權.md；戰鬥怪物與道具為 GDevelop 商店 CC0（16x16 dungeon tileset、grafxkid、western fps 2d 等包）。
+
+- ⚠️ **野狼（wolf）為佔位圖**：GDevelop 商店與 LPC 皆無四足野狼素材，`assets/battle/Wolf_Idle.png` 由 grafxkid 洞熊單幀（`Bear_Idle.png`，CC0）於 build 時去飽和＋冷灰調重生（衍生自 CC0，故無授權限制）。外形仍是熊剪影、僅以冷灰色與棕熊區隔——**待日後補上正式四足狼精靈再替換**（gen-art 不適用像素小圖）。
+
+## 地形圖磚（LPC Terrain）
+- 來源：OpenGameArt「LPC Tile Atlas」（terrain_atlas.png），已存於 `tools/lpc-terrain/`
+- 作者群：Lanea Zimmerman (Sharm)、Daniel Armstrong (HughSpectrum)、Casper Nilsson 等 LPC 貢獻者
+  （完整名單見 https://opengameart.org/content/lpc-tile-atlas ）
+- 授權：CC-BY-SA 3.0 / GPL 3.0 雙授權——發佈時需標註作者，衍生美術需以相同授權分享
+- 使用範圍：草地（含變體/花）、土路九宮格過渡與內角、素土、石板廣場、長草、大樹（橡樹/松樹）
+
+## 森林地面與植被（anokolisa「Pixel Crawler - Free Pack」，2026-07-13 新增）
+- 來源：itch.io 作者 **Anokolisa**「Pixel Crawler - Free Pack」（免費版），已存於 `tools/anokolisa/`
+  （https://anokolisa.itch.io/free-pixel-art-asset-pack-topdown-tileset-rpg-16x16-sprites ）
+- 授權：見 `tools/anokolisa/LICENSE_Terms.txt`——可自由用於商業/非商業/學習專案、可任意改色改形；
+  **署名非必要（但作者感謝）；唯一限制：不得將素材本身當「最終產品」販售**（只有原作者能販售素材）。
+  crystal-quest 為把素材功能性用於遊戲、未販售素材，故可納入本（公開）repo。
+- 使用範圍（**檔名前綴 `fst_` 一律為本包衍生**，與自製家具 `f_*` 區隔）：
+  - `assets/map/atlas_forest.png`：森林專屬地面圖集（草/長草/花草/樹牆/土路），Forest/Forest2 場景 Map 專用；其他地圖仍用 LPC `atlas.png`。
+  - `assets/props/fst_tree_1..6.png`：6 種樹（針葉/闊葉，統一 96×120 底對齊）。
+  - `assets/props/fst_deco_{bush,fern,mush,flower,pebble}.png`：森林地面非阻擋裝飾。
+  - 以上由 `scripts/art_v14_forest.py` 從 `tools/anokolisa/` 重生（部分經裁切/縮放/微合成，屬允許的改作）。
+
+## 建築與洞窟（LPC Tile Atlas 1/2，2026-07-11 新增）
+- 來源：OpenGameArt「LPC Tile Atlas」（base_out_atlas.png，`tools/lpc-atlas1/`）與
+  「LPC Tile Atlas2」（build_atlas.png，`tools/lpc-atlas2/`），彙整者 adrix89
+- 作者群：LPC 參賽者（Lanea Zimmerman、Casper Nilsson、Barbara Rivera 等，
+  完整名單見各 zip 內 Attribution.txt / Attribution2.txt）
+- 授權：CC-BY-SA 3.0 / GPL 3.0 雙授權
+- 使用範圍：鎮上六棟建築（公會/旅店/鎮長宅/道具店/鐵匠鋪/小神殿 由組件拼裝）、
+  礦坑口、洞窟磚（岩壁/沙岩頂）、石筍、灌木、招牌、火炬、鍛爐、大門等
+
+## 音效（Pixabay，2026-07-11 新增）
+- 授權：Pixabay Content License（可免費商用、毋須標註；仍列出以示感謝）
+- levelup.mp3 — "Level Up 06" by Universfield（pixabay.com/sound-effects/film-special-effects-level-up-06-370051/）
+- learn.mp3 — "Level Up, Skill Upgrade 4" by yodguard（…/film-special-effects-level-up-skill-upgrade-4-387909/，剪輯至 2.2s）
+- menu.mp3 — "UI Open SFX" by litupsubway（…/technology-ui-open-sfx-513358/）
+- cursor.mp3 — "UI Hologram Interface Blip" by soundshelfstudio（…/film-special-effects-ui-hologram-interface-blip-527096/，剪輯）
+- cancel.mp3 — "UI Swipe Cancel" by soundshelfstudio（…/film-special-effects-ui-swipe-cancel-522217/，剪輯）
+- 其餘 .wav 為 Python 生成之 8-bit 音效（自製，無授權限制）
+
+## 背景音樂（Pixabay Music，2026-07-12 新增）
+- 授權：Pixabay Content License（免費商用、毋須標註；仍列出以示感謝）。皆經響度正規化與 128kbps 壓製。
+- bgm_title.mp3 — "Fantasy Adventure Quest" by alex-morgan（標題）
+- bgm_town.mp3 — "Medieval Folk Music" by watermelon_beats（芳蕾鎮）
+- bgm_forest.mp3 — "Adventure Forest Exploration" by nathan-180（東之森）
+- bgm_dungeon.mp3 — "Dark Fantasy Ambient Dungeon Synth" by deuslower（礦山/洞穴）
+- bgm_battle.mp3 — "Powerful Epic Orchestral History Loop" by sonican（戰鬥）
+
+## 對話立繪與戰鬥大圖
+- `assets/ui/face_*.png`（全 13 位：三主角＋十位鎮民）：AI 生成立繪
+  （Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，
+  由 /gen-art skill 生成，原圖在 design/faces/、art_v7_faces.py 裁切縮圖）。
+  ※ 2026-07-13：十位鎮民立繪全數改「細線稿＋水彩手繪」風重生，配色改由角色設計各自決定（見 DESIGN §3）；三主角待重生。
+  程式繪備用版可由 art_v4_portraits.py 重生。
+- `assets/ui/portrait_<id>.png`（室內立繪＋選單用的大型前景立繪）：由 design/faces 同一 AI 立繪，
+  以 art_v13_title.py **flood-fill 去背**（只挖與邊界相連的背景、人物實心不透）＋裁至 bbox（衍生自上者，授權相同）。
+  2026-07-13：全 13 位角色皆產 `portrait_<id>`（一般對話的大型去背立繪 DlgArt＋公會室內前景 IntArt 共用）；
+  另 `menuart_<id>`（三主角全身，選單「故事」頁 MenuArt）同法產生（裁邊去浮水印→去背→正規化畫布）。
+- `assets/battle/hero_*.png`：由 LPC 合成角色幀放大裁切（沿用 LPC CC-BY-SA/GPL 授權），
+  武器圖層取自 LPC weapon walk（longsword/dagger/saber，CC-BY-SA/GPL）。
+- `assets/ui/battlebg_*.png`：程序化生成（自製）。
+- `assets/props/ext_*.png`（六棟 45° 建築外觀）：AI 生成素材（Gemini gemini-2.5-flash-image，
+  提示詞作者 John/協作 Agent，2026-07-12，由 /gen-art skill 的 building type 生成，原圖在 design/buildings/）。
+  build 時去洋紅底＋**統一石造重上色**（磚紅屋頂→深色石板、暖乳白牆→灰米石）產生衍生版 `extc_*.png`（自動生成、不入版控，見 build_cq2.py `_clean_ext(stone=True)`）。
+- `assets/props/f_*.png`（室內家具：床/桌椅/櫃架/櫃檯/壁爐/祭壇/鐵砧/武具架…）與
+  `assets/props/int_room_wood/stone.png`（室內房間外殼）：**程序化像素繪製（自製，`art_v12_furniture.py` 以 PIL 繪，無授權限制）**。
+- `assets/props/int_<key>.png`（六棟室內大圖：公會/旅店/神殿/鎮長宅/道具店/鐵匠鋪）：AI 生成素材
+  （Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-13，由 /gen-art skill 的 interior type
+  「細線稿＋水彩手繪」風生成、色調隨房間氛圍決定）。現行室內為「立繪＋選單式」，build 去底產衍生版 `intc_<key>.png` 當手繪背景註冊進 game.json。
+- `assets/char/gray_*/guard_*.png`（老葛雷/羅素隊長 36 幀走路圖，戶外遊走 NPC）：
+  LPC 角色產生器圖層合成（`art_v10_npcwalk.py`；body＋頭＋鬍/帽/鎖甲染色），授權同主角 **CC-BY-SA 3.0 / GPL 3.0**。
+- `assets/props/chest_closed.png`／`chest_opened.png`（地圖寶箱兩態）、`herb.png`（支線鏡草）、
+  `helmet.png`（支線阿吉的頭盔）：程序化像素繪製（自製，build_cq2.py 內以 PIL 繪，無授權限制；
+  同 barrel/crate/lamp 等程序繪 props）。
+- `assets/ui/joybase/joyknob/btn_a/btn_menu/btn_back/pad_*/btn_s*`（觸控虛擬搖桿與按鈕）：
+  程序化繪製（自製，build_cq2.py 內以 PIL 繪；力/敏/智 字用系統字體 STHeiti 烘入）。
+- 地牢地板圖磚（gravel 遇敵/cavedark，art_v2.py toroidal wrap_dither 無縫重繪）：自製像素，無授權限制。
+- **地牢主地板（rockfloor/cavefloor）與氛圍裝飾**（骷髏/顱堆/骨散/蜘蛛網/裂縫 `assets/props/dun_*.png`）：[**[LPC] Dungeon Elements**](https://opengameart.org/content/lpc-dungeon-elements)（`dungeonex.png` 的 cobblestone 與道具）—— CC-BY 4.0/3.0 / GPL / OGA-BY 3.0 —— Sharm（graphic artist）＋貢獻者。cobblestone 經 art_v2.py 去飽和套礦坑/洞穴灰階；原表存 `tools/lpc-dungeon/`。
+## 敵人戰鬥圖（全部 LPC 重製，2026-07-12；取代原 16px 商店圖，來源 `assets/battle/lpc_src/`）
+
+**人形怪**（哥布林/獸人/哥布林頭目/骷髏/死靈術士/食人魔）：LPC 角色產生器圖層合成（`art_v8_foes.py`：body＋怪物頭＋衣物染色）。授權 **CC-BY-SA 3.0 / GPL 3.0**（同主角，LPC 貢獻者群）。
+
+**非人形怪**（OpenGameArt LPC 相容生物包，`art_v9_creatures.py` 裁切；原表存 `tools/lpc-creatures/`）：
+- 綠黏史萊姆 / 巨牙蟲 / 礦坑飛魔 / 異變的魔影：[**[LPC] Monsters**](https://opengameart.org/content/lpc-monsters)（slime / big_worm / bat / ghost）—— **CC-BY-SA 3.0 / GPL 3.0** —— Charles Sanchez (CharlesGabriel)、bagzie、bluecarrot16。
+- 暗影小魔：[**[LPC] Imp 2**](https://opengameart.org/content/lpc-imp-2) —— CC-BY 4.0/3.0 / GPL / OGA-BY 3.0 —— Stephen "Redshrike" Challener（graphic artist）＋ William.Thompsonj（contributor）。
+- 洞熊／狂暴洞熊：[**[LPC] bears, deer, lions and more**](https://opengameart.org/content/lpc-bears-deer-lions-and-more)（grizzly bear）—— **CC-BY 4.0** —— tapatilorenzo（部分衍生自 Sevarihk）。
+- 野狼（取代先前的熊 recolor 佔位）：[**[LPC] Wolf Animation**](https://opengameart.org/content/lpc-wolf-animation) —— CC-BY 4.0/3.0 / GPL / OGA-BY 3.0 —— Stephen "Redshrike" Challener ＋ William.Thompsonj。
+- 掠翅鳥：[**[LPC] Birds**](https://opengameart.org/content/lpc-birds)（eagle）—— CC-BY 4.0/3.0 / CC-BY-SA / GPL / OGA-BY —— bluecarrot16（castelonia 委製）。
+- `assets/ui/menubg.png`（水晶奇譚標題畫面）：背景與 Logo 徽記為 AI 生成
+  （Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，原圖 design/title/：
+  2026-07-13 改用手繪奇幻森林 `title_new.png`，由 `art_v13_title.py` 合成既有 logo；舊版 title_a 保留），
+  標題文字「水晶奇譚／CRYSTAL TALE」以 PIL＋系統字體(STHeiti/Arial)合成（自製）。
+  標題選單描邊字 `t_start/t_cont/t_restart.png` 亦為 PIL 系統字體烘製（自製）。
+  ※ 遊戲更名：水晶戰記 → 水晶奇譚（Crystal Tale）；專案資料夾 crystal-quest 維持為代號。
