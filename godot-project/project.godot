@@ -98,6 +98,12 @@ SceneRouter="*res://autoload/scene_router.gd"
 ; 內容。見 TASKS/01_對話劇情.md。
 DialogueSystem="*res://scripts/dialogue/dialogue_system.gd"
 
+; CORE-3 新增：SaveManager 是存檔／讀檔 autoload，見 godot-project/autoload/save_manager.gd 檔頭註解
+; 與 ../TASKS/00_核心任務.md CORE-3 段落。理由與 CORE-2/MOD-A 同例：只新增一行登記，不動其他 CORE/MOD
+; 任務已完成的內容。dialogue_system.gd（MOD-A）先前用 get_node_or_null("/root/SaveManager") 動態查找
+; 呼叫存檔，這裡正式註冊後那段程式碼會自動生效，不需要回頭改 dialogue_system.gd。
+SaveManager="*res://autoload/save_manager.gd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
