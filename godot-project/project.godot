@@ -98,6 +98,11 @@ SceneRouter="*res://autoload/scene_router.gd"
 ; 內容。見 TASKS/01_對話劇情.md。
 DialogueSystem="*res://scripts/dialogue/dialogue_system.gd"
 
+; CORE-6 新增：InputBridge 統一鍵盤/觸控輸入的邊緣觸發判斷（對應 GDevelop `keyHit()`），見
+; godot-project/autoload/input_bridge.gd 檔頭註解與 ../TASKS/00_核心任務.md CORE-6 段落。只新增
+; 一行登記，不動 [input] 區塊既有的 InputMap 定義（CORE-1 定案）與其他 CORE/MOD 任務已完成的內容。
+InputBridge="*res://autoload/input_bridge.gd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
