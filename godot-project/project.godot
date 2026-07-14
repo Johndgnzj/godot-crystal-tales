@@ -1,29 +1,39 @@
 ; Engine configuration file.
-; 對應 GDevelop 版 game.json properties（windowWidth/Height, scaleMode, antialiasingMode, pixelsRounding）。
-; 見 ../CLAUDE.md「Godot 版本與技術選型」一節。CORE-1 任務產出，實際玩法內容待 CORE/MOD 任務展開。
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
 ;
-; window/stretch/mode 決定：採用 "viewport"（而非 canvas_items）—— 本專案是 tile-based 像素風 JRPG，
-; viewport 模式以固定基準解析度整張畫面算圖後再整體縮放＋nearest filter，行為最接近 GDevelop 版
-; scaleMode:nearest 的效果，避免 canvas_items 模式下每個節點各自縮放造成的 tile 接縫/次像素抖動。
-; 註：CLAUDE.md 原文寫「stretch mode 待 CORE-1 實測決定」，但 CORE-1 執行當下環境內沒有可用的 Godot
-; 執行檔可以實機開專案測試（見任務報告），這個決定是依 Godot 官方文件＋社群慣例做的書面判斷，尚未實機驗證，
-; 之後拿到可用的 Godot 編輯器時應該實際開專案確認縮放/像素對齊行為，如與預期不符再回來調整。
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
 config/name="水晶奇譚 Crystal Tales"
 config/description="GDevelop → Godot 遷移專案（見 ../CLAUDE.md）。CORE-1 骨架，玩法內容待 CORE/MOD 任務展開。"
 run/main_scene="res://scenes/title/title.tscn"
-config/features=PackedStringArray("4.3", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+
+ContentDB="*res://autoload/content_db.gd"
+GameState="*res://autoload/game_state.gd"
+SceneRouter="*res://autoload/scene_router.gd"
+DialogueSystem="*res://scripts/dialogue/dialogue_system.gd"
+InputBridge="*res://autoload/input_bridge.gd"
+SaveManager="*res://autoload/save_manager.gd"
+DebugHooks="*res://tests/debug_hooks.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="viewport"
-window/stretch/aspect="keep"
 window/handheld/orientation="landscape"
 
 [input]
@@ -74,47 +84,6 @@ battle_auto={
 ]
 }
 
-[autoload]
-
-; CORE-2 新增（原 CORE-1 骨架尚未包含 [autoload] 區塊；註冊 autoload 屬於後續 CORE 任務的標準做法，
-; 不算越界改動 CORE-1 的檔案範圍，見 ../TASKS/00_核心任務.md CORE-2 段落與 commit message 說明）。
-; ContentDB 是 CONTENT.json 的唯讀查詢介面，見 godot-project/autoload/content_db.gd 檔頭註解。
-ContentDB="*res://autoload/content_db.gd"
-
-; GameState 原為協調者放置的【暫時性 STUB】，CORE-4 執行時已正式檢視/強化為正式產出（欄位/方法命名
-; 沿用未變，MOD-A/MOD-B 既有呼叫不受影響）——見 godot-project/autoload/game_state.gd 檔頭註解與
-; ../TASKS/00_核心任務.md CORE-4 段落「驗收現況」。
-; SceneRouter 目前仍是【暫時性 STUB】，由協調者先行放置以解除 MOD-A/MOD-B 的依賴阻塞，
-; 不是 CORE-5 任務的正式完成——見該檔案的檔頭註解與 ../TASKS/00_核心任務.md CORE-5 段落。
-GameState="*res://autoload/game_state.gd"
-SceneRouter="*res://autoload/scene_router.gd"
-
-; MOD-A 新增：DialogueSystem 是 NPC 對話（DLG）／過場劇情（CUTS）的全域引擎，見
-; scripts/dialogue/dialogue_system.gd 檔頭註解。比照既有 ContentDB/GameState/SceneRouter 的
-; autoload 慣例（單一實例、載入一次 resources/content/dialogue.json、對外提供固定路徑可呼叫的
-; API），讓任何世界場景／MOD-B 的 NPC 互動腳本／MOD-H 的地圖場景都能直接呼叫
-; `DialogueSystem.open_npc_dialogue(npc_id)` 等函式，不需要各自 instantiate 一份重複載入資料。
-; 理由與 CORE-2 當初新增 [autoload] 區塊的先例相同：只新增一行登記，不動其他 CORE/MOD 任務已完成的
-; 內容。見 TASKS/01_對話劇情.md。
-DialogueSystem="*res://scripts/dialogue/dialogue_system.gd"
-
-; CORE-6 新增：InputBridge 統一鍵盤/觸控輸入的邊緣觸發判斷（對應 GDevelop `keyHit()`），見
-; godot-project/autoload/input_bridge.gd 檔頭註解與 ../TASKS/00_核心任務.md CORE-6 段落。只新增
-; 一行登記，不動 [input] 區塊既有的 InputMap 定義（CORE-1 定案）與其他 CORE/MOD 任務已完成的內容。
-InputBridge="*res://autoload/input_bridge.gd"
-
-; CORE-3 新增：SaveManager 是存檔／讀檔 autoload，見 godot-project/autoload/save_manager.gd 檔頭註解
-; 與 ../TASKS/00_核心任務.md CORE-3 段落。理由與 CORE-2/MOD-A 同例：只新增一行登記，不動其他 CORE/MOD
-; 任務已完成的內容。dialogue_system.gd（MOD-A）先前用 get_node_or_null("/root/SaveManager") 動態查找
-; 呼叫存檔，這裡正式註冊後那段程式碼會自動生效，不需要回頭改 dialogue_system.gd。
-SaveManager="*res://autoload/save_manager.gd"
-
-; CORE-7 新增：DebugHooks 是自動化測試的除錯查詢點（GDevelop window.__W/__B/__forceEnc 的 Godot 等價
-; 物），見 godot-project/tests/debug_hooks.gd 檔頭與 ../TASKS/00_核心任務.md CORE-7 段落。只在 debug
-; build 啟用（release 匯出不暴露內部狀態）。理由與 CORE-2/CORE-3/CORE-6/MOD-A 同例：只新增一行登記，
-; 不動其他 CORE/MOD 任務已完成的內容。
-DebugHooks="*res://tests/debug_hooks.gd"
-
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
@@ -122,4 +91,3 @@ renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
-anti_aliasing/quality/msaa_2d=0
