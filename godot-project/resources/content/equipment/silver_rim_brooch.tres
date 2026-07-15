@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "silver_rim_brooch"
+display_name = "銀邊胸針"
+slot = "acc"
+desc = "鑲銀邊的胸針，微微提升魔力集中。"
+buy = 28
+sell = 8
+stats = {
+"matk": 1.0
+}

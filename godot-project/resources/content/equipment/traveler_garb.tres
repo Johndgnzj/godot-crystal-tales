@@ -13,3 +13,4 @@ sell = 10
 stats = {
 "pdef": 2.0
 }
+attr_type = "str"

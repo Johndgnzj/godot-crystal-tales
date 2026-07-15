@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "swiftwind_boots"
+display_name = "迅風靴"
+slot = "boots"
+desc = "鞋底刻著風紋的輕靴，踏步彷彿乘風而行。"
+buy = 150
+sell = 45
+tier = 2
+stats = {
+"dodge": 6.0
+}
+rarity = "rare"
+attr_type = "agi"

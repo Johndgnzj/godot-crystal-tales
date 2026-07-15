@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "windgod_feather"
+display_name = "疾風之神羽"
+slot = "acc"
+desc = "風神落下的羽毛，賦予配戴者難以捉摸的身法。"
+buy = 500
+sell = 150
+tier = 2
+stats = {
+"dodge": 10.0,
+"crit": 6.0
+}
+rarity = "epic"

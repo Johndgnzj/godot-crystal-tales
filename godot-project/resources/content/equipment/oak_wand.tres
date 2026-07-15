@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "oak_wand"
+display_name = "橡木短杖"
+slot = "weapon"
+desc = "橡木削製的短杖，適合初階咒語施放。"
+buy = 85
+sell = 26
+stats = {
+"matk": 4.0,
+"mp": 8.0
+}
+attr_type = "int"

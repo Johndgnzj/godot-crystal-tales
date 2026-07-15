@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "swiftshadow_band"
+display_name = "疾影之環"
+slot = "acc"
+desc = "刻著奔跑紋樣的指環，身法飄忽如影。"
+buy = 240
+sell = 72
+tier = 2
+stats = {
+"dodge": 6.0,
+"crit": 3.0
+}
+rarity = "rare"

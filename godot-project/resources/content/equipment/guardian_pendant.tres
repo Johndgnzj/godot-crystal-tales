@@ -11,6 +11,7 @@ desc = "刻有守護紋章的墜飾，同時強化物防與魔防。"
 buy = 120
 sell = 36
 tier = 2
+rarity = "rare"
 stats = {
 "mdef": 3.0,
 "pdef": 3.0

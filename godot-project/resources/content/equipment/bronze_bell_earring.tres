@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "bronze_bell_earring"
+display_name = "銅鈴耳墜"
+slot = "acc"
+desc = "叮噹作響的銅鈴耳墜，據說能分散敵人注意力。"
+buy = 32
+sell = 10
+stats = {
+"mp": 3.0,
+"dodge": 1.0
+}

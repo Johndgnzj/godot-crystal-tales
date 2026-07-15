@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "hunter_shortboots"
+display_name = "獵人短靴"
+slot = "boots"
+desc = "獵人常穿的短靴，方便隨時變換方向。"
+buy = 55
+sell = 16
+stats = {
+"dodge": 3.0
+}
+rarity = "uncommon"
+attr_type = "agi"

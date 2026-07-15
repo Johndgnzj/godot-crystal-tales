@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "soft_leather_shoes"
+display_name = "軟皮鞋"
+slot = "boots"
+desc = "柔軟合腳的皮鞋，走起路來輕巧不少。"
+buy = 20
+sell = 6
+stats = {
+"dodge": 1.0
+}
+attr_type = "agi"

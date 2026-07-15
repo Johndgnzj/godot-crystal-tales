@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "phantom_cloak_armor"
+display_name = "幻影披風甲"
+slot = "armor"
+desc = "披風下若隱若現的輕甲，模糊敵人的視線判斷。"
+buy = 360
+sell = 108
+tier = 2
+stats = {
+"dodge": 8.0,
+"pdef": 3.0
+}
+rarity = "rare"
+attr_type = "agi"

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "battlefield_medal"
+display_name = "戰場勳章"
+slot = "acc"
+desc = "沙場老兵的勳章，攻守俱佳。"
+buy = 235
+sell = 70
+tier = 2
+stats = {
+"patk": 4.0,
+"pdef": 3.0
+}
+rarity = "rare"

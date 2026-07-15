@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "sage_staff"
+display_name = "賢者長杖"
+slot = "weapon"
+desc = "賢者議會認證的長杖，法力運行更加穩定。"
+buy = 290
+sell = 87
+tier = 2
+stats = {
+"matk": 10.0,
+"mp": 20.0
+}
+rarity = "rare"
+attr_type = "int"

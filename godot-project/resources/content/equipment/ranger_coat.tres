@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "ranger_coat"
+display_name = "遊俠外套"
+slot = "armor"
+desc = "遊俠慣穿的多層外套，兼顧輕便與防護。"
+buy = 95
+sell = 28
+stats = {
+"dodge": 3.0,
+"pdef": 2.0
+}
+rarity = "uncommon"
+attr_type = "agi"

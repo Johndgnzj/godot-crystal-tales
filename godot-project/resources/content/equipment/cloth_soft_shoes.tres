@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "cloth_soft_shoes"
+display_name = "布面軟鞋"
+slot = "boots"
+desc = "布面軟鞋，能稍微緩和魔力波動的干擾。"
+buy = 25
+sell = 8
+stats = {
+"mdef": 1.0,
+"mp": 3.0
+}
+attr_type = "int"

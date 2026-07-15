@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "abyssal_scepter"
+display_name = "深淵權杖"
+slot = "weapon"
+desc = "來歷不明的黑色權杖，蘊藏著深不見底的魔力。"
+buy = 560
+sell = 168
+tier = 2
+stats = {
+"matk": 16.0,
+"mp": 32.0
+}
+rarity = "epic"
+attr_type = "int"

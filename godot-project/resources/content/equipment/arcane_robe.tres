@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "arcane_robe"
+display_name = "秘術長袍"
+slot = "armor"
+desc = "秘術師公會特製的長袍，法力運轉更為順暢。"
+buy = 165
+sell = 50
+stats = {
+"matk": 3.0,
+"mp": 13.0,
+"pdef": 2.0
+}
+rarity = "uncommon"
+attr_type = "int"

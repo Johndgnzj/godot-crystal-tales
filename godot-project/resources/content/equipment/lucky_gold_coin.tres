@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "lucky_gold_coin"
+display_name = "幸運金幣"
+slot = "acc"
+desc = "傳說中從未失手的幸運金幣，帶著它總能逢凶化吉。"
+buy = 225
+sell = 68
+tier = 2
+stats = {
+"crit": 4.0,
+"dodge": 4.0
+}
+rarity = "rare"

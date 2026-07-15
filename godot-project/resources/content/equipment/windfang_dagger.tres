@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "windfang_dagger"
+display_name = "破空迅牙"
+slot = "weapon"
+desc = "削鐵如泥的迅捷短劍，一擊直取要害。"
+buy = 380
+sell = 114
+tier = 2
+stats = {
+"crit": 13.0,
+"patk": 6.0
+}
+rarity = "epic"
+attr_type = "agi"

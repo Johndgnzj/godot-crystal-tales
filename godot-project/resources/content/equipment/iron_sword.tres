@@ -10,6 +10,8 @@ slot = "weapon"
 desc = "扎實的全鐵長劍，冒險者的標準配備。"
 buy = 120
 sell = 36
+rarity = "uncommon"
 stats = {
 "patk": 6.0
 }
+attr_type = "str"

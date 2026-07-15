@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "starlit_relic"
+display_name = "星空秘寶"
+slot = "acc"
+desc = "遠古秘寶，據說封存著整片星空的魔力。"
+buy = 600
+sell = 180
+tier = 2
+stats = {
+"matk": 8.0,
+"mp": 25.0,
+"crit": 3.0
+}
+rarity = "epic"

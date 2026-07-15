@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "steady_pendant"
+display_name = "沉穩護腕墜"
+slot = "acc"
+desc = "沉甸甸的墜飾，攻防都穩了幾分。"
+buy = 85
+sell = 26
+stats = {
+"pdef": 2.0,
+"mdef": 2.0
+}
+rarity = "uncommon"

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "undying_will_pendant"
+display_name = "不滅意志之心"
+slot = "acc"
+desc = "傳說永不熄滅的意志結晶，守護配戴者直到最後一刻。"
+buy = 520
+sell = 156
+tier = 2
+stats = {
+"hp": 40.0,
+"pdef": 5.0,
+"mdef": 5.0
+}
+rarity = "epic"

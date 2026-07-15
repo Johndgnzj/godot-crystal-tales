@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "profound_arcane_robe"
+display_name = "深奧秘法袍"
+slot = "armor"
+desc = "封存深奧咒文的至高法袍，魔力近乎無窮。"
+buy = 600
+sell = 180
+tier = 2
+stats = {
+"matk": 8.0,
+"mp": 30.0,
+"pdef": 5.0
+}
+rarity = "epic"
+attr_type = "int"

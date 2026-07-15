@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "rune_gloves"
+display_name = "魔紋手套"
+slot = "acc"
+desc = "繡有魔紋的手套，施法時更加得心應手。"
+buy = 100
+sell = 30
+stats = {
+"matk": 2.0,
+"mp": 8.0
+}
+rarity = "uncommon"

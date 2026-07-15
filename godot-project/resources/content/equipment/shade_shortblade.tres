@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "shade_shortblade"
+display_name = "幽影短刃"
+slot = "weapon"
+desc = "吸光的暗色刃面，揮動間幾乎無聲。"
+buy = 220
+sell = 66
+tier = 2
+stats = {
+"crit": 10.0,
+"patk": 5.0
+}
+rarity = "rare"
+attr_type = "agi"

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "dragonking_scale"
+display_name = "龍王之鱗"
+slot = "acc"
+desc = "傳說中龍王親賜的鱗片，防禦近乎無懈可擊。"
+buy = 540
+sell = 162
+tier = 2
+stats = {
+"pdef": 8.0,
+"mdef": 8.0
+}
+rarity = "epic"

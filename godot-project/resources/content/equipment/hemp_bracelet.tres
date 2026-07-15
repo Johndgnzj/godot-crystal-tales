@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "hemp_bracelet"
+display_name = "麻繩手環"
+slot = "acc"
+desc = "簡樸的麻繩手環，冒險者間流行的護身小物。"
+buy = 18
+sell = 5
+stats = {
+"hp": 5.0
+}

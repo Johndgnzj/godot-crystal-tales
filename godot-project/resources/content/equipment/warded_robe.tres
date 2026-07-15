@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "warded_robe"
+display_name = "織符長袍"
+slot = "armor"
+desc = "縫入基礎防護符文的長袍，兼顧法力與安全。"
+buy = 75
+sell = 22
+stats = {
+"matk": 2.0,
+"mp": 8.0
+}
+attr_type = "int"

@@ -7,4 +7,4 @@ script = ExtResource("1_ypnh0")
 id = "gid"
 display_name = "吉德的道具店"
 greet = "要看看我店裡的商品嗎？"
-sell_ids = ["potion", "hi_potion", "mana_herb", "antidote", "revive_feather", "tent", "lucky_coin", "agate_charm", "vital_ring", "focus_earring"]
+sell_ids = ["potion", "hi_potion", "mana_herb", "antidote", "revive_feather", "tent", "lucky_coin", "agate_charm", "vital_ring", "focus_earring", "copper_ring", "wooden_bead_bracelet", "rabbit_foot_charm", "worn_pocketwatch", "shell_necklace", "leather_cord_charm", "silver_rim_brooch", "polished_stone_ring", "hemp_bracelet", "bronze_bell_earring", "hawkeye_badge", "gale_earring", "steady_pendant", "scholar_spectacles", "lifestone_necklace", "manacrystal_ring", "warrior_armlet", "lucky_bunny_clip", "guardian_emblem", "rune_gloves", "dragonbreath_charm", "deepsea_pearl_necklace", "forest_spirit_ring", "swiftshadow_band", "ironwill_medal", "starlight_pendant", "sage_ring", "battlefield_medal", "lucky_gold_coin", "goddess_grace_ring", "heart_of_chaos", "undying_will_pendant", "windgod_feather", "dragonking_scale", "starlit_relic"]

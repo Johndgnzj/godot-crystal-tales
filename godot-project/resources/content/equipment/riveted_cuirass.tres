@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "riveted_cuirass"
+display_name = "鉚釘胸甲"
+slot = "armor"
+desc = "以鉚釘固定的胸甲，防禦扎實，需要練習才能靈活行動。"
+buy = 140
+sell = 42
+stats = {
+"pdef": 7.0
+}
+rarity = "uncommon"
+attr_type = "str"

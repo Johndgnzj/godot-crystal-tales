@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "shell_necklace"
+display_name = "貝殼項鍊"
+slot = "acc"
+desc = "海貝串成的項鍊，聽說有守護的力量。"
+buy = 22
+sell = 7
+stats = {
+"mdef": 1.0
+}

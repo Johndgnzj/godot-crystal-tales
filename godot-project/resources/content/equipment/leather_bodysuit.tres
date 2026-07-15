@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "leather_bodysuit"
+display_name = "皮革緊身衣"
+slot = "armor"
+desc = "貼合身形的皮革緊身衣，不影響身手。"
+buy = 55
+sell = 16
+stats = {
+"dodge": 2.0,
+"pdef": 1.0
+}
+attr_type = "agi"

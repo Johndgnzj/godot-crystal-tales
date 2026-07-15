@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "sage_robe"
+display_name = "賢者長袍"
+slot = "armor"
+desc = "賢者議會的正式禮袍，法力儲備遠勝常人。"
+buy = 300
+sell = 90
+tier = 2
+stats = {
+"matk": 4.0,
+"mp": 19.0,
+"pdef": 3.0
+}
+rarity = "rare"
+attr_type = "int"
