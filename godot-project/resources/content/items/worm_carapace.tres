@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_4jsbx")
 id = "worm_carapace"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "蟲甲"
 cat = "material"
 effect = "巨牙蟲的堅硬外殼，可磨成護具塗層。"

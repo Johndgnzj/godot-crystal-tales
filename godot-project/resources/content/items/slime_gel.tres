@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_x7eeb")
 id = "slime_gel"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "史萊姆凝膠"
 cat = "material"
 effect = "綠黏史萊姆的黏液，煉金基礎素材。"

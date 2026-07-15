@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_in7al")
 id = "iron_ore"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "鐵礦石"
 cat = "material"
 effect = "未精煉的鐵礦，鐵匠鋪收購，可鍛造武具。"

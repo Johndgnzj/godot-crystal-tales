@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_l2a46")
 id = "potion"
+rarity = "common"
+base_drop_rate = 0.0
 display_name = "藥水"
 cat = "consumable"
 kind = "heal"

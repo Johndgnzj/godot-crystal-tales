@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_p6itc")
 id = "goddess_mark"
+rarity = "key"
+base_drop_rate = 0.0
 display_name = "女神的記號"
 cat = "key"
 effect = "蓋婭女神在路德身上留下的記號（劇情物品，不可販售）。"
-rarity = "unique"

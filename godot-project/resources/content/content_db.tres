@@ -234,7 +234,7 @@ script = ExtResource("4_hoq51")
 id = "bird"
 display_name = "掠翅鳥"
 sprite = "bird"
-hp = 16.0
+hp = 28.0
 atk = 7.0
 def_stat = 2.0
 spd = 14.0
@@ -242,7 +242,7 @@ exp = 5
 gold = 3
 drops = [{
 "id": "soft_feather",
-"rate": 0.5
+"rate": 1.2
 }]
 
 [sub_resource type="Resource" id="Resource_2d226"]
@@ -250,7 +250,7 @@ script = ExtResource("4_hoq51")
 id = "gslime"
 display_name = "綠黏史萊姆"
 sprite = "gslime"
-hp = 26.0
+hp = 44.0
 atk = 6.0
 def_stat = 4.0
 spd = 4.0
@@ -258,7 +258,7 @@ exp = 6
 gold = 4
 drops = [{
 "id": "slime_gel",
-"rate": 0.5
+"rate": 1.25
 }]
 
 [sub_resource type="Resource" id="Resource_38aoo"]
@@ -266,7 +266,7 @@ script = ExtResource("4_hoq51")
 id = "worm"
 display_name = "巨牙蟲"
 sprite = "worm"
-hp = 20.0
+hp = 34.0
 atk = 11.0
 def_stat = 3.0
 spd = 7.0
@@ -274,7 +274,7 @@ exp = 8
 gold = 5
 drops = [{
 "id": "worm_carapace",
-"rate": 0.45
+"rate": 1.2
 }]
 
 [sub_resource type="Resource" id="Resource_1f648"]
@@ -282,7 +282,7 @@ script = ExtResource("4_hoq51")
 id = "goblin"
 display_name = "哥布林拾荒者"
 sprite = "goblin"
-hp = 22.0
+hp = 38.0
 atk = 9.0
 def_stat = 4.0
 spd = 8.0
@@ -290,7 +290,7 @@ exp = 8
 gold = 7
 drops = [{
 "id": "goblin_fang",
-"rate": 0.4
+"rate": 1.1
 }]
 
 [sub_resource type="Resource" id="Resource_7ak06"]
@@ -298,7 +298,7 @@ script = ExtResource("4_hoq51")
 id = "goblin_chief"
 display_name = "哥布林頭目"
 sprite = "maskedorc"
-hp = 600.0
+hp = 780.0
 atk = 26.0
 def_stat = 13.0
 spd = 10.0
@@ -307,10 +307,10 @@ gold = 150
 big = true
 drops = [{
 "id": "goblin_fang",
-"rate": 1.0
+"rate": 5.0
 }, {
 "id": "crystal_shard",
-"rate": 0.25
+"rate": 5.0
 }]
 foe_skills = [{
 "mult": 1.9,
@@ -327,7 +327,7 @@ script = ExtResource("4_hoq51")
 id = "bear"
 display_name = "洞熊"
 sprite = "bear"
-hp = 70.0
+hp = 120.0
 atk = 16.0
 def_stat = 9.0
 spd = 5.0
@@ -335,7 +335,7 @@ exp = 28
 gold = 18
 drops = [{
 "id": "beast_hide",
-"rate": 0.6
+"rate": 2.5
 }]
 
 [sub_resource type="Resource" id="Resource_j7mbp"]
@@ -343,7 +343,7 @@ script = ExtResource("4_hoq51")
 id = "bear_dire"
 display_name = "狂暴洞熊"
 sprite = "bear"
-hp = 960.0
+hp = 1200.0
 atk = 36.0
 def_stat = 16.0
 spd = 8.0
@@ -353,10 +353,10 @@ big = true
 all_attack = true
 drops = [{
 "id": "beast_hide",
-"rate": 1.0
+"rate": 8.0
 }, {
 "id": "crystal_shard",
-"rate": 0.3
+"rate": 6.0
 }]
 foe_skills = [{
 "mult": 2.1,
@@ -373,7 +373,7 @@ script = ExtResource("4_hoq51")
 id = "wolf"
 display_name = "野狼"
 sprite = "wolf"
-hp = 40.0
+hp = 68.0
 atk = 13.0
 def_stat = 6.0
 spd = 12.0
@@ -381,10 +381,10 @@ exp = 16
 gold = 11
 drops = [{
 "id": "wolf_hide",
-"rate": 0.6
+"rate": 2.0
 }, {
 "id": "beast_hide",
-"rate": 0.15
+"rate": 0.75
 }]
 
 [sub_resource type="Resource" id="Resource_dfnc1"]
@@ -392,7 +392,7 @@ script = ExtResource("4_hoq51")
 id = "wogol"
 display_name = "礦坑飛魔"
 sprite = "wogol"
-hp = 24.0
+hp = 40.0
 atk = 11.0
 def_stat = 4.0
 spd = 15.0
@@ -400,7 +400,7 @@ exp = 11
 gold = 8
 drops = [{
 "id": "crystal_shard",
-"rate": 0.1
+"rate": 1.0
 }]
 
 [sub_resource type="Resource" id="Resource_sahc2"]
@@ -408,7 +408,7 @@ script = ExtResource("4_hoq51")
 id = "skeleton"
 display_name = "骷髏礦工"
 sprite = "skeleton"
-hp = 34.0
+hp = 58.0
 atk = 12.0
 def_stat = 7.0
 spd = 7.0
@@ -416,10 +416,10 @@ exp = 12
 gold = 10
 drops = [{
 "id": "bone_shard",
-"rate": 0.5
+"rate": 1.2
 }, {
 "id": "iron_ore",
-"rate": 0.2
+"rate": 0.8
 }]
 
 [sub_resource type="Resource" id="Resource_vjhig"]
@@ -427,7 +427,7 @@ script = ExtResource("4_hoq51")
 id = "orc"
 display_name = "獸人挖掘者"
 sprite = "orc"
-hp = 48.0
+hp = 82.0
 atk = 14.0
 def_stat = 9.0
 spd = 6.0
@@ -435,10 +435,10 @@ exp = 18
 gold = 14
 drops = [{
 "id": "iron_ore",
-"rate": 0.4
+"rate": 1.5
 }, {
 "id": "bone_shard",
-"rate": 0.15
+"rate": 0.5
 }]
 
 [sub_resource type="Resource" id="Resource_hnf0v"]
@@ -446,7 +446,7 @@ script = ExtResource("4_hoq51")
 id = "chort"
 display_name = "暗影小魔"
 sprite = "chort"
-hp = 30.0
+hp = 50.0
 atk = 14.0
 def_stat = 5.0
 spd = 13.0
@@ -454,7 +454,7 @@ exp = 16
 gold = 12
 drops = [{
 "id": "crystal_shard",
-"rate": 0.15
+"rate": 1.2
 }]
 
 [sub_resource type="Resource" id="Resource_1s8rn"]
@@ -462,7 +462,7 @@ script = ExtResource("4_hoq51")
 id = "necro"
 display_name = "死靈術士"
 sprite = "necro"
-hp = 60.0
+hp = 100.0
 atk = 13.0
 def_stat = 6.0
 spd = 9.0
@@ -471,10 +471,10 @@ gold = 35
 healer = true
 drops = [{
 "id": "crystal_shard",
-"rate": 0.5
+"rate": 3.0
 }, {
 "id": "mana_herb",
-"rate": 0.3
+"rate": 1.5
 }]
 
 [sub_resource type="Resource" id="Resource_cs8nw"]
@@ -482,7 +482,7 @@ script = ExtResource("4_hoq51")
 id = "ogre"
 display_name = "洞窟食人魔"
 sprite = "ogre"
-hp = 1300.0
+hp = 1600.0
 atk = 38.0
 def_stat = 18.0
 spd = 6.0
@@ -492,10 +492,10 @@ big = true
 all_attack = true
 drops = [{
 "id": "crystal_shard",
-"rate": 1.0
+"rate": 16.0
 }, {
 "id": "beast_hide",
-"rate": 0.5
+"rate": 2.5
 }]
 foe_skills = [{
 "mult": 2.0,
@@ -2187,6 +2187,8 @@ rarity = "epic"
 [sub_resource type="Resource" id="Resource_x6djv"]
 script = ExtResource("6_gqqnr")
 id = "potion"
+rarity = "common"
+base_drop_rate = 0.0
 display_name = "藥水"
 cat = "consumable"
 kind = "heal"
@@ -2200,6 +2202,8 @@ icon = "res://assets/battle/Red_Potion.png"
 [sub_resource type="Resource" id="Resource_pni1o"]
 script = ExtResource("6_gqqnr")
 id = "hi_potion"
+rarity = "uncommon"
+base_drop_rate = 0.0
 display_name = "上級藥水"
 cat = "consumable"
 kind = "heal"
@@ -2207,11 +2211,12 @@ power = 150.0
 effect = "單體回復 150 HP。"
 buy = 90
 sell = 27
-rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_khpay"]
 script = ExtResource("6_gqqnr")
 id = "mana_herb"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "魔力草"
 cat = "consumable"
 kind = "mp"
@@ -2223,6 +2228,8 @@ sell = 12
 [sub_resource type="Resource" id="Resource_cuqn5"]
 script = ExtResource("6_gqqnr")
 id = "antidote"
+rarity = "common"
+base_drop_rate = 0.0
 display_name = "解毒草"
 cat = "consumable"
 kind = "cure"
@@ -2234,6 +2241,8 @@ sell = 4
 [sub_resource type="Resource" id="Resource_kkpf5"]
 script = ExtResource("6_gqqnr")
 id = "revive_feather"
+rarity = "rare"
+base_drop_rate = 0.0
 display_name = "復活羽毛"
 cat = "consumable"
 kind = "revive"
@@ -2241,22 +2250,24 @@ power = 50.0
 effect = "復活一名戰鬥不能的同伴，並回復其 50% HP。"
 buy = 100
 sell = 30
-rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_2mls8"]
 script = ExtResource("6_gqqnr")
 id = "tent"
+rarity = "uncommon"
+base_drop_rate = 0.0
 display_name = "帳篷"
 cat = "consumable"
 kind = "rest"
 effect = "於野外休息點使用，全隊回復全部 HP／MP。"
 buy = 120
 sell = 36
-rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_iqrol"]
 script = ExtResource("6_gqqnr")
 id = "soft_feather"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "柔軟羽毛"
 cat = "material"
 effect = "掠翅鳥的輕盈羽毛，煉金與販售的常見素材。"
@@ -2266,6 +2277,8 @@ sell = 2
 [sub_resource type="Resource" id="Resource_wfoeg"]
 script = ExtResource("6_gqqnr")
 id = "slime_gel"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "史萊姆凝膠"
 cat = "material"
 effect = "綠黏史萊姆的黏液，煉金基礎素材。"
@@ -2275,6 +2288,8 @@ sell = 2
 [sub_resource type="Resource" id="Resource_ww16q"]
 script = ExtResource("6_gqqnr")
 id = "worm_carapace"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "蟲甲"
 cat = "material"
 effect = "巨牙蟲的堅硬外殼，可磨成護具塗層。"
@@ -2284,6 +2299,8 @@ sell = 3
 [sub_resource type="Resource" id="Resource_yy8o7"]
 script = ExtResource("6_gqqnr")
 id = "goblin_fang"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "哥布林牙"
 cat = "material"
 effect = "哥布林的獠牙，冒險者最常變賣的素材。"
@@ -2293,6 +2310,8 @@ sell = 4
 [sub_resource type="Resource" id="Resource_nhh40"]
 script = ExtResource("6_gqqnr")
 id = "bone_shard"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "白骨碎片"
 cat = "material"
 effect = "骷髏礦工遺留的骨片，帶著礦坑的塵味。"
@@ -2302,6 +2321,8 @@ sell = 5
 [sub_resource type="Resource" id="Resource_t0u0x"]
 script = ExtResource("6_gqqnr")
 id = "wolf_hide"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "狼皮"
 cat = "material"
 effect = "野狼的毛皮，可製輕甲（第二章素材）。"
@@ -2311,6 +2332,8 @@ sell = 7
 [sub_resource type="Resource" id="Resource_ldt1x"]
 script = ExtResource("6_gqqnr")
 id = "iron_ore"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "鐵礦石"
 cat = "material"
 effect = "未精煉的鐵礦，鐵匠鋪收購，可鍛造武具。"
@@ -2320,46 +2343,51 @@ sell = 8
 [sub_resource type="Resource" id="Resource_x4fll"]
 script = ExtResource("6_gqqnr")
 id = "beast_hide"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "獸皮"
 cat = "material"
 effect = "洞熊的厚實毛皮，是製甲的好材料。"
 buy = 30
 sell = 10
-rarity = "uncommon"
 
 [sub_resource type="Resource" id="Resource_q20xv"]
 script = ExtResource("6_gqqnr")
 id = "crystal_shard"
+rarity = "rare"
+base_drop_rate = 0.05
 display_name = "水晶碎片"
 cat = "material"
 effect = "蘊含魔力的水晶碎片，稀有；似乎與礦山異變有關。"
 buy = 60
 sell = 20
-rarity = "rare"
 
 [sub_resource type="Resource" id="Resource_544ya"]
 script = ExtResource("6_gqqnr")
 id = "guild_card"
+rarity = "key"
+base_drop_rate = 0.0
 display_name = "公會登錄證"
 cat = "key"
 effect = "冒險者公會核發的身分證明（F 級）。序章於緹娜處登錄後取得。"
-rarity = "unique"
 
 [sub_resource type="Resource" id="Resource_001vv"]
 script = ExtResource("6_gqqnr")
 id = "miner_helmet"
+rarity = "key"
+base_drop_rate = 0.0
 display_name = "失蹤礦工的頭盔"
 cat = "key"
 effect = "「礦工的遺物」委託道具，需交還委託人（老葛雷）。"
-rarity = "unique"
 
 [sub_resource type="Resource" id="Resource_4o5ij"]
 script = ExtResource("6_gqqnr")
 id = "goddess_mark"
+rarity = "key"
+base_drop_rate = 0.0
 display_name = "女神的記號"
 cat = "key"
 effect = "蓋婭女神在路德身上留下的記號（劇情物品，不可販售）。"
-rarity = "unique"
 
 [sub_resource type="Resource" id="Resource_olg13"]
 script = ExtResource("7_phwb1")
@@ -2367,23 +2395,23 @@ party_size = 2
 maps = {
 "cave": {
 "battles": 24.0,
-"entryLv": 8.0,
-"targetLv": 11.0
+"entryLv": 5.0,
+"targetLv": 7.0
 },
 "forest": {
 "battles": 14.0,
 "entryLv": 1.0,
-"targetLv": 3.0
+"targetLv": 2.0
 },
 "forest2": {
 "battles": 16.0,
-"entryLv": 3.0,
-"targetLv": 5.0
+"entryLv": 2.0,
+"targetLv": 3.0
 },
 "mine": {
 "battles": 24.0,
-"entryLv": 5.0,
-"targetLv": 8.0
+"entryLv": 3.0,
+"targetLv": 5.0
 },
 "tutorial": {
 "battles": 3.0,

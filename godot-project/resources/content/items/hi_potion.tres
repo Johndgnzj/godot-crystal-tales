@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_0lpwf")
 id = "hi_potion"
+rarity = "uncommon"
+base_drop_rate = 0.0
 display_name = "上級藥水"
 cat = "consumable"
 kind = "heal"
@@ -12,4 +14,3 @@ power = 150.0
 effect = "單體回復 150 HP。"
 buy = 90
 sell = 27
-rarity = "uncommon"

@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_suv3g")
 id = "soft_feather"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "柔軟羽毛"
 cat = "material"
 effect = "掠翅鳥的輕盈羽毛，煉金與販售的常見素材。"

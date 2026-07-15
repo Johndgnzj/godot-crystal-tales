@@ -14,7 +14,9 @@ extends Resource
 @export var buy: int = 0
 @export var sell: int = 0
 @export var icon: String = ""           ## res:// 圖示路徑；留空＝美術尚未產出，UI 端 fallback 用 cat 預設圖示
-@export_enum("common", "uncommon", "rare", "unique") var rarity: String = "common"  ## 稀有度色階，見 道具武器設計.md
+@export var rarity: String = "common"    ## common / uncommon / rare / key（稀有度，兼具掉落機率分級與 UI 呈現用途，見 F-10）
+@export var base_drop_rate: float = 0.0  ## 物品自身基礎掉落率；怪物 drops.rate 為其加成倍率，
+                                         ## 最終掉率見 specs/BATTLE_FORMULAS.md F-10
 
 
 static func from_dict(d: Dictionary) -> ItemDef:
@@ -31,4 +33,5 @@ static func from_dict(d: Dictionary) -> ItemDef:
 	result.sell = int(d.get("sell", 0))
 	result.icon = d.get("icon", "")
 	result.rarity = d.get("rarity", "common")
+	result.base_drop_rate = float(d.get("base_drop_rate", 0))
 	return result

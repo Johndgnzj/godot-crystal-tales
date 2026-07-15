@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_hspor")
 id = "miner_helmet"
+rarity = "key"
+base_drop_rate = 0.0
 display_name = "失蹤礦工的頭盔"
 cat = "key"
 effect = "「礦工的遺物」委託道具，需交還委託人（老葛雷）。"
-rarity = "unique"

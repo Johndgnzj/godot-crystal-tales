@@ -7,7 +7,7 @@ script = ExtResource("1_fsrh3")
 id = "orc"
 display_name = "獸人挖掘者"
 sprite = "orc"
-hp = 48.0
+hp = 82.0
 atk = 14.0
 def_stat = 9.0
 spd = 6.0
@@ -15,8 +15,8 @@ exp = 18
 gold = 14
 drops = [{
 "id": "iron_ore",
-"rate": 0.4
+"rate": 1.5
 }, {
 "id": "bone_shard",
-"rate": 0.15
+"rate": 0.5
 }]

@@ -7,7 +7,7 @@ script = ExtResource("1_iwqxm")
 id = "bird"
 display_name = "掠翅鳥"
 sprite = "bird"
-hp = 16.0
+hp = 28.0
 atk = 7.0
 def_stat = 2.0
 spd = 14.0
@@ -15,5 +15,5 @@ exp = 5
 gold = 3
 drops = [{
 "id": "soft_feather",
-"rate": 0.5
+"rate": 1.2
 }]
