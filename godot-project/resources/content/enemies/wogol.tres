@@ -7,7 +7,7 @@ script = ExtResource("1_5xa2d")
 id = "wogol"
 display_name = "礦坑飛魔"
 sprite = "wogol"
-hp = 24.0
+hp = 40.0
 atk = 11.0
 def_stat = 4.0
 spd = 15.0
@@ -15,5 +15,5 @@ exp = 11
 gold = 8
 drops = [{
 "id": "crystal_shard",
-"rate": 0.1
+"rate": 1.0
 }]

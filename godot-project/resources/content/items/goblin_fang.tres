@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_j54fp")
 id = "goblin_fang"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "哥布林牙"
 cat = "material"
 effect = "哥布林的獠牙，冒險者最常變賣的素材。"

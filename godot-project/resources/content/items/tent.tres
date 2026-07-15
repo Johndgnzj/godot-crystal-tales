@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_pbedy")
 id = "tent"
+rarity = "uncommon"
+base_drop_rate = 0.0
 display_name = "帳篷"
 cat = "consumable"
 kind = "rest"

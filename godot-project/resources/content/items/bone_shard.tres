@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_q6sbh")
 id = "bone_shard"
+rarity = "common"
+base_drop_rate = 0.2
 display_name = "白骨碎片"
 cat = "material"
 effect = "骷髏礦工遺留的骨片，帶著礦坑的塵味。"

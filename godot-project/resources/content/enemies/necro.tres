@@ -7,7 +7,7 @@ script = ExtResource("1_ph3pf")
 id = "necro"
 display_name = "死靈術士"
 sprite = "necro"
-hp = 60.0
+hp = 100.0
 atk = 13.0
 def_stat = 6.0
 spd = 9.0
@@ -16,8 +16,8 @@ gold = 35
 healer = true
 drops = [{
 "id": "crystal_shard",
-"rate": 0.5
+"rate": 3.0
 }, {
 "id": "mana_herb",
-"rate": 0.3
+"rate": 1.5
 }]
