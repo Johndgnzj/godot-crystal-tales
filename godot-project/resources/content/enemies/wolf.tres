@@ -7,7 +7,7 @@ script = ExtResource("1_tv7c7")
 id = "wolf"
 display_name = "野狼"
 sprite = "wolf"
-hp = 40.0
+hp = 68.0
 atk = 13.0
 def_stat = 6.0
 spd = 12.0
@@ -15,8 +15,8 @@ exp = 16
 gold = 11
 drops = [{
 "id": "wolf_hide",
-"rate": 0.6
+"rate": 2.0
 }, {
 "id": "beast_hide",
-"rate": 0.15
+"rate": 0.75
 }]

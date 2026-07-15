@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_wham8")
 id = "crystal_shard"
+rarity = "rare"
+base_drop_rate = 0.05
 display_name = "水晶碎片"
 cat = "material"
 effect = "蘊含魔力的水晶碎片，稀有；似乎與礦山異變有關。"

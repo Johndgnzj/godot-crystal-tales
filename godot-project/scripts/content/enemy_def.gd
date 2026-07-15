@@ -14,7 +14,8 @@ extends Resource
 @export var big: bool = false           ## boss/大型敵人旗標
 @export var all_attack: bool = false    ## 來源 JSON key: "allAttack"
 @export var healer: bool = false
-@export var drops: Array = []           ## Array[Dictionary]，每個元素 {id, rate}
+@export var drops: Array = []           ## Array[Dictionary]，每個元素 {id, rate}；rate 是「加成倍率」，
+                                        ## 最終掉率 = clamp(item.base_drop_rate × rate, 0, 1)，見 specs/BATTLE_FORMULAS.md F-10
 @export var foe_skills: Array = []      ## 來源 JSON key: "foeSkills"，Array[Dictionary] {name,target,mult}
 
 

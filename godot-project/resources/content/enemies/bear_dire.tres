@@ -7,7 +7,7 @@ script = ExtResource("1_6gng3")
 id = "bear_dire"
 display_name = "狂暴洞熊"
 sprite = "bear"
-hp = 960.0
+hp = 1200.0
 atk = 36.0
 def_stat = 16.0
 spd = 8.0
@@ -17,10 +17,10 @@ big = true
 all_attack = true
 drops = [{
 "id": "beast_hide",
-"rate": 1.0
+"rate": 8.0
 }, {
 "id": "crystal_shard",
-"rate": 0.3
+"rate": 6.0
 }]
 foe_skills = [{
 "mult": 2.1,

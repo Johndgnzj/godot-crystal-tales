@@ -7,7 +7,7 @@ script = ExtResource("1_3nqsu")
 id = "skeleton"
 display_name = "骷髏礦工"
 sprite = "skeleton"
-hp = 34.0
+hp = 58.0
 atk = 12.0
 def_stat = 7.0
 spd = 7.0
@@ -15,8 +15,8 @@ exp = 12
 gold = 10
 drops = [{
 "id": "bone_shard",
-"rate": 0.5
+"rate": 1.2
 }, {
 "id": "iron_ore",
-"rate": 0.2
+"rate": 0.8
 }]
