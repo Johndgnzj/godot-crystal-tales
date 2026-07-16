@@ -8,7 +8,7 @@
      是同一份公式在兩種語言各寫一次，方便肉眼逐行比對兩邊是否一致——見函式旁的 .gd 行號註解）。
 
   2. `EXPECTED_WORLD` / `EXPECTED_BATTLE`：凍結的實測 fixture，來源是**直接從
-     ../../../../gd-crystal-tales/projects/crystal-quest/scripts/build_cq2.py 逐字抄出**的 WORLD 版
+     reference/gdevelop/build_cq2.py 逐字抄出**的 WORLD 版
      （L1326-1345）與 BATTLE 版（L2641-2661）`derive()`／`expNeed()`（L1325/L2662）字面 JS 原始碼，用
      Node.js 對同一批測試用 member 字典跑一次算出來的（見本檔案 `_REGEN_NOTE`）。這是 TASKS/06 驗收標準
      要求的「跟 GDevelop 版 debug hook 讀出的實測值比對」在沒有瀏覽器/GDevelop 執行環境時最接近的替代方案
@@ -48,9 +48,9 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent                 # .../godot-project/scripts/content
 GODOT_ROOT = SCRIPT_DIR.parents[1]                            # .../godot-project
-WORKSPACE_ROOT = GODOT_ROOT.parent.parent                     # 共同上層目錄
-CONTENT_PATH = WORKSPACE_ROOT / "gd-crystal-tales" / "projects" / "crystal-quest" / "CONTENT.json"
-BUILD_CQ2_PATH = WORKSPACE_ROOT / "gd-crystal-tales" / "projects" / "crystal-quest" / "scripts" / "build_cq2.py"
+REPO_ROOT = GODOT_ROOT.parent                                 # .../godot-crystal-tales
+CONTENT_PATH = REPO_ROOT / "reference" / "gdevelop" / "CONTENT.json"
+BUILD_CQ2_PATH = REPO_ROOT / "reference" / "gdevelop" / "build_cq2.py"
 
 FAILURES: list[str] = []
 

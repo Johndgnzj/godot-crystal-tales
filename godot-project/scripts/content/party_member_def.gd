@@ -1,7 +1,7 @@
 class_name PartyMemberDef
 extends Resource
 ## 對應 CONTENT.json 的 party[] 元素（隊伍成員模板）。
-## 規格來源：../../../../gd-crystal-tales/projects/crystal-quest/CONTENT.json（唯讀，見 CORE-2）
+## 規格來源：reference/gdevelop/CONTENT.json（唯讀快照，見 CORE-2）
 
 @export var id: String = ""
 @export var display_name: String = ""   ## 來源 JSON key: "name"

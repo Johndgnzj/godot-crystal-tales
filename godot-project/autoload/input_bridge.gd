@@ -2,7 +2,7 @@ extends Node
 ## InputBridge — autoload（註冊名稱 "InputBridge"，見 ../project.godot [autoload]）。
 ##
 ## CORE-6 正式產出：統一鍵盤與觸控輸入，對應 GDevelop 版「觸控 = 合成鍵餵給既有鍵盤流程」的設計
-## （../gd-crystal-tales/projects/crystal-quest/DEV_開發指南.md L53：「每幀先蒐集觸控→`st.tk`
+## （reference/gdevelop/DEV_開發指南.md L53：「每幀先蒐集觸控→`st.tk`
 ## （touch-key 集合）；`keyHit()` 與 `hit` 都吃 `st.tk`，故觸控＝合成鍵餵給既有鍵盤流程（選單/商店/
 ## 配點零改動）。搖桿用 `b.simulateControl("Right"/…)` 驅動 TopDown」）。
 ##

@@ -35,8 +35,8 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent                 # .../godot-project/scripts/content
 GODOT_ROOT = SCRIPT_DIR.parents[1]                            # .../godot-project
-WORKSPACE_ROOT = GODOT_ROOT.parent.parent                     # 共同上層目錄
-SOURCE = WORKSPACE_ROOT / "gd-crystal-tales" / "projects" / "crystal-quest" / "CONTENT.json"
+REPO_ROOT = GODOT_ROOT.parent                                 # .../godot-crystal-tales
+SOURCE = REPO_ROOT / "reference" / "gdevelop" / "CONTENT.json"
 SYNCED = GODOT_ROOT / "resources" / "content" / "content.json"
 
 # 分類 -> (.gd 檔案, 是不是「id -> 內容」的物件而非陣列)

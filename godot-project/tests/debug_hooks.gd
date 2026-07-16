@@ -10,7 +10,7 @@ extends Node
 ##
 ## ## 用途：GDevelop `window.__W` / `window.__B` / `window.__forceEnc` 的 Godot 等價物
 ##
-## GDevelop 版的 puppeteer E2E（見 ../../gd-crystal-tales/projects/crystal-quest/DEV_開發指南.md L73-79）
+## GDevelop 版的 puppeteer E2E（見 reference/gdevelop/DEV_開發指南.md L73-79）
 ## 靠瀏覽器全域變數讀遊戲內部狀態、強制觸發遭遇：
 ##   window.__W       世界：scene / 座標 / 旗標 / 選單狀態 / 隊伍摘要
 ##   window.__B       戰鬥：state / foes / heroes / sel

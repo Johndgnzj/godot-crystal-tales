@@ -45,8 +45,8 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent                 # .../godot-project/scripts/battle
 GODOT_ROOT = SCRIPT_DIR.parents[1]                            # .../godot-project
-WORKSPACE_ROOT = GODOT_ROOT.parent.parent                     # 共同上層目錄
-CONTENT_PATH = WORKSPACE_ROOT / "gd-crystal-tales" / "projects" / "crystal-quest" / "CONTENT.json"
+REPO_ROOT = GODOT_ROOT.parent                                 # .../godot-crystal-tales
+CONTENT_PATH = REPO_ROOT / "reference" / "gdevelop" / "CONTENT.json"
 
 FAILURES: list[str] = []
 

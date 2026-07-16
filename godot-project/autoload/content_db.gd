@@ -6,7 +6,7 @@ extends Node
 ## 這一個聚合檔即拿到全部——匯出（.pck）安全（不靠 DirAccess 掃 res:// 目錄）、型別安全。
 ##
 ## 匯入來源（僅在「要從 GDevelop 重新匯入」時才用）：
-##   ../../../GDevelop/projects/crystal-quest/CONTENT.json 是最初的資料種子
+##   reference/gdevelop/CONTENT.json（凍結快照）是最初的資料種子
 ##     -> scripts/content/sync_content.py -> res://resources/content/content.json
 ##     -> scripts/content/build_tres.gd  -> resources/content/**/*.tres ＋ content_db.tres
 ## 切斷 GDevelop 臍帶後（2026-07-14，CORE-2 決策更新）：.tres 才是唯一真相源，平時直接編輯 .tres，

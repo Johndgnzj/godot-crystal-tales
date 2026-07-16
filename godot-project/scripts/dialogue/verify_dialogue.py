@@ -24,8 +24,8 @@ import sys
 from pathlib import Path
 
 GODOT_ROOT = Path(__file__).resolve().parents[2]
-WORKSPACE_ROOT = GODOT_ROOT.parent.parent
-SOURCE = WORKSPACE_ROOT / "gd-crystal-tales" / "projects" / "crystal-quest" / "scripts" / "build_cq2.py"
+REPO_ROOT = GODOT_ROOT.parent
+SOURCE = REPO_ROOT / "reference" / "gdevelop" / "build_cq2.py"
 DIALOGUE_JSON = GODOT_ROOT / "resources" / "content" / "dialogue.json"
 DIALOGUE_SYSTEM_GD = GODOT_ROOT / "scripts" / "dialogue" / "dialogue_system.gd"
 
@@ -186,50 +186,76 @@ def match_when(flags: dict, w) -> bool:
     return v == n if m.group(2) == "==" else v >= n
 
 
-def choose(entries: list, flags: dict):
+def choose(entries: list, flags: dict, cmd: str | None = None):
+    """cmd=None：室外貼近 NPC 對話，扁平掃全表（build_cq2.py L1859-1864）。
+    cmd 給值：室內主人指令，只掃同 cmd 組（openOwnerCmd L1564-1566，無 cmd 視為 "talk"）。"""
     for e in entries:
+        if cmd is not None and (e.get("cmd") or "talk") != cmd:
+            continue
         if match_when(flags, e.get("when")):
             return e
     return None
 
 
+def event_visible(entries: list, flags: dict, cmd: str) -> bool:
+    """一次性事件指令是否出現在室內互動選單（buildIntCmds L1580）：
+    when 成立且 done 旗標未設才出現——贈禮只發一次的機制在選單層，不是 when 條件。"""
+    for e in entries:
+        if (e.get("cmd") or "talk") != cmd:
+            continue
+        if match_when(flags, e.get("when")) and not (e.get("done") and flags.get(e["done"], 0)):
+            return True
+    return False
+
+
 def check_samples(data: dict) -> None:
     dlg = data["dlg"]
-    # 注意：matchWhen 對未定義旗標視為 0，tina 的陣列第一條就是 "step==0"（見 build_cq2.py
-    # L933），所以除了測 step==0 本身那組，其餘情境都要明確給 step 一個非 0 值（比照遊戲實際進度——
+    # 兩套選擇語意（對照 build_cq2.py）：
+    #   室外 NPC（gray/mira/rossel…，條目無 cmd）＝扁平由上而下（L1859-1864）→ cmd 給 None。
+    #   室內主人（tina/hank/dora…，條目有 cmd）＝先選指令再組內由上而下（openOwnerCmd L1564-1566）
+    #   → cmd 給 "talk"/"quest"/"trade"/事件 id。
+    # 注意：matchWhen 對未定義旗標視為 0，tina talk 組第一條是 "step==0"（L950），所以 talk 組
+    # 除了測 step==0 本身那組，其餘情境都要明確給 step 一個非 0 值（比照遊戲實際進度——
     # reg/ch1/ch2 開始有值時，step 早就因為 register 的 CUTS setstep 或 action 進到 >=3 了），
     # 不然 step 預設 0 會被 matchWhen 誤判成「還在 step==0」而蓋掉後面條件，這是 matchWhen 語意本身
     # 的特性（未定義旗標視為 0），不是資料或程式碼的錯。
     scenarios = [
-        ("tina", {"step": 0}, "step==0"),
-        ("tina", {"step": 3, "reg": 1}, "reg==1"),
-        ("tina", {"step": 3, "ch1": 1}, "ch1==1"),
-        ("tina", {"step": 3, "ch1": 2}, "ch1==2"),
-        ("tina", {"step": 3, "ch2": 1}, "ch2>=1"),
-        ("hank", {"step": 0}, "step==0"),
-        ("hank", {"ch1": 1}, "ch1>=1"),
-        ("hank", {"gotSword": 1}, "gotSword==1"),
-        ("gray", {"ch1": 3}, "ch1==3"),
-        ("gray", {"ch2": 1}, "ch2==1"),
-        ("gray", {"ch2": 2}, "ch2==2"),
-        ("gray", {"relic": 1}, "relic==1"),
+        ("tina", "talk", {"step": 0}, "step==0"),
+        ("tina", "quest", {"step": 3, "reg": 1}, "reg==1"),
+        ("tina", "quest", {"step": 3, "ch1": 1}, "ch1==1"),
+        ("tina", "quest", {"step": 3, "ch1": 2}, "ch1==2"),
+        ("tina", "talk", {"step": 3, "ch2": 1}, "ch2>=1"),
+        ("hank", "talk", {"step": 0}, "step==0"),
+        ("hank", "hank_gift", {"step": 3, "ch1": 1}, "ch1>=1"),
+        ("gray", None, {"ch1": 3}, "ch1==3"),
+        ("gray", None, {"ch2": 1}, "ch2==1"),
+        ("gray", None, {"ch2": 2}, "ch2==2"),
+        ("gray", None, {"relic": 1}, "relic==1"),
     ]
     all_ok = True
-    for npc_id, flags, expect_when in scenarios:
-        chosen = choose(dlg[npc_id], flags)
+    for npc_id, cmd, flags, expect_when in scenarios:
+        chosen = choose(dlg[npc_id], flags, cmd)
         if chosen is None:
-            fail(f"抽樣 {npc_id} flags={flags}: 沒有任何條目命中（預期命中 when={expect_when!r}）")
+            fail(f"抽樣 {npc_id} cmd={cmd!r} flags={flags}: 沒有任何條目命中（預期命中 when={expect_when!r}）")
             all_ok = False
             continue
         if chosen.get("when") != expect_when:
-            fail(f"抽樣 {npc_id} flags={flags}: 命中 when={chosen.get('when')!r}，預期 {expect_when!r}"
+            fail(f"抽樣 {npc_id} cmd={cmd!r} flags={flags}: 命中 when={chosen.get('when')!r}，預期 {expect_when!r}"
                  f"（可能是陣列順序被改動，優先權跟 GDevelop 版不一致）")
             all_ok = False
         else:
-            print(f"[OK] {npc_id} flags={flags} -> when={chosen.get('when')!r} "
+            print(f"[OK] {npc_id} cmd={cmd!r} flags={flags} -> when={chosen.get('when')!r} "
                   f"action={chosen.get('action')!r} 第一句={chosen['lines'][0][:20]!r}")
+    # done 旗標語意（贈禮只發一次）：漢克贈劍事件在 gotSword 設起前可見、設起後從選單消失。
+    for flags, expect in (({"step": 3, "ch1": 1}, True), ({"step": 3, "ch1": 1, "gotSword": 1}, False)):
+        got = event_visible(dlg["hank"], flags, "hank_gift")
+        if got != expect:
+            fail(f"hank_gift flags={flags}: 選單可見={got}，預期 {expect}（done 旗標語意，L1580）")
+            all_ok = False
+        else:
+            print(f"[OK] hank_gift flags={flags} -> 選單可見={got}（done='gotSword' 只發一次）")
     if all_ok:
-        ok("緹娜/漢克/老葛雷抽樣情境全部命中預期的 when 分支（陣列優先順序跟原始碼一致）")
+        ok("緹娜/漢克/老葛雷抽樣情境全部命中預期的 when 分支（cmd 分組＋陣列優先順序＋done 語意跟原始碼一致）")
 
 
 def main() -> int:

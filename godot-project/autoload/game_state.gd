@@ -10,7 +10,7 @@ extends Node
 ## inv_use）——改名會讓已合併的程式碼失效，故不改。
 ##
 ## 規格來源：specs/SAVE_SCHEMA.md（全域變數表、saveGame() 寫入格式）；型別語意對照
-## ../gd-crystal-tales/projects/crystal-quest/scripts/build_cq2.py L1266-1296（flags/invAll/invGet/
+## reference/gdevelop/build_cq2.py L1266-1296（flags/invAll/invGet/
 ## invAdd/invUse）與 L1608-1618（openChest 的 g_chests 去重寫入邏輯）。
 ##
 ## 跟 stub 版本比，本次變更：

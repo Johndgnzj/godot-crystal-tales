@@ -3,7 +3,7 @@
 
 角色（2026-07-14 更新，見 ../../autoload/content_db.gd 檔頭與 CORE-2 spec）：切斷 GDevelop 臍帶後，
 Godot 端的 .tres 才是資料真相源，平時不跑這支。本腳本淪為**可選的「從 GDevelop 重新匯入」工具**——把
-GDevelop 那份 CONTENT.json 複製進 res://resources/content/content.json（帶輕量 schema 檢查），之後再跑
+reference/gdevelop/CONTENT.json（GDevelop 凍結快照）複製進 res://resources/content/content.json（帶輕量 schema 檢查），之後再跑
 scripts/content/build_tres.gd 產生 .tres。只有「要把 GDevelop 的新資料拉進來」時才需要這條路。
 
 用法：
@@ -23,8 +23,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 GODOT_ROOT = Path(__file__).resolve().parents[2]          # .../godot-crystal-tales/godot-project
-WORKSPACE_ROOT = GODOT_ROOT.parent.parent                  # .../ (GDevelop 與 Godot 兩個 repo 的共同上層)
-SOURCE = WORKSPACE_ROOT / "GDevelop" / "projects" / "crystal-quest" / "CONTENT.json"
+REPO_ROOT = GODOT_ROOT.parent                              # .../godot-crystal-tales
+SOURCE = REPO_ROOT / "reference" / "gdevelop" / "CONTENT.json"
 DEST = GODOT_ROOT / "resources" / "content" / "content.json"
 
 REQUIRED_TOP_KEYS = [

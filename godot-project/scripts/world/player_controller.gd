@@ -4,7 +4,7 @@ class_name PlayerController
 ## MOD-C 產出：頂視角八方向移動控制器。
 ##
 ## 對應 GDevelop `TopDownMovementBehavior::TopDownMovementBehavior`（見
-## ../gd-crystal-tales/projects/crystal-quest/scripts/build_cq2.py:1018-1023）：
+## reference/gdevelop/build_cq2.py:1018-1023）：
 ##   allowDiagonals=true, acceleration=1200, deceleration=1500, maxSpeed=190,
 ##   angularMaxSpeed=360, rotateObject=false, viewpoint="TopDown"
 ## 這是 GDevelop 引擎內建行為（不是 build_cq2.py 自訂的 JS 邏輯），沒有文件化的逐幀積分公式可抄，

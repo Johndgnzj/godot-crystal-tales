@@ -1,11 +1,12 @@
 # 水晶戰記 Godot 遷移工作區
 
-本目錄是 **GDevelop → Godot 遷移**的準備區，與現有 GDevelop 專案 `../GDevelop`（內含
-`projects/crystal-quest`）平行存在，互不修改對方。遷移完成前，`GDevelop` 仍是唯一可玩、可發布的版本；
-本目錄只做規格、任務拆解與（未來）Godot 專案骨架。
+本目錄是《水晶戰記》**Godot 版主專案**（自 GDevelop 遷移而來，POC 已可玩）。原 GDevelop 專案已凍結，
+所有仍被引用的檔案（`build_cq2.py`／`CONTENT.json`／`DEV_開發指南.md`）已收進本 repo 的
+**`reference/gdevelop/`** 唯讀快照（2026-07-16），**開發不再依賴 `../GDevelop` 目錄**，該目錄可整個封存。
 
-> 這份 CLAUDE.md 是**轉換期規範**：Godot 專案還沒開始寫玩法程式碼前，所有 subagent 協作都要先讀這份文件。
-> 待 `godot-project/` 真的長出可玩內容後，這份文件會逐步演化成該專案的正式 CLAUDE.md（不需要重開新檔）。
+> 所有 subagent 協作開工前都要先讀這份文件。舊文件（TASKS/、specs/、程式註解）中的
+> `../GDevelop/projects/crystal-quest/...` 或 `../gd-crystal-tales/...` 路徑，一律對應
+> `reference/gdevelop/` 的同名檔案。
 
 ## 目錄地圖
 
@@ -22,7 +23,8 @@ godot-crystal-tales/
 │   ├── SAVE_SCHEMA.md         # 存檔/全域狀態 JSON schema
 │   ├── BATTLE_FORMULAS.md     # 戰鬥/衍生屬性公式（逐行對照 build_cq2.py 原始碼行號）
 │   └── DIALOGUE_SPEC.md       # matchWhen/DLG/CUTS/pickups 資料格式與語意
-└── godot-project/             # 未來 Godot 專案骨架（先建目錄結構，玩法程式碼待 CORE 任務展開後才寫）
+├── reference/gdevelop/        # 原 GDevelop 專案凍結快照：build_cq2.py / CONTENT.json / DEV_開發指南.md（唯讀）
+└── godot-project/             # Godot 專案本體
     ├── project.godot
     ├── autoload/               # 全域單例（GameState/SaveManager/ContentDB/AudioBus…）
     ├── scenes/
@@ -38,16 +40,15 @@ godot-crystal-tales/
 - **數值資料真相源＝Godot 端 `resources/content/**/*.tres`**（2026-07-14 切斷 GDevelop 臍帶後定案，取代原本
   「以 GDevelop CONTENT.json 為源、run-time parse JSON」的做法）：party/equipment/skills/items/enemies/
   encounters/shops/chests/derived/pacing 各自一個 `.tres`，由聚合資源 `content_db.tres` 引用、`ContentDB`
-  autoload 載入。**設計員直接在 Godot 編輯器 Inspector 編輯 .tres**，不再手刻或改 JSON。GDevelop 的
-  `../GDevelop/projects/crystal-quest/CONTENT.json` 只是最初的資料種子——僅在「要從 GDevelop 重新拉新資料」時，
-  才跑 `sync_content.py` → `build_tres.gd` 重新匯入（見 `autoload/content_db.gd` 檔頭）。
-- **`../GDevelop/projects/crystal-quest/scripts/build_cq2.py`** 是遊戲規則的唯一真相來源（因為
+  autoload 載入。**設計員直接在 Godot 編輯器 Inspector 編輯 .tres**，不再手刻或改 JSON。
+  `reference/gdevelop/CONTENT.json`（凍結快照）只是最初的資料種子——僅在「要重新匯入種子資料」時，
+  才跑 `sync_content.py` → `build_tres.gd`（見 `autoload/content_db.gd` 檔頭）。
+- **`reference/gdevelop/build_cq2.py`**（凍結快照）是遊戲規則的唯一真相來源（因為
   GDevelop 版的「事件系統」其實只是外殼，真正邏輯全在這支腳本產生的 JsCode 裡）。`specs/` 下的規格文件是從這支
-  腳本**凍結抄錄**出來的快照，抄錄時必須附原始行號；之後 build_cq2.py 若改動數值/規則，要回來更新對應 spec 並
-  標記版本號遞增（見下方版本規則）。
-- **`../GDevelop/projects/crystal-quest/assets/`** 是美術/音效資產的唯一真相來源，直接複製，不重新繪製
-  （除非任務清單明確標記為「順便重繪」）。
-- **`../GDevelop/projects/crystal-quest/DEV_開發指南.md`** 是系統邊界的權威說明（WORLD_JS/BATTLE_JS 的
+  腳本**凍結抄錄**出來的快照，抄錄時必須附原始行號；spec 引用的行號皆對照此檔。
+- **美術/音效資產**已全數複製進 `godot-project/assets/`，以 repo 內為準，不重新繪製
+  （除非任務清單明確標記為「順便重繪」）。原始出處為 GDevelop 版 assets，出處紀錄見 `CREDITS_素材授權.md`。
+- **`reference/gdevelop/DEV_開發指南.md`**（凍結快照）是系統邊界的權威說明（WORLD_JS/BATTLE_JS 的
   各子系統列表），`TASKS/` 底下的模組任務拆分直接對應這份文件的系統清單，不要另外發明系統邊界。
 
 ## 版本規則
@@ -121,4 +122,4 @@ godot --headless --check-only --path godot-project
 3. 每個任務完成時，在對應 `TASKS/*.md` 裡把狀態改成「已驗收」，並在 `MIGRATION_OVERVIEW.md` 的進度表打勾。
 4. 遇到規格與現有 `specs/` 衝突（例如發現 GDevelop 原始碼與 DEV_開發指南.md 描述不一致），以**原始碼
   （build_cq2.py 實際邏輯）為準**，回頭更新 spec 並註記版本遞增，不要自行改規則。
-5. 本目錄不影響 `GDevelop` 的開發與發布；除非任務明確要求，不要修改 `../GDevelop` 底下的檔案。
+5. `reference/gdevelop/` 是唯讀凍結快照，**不要修改**；原 `../GDevelop` 目錄已無開發依賴，不要再引用或修改它。
