@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "rune_staff"
+display_name = "符文法杖"
+slot = "weapon"
+desc = "刻滿符文的法杖，魔力導引效率更好。"
+buy = 135
+sell = 40
+stats = {
+"matk": 6.0,
+"mp": 11.0
+}
+rarity = "uncommon"
+attr_type = "int"

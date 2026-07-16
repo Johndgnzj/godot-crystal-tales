@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "gale_wrap"
+display_name = "疾風束衣"
+slot = "armor"
+desc = "以特殊纖維編織，穿上後步伐輕若疾風。"
+buy = 260
+sell = 78
+tier = 2
+stats = {
+"dodge": 6.0,
+"pdef": 3.0
+}
+rarity = "rare"
+attr_type = "agi"

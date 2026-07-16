@@ -757,8 +757,12 @@ func _settle_win() -> void:
 		var drops: Array = f.get("drops", [])
 		for drop in drops:
 			var dd: Dictionary = drop
-			if randf() < float(dd.get("rate", 0.0)):
-				var did := String(dd.get("id", ""))
+			var did := String(dd.get("id", ""))
+			# see specs/BATTLE_FORMULAS.md F-10：最終掉率 = clamp(物品基礎率 × 怪物加成倍率, 0, 1)
+			var mult := float(dd.get("rate", 0.0))
+			var idef: ItemDef = ContentDB.get_item(did)
+			var base_rate := idef.base_drop_rate if idef != null else 1.0
+			if randf() < clampf(base_rate * mult, 0.0, 1.0):
 				drop_count[did] = int(drop_count.get(did, 0)) + 1
 	var drop_names: Array = []
 	for did: String in drop_count.keys():

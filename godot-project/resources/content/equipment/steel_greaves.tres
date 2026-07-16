@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "steel_greaves"
+display_name = "精鋼護靴"
+slot = "boots"
+desc = "精鋼打造的護靴，正面防禦相當可靠。"
+buy = 190
+sell = 57
+tier = 2
+stats = {
+"pdef": 5.0
+}
+rarity = "rare"
+attr_type = "str"

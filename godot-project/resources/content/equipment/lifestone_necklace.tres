@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "lifestone_necklace"
+display_name = "生命石項鍊"
+slot = "acc"
+desc = "鑲著暗紅色石頭的項鍊，能感受到微弱的生命波動。"
+buy = 75
+sell = 22
+stats = {
+"hp": 15.0
+}
+rarity = "uncommon"

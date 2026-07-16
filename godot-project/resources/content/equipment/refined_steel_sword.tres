@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "refined_steel_sword"
+display_name = "精鋼劍"
+slot = "weapon"
+desc = "反覆回火打造的精鋼劍身，刃口更持久鋒利。"
+buy = 180
+sell = 54
+stats = {
+"patk": 8.0
+}
+rarity = "uncommon"
+attr_type = "str"

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "starlight_staff"
+display_name = "星辰法杖"
+slot = "weapon"
+desc = "杖頭封存著星辰碎光，夜間施法尤其強大。"
+buy = 400
+sell = 120
+tier = 2
+stats = {
+"matk": 13.0,
+"mp": 26.0
+}
+rarity = "rare"
+attr_type = "int"

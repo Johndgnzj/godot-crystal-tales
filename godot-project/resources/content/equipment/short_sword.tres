@@ -13,3 +13,4 @@ sell = 12
 stats = {
 "patk": 2.0
 }
+attr_type = "str"

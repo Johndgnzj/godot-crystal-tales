@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_1l4io")
 id = "mana_herb"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "魔力草"
 cat = "consumable"
 kind = "mp"

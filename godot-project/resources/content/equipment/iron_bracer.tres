@@ -10,6 +10,7 @@ slot = "wrist"
 desc = "加了鐵片的護腕，格擋之餘還能增添揮劍力道。"
 buy = 70
 sell = 21
+rarity = "uncommon"
 stats = {
 "patk": 2.0,
 "pdef": 1.0

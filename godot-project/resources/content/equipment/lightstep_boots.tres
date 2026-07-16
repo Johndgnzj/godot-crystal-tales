@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "lightstep_boots"
+display_name = "輕步靴"
+slot = "boots"
+desc = "特別減重處理的靴子，適合需要靈活走位的人。"
+buy = 38
+sell = 11
+stats = {
+"dodge": 2.0
+}
+attr_type = "agi"

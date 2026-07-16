@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "nightfall_edge"
+display_name = "絕命夜刃"
+slot = "weapon"
+desc = "傳說中刺客一族的夜刃，見血封喉。"
+buy = 520
+sell = 156
+tier = 2
+stats = {
+"crit": 16.0,
+"patk": 8.0
+}
+rarity = "epic"
+attr_type = "agi"

@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_odtgp")
 id = "antidote"
+rarity = "common"
+base_drop_rate = 0.0
 display_name = "解毒草"
 cat = "consumable"
 kind = "cure"

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "sage_ring"
+display_name = "賢者之戒"
+slot = "acc"
+desc = "賢者議會的認證信物，法力供給源源不絕。"
+buy = 260
+sell = 78
+tier = 2
+stats = {
+"matk": 4.0,
+"mp": 20.0
+}
+rarity = "rare"

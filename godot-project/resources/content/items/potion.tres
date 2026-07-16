@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_l2a46")
 id = "potion"
+rarity = "common"
+base_drop_rate = 0.0
 display_name = "藥水"
 cat = "consumable"
 kind = "heal"
@@ -13,3 +15,4 @@ count = 4
 effect = "單體回復 60 HP。"
 buy = 30
 sell = 9
+icon = "res://assets/battle/Red_Potion.png"

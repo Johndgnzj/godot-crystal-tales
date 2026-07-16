@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "studded_boots"
+display_name = "釘底靴"
+slot = "boots"
+desc = "鞋底加了鐵釘的靴子，踩踏更穩固。"
+buy = 35
+sell = 10
+stats = {
+"pdef": 2.0
+}
+attr_type = "str"

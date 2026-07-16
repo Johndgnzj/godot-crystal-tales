@@ -1,13 +1,19 @@
 # 規格：衍生屬性與戰鬥公式
 
-- Spec 版本: v1.1
+- Spec 版本: v2.0
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py`（WORLD 版 `derive()` L1326-1345；BATTLE 版 `derive()`
   L2641-2661 為同一份公式的重複實作——**已知技術債，DEV_開發指南.md L63 有提及「改公式要同步兩處」**）
-- 狀態: 定案（抄錄自現行程式碼，行為以此為準；若與 DEV_開發指南.md 文字敘述衝突，以本文件的原始碼行號為準）
+- 狀態: 定案（F-1~F-9 抄錄自現行程式碼；**F-10 為 Godot 端刻意新增、偏離 GDevelop 的平衡設計，見版本紀錄 v2.0**）
 - 用途: MOD-F（衍生屬性/戰鬥公式）、MOD-E（ATB 戰鬥系統）實作依據
 
 ## 版本紀錄
 
+- **v2.0（2026-07-15，遊玩回饋平衡調整；John 指示）**：**破壞性變動——非抄錄自 GDevelop，而是 Godot 端刻意偏離**。
+  1. **新增 F-10 掉落公式**：`ItemDef` 新增 `rarity` 與 `base_drop_rate` 兩欄；`EnemyDef.drops[].rate` 語意由
+     「絕對掉落機率」改為「加成倍率」，最終掉率 = `clamp(item.base_drop_rate × rate, 0, 1)`。
+  2. **伴隨資料再平衡（值在 `.tres`，非本文件）**：一般怪 hp ×約1.7、Boss ×約1.3（`enemies/*.tres`）；
+     `pacing.tres` 各地圖 entry/target 級距收斂（森林 1→2、森林2 2→3、礦坑 3→5、洞窟 5→7），透過 F-9
+     EXPSCALE 自動使升級變緩；掉落率經 F-10 重算，一般素材淨掉率由 0.4~0.6 降到 0.20~0.30。
 - **v1.1（2026-07-14，MOD-E 實作時發現並修正）**：
   1. **F-8 敵人技能**：v1.0 只有行為輪廓，本版回 `build_cq2.py foeAct()`（L3019-3068）逐行核對，補齊
      healer / foeSkills(40%) / allAttack(30%) / 一般攻擊的完整優先序與精確算式（見下方 F-8）。
@@ -253,6 +259,27 @@ for map_id, cfg in CONTENT.pacing.maps.items():
 表換成 run-time 等價計算）。若之後 CORE-2 任務負責者想把這個表移到轉存階段預先算好（跟原始碼設計更一致、
 啟動時省一點計算），`exp_scale.gd` 的公式可以直接搬過去，`ContentDB` 加一個 `get_exp_scale(map_id)`
 查詢介面，MOD-E 這邊改成呼叫該介面即可，不影響呼叫端（`battle_state_machine.gd`）簽名。
+
+## F-10　掉落機率（Godot 端設計，非 GDevelop 抄錄）
+
+戰鬥勝利結算時，對每個敵人的每筆 `drops` 元素獨立擲骰（`battle_state_machine.gd` 勝利結算段）：
+
+```
+mult      = enemy.drops[i].rate           # 怪物端「加成倍率」，不再是絕對機率
+baseRate  = ContentDB.get_item(id).base_drop_rate   # 物品自身基礎掉落率；查不到物品則視同 1.0
+chance    = clamp(baseRate * mult, 0, 1)
+掉落 = randf() < chance
+```
+
+- **物品端**（`ItemDef`）：`rarity`（common/uncommon/rare/key）為分級標籤；`base_drop_rate` 是該物品的基礎掉率。
+  現行分級：普通素材 0.20、優良素材 0.12、稀有素材（水晶碎片）0.05；消耗品/關鍵物品 `base_drop_rate = 0`
+  （不從戰鬥掉落，只走商店/寶箱/劇情）。
+- **怪物端**（`EnemyDef.drops[].rate`）：作為倍率去「加成或抑制」該物品的基礎掉率。一般怪主素材倍率約 1.0~2.5；
+  Boss 對稀有素材給高倍率（例：食人魔水晶碎片 ×16 → clamp 到 0.8）以維持「Boss 幾乎必掉」的手感。
+- 設計理由：同一素材由不同怪掉落時，稀有度由**物品**統一定義，怪物只調整權重，避免每隻怪各自寫死絕對機率造成
+  同物品掉率四散、難以維護。
+- 與 GDevelop 差異：GDevelop 端 `drops[].rate` 是絕對機率、且物品無 rarity 概念；此為遷移期刻意重構，回頭若要
+  從 GDevelop 重新拉資料，`sync_content.py`/種子 JSON 不含這兩欄，需由設計員在 Godot Inspector 補回。
 
 ## 待確認事項
 

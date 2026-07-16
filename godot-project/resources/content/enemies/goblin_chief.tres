@@ -7,7 +7,7 @@ script = ExtResource("1_vlmoy")
 id = "goblin_chief"
 display_name = "哥布林頭目"
 sprite = "maskedorc"
-hp = 600.0
+hp = 780.0
 atk = 26.0
 def_stat = 13.0
 spd = 10.0
@@ -16,10 +16,10 @@ gold = 150
 big = true
 drops = [{
 "id": "goblin_fang",
-"rate": 1.0
+"rate": 5.0
 }, {
 "id": "crystal_shard",
-"rate": 0.25
+"rate": 5.0
 }]
 foe_skills = [{
 "mult": 1.9,

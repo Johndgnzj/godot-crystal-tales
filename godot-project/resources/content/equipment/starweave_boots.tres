@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "starweave_boots"
+display_name = "星紋靴"
+slot = "boots"
+desc = "織有星紋圖案的靴子，安神定氣。"
+buy = 125
+sell = 38
+stats = {
+"mdef": 4.0,
+"mp": 11.0
+}
+rarity = "uncommon"
+attr_type = "int"

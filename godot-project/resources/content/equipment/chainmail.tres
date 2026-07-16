@@ -11,6 +11,8 @@ desc = "細環相扣的鎖子甲，防護扎實但略沉。"
 buy = 200
 sell = 60
 tier = 2
+rarity = "rare"
 stats = {
 "pdef": 9.0
 }
+attr_type = "str"

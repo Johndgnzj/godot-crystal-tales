@@ -7,7 +7,7 @@ script = ExtResource("1_r4rre")
 id = "worm"
 display_name = "巨牙蟲"
 sprite = "worm"
-hp = 20.0
+hp = 34.0
 atk = 11.0
 def_stat = 3.0
 spd = 7.0
@@ -15,5 +15,5 @@ exp = 8
 gold = 5
 drops = [{
 "id": "worm_carapace",
-"rate": 0.45
+"rate": 1.2
 }]

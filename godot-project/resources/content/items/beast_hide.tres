@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_v0nut")
 id = "beast_hide"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "獸皮"
 cat = "material"
 effect = "洞熊的厚實毛皮，是製甲的好材料。"

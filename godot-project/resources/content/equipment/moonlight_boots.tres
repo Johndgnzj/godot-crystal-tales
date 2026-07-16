@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "moonlight_boots"
+display_name = "月光靴"
+slot = "boots"
+desc = "月光下若隱若現的靴子，據說能安撫躁動的魔力。"
+buy = 290
+sell = 87
+tier = 2
+stats = {
+"mdef": 6.0,
+"mp": 19.0
+}
+rarity = "rare"
+attr_type = "int"

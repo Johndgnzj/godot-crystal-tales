@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "nightwalker_garb"
+display_name = "夜行輕甲"
+slot = "armor"
+desc = "為潛行設計的輕甲，行動間幾乎不發出聲響。"
+buy = 150
+sell = 45
+stats = {
+"dodge": 4.0,
+"pdef": 2.0
+}
+rarity = "uncommon"
+attr_type = "agi"

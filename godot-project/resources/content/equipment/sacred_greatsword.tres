@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "sacred_greatsword"
+display_name = "聖銀大劍"
+slot = "weapon"
+desc = "教會秘藏的聖銀大劍，唯有力量足夠者能揮動。"
+buy = 650
+sell = 195
+tier = 2
+stats = {
+"patk": 20.0
+}
+rarity = "epic"
+attr_type = "str"

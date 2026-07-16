@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "sage_soft_boots"
+display_name = "賢者軟靴"
+slot = "boots"
+desc = "賢者議會配發的軟靴，法力保護更為周全。"
+buy = 210
+sell = 63
+tier = 2
+stats = {
+"mdef": 5.0,
+"mp": 15.0
+}
+rarity = "rare"
+attr_type = "int"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "hardened_vest"
+display_name = "硬皮背心"
+slot = "armor"
+desc = "加了硬化處理的皮背心，抵禦鈍器更有效。"
+buy = 60
+sell = 18
+stats = {
+"pdef": 4.0
+}
+attr_type = "str"

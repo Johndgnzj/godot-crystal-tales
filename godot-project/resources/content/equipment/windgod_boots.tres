@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "windgod_boots"
+display_name = "風神之靴"
+slot = "boots"
+desc = "相傳源自風神庇佑的靴子，步伐快得幾乎脫離塵世。"
+buy = 360
+sell = 108
+tier = 2
+stats = {
+"dodge": 10.0
+}
+rarity = "epic"
+attr_type = "agi"

@@ -10,6 +10,7 @@ slot = "acc"
 desc = "藍晶耳環，凝神靜氣，強化魔力循環。"
 buy = 90
 sell = 27
+rarity = "uncommon"
 stats = {
 "matk": 2.0,
 "mp": 10.0

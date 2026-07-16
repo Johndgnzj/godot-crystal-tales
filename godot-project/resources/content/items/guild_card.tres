@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_4sbxf")
 id = "guild_card"
+rarity = "key"
+base_drop_rate = 0.0
 display_name = "公會登錄證"
 cat = "key"
 effect = "冒險者公會核發的身分證明（F 級）。序章於緹娜處登錄後取得。"

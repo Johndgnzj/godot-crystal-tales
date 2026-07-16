@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_nastx")
 id = "wolf_hide"
+rarity = "uncommon"
+base_drop_rate = 0.12
 display_name = "狼皮"
 cat = "material"
 effect = "野狼的毛皮，可製輕甲（第二章素材）。"

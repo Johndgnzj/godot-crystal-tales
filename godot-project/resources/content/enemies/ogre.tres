@@ -7,7 +7,7 @@ script = ExtResource("1_4pwp8")
 id = "ogre"
 display_name = "洞窟食人魔"
 sprite = "ogre"
-hp = 1300.0
+hp = 1600.0
 atk = 38.0
 def_stat = 18.0
 spd = 6.0
@@ -17,10 +17,10 @@ big = true
 all_attack = true
 drops = [{
 "id": "crystal_shard",
-"rate": 1.0
+"rate": 16.0
 }, {
 "id": "beast_hide",
-"rate": 0.5
+"rate": 2.5
 }]
 foe_skills = [{
 "mult": 2.0,

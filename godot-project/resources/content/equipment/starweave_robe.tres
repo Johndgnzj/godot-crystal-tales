@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "starweave_robe"
+display_name = "星紋披袍"
+slot = "armor"
+desc = "織入星紋圖案的披袍，據說能安定心神。"
+buy = 120
+sell = 36
+stats = {
+"matk": 2.0,
+"mp": 11.0,
+"pdef": 1.0
+}
+rarity = "uncommon"
+attr_type = "int"

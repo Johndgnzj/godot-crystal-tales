@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "manacrystal_ring"
+display_name = "法力晶環"
+slot = "acc"
+desc = "鑲嵌小水晶的戒指，能小幅蓄積法力。"
+buy = 78
+sell = 23
+stats = {
+"mp": 15.0
+}
+rarity = "uncommon"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "hawkeye_badge"
+display_name = "鷹眼徽章"
+slot = "acc"
+desc = "刻有鷹眼圖騰的徽章，讓人下手更準。"
+buy = 60
+sell = 18
+stats = {
+"crit": 3.0
+}
+rarity = "uncommon"

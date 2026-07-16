@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gen"]
+
+[resource]
+script = ExtResource("1_gen")
+id = "wooden_bead_bracelet"
+display_name = "木珠手鍊"
+slot = "acc"
+desc = "手工串製的木珠手鍊，安定心神。"
+buy = 25
+sell = 8
+stats = {
+"mp": 5.0
+}
