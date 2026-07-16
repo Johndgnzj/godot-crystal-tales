@@ -1,11 +1,16 @@
 # 規格：對話／過場／觸發／撿取資料格式
 
-- Spec 版本: v1.1
-- 對應 GDevelop 原始碼快照: `scripts/build_cq2.py` L930-990（DLG/CUTS 定義）、L1270-1274（matchWhen）、
-  L1516（openOwnerDlg）、L1620-1625/L1676-1709（劇情佇列播放與收尾）、L2298-2392（出口/觸發區/BossMark/
-  pickups）
+- Spec 版本: v2.0
+- 對應 GDevelop 原始碼快照: `reference/gdevelop/build_cq2.py`（2026-07 快照）L941-1015（DLG）、
+  L1016-1036（CUTS）、L1302-1306（matchWhen）、L1564-1566（openOwnerCmd）、L1575-1582（buildIntCmds）、
+  L1859-1864（室外 NPC 對話）；其餘段落（劇情佇列/出口/觸發區/pickups）行號仍對應 v1.1 舊快照，待全面校對
 - 狀態: 定案
 - 用途: MOD-A（對話/劇情）、MOD-B（撿取/觸發）實作依據
+- v2.0 變更記錄（2026-07-16，verify_dialogue.py 抽樣失敗調查時發現並修正）：
+  1. GDevelop 端 DLG 改版：室內 NPC 條目新增 `cmd`/`label`/`done` 三欄位，條目選擇從單軌扁平掃描變成
+     「室外扁平／室內先按 cmd 分組再組內由上而下」雙軌；一次性贈禮（`done`）在互動選單層過濾，不是 when
+     條件。D-2 已依新快照改寫，extract_dialogue.py／dialogue.json／dialogue_system.gd／
+     verify_dialogue.py 均已同步雙軌語意。
 - v1.1 變更記錄（2026-07-13，MOD-A 認領實作時發現並補回）：
   1. D-3 原本只寫了 `once`/`lines` 兩個欄位，實際回讀 `build_cq2.py` L991-1011 與 L1685-1706 收尾邏輯
      後發現 CUTS 條目還有 `battle`/`transfer`/`setstep`/`party` 四個既有欄位（`demon_pre`/`demon_post`/
@@ -33,20 +38,34 @@ Godot 端等價：`FlagMatcher.matches(flags: Dictionary, when: String) -> bool`
 `scripts/flag_matcher.gd`，MOD-A/MOD-B 共用同一份（對應 GDevelop 版「DLG/trigger/pickup 皆用它」的設計，
 不要各自重寫一份判斷邏輯）。
 
-## D-2　NPC 對話表 `DLG`（L931-990）
+## D-2　NPC 對話表 `DLG`（L941-1015）
 
 ```jsonc
 DLG = {
   "<npc_id>": [
-    {"when": "<matchWhen 語法>", "name": "顯示名稱", "lines": ["台詞1", "台詞2", ...], "action": "<可選，對話結束後執行的 side-effect id>"},
-    ...  // 由上到下第一個 matchWhen 為真的條目勝出（見 openOwnerDlg，L1516）
+    {"when": "<matchWhen 語法>", "name": "顯示名稱", "lines": ["台詞1", "台詞2", ...],
+     "action": "<可選，對話結束後執行的 side-effect id>",
+     "cmd": "<可選，室內互動指令分組：talk/quest/trade/rest/pray/一次性事件 id；無 cmd 視為 talk>",
+     "label": "<可選，該指令在室內互動選單顯示的名稱>",
+     "done": "<可選，一次性旗標名：事件觸發後由 action 寫 1，選單層過濾不再出現>"},
+    ...
   ]
 }
 ```
 
-- **順序即優先權**：陣列由上到下找第一個 `when` 成立的條目，找到就停止（`for` 迴圈 `return`）。撰寫新對話時
-  **越晚觸發的劇情條件要排越前面**（例如 `ch2>=1` 通常要排在 `step>=3` 前面），現有 DLG 表全部遵循這個慣例
-  （越後期的旗標排越上面），Godot 端資料若改用陣列結構，順序語意要保留。
+- **條目選擇分兩軌**（v2.0 快照起）：
+  - **室外 NPC**（gray/mira/rossel…，條目無 `cmd`）：貼近對話時扁平掃全表，由上到下第一個 `when` 成立的
+    條目勝出（L1859-1864）。
+  - **室內主人**（tina/hank/dora/sister/mayor/martha/gid…，條目有 `cmd`）：先由互動選單選指令
+    （buildIntCmds L1575-1582——`talk` 永遠有；trade/quest/rest/pray 有條目就出現；其他 cmd 是一次性
+    事件，`when` 成立**且 `done` 旗標未設**才出現），再在**同 cmd 組內**由上到下取第一個 `when` 成立的
+    條目（openOwnerCmd L1564-1566，`e.cmd||"talk"`）。
+- **順序即優先權**（兩軌皆同）：由上到下找第一個 `when` 成立的條目，找到就停止（`for` 迴圈 `return`）。
+  撰寫新對話時**越晚觸發的劇情條件要排越前面**（例如 `ch2>=1` 通常要排在 `step>=3` 前面），現有 DLG 表
+  全部遵循這個慣例（越後期的旗標排越上面），Godot 端資料若改用陣列結構，順序語意要保留。
+- **`done` 不是 when 條件**：贈禮只發一次的機制在選單層（例如漢克贈劍條目是 `when:"ch1>=1",
+  done:"gotSword"`，`give_sword` action 觸發後寫 `gotSword=1`，該指令就從選單消失）——DLG 裡**沒有**
+  `gotSword==1` 這種 when，驗證/實作時不要發明。
 - `action`：對話結束後執行的具名副作用，目前已知值：`register`（登錄冒險者）、`ch1_take`/`ch1_reward`、
   `ch2_take`/`ch2_report`、`heal`（隊伍全恢復）、`give_ring`/`shop_hank_gift`/`shop_gid_gift`（贈送道具/開店）、
   `mira_start`/`mira_reward`、`relic_turnin`、`shop_hank`/`shop_gid`（純開店，無贈禮）。這些 action 各自對應
