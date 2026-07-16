@@ -133,10 +133,57 @@ func open_npc_dialogue(npc_id: String) -> bool:
 			_current_npc_id = npc_id
 			_current_dlg = entry
 			_dlg_idx = 0
+			AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L1566：開啟對話
 			dialogue_started.emit(npc_id, entry)
 			dialogue_line_changed.emit(entry.speaker, entry.lines[0] if entry.lines.size() > 0 else "")
 			return true
 	return false
+
+
+## 開啟某主人「指定 cmd」的第一個 when 命中條目（對應 openOwnerCmd L1564-1567）。室內選單（interior.gd）
+## 用這支：`交談`→cmd="talk"、`功能`→trade/quest/rest/pray、`一次性事件`→該事件 cmd。與 open_npc_dialogue
+## 的差別只在多了 cmd 過濾（cmd 空字串視為 "talk"，對齊原始碼 `e.cmd||"talk"`）。找不到回傳 false。
+func open_owner_cmd(npc_id: String, cmd: String = "talk") -> bool:
+	if is_busy():
+		return false
+	if cmd == "":
+		cmd = "talk"
+	var flags: Dictionary = GameState.flags
+	for entry in _dlg.get(npc_id, []):
+		var ecmd: String = entry.cmd if entry.cmd != "" else "talk"
+		if ecmd != cmd:
+			continue
+		if FlagMatcher.matches(flags, entry.when):
+			_current_npc_id = npc_id
+			_current_dlg = entry
+			_dlg_idx = 0
+			AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L1566
+			dialogue_started.emit(npc_id, entry)
+			dialogue_line_changed.emit(entry.speaker, entry.lines[0] if entry.lines.size() > 0 else "")
+			return true
+	return false
+
+
+## 依主人清單掃出室內動態指令選單（對應 buildIntCmds L1575-1582）：
+##   [交談] ＋ [功能(trade/quest/rest/pray，每種只一次、建表不檢查 when)] ＋ [符合 when 且未完成的一次性事件] ＋ [離開]
+## 回傳 [{cmd, label, who?}]；`交談`/`離開` 無 who（interior.gd 用主人清單自行處理接力）。
+func get_interior_commands(owner_ids: Array) -> Array:
+	var flags: Dictionary = GameState.flags
+	var cmds: Array = [{"cmd": "talk", "label": "交談"}]
+	var func_seen: Dictionary = {}
+	for oid in owner_ids:
+		for entry in _dlg.get(str(oid), []):
+			var k: String = entry.cmd if entry.cmd != "" else "talk"
+			if k == "talk":
+				continue
+			if k == "trade" or k == "quest" or k == "rest" or k == "pray":
+				if not func_seen.has(k):
+					func_seen[k] = true
+					cmds.append({"cmd": k, "label": entry.label if entry.label != "" else k, "who": oid})
+			elif FlagMatcher.matches(flags, entry.when) and not (entry.done != "" and int(flags.get(entry.done, 0)) != 0):
+				cmds.append({"cmd": k, "label": entry.label if entry.label != "" else "？", "who": oid})
+	cmds.append({"cmd": "leave", "label": "離開"})
+	return cmds
 
 
 ## 不透過 DLG 表、臨時顯示一段訊息的對話框（對應告示板 boardLines()／寶箱開啟訊息 openChest()
@@ -153,6 +200,7 @@ func show_message(speaker: String, lines: PackedStringArray, action: String = ""
 	_current_npc_id = ""
 	_current_dlg = entry
 	_dlg_idx = 0
+	AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L1866：告示板/臨時訊息開啟
 	dialogue_started.emit("", entry)
 	dialogue_line_changed.emit(entry.speaker, entry.lines[0] if entry.lines.size() > 0 else "")
 	return true
@@ -244,6 +292,7 @@ func _start_cutscene(cut_id: String) -> void:
 	_current_cut_id = cut_id
 	_current_cut = cut
 	_cut_idx = 0
+	AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L1695：過場開啟
 	cutscene_started.emit(cut_id)
 	if cut.lines.size() > 0:
 		var line: Dictionary = cut.lines[0]
@@ -352,20 +401,20 @@ func _run_action(action: String) -> void:
 		"ch1_reward":
 			GameState.flag_set("ch1", 3)
 			GameState.gold += 200
-		"shop_gid_gift":
-			if GameState.flag_get("gotPotion") == 0:
-				GameState.flag_set("gotPotion", 1)
-				GameState.inv_add("potion", 2)
-			shop_requested.emit("gid")
 		"shop_gid":
 			shop_requested.emit("gid")
-		"shop_hank_gift":
+		"shop_hank":
+			shop_requested.emit("hank")
+		"give_sword":
+			# 漢克臨別贈言（build_cq2.py L1836，cmd hank_gift／done gotSword）：贈鐵劍，不開店。
 			if GameState.flag_get("gotSword") == 0:
 				GameState.flag_set("gotSword", 1)
 				GameState.eq_inv.append("iron_sword")
-			shop_requested.emit("hank")
-		"shop_hank":
-			shop_requested.emit("hank")
+		"give_potion":
+			# 吉德新客招待（build_cq2.py L1837，cmd gid_gift／done gotPotion）：贈藥水×2，不開店。
+			if GameState.flag_get("gotPotion") == 0:
+				GameState.flag_set("gotPotion", 1)
+				GameState.inv_add("potion", 2)
 		"give_ring":
 			if GameState.flag_get("gotRing") == 0:
 				GameState.flag_set("gotRing", 1)

@@ -1,6 +1,6 @@
 ---
 name: gen-art
-description: 用 Gemini API 生成水晶戰記（Godot 版）的美術素材（NPC/角色立繪、戰鬥背景、區域地圖、標題圖、圖示、室內背景）。當 John 說「產圖」「生成素材」「幫某角色畫立繪」「換戰鬥背景」等美術生成需求時使用。像素級小圖（行走圖、圖磚、敵人戰鬥圖）不適用本 skill——那些用 LPC 合成或商店素材。
+description: 用 Gemini API 生成水晶戰記（Godot 版）的美術素材（NPC/角色立繪、戰鬥背景、區域地圖、標題圖、圖示、室內背景），也能把遊戲的 TileMap 地圖拼起來再 image-to-image 風格化成手繪地區圖（gen-region 產完地圖後的美術收尾）。當 John 說「產圖」「生成素材」「幫某角色畫立繪」「換戰鬥背景」「把地圖變成手繪風格」「地區地圖上色」等美術生成需求時使用。像素級小圖（行走圖、圖磚、敵人戰鬥圖）不適用本 skill——那些用 LPC 合成或商店素材。
 ---
 
 # gen-art：Gemini 產圖管線（Godot 版）
@@ -12,8 +12,8 @@ description: 用 Gemini API 生成水晶戰記（Godot 版）的美術素材（N
 
 `GEMINI_API_KEY` 走 `.env`（KEY=VALUE 格式，須 gitignore；不要把 key 寫進任何程式碼、文件、commit）。腳本 `find_key()` 會先讀環境變數，否則從 skill 檔案位置**往上層目錄逐層找 `.env`**（最多 8 層）。
 
-- **目前**：Godot 專案根目錄 `godot-crystal-tales/` 沒有 `.env`。往上找會命中 `GameCreator/GDevelop/.env`（沿用 GDevelop 那把金鑰）——可直接用，不必另外設定。
-- **建議（獨立管理時）**：在 `godot-crystal-tales/` 根目錄自備一份 `.env`（內容 `GEMINI_API_KEY=...`），並在專案 `.gitignore` 加上 `.env`（`godot-project/.gitignore` 目前**沒有**排除 `.env`；若把 `.env` 放在 `godot-project/` 底下記得補上，放專案根 `godot-crystal-tales/` 則該層目前無 `.gitignore`，需新增）。
+- **建議位置**：專案根 `godot-crystal-tales/.env`（內容 `GEMINI_API_KEY=...`）。根層 `.gitignore` 已排除 `.env`，不會進 git。從舊專案複製：`cp ../GDevelop/.env .env`。
+- 若專案根沒有 `.env`，腳本會繼續往上層找（舊行為會命中 `GameCreator/GDevelop/.env`）——GDevelop 目錄已是可移除的舊專案，別再依賴這條路徑。
 
 ## 生成
 
@@ -32,7 +32,7 @@ python3 .claude/skills/gen-art/gen_image.py --type <類型> [--frame bust|full] 
 | `map` | 16:9 | 鳥瞰地區圖、無文字 | 縮製後替換 `godot-project/assets/ui/region_map.png` |
 | `title` | 16:9 | 關鍵美術、無 logo 文字 | 縮 1280×720 替換 `godot-project/assets/ui/menubg.png`。**⚠️ 待改（GDevelop 專屬）**：原合成流程走 `scripts/art_v13_title.py`——Godot 沒有這支腳本，若需疊 logo/文字改在 Godot 場景內用 Label/TextureRect 疊（整合方式待設計） |
 | `icon` | 1:1 | 置中主體、深底、無字 | 視用途存 `godot-project/assets/ui/` |
-| `building` | 1:1 | 45° 斜角像素建築外觀、洋紅底 #ff00ff 去背（地圖用，維持像素風不套水彩） | 去背後縮放置放於地圖；Godot 端存 `godot-project/assets/props/`（或 `assets/map/`，依用途）。去背可在 Godot import 設定或外部工具處理 |
+| `building` | 1:1 | **正面平視日系像素 RPG 建築（facade 正對鏡頭、微俯視露屋頂、明確非 isometric 斜角）、門置中在正面下緣**（玩家從下方走上門格進入，方便放進入點）、洋紅底 #ff00ff 去背（地圖用，維持像素風不套水彩） | 去背後縮放置放於地圖；Godot 端存 `godot-project/assets/props/`（或 `assets/map/`，依用途）。去背可在 Godot import 設定或外部工具處理 |
 | `interior` | 4:3 | **水彩手繪滿版室內場景**（與立繪同套技法）、色調隨房間氛圍決定、無角色、無文字 | 存 `godot-project/assets/props/int_<key>.png`（現有 `int_*.png` 同慣例）。**⚠️ 待改（GDevelop 專屬）**：原本 build 走 `_clean_ext` 產去背版 `intc_<key>.png` 作立繪＋選單式室內背景——Godot 沒有這道 build 後處理，改法：直接用 `int_*.png` 由編輯器 import，若需去背版另行處理（整合方式待設計；現有 `intc_*.png` 是從 GDevelop 端複製過來的成品） |
 | `raw` | 自訂 `--ar` | 無前綴 | — |
 
@@ -75,3 +75,21 @@ python3 .claude/skills/gen-art/gen_image.py --type <類型> [--frame bust|full] 
 - prompt 一律描述畫面內容與風格，**不要放遊戲名或人名文字**（模型會把字畫進圖裡）。
 - 免費額度有限，失敗先看 HTTP 429（配額）再重試。
 - **不要修改 GDevelop 專案**（`../GDevelop/`、`../gd-crystal-tales/`）任何檔案——那邊是唯讀參考來源。
+
+## 地圖風格化（image-to-image；gen-region 的 stage 3）
+
+把一張世界地圖 `.tscn`（gen-region 產的、或現有的 town/forest/cave…）的 TileMap 先拼成平面圖，再餵 Gemini 風格化成手繪地區圖。骨架跟著實際地圖走、不求 100% 符合。這是 image-to-image（多送一個參考圖 part），與上表純文字生圖不同。
+
+```bash
+# 1) 拼圖：世界場景 .tscn → 平面 PNG（讀 ground_tiles + atlas，32px/6 欄）
+python3 .claude/skills/gen-art/stitch_map.py godot-project/scenes/world/<map>.tscn --out /tmp/stitch_<map>.png
+
+# 2) 風格化：拼圖當參考圖餵 Gemini（沿用本 skill 的 find_key/重試）
+python3 .claude/skills/gen-art/stylize_map.py --in-image /tmp/stitch_<map>.png \
+    --prompt "<地區主題，如：廢棄水晶礦坑，藍黑色調、微光水晶>" \
+    --out godot-project/assets/ui/region_<map>.png
+```
+
+- `stitch_map.py` 純還原（無 AI），也可單獨預覽任何世界場景套素材後的樣子；需 Pillow（`pip install pillow`）。
+- `stylize_map.py` 的 prompt 前綴已要求「保留參考圖的迷宮/房間骨架、邊緣通道口別封死」。
+- 輸出比照 `map` type 的地區圖慣例存 `assets/ui/region_<id>.png`；比照「生成後必做」在 `CREDITS_素材授權.md` 標註 AI 生成。

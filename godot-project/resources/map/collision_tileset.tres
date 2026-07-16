@@ -1,0 +1,14 @@
+[gd_resource type="TileSet" format=3 uid="uid://de4rt6gxi87s2"]
+
+[ext_resource type="Texture2D" uid="uid://bl1icyqfto53w" path="res://assets/map/_collision_cell.png" id="1_l1bei"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2pj8j"]
+texture = ExtResource("1_l1bei")
+texture_region_size = Vector2i(38, 38)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-19, -19, 19, -19, 19, 19, -19, 19)
+
+[resource]
+tile_size = Vector2i(38, 38)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_2pj8j")

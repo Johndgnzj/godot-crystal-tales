@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="RegionDef" format=3 uid="uid://d17ny7o3tv6nt"]
+
+[ext_resource type="Script" uid="uid://jar20nes77cu" path="res://scripts/content/map_def.gd" id="1_73gbg"]
+[ext_resource type="Script" uid="uid://csncvmke8p12o" path="res://scripts/content/map_exit_def.gd" id="2_3yr3r"]
+[ext_resource type="Script" uid="uid://8tq3gsox2qjm" path="res://scripts/content/region_def.gd" id="3_vxqth"]
+
+[sub_resource type="Resource" id="Resource_gmkbp"]
+script = ExtResource("2_3yr3r")
+to = "Town"
+at = "west"
+spawn = "fromForest"
+
+[sub_resource type="Resource" id="Resource_fh2dt"]
+script = ExtResource("2_3yr3r")
+to = "Forest"
+at = "north"
+spawn = "fromTown"
+
+[sub_resource type="Resource" id="Resource_x3e6t"]
+script = ExtResource("2_3yr3r")
+to = "EForest1"
+at = "south"
+spawn = "from_Town"
+
+[sub_resource type="Resource" id="Resource_v8pxc"]
+script = ExtResource("1_73gbg")
+id = "hub"
+scene_name = "Hub"
+kind = "grassland"
+w = 22
+h = 16
+layout = "open"
+openness = "wide"
+level_band = Array[int]([1, 2])
+entries = Array[String](["Town"])
+exits = Array[ExtResource("2_3yr3r")]([SubResource("Resource_gmkbp"), SubResource("Resource_fh2dt"), SubResource("Resource_x3e6t")])
+
+[resource]
+script = ExtResource("3_vxqth")
+region_id = "test_hub"
+seed = 7
+maps = Array[ExtResource("1_73gbg")]([SubResource("Resource_v8pxc")])

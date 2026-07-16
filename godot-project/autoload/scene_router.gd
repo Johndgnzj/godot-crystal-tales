@@ -44,6 +44,22 @@ const SCENE_PATHS := {
 	"Mine": "res://scenes/world/mine.tscn",
 	"Cave": "res://scenes/world/cave.tscn",
 	"Battle": "res://scenes/battle/battle.tscn",
+	# 測試中繼空間（Town 東門 → Hub → Forest/EForest1）
+	"Hub": "res://scenes/world/hub.tscn",
+	# east_forest 地區（gen-region 產出，MOD-H2）
+	"EForest1": "res://scenes/world/eforest1.tscn",
+	"EForest2": "res://scenes/world/eforest2.tscn",
+	"EForest3": "res://scenes/world/eforest3.tscn",
+	# M3 東邊森林：手繪畫面地圖（新美術路線試作，見 temp_assets/map/map-def.xlsx）
+	"EFA": "res://scenes/world/painted/ef_a.tscn",
+	"EFB": "res://scenes/world/painted/ef_b.tscn",
+	"EFC": "res://scenes/world/painted/ef_c.tscn",
+	"EFD": "res://scenes/world/painted/ef_d.tscn",
+	"EFE": "res://scenes/world/painted/ef_e.tscn",
+	"EFF": "res://scenes/world/painted/ef_f.tscn",
+	"EFG": "res://scenes/world/painted/ef_g.tscn",
+	"EFH": "res://scenes/world/painted/ef_h.tscn",
+	"EFI": "res://scenes/world/painted/ef_i.tscn",
 }
 
 ## `back()` 的 fallback（build_cq2.py L2820：`g.get("g_returnScene").getAsString()||"Town"`）：

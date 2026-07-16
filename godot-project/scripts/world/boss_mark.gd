@@ -54,10 +54,9 @@ func _on_body_entered(body: Node) -> void:
 
 func _trigger(player: Node2D) -> void:
 	var return_pos: Vector2 = compute_return_position(player.global_position)
+	AudioManager.sfx("hurt.wav")   # 頭目遭遇音效，對應 build_cq2.py L2507/L2521
 	boss_triggered.emit(encounter_id)
 	SceneRouter.start_battle(encounter_id, return_scene_id, return_pos.x, return_pos.y)
-	# TODO: sfx_name（預設 "hurt.wav"）目前沒有 AudioBus/音效 autoload 可呼叫（尚無對應 CORE 任務
-	# 產出）。播音效邏輯留給監聽 boss_triggered 訊號的世界場景控制器處理，或等音效系統就位後這裡直接呼叫。
 
 
 ## 純邏輯計算，跟 Node/Signal 脫鉤方便測試：戰敗/逃走重試用的「回到觸發前座標」= 觸發當下玩家座標

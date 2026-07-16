@@ -1,93 +1,220 @@
 extends CanvasLayer
-## hud.tscn 的控制腳本 —— 隊伍血條/金幣/目標提示 HUD。
+## 世界場景 HUD —— 右上角「開選單」圖示鈕 ＋（debug build 才有的）除錯選單鈕。
 ##
-## 對應 build_cq2.py 的 HUD 段落（L2394-2418）：
-##   HudParty（隊伍成員 名字 Lv HP/maxHP）、HudGold（佩戴稱號＋金幣＋[M]選單提示）、
-##   HudGoal（依劇情旗標的當前目標指引）。
+## 一般顯示（角色/HP MP/目標/金幣）已移除，改由選單內查看。開選單：點選單圖示走 menu.request_open()
+## （M 鍵仍可開）。世界場景自身的互動提示 `$HUD/Prompt` 是另一節點、不在此檔。
 ##
-## 即時反映 GameState 異動：GameState 是純資料容器、不發 signal（見 autoload/game_state.gd 檔頭），
-## 所以照 build_cq2 的每幀重算模型，在 _process 每幀刷新（成本低——最多數名隊員、字串組裝）。
-## 這不是「每幀跑巨大玩法邏輯」的反模式（CLAUDE.md L87 禁止的是玩法邏輯），只是唯讀顯示層的刷新。
-##
-## 依賴（皆唯讀呼叫）：GameState（party/gold/flags）、ContentDB（derive 需要）、Derive.derive()、
-## TitlesData（佩戴稱號名）。
-##
-## scene_id：HudGoal 第一個分支（step==0 且在芳蕾鎮）需要知道目前世界場景 id（對照 build_cq2
-## CFG.SCENE==="Town"）。HUD 自身不知道所在場景，由世界場景控制器（MOD-C／整合端）在載入場景時呼叫
-## set_scene_id() 告知；預設 "" 時該分支退化為「跟著亞倫深入礦山」，不會誤顯示鎮上提示。
+## 除錯選單（只在 OS.is_debug_build()）：選單圖示左邊多一顆 ⚙ 鈕，開後有
+##   直接回城（SceneRouter.go_to Town）／立刻戰鬥（DebugHooks.force_encounter 目前區域遭遇）／
+##   自動導航（列出本場景 ExitZone → 選定後關面板、自動走向該出口，走進去即換場景）。
+## 自動導航靠 InputBridge.simulate_action_* 灌 move_* 給既有 PlayerController 走（含碰撞），
+## 是直線趨近、非路徑尋徑，遇牆會卡住 → 有 NAV_TIMEOUT 保底。純除錯用，release 匯出不會出現。
 
-@onready var _party_label: Label = $Root/HudParty
-@onready var _gold_label: Label = $Root/HudGold
-@onready var _goal_label: Label = $Root/HudGoal
+@onready var _menu_btn: TextureButton = $Root/MenuBtn
 
 var scene_id: String = ""
 
+var _dbg_btn: Button
+var _dbg_panel: Control
+var _dbg_open := false
+
+var _nav_active := false
+var _nav_target := Vector2.ZERO
+var _nav_time := 0.0
+const NAV_DZ := 8.0
+const NAV_ARRIVE := 12.0
+const NAV_TIMEOUT := 12.0
+const MOVE_ACTIONS := ["move_up", "move_down", "move_left", "move_right"]
+
 
 func _ready() -> void:
-	_gold_label.add_theme_color_override("font_color", _party_label.get_theme_color("gold", "CQ"))
-	_goal_label.add_theme_color_override("font_color", _party_label.get_theme_color("accent", "CQ"))
-	_refresh()
+	_menu_btn.pressed.connect(_on_menu_btn)
+	if OS.is_debug_build():
+		_build_debug_button()
 
 
 func set_scene_id(id: String) -> void:
 	scene_id = id
 
 
-func _process(_delta: float) -> void:
-	_refresh()
+func _on_menu_btn() -> void:
+	var m := get_tree().get_first_node_in_group("cq_menu")
+	if m != null and m.has_method("request_open"):
+		m.request_open()
 
 
-func _refresh() -> void:
-	_party_label.text = _party_text()
-	_gold_label.text = _gold_text()
-	_goal_label.text = _goal_text()
+# =========================================================================
+# 自動導航驅動（灌 move_* 給玩家走）
+# =========================================================================
+func _process(delta: float) -> void:
+	if not _nav_active:
+		return
+	_nav_time += delta
+	var p := _find_player()
+	if p == null or _nav_time > NAV_TIMEOUT:
+		_stop_nav()
+		return
+	var d: Vector2 = _nav_target - p.global_position
+	if d.length() <= NAV_ARRIVE:
+		_stop_nav()
+		return
+	_hold("move_right", d.x > NAV_DZ)
+	_hold("move_left", d.x < -NAV_DZ)
+	_hold("move_down", d.y > NAV_DZ)
+	_hold("move_up", d.y < -NAV_DZ)
 
 
-## 對應 L2395-2396：ps.map(derive → name+" Lv"+lv+" "+hp+"/"+maxhp).join("   ")。
-func _party_text() -> String:
-	var parts: PackedStringArray = []
-	for m in GameState.party:
-		if typeof(m) != TYPE_DICTIONARY:
+func _hold(action: String, on: bool) -> void:
+	if on:
+		InputBridge.simulate_action_press(action)
+	else:
+		InputBridge.simulate_action_release(action)
+
+
+func _stop_nav() -> void:
+	_nav_active = false
+	for a in MOVE_ACTIONS:
+		InputBridge.simulate_action_release(a)
+
+
+func _start_nav(target: Vector2) -> void:
+	_nav_target = target
+	_nav_time = 0.0
+	_nav_active = true
+	_close_debug()
+
+
+func _find_player() -> Node2D:
+	var ns := get_tree().get_nodes_in_group("player")
+	if ns.size() > 0 and ns[0] is Node2D:
+		return ns[0]
+	return null
+
+
+# =========================================================================
+# 除錯選單
+# =========================================================================
+func _build_debug_button() -> void:
+	_dbg_btn = Button.new()
+	_dbg_btn.text = "⚙"
+	_dbg_btn.focus_mode = Control.FOCUS_NONE
+	_dbg_btn.anchor_left = 1.0
+	_dbg_btn.anchor_right = 1.0
+	_dbg_btn.offset_left = -116.0
+	_dbg_btn.offset_right = -68.0
+	_dbg_btn.offset_top = 10.0
+	_dbg_btn.offset_bottom = 58.0
+	_dbg_btn.add_theme_font_size_override("font_size", 22)
+	_dbg_btn.add_theme_color_override("font_color", Color(1.0, 0.72, 0.35))
+	_dbg_btn.add_theme_color_override("font_hover_color", Color(1.0, 0.85, 0.55))
+	_dbg_btn.add_theme_constant_override("outline_size", 4)
+	_dbg_btn.add_theme_color_override("font_outline_color", PixelUI.OUTLINE)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.12, 0.09, 0.05, 0.82)
+	sb.set_border_width_all(2)
+	sb.border_color = Color(0.85, 0.55, 0.2)
+	sb.set_corner_radius_all(6)
+	var hov := sb.duplicate() as StyleBoxFlat
+	hov.bg_color = Color(0.22, 0.15, 0.06, 0.9)
+	_dbg_btn.add_theme_stylebox_override("normal", sb)
+	_dbg_btn.add_theme_stylebox_override("hover", hov)
+	_dbg_btn.add_theme_stylebox_override("pressed", hov)
+	_dbg_btn.pressed.connect(_toggle_debug)
+	$Root.add_child(_dbg_btn)
+
+
+func _toggle_debug() -> void:
+	if _dbg_open:
+		_close_debug()
+	else:
+		_dbg_open = true
+		_show_debug_main()
+
+
+func _close_debug() -> void:
+	_dbg_open = false
+	if _dbg_panel != null:
+		_dbg_panel.queue_free()
+		_dbg_panel = null
+
+
+func _show_debug_main() -> void:
+	_rebuild_panel("除錯選單", [
+		{"t": "直接回城", "cb": _dbg_go_town},
+		{"t": "立刻戰鬥", "cb": _dbg_battle},
+		{"t": "自動導航", "cb": _show_debug_nav},
+	])
+
+
+func _show_debug_nav() -> void:
+	var items: Array = []
+	for e in _scene_exits():
+		items.append({"t": "→ " + String(e["label"]), "cb": _start_nav.bind(e["pos"])})
+	if items.is_empty():
+		items.append({"t": "（此區沒有出口）", "cb": Callable()})
+	items.append({"t": "‹ 返回", "cb": _show_debug_main})
+	_rebuild_panel("自動導航：選目的地", items)
+
+
+func _rebuild_panel(title: String, items: Array) -> void:
+	if _dbg_panel != null:
+		_dbg_panel.queue_free()
+	var panel := PixelUI.panel(Color(0.047, 0.055, 0.102, 0.95), 3)
+	panel.anchor_left = 1.0
+	panel.anchor_right = 1.0
+	panel.offset_left = -260.0
+	panel.offset_right = -12.0
+	panel.offset_top = 66.0
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	panel.add_child(v)
+	v.add_child(PixelUI.label(title, 15, PixelUI.GOLD, 3))
+	for it in items:
+		var b := PixelUI.button(String(it["t"]), PixelUI.WHITE, 17)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var cb: Callable = it["cb"]
+		if cb.is_valid():
+			b.pressed.connect(cb)
+		else:
+			b.disabled = true
+		v.add_child(b)
+	$Root.add_child(panel)
+	_dbg_panel = panel
+
+
+func _dbg_go_town() -> void:
+	_close_debug()
+	SceneRouter.go_to("Town")
+
+
+func _dbg_battle() -> void:
+	_close_debug()
+	DebugHooks.force_encounter(_current_enc())
+
+
+func _current_enc() -> String:
+	var scene := get_tree().current_scene
+	if scene != null:
+		var eg: Variant = scene.get("enc_group")
+		if eg != null and String(eg) != "":
+			return String(eg)
+	return "forest"
+
+
+func _scene_exits() -> Array:
+	var out: Array = []
+	var scene := get_tree().current_scene
+	if scene == null:
+		return out
+	var zones := scene.get_node_or_null("Zones")
+	if zones == null:
+		return out
+	for z in zones.get_children():
+		if not (z is ExitZone):
 			continue
-		if ContentDB.is_loaded:
-			Derive.derive(m)
-		var hp: int = int(m.get("hp", 0))
-		var maxhp: int = int(m.get("maxhp", hp))
-		parts.append("%s Lv%s %d/%d" % [m.get("name", ""), m.get("lv", 1), hp, maxhp])
-	return "   ".join(parts)
-
-
-## 對應 L2397-2402：佩戴稱號〈…〉＋金幣＋[M]選單。
-func _gold_text() -> String:
-	var eq_name := TitlesData.equipped_name()
-	var prefix := ("〈%s〉　" % eq_name) if eq_name != "" else ""
-	return "%s金幣 %d　[M]選單" % [prefix, GameState.gold]
-
-
-## 對應 L2403-2418：依旗標 step/reg/ch1/ch2 決定當前目標指引（第一個分支另需 scene_id=="Town"）。
-func _goal_text() -> String:
-	var step := GameState.flag_get("step")
-	var reg := GameState.flag_get("reg")
-	var ch1 := GameState.flag_get("ch1")
-	var ch2 := GameState.flag_get("ch2")
-	if step == 0 and scene_id == "Town":
-		return "▶ 逛逛鎮子，準備好就從北出口前往礦山"
-	elif step == 0:
-		return "▶ 跟著亞倫深入礦山（往北）"
-	elif step < 3:
-		return "▶ 逃出洞穴"
-	elif reg == 0:
-		return "▶ 到公會找緹娜登錄冒險者"
-	elif ch1 == 0:
-		return "▶ 找緹娜接委託"
-	elif ch1 == 1:
-		return "▶ 討伐東之森深處的哥布林頭目"
-	elif ch1 == 2:
-		return "▶ 回公會向緹娜回報"
-	elif ch1 == 3 and ch2 == 0:
-		return "▶ 找水井旁的老葛雷打聽礦山的委託"
-	elif ch2 == 1:
-		return "▶ 前往北方礦山外圍，查明礦工失蹤真相"
-	elif ch2 == 2:
-		return "▶ 回鎮上向老葛雷回報所見"
-	return "▶ 第二章完！深入礦坑洞穴、追查邪氣源頭（第三章敬請期待）"
+		var ez := z as ExitZone
+		if not ez.enabled:
+			continue
+		var label: String = ez.to_scene if ez.to_scene != "" else "出口"
+		out.append({"label": label, "pos": ez.global_position})
+	return out

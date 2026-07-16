@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="RegionDef" format=3 uid="uid://6twwdb430aos"]
+
+[ext_resource type="Script" uid="uid://jar20nes77cu" path="res://scripts/content/map_def.gd" id="1_bnwci"]
+[ext_resource type="Script" uid="uid://csncvmke8p12o" path="res://scripts/content/map_exit_def.gd" id="2_xoaab"]
+[ext_resource type="Script" uid="uid://8tq3gsox2qjm" path="res://scripts/content/region_def.gd" id="3_4j6he"]
+
+[sub_resource type="Resource" id="Resource_ifgqd"]
+script = ExtResource("2_xoaab")
+to = "Town"
+at = "west"
+spawn = "shrine"
+
+[sub_resource type="Resource" id="Resource_4uybx"]
+script = ExtResource("2_xoaab")
+to = "eforest2"
+
+[sub_resource type="Resource" id="Resource_aceok"]
+script = ExtResource("1_bnwci")
+id = "eforest1"
+scene_name = "EForest1"
+complexity = "low"
+enemies = Array[String](["bird", "gslime", "goblin"])
+entries = Array[String](["Town"])
+exits = Array[ExtResource("2_xoaab")]([SubResource("Resource_ifgqd"), SubResource("Resource_4uybx")])
+
+[sub_resource type="Resource" id="Resource_4prjv"]
+script = ExtResource("2_xoaab")
+to = "eforest1"
+at = "west"
+
+[sub_resource type="Resource" id="Resource_o8bq3"]
+script = ExtResource("2_xoaab")
+to = "eforest3"
+at = "south"
+
+[sub_resource type="Resource" id="Resource_g2cmf"]
+script = ExtResource("1_bnwci")
+id = "eforest2"
+scene_name = "EForest2"
+w = 44
+h = 30
+complexity = "low"
+level_band = Array[int]([2, 4])
+enemies = Array[String](["bird", "gslime", "goblin", "worm"])
+exits = Array[ExtResource("2_xoaab")]([SubResource("Resource_4prjv"), SubResource("Resource_o8bq3")])
+
+[sub_resource type="Resource" id="Resource_wh8je"]
+script = ExtResource("2_xoaab")
+to = "eforest2"
+at = "north"
+
+[sub_resource type="Resource" id="Resource_as5tt"]
+script = ExtResource("1_bnwci")
+id = "eforest3"
+scene_name = "EForest3"
+complexity = "low"
+level_band = Array[int]([3, 5])
+enemies = Array[String](["goblin", "worm", "wolf"])
+exits = Array[ExtResource("2_xoaab")]([SubResource("Resource_wh8je")])
+boss_enemy = "goblin_chief"
+
+[resource]
+script = ExtResource("3_4j6he")
+region_id = "east_forest"
+seed = 71
+maps = Array[ExtResource("1_bnwci")]([SubResource("Resource_aceok"), SubResource("Resource_g2cmf"), SubResource("Resource_as5tt")])

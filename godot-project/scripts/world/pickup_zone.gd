@@ -19,7 +19,7 @@ class_name PickupZone
 @export var set_value: int = 0
 @export var item_id: String = ""        ## 留空代表不額外加道具。
 @export var msg: String = ""
-@export var sfx_name: String = "select.wav"
+@export var sfx_name: String = "select.mp3"
 
 ## 是否啟用，同 exit_zone.gd：`!lock && !st.inside` 閘門交由外部控制器透過這個屬性關閉。
 @export var enabled: bool = true

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="1_6d0o7"]
+
+[resource]
+script = ExtResource("1_6d0o7")
+map_id = "eforest1"
+formations = [["goblin"], ["bird", "goblin"], ["gslime", "bird"], ["bird", "gslime", "goblin"]]

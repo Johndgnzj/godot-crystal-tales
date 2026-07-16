@@ -12,6 +12,9 @@ JSON。之後 GDevelop 端台詞異動，重跑這支腳本即可重新抽取，
     一個叫 name 一個叫 speaker）。
   - DLG 條目缺少的 "action" 一律補 null（而不是 KeyError），方便 Godot 端 from_dict 用同一種
     d.get("action", "") 寫法處理。
+  - DLG 條目保留 "cmd"/"label"/"done"（缺省補 null）：立繪＋選單式室內（town 六棟主人）靠這三個欄位
+    組動態指令選單（交談／功能／一次性事件／離開），見 interior.gd 與 dialogue_system.get_interior_commands()。
+    戶外 NPC（gray/mira/guard）沒有 cmd，維持既有「首個 when 命中」的對話行為，不受影響。
   - CUTS 的 "lines" 從 `[[speaker, text], ...]` 轉成 `[{"speaker":..., "text":...}, ...]`
     （解決 specs/DIALOGUE_SPEC.md D-8「待確認事項」——本次抽取時定案為 Dictionary 陣列，比陣列的
     陣列更適合 Godot 端用欄位名稱存取，見 cutscene_entry.gd）。
@@ -34,9 +37,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-GODOT_ROOT = Path(__file__).resolve().parents[2]           # .../godot-crystal-tales-mod-a/godot-project
-WORKSPACE_ROOT = GODOT_ROOT.parent.parent                   # .../ (GDevelop 與 Godot 兩個 repo 的共同上層)
-SOURCE = WORKSPACE_ROOT / "gd-crystal-tales" / "projects" / "crystal-quest" / "scripts" / "build_cq2.py"
+GODOT_ROOT = Path(__file__).resolve().parents[2]           # .../godot-crystal-tales/godot-project
+REPO_ROOT = GODOT_ROOT.parent                               # .../godot-crystal-tales
+SOURCE = REPO_ROOT / "reference" / "gdevelop" / "build_cq2.py"
 DEST = GODOT_ROOT / "resources" / "content" / "dialogue.json"
 
 
@@ -66,6 +69,13 @@ def transform_dlg(raw: dict) -> dict:
                 "speaker": e.get("name", ""),
                 "lines": list(e.get("lines", [])),
                 "action": e.get("action"),
+                # 室內選單（立繪＋選單式室內，build_cq2.py buildIntCmds L1575-1582）需要這三個欄位：
+                #   cmd  ＝指令分類（talk/quest/rest/pray/trade／一次性事件如 hank_gift）
+                #   label＝功能/事件在選單裡顯示的中文（cmd==talk 者無 label）
+                #   done ＝一次性事件的完成旗標名；該旗標設立後此指令從選單消失
+                "cmd": e.get("cmd"),
+                "label": e.get("label"),
+                "done": e.get("done"),
             })
             entry_count += 1
         out[npc_id] = conv

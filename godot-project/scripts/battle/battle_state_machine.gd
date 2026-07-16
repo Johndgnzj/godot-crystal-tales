@@ -63,7 +63,7 @@ var back_row: Array = []
 var actor: Variant = null   ## Dictionary or null，目前行動中的英雄（對應 b.actor）
 var pend: Variant = null    ## Dictionary or null，{t:"atk"/"skill"/"item", sk?, item?}（對應 b.pend）
 
-var sel: int = 0     ## 指令選單游標（0~4：攻/技/道/防禦/逃）
+var sel: int = 0     ## 指令選單游標（0~3：攻/技/道/逃——防禦已依 John 要求移除）
 var s_sel: int = 0   ## 技能選單游標
 var i_sel: int = 0   ## 道具選單游標
 var t_sel: int = 0   ## 選標游標
@@ -85,10 +85,16 @@ var _foe_rows: Array = []
 
 
 func _ready() -> void:
+	AudioManager.play_bgm("bgm_battle.mp3")   # 對應 build_cq2.py L2870
 	_init_battle()
 
 
 func _process(delta: float) -> void:
+	_view_time += delta
+	if _lunge_unit != null:
+		_lunge_t += delta
+		if _lunge_t >= LUNGE_DUR:
+			_lunge_unit = null
 	_handle_auto_toggle()
 	match state:
 		"run":
@@ -197,7 +203,7 @@ func _init_battle() -> void:
 	i_sel = 0
 	t_sel = 0
 
-	_build_ui_rows()
+	_build_view()
 
 
 # =========================================================================
@@ -209,6 +215,7 @@ func _handle_auto_toggle() -> void:
 		return
 	if InputBridge.is_action_hit("battle_auto"):
 		var enabled := AutoBattle.toggle()
+		AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L2885
 		_banner("自動戰鬥：" + ("開啟──我方自動普攻" if enabled else "關閉"))
 		if enabled and state == "menu" and actor != null:
 			_auto_attack(actor)
@@ -272,14 +279,18 @@ func _process_anim(delta: float) -> void:
 # =========================================================================
 
 func _process_menu() -> void:
+	# 2×2 指令格：攻擊(0) 技能(1) / 道具(2) 逃跑(3)（防禦已移除）。
 	if InputBridge.is_action_hit("ui_left"):
-		sel = (sel + 4) % 5
+		sel = (sel + 3) % 4
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_right"):
-		sel = (sel + 1) % 5
+		sel = (sel + 1) % 4
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_up") or InputBridge.is_action_hit("ui_down"):
-		# 原始碼不分上/下，兩者做同一個「切換到另一排」映射（L2732）：0,1,2 是上排，3,4 是下排。
-		sel = (sel - 3) if sel >= 3 else mini(4, sel + 3)
+		sel = (sel + 2) % 4   # 上下＝切換另一排（0↔2、1↔3）
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_accept"):
+		AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L2918-2924：選指令一律 select.wav
 		_pick_menu(sel)
 
 
@@ -295,12 +306,8 @@ func _pick_menu(pick: int) -> void:
 		state = "item"
 		i_sel = 0
 	elif pick == 3:
-		actor["defending"] = true
-		_banner(String(actor.get("name", "")) + " 擺出防禦姿態（物理傷害減半）")
-		_end_action(0.45)
-	elif pick == 4:
-		# 逃跑成功條件：不是 scripted 戰鬥，也不是 ch1_boss（見 specs/BATTLE_FORMULAS.md 抄錄自
-		# build_cq2.py L2744：這兩個條件是 && 短路，任一為真直接判定失敗，連機率都不擲）。
+		# 逃跑（原 index 4，防禦移除後遞補為 3）。逃跑成功條件：不是 scripted 戰鬥，也不是 ch1_boss
+		# （見 specs/BATTLE_FORMULAS.md 抄錄自 build_cq2.py L2744：這兩個條件 && 短路，任一為真直接判失敗）。
 		var can_flee: bool = (not scripted) and enc != "ch1_boss"
 		if can_flee and randf() < 0.7:
 			_sync_party_to_game_state()
@@ -318,16 +325,21 @@ func _process_skill() -> void:
 	var sl := _skills_for(actor)
 	if InputBridge.is_action_hit("ui_up") and s_sel > 0:
 		s_sel -= 1
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_down") and s_sel < sl.size() - 1:
 		s_sel += 1
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_cancel"):
 		state = "menu"
+		AudioManager.sfx("return.mp3")
 		return
 	if InputBridge.is_action_hit("ui_accept") and s_sel < sl.size():
 		var sk: SkillDef = sl[s_sel]
 		if float(actor.get("mp", 0)) < float(sk.mp):
 			_banner("MP 不足！")
+			AudioManager.sfx("return.mp3")
 		else:
+			AudioManager.sfx("select.mp3")
 			pend = {"t": "skill", "sk": sk}
 			t_sel = 0
 			if sk.target == "enemy":
@@ -359,20 +371,26 @@ func _process_item() -> void:
 		i_sel = maxi(0, items.size() - 1)
 	if InputBridge.is_action_hit("ui_up") and i_sel > 0:
 		i_sel -= 1
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_down") and i_sel < items.size() - 1:
 		i_sel += 1
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_cancel"):
 		state = "menu"
+		AudioManager.sfx("return.mp3")
 		return
 	if InputBridge.is_action_hit("ui_accept"):
 		if items.is_empty():
 			_banner("沒有可用的道具！")
+			AudioManager.sfx("return.mp3")
 			return
 		var picked: Dictionary = items[i_sel]
 		var meta: ItemDef = picked["meta"]
 		if not DamageCalc.item_usable_in_battle(meta):
 			_banner(meta.display_name + " 無法在戰鬥中使用")
+			AudioManager.sfx("return.mp3")
 			return
+		AudioManager.sfx("select.mp3")
 		pend = {"t": "item", "item": picked["id"]}
 		state = "target_ally"
 		t_sel = 0
@@ -402,10 +420,13 @@ func _process_target() -> void:
 		return
 	if InputBridge.is_action_hit("ui_up") or InputBridge.is_action_hit("ui_left"):
 		t_sel = (t_sel + alive.size() - 1) % alive.size()
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_down") or InputBridge.is_action_hit("ui_right"):
 		t_sel = (t_sel + 1) % alive.size()
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_cancel"):
 		state = "menu"
+		AudioManager.sfx("return.mp3")
 		return
 	if InputBridge.is_action_hit("ui_accept"):
 		var chosen: Dictionary = alive[t_sel % alive.size()]
@@ -420,10 +441,13 @@ func _process_target_ally() -> void:
 		return
 	if InputBridge.is_action_hit("ui_up") or InputBridge.is_action_hit("ui_left"):
 		t_sel = (t_sel + alive.size() - 1) % alive.size()
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_down") or InputBridge.is_action_hit("ui_right"):
 		t_sel = (t_sel + 1) % alive.size()
+		AudioManager.sfx("cursor.mp3")
 	if InputBridge.is_action_hit("ui_cancel"):
 		state = "menu"
+		AudioManager.sfx("return.mp3")
 		return
 	if InputBridge.is_action_hit("ui_accept"):
 		var chosen: Dictionary = alive[t_sel % alive.size()]
@@ -436,6 +460,9 @@ func _process_target_ally() -> void:
 
 func _apply_one(ts: Array) -> void:
 	var a: Dictionary = actor
+	if String(a.get("side", "")) == "hero":
+		_lunge_unit = a
+		_lunge_t = 0.0
 	var pd: Dictionary = pend
 	var t: Dictionary = ts[0]
 	var msg_out := ""
@@ -443,11 +470,14 @@ func _apply_one(ts: Array) -> void:
 	if pd["t"] == "atk":
 		if DamageCalc.is_dodge(a, t):
 			msg_out = String(t.get("name", "")) + " 靈巧地閃開了！"
+			AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L3147（MISS）
 		else:
 			var r := DamageCalc.phys_damage(a, t)
 			t["hp"] = float(t.get("hp", 0)) - float(r["dmg"])
 			msg_out = String(a.get("name", "")) + " 攻擊 " + String(t.get("name", "")) + "，造成 " \
 				+ str(r["dmg"]) + " 傷害" + ("（會心！）" if r["crit"] else "")
+			AudioManager.sfx("atk.wav")   # 對應 build_cq2.py L3245
+			AudioManager.sfx("hurt.wav")
 			_kill(t)
 
 	elif pd["t"] == "skill":
@@ -461,6 +491,8 @@ func _apply_one(ts: Array) -> void:
 			t["hp"] = float(t.get("hp", 0)) - dmg
 			msg_out = String(a.get("name", "")) + sk_tag + "！" + String(t.get("name", "")) \
 				+ " 受到 " + str(dmg) + " 傷害"
+			AudioManager.sfx("magic.wav")   # 對應 build_cq2.py L3159
+			AudioManager.sfx("hurt.wav")
 			_kill(t)
 		else:
 			var heal := DamageCalc.skill_heal(a, sk)
@@ -468,6 +500,7 @@ func _apply_one(ts: Array) -> void:
 			t["hp"] = minf(float(t.get("maxhp", 0)), before + heal)
 			msg_out = String(a.get("name", "")) + sk_tag + "！" + String(t.get("name", "")) \
 				+ " 恢復 " + str(int(t["hp"] - before)) + " HP"
+			AudioManager.sfx("heal.wav")   # 對應 build_cq2.py L3167
 
 	elif pd["t"] == "item":
 		var item_id: String = pd["item"]
@@ -481,6 +514,7 @@ func _apply_one(ts: Array) -> void:
 			power = eff["power"]
 			item_name = meta.display_name
 		GameState.inv_use(item_id)
+		AudioManager.sfx("heal.wav")   # 對應 build_cq2.py L3174/L3177
 		if kind == "mp":
 			var before_mp: float = float(t.get("mp", 0))
 			t["mp"] = minf(float(t.get("maxmp", 0)), before_mp + power)
@@ -498,6 +532,9 @@ func _apply_one(ts: Array) -> void:
 
 func _apply_all(sk: SkillDef) -> void:
 	var a: Dictionary = actor
+	if String(a.get("side", "")) == "hero":
+		_lunge_unit = a
+		_lunge_t = 0.0
 	a["mp"] = float(a.get("mp", 0)) - float(sk.mp)
 	var list: Array = foes.filter(func(u): return bool(u.get("alive", false)))
 	var tot := 0
@@ -507,6 +544,8 @@ func _apply_all(sk: SkillDef) -> void:
 		target["hp"] = float(target.get("hp", 0)) - dmg
 		tot += dmg
 		_kill(target)
+	AudioManager.sfx("magic.wav")   # 對應 build_cq2.py L3197（全體技能）
+	AudioManager.sfx("hurt.wav")
 	var actor_sk: Dictionary = a.get("sk", {})
 	var slv: int = int(actor_sk.get(sk.id, 1))
 	_banner(String(a.get("name", "")) + "「" + sk.display_name + (" Lv" + str(slv) if slv > 1 else "") \
@@ -543,6 +582,7 @@ func _foe_act(a: Dictionary) -> void:
 			var t2: Dictionary = low[0]
 			var heal := DamageCalc.foe_heal_amount()
 			t2["hp"] = minf(float(t2.get("maxhp", 0)), float(t2.get("hp", 0)) + heal)
+			AudioManager.sfx("heal.wav")
 			_banner(String(a.get("name", "")) + " 治療了 " + String(t2.get("name", "")) + "（+" + str(heal) + " HP）")
 			_finish_foe()
 			return
@@ -565,6 +605,8 @@ func _foe_act(a: Dictionary) -> void:
 				hero["hp"] = float(hero.get("hp", 0)) - float(r["dmg"])
 				tot += r["dmg"]
 				_kill(hero)
+			AudioManager.sfx("atk.wav")   # 對應 build_cq2.py L3222/L3239（敵方傷害）
+			AudioManager.sfx("hurt.wav")
 			_banner(String(a.get("name", "")) + " 使出【" + String(fsk.get("name", "")) + "】！全體共受到 " + str(tot) + " 傷害")
 			_finish_foe()
 			return
@@ -577,6 +619,8 @@ func _foe_act(a: Dictionary) -> void:
 			var r2 := DamageCalc.foe_named_skill_damage(a, t3, mult)
 			t3["hp"] = float(t3.get("hp", 0)) - float(r2["dmg"])
 			_kill(t3)
+			AudioManager.sfx("atk.wav")
+			AudioManager.sfx("hurt.wav")
 			_banner(String(a.get("name", "")) + " 使出【" + String(fsk.get("name", "")) + "】，對 " + String(t3.get("name", "")) \
 				+ " 造成 " + str(r2["dmg"]) + " 傷害" + ("（會心！）" if r2["crit"] else ""))
 			_finish_foe()
@@ -591,6 +635,8 @@ func _foe_act(a: Dictionary) -> void:
 			hero2["hp"] = float(hero2.get("hp", 0)) - float(r3["dmg"])
 			tot2 += r3["dmg"]
 			_kill(hero2)
+		AudioManager.sfx("atk.wav")
+		AudioManager.sfx("hurt.wav")
 		_banner(String(a.get("name", "")) + " 的橫掃攻擊！全體共受到 " + str(tot2) + " 傷害")
 		_finish_foe()
 		return
@@ -604,6 +650,8 @@ func _foe_act(a: Dictionary) -> void:
 	var r4 := DamageCalc.phys_damage(a, t)
 	t["hp"] = float(t.get("hp", 0)) - float(r4["dmg"])
 	_kill(t)
+	AudioManager.sfx("atk.wav")
+	AudioManager.sfx("hurt.wav")
 	_banner(String(a.get("name", "")) + " 攻擊 " + String(t.get("name", "")) + "，造成 " + str(r4["dmg"]) + " 傷害" \
 		+ ("（會心！）" if r4["crit"] else "") + ("（防禦中）" if bool(t.get("defending", false)) else ""))
 	_finish_foe()
@@ -739,6 +787,9 @@ func _settle_win() -> void:
 	if any_up:
 		win_msg += "\n（獲得屬性點與技能點——在選單→角色 分配）"
 
+	# 勝利短曲（bgm/ 底下）：停掉 battle BGM、播一次不循環；升級時用專屬版本。
+	# 原版是 sfx(levelup/win) 疊在戰鬥音樂上（L3325），這裡改成 John 提供的專屬勝利小段。
+	AudioManager.play_bgm_oneshot("bgm_battle_level_up.mp3" if any_up else "bgm_battle_win.mp3")
 	end_state = "win"
 	state = "win"
 
@@ -751,6 +802,7 @@ func _settle_lose() -> void:
 			Derive.derive(m)
 			m["hp"] = m["maxhp"]
 			m["mp"] = m["maxmp"]
+	AudioManager.sfx("lose.wav")   # 對應 build_cq2.py L3333
 	win_msg = "隊伍全滅……被送回了鎮上"
 	end_state = "lose"
 	state = "lose"
@@ -779,193 +831,610 @@ func _sync_party_to_game_state() -> void:
 
 func _process_end() -> void:
 	if InputBridge.is_action_hit("ui_accept"):
+		AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L2994
 		# SceneRouter.battle_result() 內建 "lose" -> Town/shrine 的覆寫規則，這裡不用重複判斷。
 		SceneRouter.battle_result(state)
 
 
 # =========================================================================
-# UI（最簡陋 Label/ProgressBar 版本，MOD-D 之後換裝，見檔頭「UI 現況」）
+# UI（Canvas-2.dc.html 戰鬥設計的落地；MOD-D 換裝——狀態機/戰鬥邏輯不動，見檔頭「UI 現況」）
+#
+# 程序化建 Control 節點樹（沿用 PixelUI 色票/描邊/面板）：背景（下方為地面，角色站其上）、
+# 左側敵人／右側我方最多四人站位、上方戰鬥訊息＋自動鈕、底部 行動格／行動者頭像／狀態列、勝敗結算。
+# battle.tscn 只提供 Node2D 根＋View(CanvasLayer)/Root(Control)，其餘節點都在這裡建。
 # =========================================================================
 
-@onready var _ui_banner: Label = $UI/Banner
-@onready var _ui_boss_name: Label = $UI/BossName
-@onready var _ui_boss_hp: ProgressBar = $UI/BossHpBar
-@onready var _ui_hero_list: VBoxContainer = $UI/HeroList
-@onready var _ui_foe_list: VBoxContainer = $UI/FoeList
-@onready var _ui_cmd_menu: VBoxContainer = $UI/CmdMenu
-@onready var _ui_skill_menu: VBoxContainer = $UI/SkillMenu
-@onready var _ui_item_menu: VBoxContainer = $UI/ItemMenu
-@onready var _ui_target_hint: Label = $UI/TargetHint
-@onready var _ui_auto_label: Label = $UI/AutoLabel
-@onready var _ui_result_panel: Control = $UI/ResultPanel
-@onready var _ui_result_title: Label = $UI/ResultPanel/ResultTitle
-@onready var _ui_result_msg: Label = $UI/ResultPanel/ResultMsg
-@onready var _ui_result_hint: Label = $UI/ResultPanel/ContHint
+const HERO_SLOTS := [Vector2(1074, 500), Vector2(1180, 464), Vector2(1044, 410), Vector2(1160, 372)]
+const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vector2(168, 372)]
+const HERO_H := 104.0   # 原 156 縮成 2/3（John 要求）
+const FOE_H := 82.0     # 原 122 縮成 2/3
+const BOSS_H := 140.0   # 原 210 縮成 2/3
+const HERO_RATIO := {"ludo": 0.92, "marin": 0.58, "aaron": 0.80}   # 由 assets/battle/hero_dims.json 換算（w/h）
+const FRAME_DT := 0.18
+# 我方發動攻擊時向前（敵方在左＝-x）踏步出招再回位。
+const LUNGE_DUR := 0.55
+const LUNGE_DIST := 120.0
+
+var _view_time: float = 0.0
+var _lunge_unit: Variant = null
+var _lunge_t: float = 0.0
+var _root: Control
+var _bg: TextureRect
+var _boss_name: Label
+var _boss_bar_bg: ColorRect
+var _boss_bar_fill: ColorRect
+var _log_label: Label
+var _auto_btn: Button
+var _cmd_labels: Array = []
+var _skill_box: VBoxContainer
+var _skill_labels: Array = []
+var _item_box: VBoxContainer
+var _item_labels: Array = []
+var _portrait: TextureRect
+var _status_rows: Array = []
+var _foe_nodes: Array = []
+var _hero_nodes: Array = []
+var _cursor: TextureRect
+var _actor_arrow: Label
+var _result_overlay: Control
+var _result_title: Label
+var _result_msg: Label
+var _result_hint: Label
+var _result_btn: Button
 
 
-func _build_ui_rows() -> void:
-	for c in _ui_hero_list.get_children():
+func _build_view() -> void:
+	_root = $View/Root
+	for c in _root.get_children():
 		c.queue_free()
-	for c in _ui_foe_list.get_children():
-		c.queue_free()
-	_hero_rows.clear()
-	_foe_rows.clear()
+	_foe_nodes.clear()
+	_hero_nodes.clear()
+	_status_rows.clear()
+	_cmd_labels.clear()
+	_skill_labels.clear()
+	_item_labels.clear()
 
+	# --- 背景（cover 全螢幕；圖本身下方即地面，角色站其上）---
+	_bg = TextureRect.new()
+	_bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_bg.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # 高解析背景縮放走平滑（角色 sprite 仍各自 Nearest）
+	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var bgt := _battle_bg_texture()
+	if bgt != null:
+		_bg.texture = bgt
+	_root.add_child(_bg)
+
+	# --- 單位：敵人（左）／我方最多四人（右）站位 ---
+	for f in foes:
+		_foe_nodes.append(_build_unit(f, false))
+	for h in heroes:
+		_hero_nodes.append(_build_unit(h, true))
+
+	# --- 目標游標 + 行動者箭頭 ---
+	_cursor = TextureRect.new()
+	_cursor.texture = _tex("res://assets/ui/cursor.png")
+	_cursor.custom_minimum_size = Vector2(40, 40)
+	_cursor.size = Vector2(40, 40)
+	_cursor.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_cursor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_cursor.visible = false
+	_root.add_child(_cursor)
+	_actor_arrow = PixelUI.label("▼", 28, PixelUI.SEL, 4)
+	_actor_arrow.visible = false
+	_root.add_child(_actor_arrow)
+
+	# --- 上方：戰鬥訊息 ---
+	var logbg := PixelUI.panel(Color(0.047, 0.055, 0.102, 0.42), 2)
+	logbg.position = Vector2(30, 18)
+	logbg.custom_minimum_size = Vector2(700, 0)
+	_log_label = PixelUI.label("", 19, Color(0.922, 0.922, 0.96), 3)
+	_log_label.custom_minimum_size = Vector2(672, 0)
+	logbg.add_child(_log_label)
+	_root.add_child(logbg)
+
+	# --- 上方右：自動戰鬥鈕（滑鼠可點；A 鍵仍可切）---
+	_auto_btn = PixelUI.button("自動　關", PixelUI.CYAN, 17)
+	_auto_btn.anchor_left = 1.0
+	_auto_btn.anchor_right = 1.0
+	_auto_btn.offset_left = -156.0
+	_auto_btn.offset_right = -22.0
+	_auto_btn.offset_top = 18.0
+	_auto_btn.offset_bottom = 56.0
+	_auto_btn.pressed.connect(_on_auto_pressed)
+	_root.add_child(_auto_btn)
+
+	_build_action_panel()
+	_build_portrait_panel()
+	_build_status_panel()
+	_build_boss_bar()
+	_build_result_overlay()
+
+
+## 建一個站在地面上的單位（敵人或英雄）。foot-anchor：wrap 在腳點，sprite 從 -h 到 0。
+func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
+	var wrap := Control.new()
+	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.position = (HERO_SLOTS if is_hero else FOE_SLOTS)[int(u.get("slot", 0)) % 4]
+	_root.add_child(wrap)
+
+	var frames := _load_frames(u, is_hero)
+	var h: float = HERO_H if is_hero else (BOSS_H if bool(u.get("big", false)) else FOE_H)
+	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
+	var w := h * ratio
+
+	if frames.is_empty():
+		var ph := ColorRect.new()   # 無戰鬥圖的敵人（bear/orc/ogre/necro…）用佔位塊，仍看得到名字/血條
+		ph.color = Color(0.1, 0.11, 0.16, 0.55)
+		ph.size = Vector2(w, h)
+		ph.position = Vector2(-w * 0.5, -h)
+		ph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wrap.add_child(ph)
+
+	var spr := TextureRect.new()
+	spr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	spr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	spr.flip_h = false   # 都不翻轉：素材我方本就面朝左、敵方面朝右（John 回饋我方原本翻反了）
+	spr.size = Vector2(w, h)
+	spr.position = Vector2(-w * 0.5, -h)
+	if not frames.is_empty():
+		spr.texture = frames[0]
+	wrap.add_child(spr)
+
+	var name_lbl: Label = null
+	var hp_fill: ColorRect = null
+	# 一般敵人：名字在頭頂、血條在腳下。boss（big）不畫，改用畫面中上的 boss 血條。
+	if not is_hero and not bool(u.get("big", false)):
+		name_lbl = PixelUI.label(String(u.get("name", "")), 15, PixelUI.WHITE, 3)
+		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_lbl.size = Vector2(160, 22)
+		name_lbl.position = Vector2(-80, -h - 26)
+		wrap.add_child(name_lbl)
+		var barbg := ColorRect.new()
+		barbg.color = PixelUI.OUTLINE
+		barbg.size = Vector2(100, 10)
+		barbg.position = Vector2(-50, 6)
+		barbg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wrap.add_child(barbg)
+		hp_fill = ColorRect.new()
+		hp_fill.color = PixelUI.HP
+		hp_fill.size = Vector2(96, 6)
+		hp_fill.position = Vector2(-48, 8)
+		hp_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wrap.add_child(hp_fill)
+
+	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "is_hero": is_hero, "h": h, "base": wrap.position}
+
+
+func _load_frames(u: Dictionary, is_hero: bool) -> Array:
+	var out: Array = []
+	var s := String(u.get("sprite", ""))
+	if is_hero:
+		for i in range(4):
+			var p := "res://assets/battle/hero_%s_f%d.png" % [s, i]
+			if ResourceLoader.exists(p):
+				out.append(load(p))
+	else:
+		for i in range(8):
+			var p := "res://assets/battle/foe_%s_%d.png" % [s, i]
+			if ResourceLoader.exists(p):
+				out.append(load(p))
+	return out
+
+
+func _tex(path: String) -> Texture2D:
+	return load(path) if ResourceLoader.exists(path) else null
+
+
+func _battle_bg_texture() -> Texture2D:
+	var area := ""
+	var ed: EncounterDef = ContentDB.get_encounter(enc)
+	if ed != null:
+		area = ed.map_id
+	var name_ := "forest"
+	if "cave" in area:
+		name_ = "cave"
+	elif "mine" in area:
+		name_ = "mine"
+	for p in ["res://assets/ui/battlebg_%s.png" % name_, "res://assets/ui/battlebg.png"]:
+		if ResourceLoader.exists(p):
+			return load(p)
+	return null
+
+
+## 中上：Boss（大敵）名稱＋血條。一般敵人血條在腳下，boss 太大改放畫面中上（對齊 Canvas-2 設計）。
+func _build_boss_bar() -> void:
+	_boss_name = PixelUI.label("", 22, PixelUI.WHITE, 4)
+	_boss_name.anchor_left = 0.0
+	_boss_name.anchor_right = 1.0
+	_boss_name.offset_left = 0.0
+	_boss_name.offset_right = 0.0
+	_boss_name.offset_top = 50.0
+	_boss_name.offset_bottom = 82.0
+	_boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_boss_name.visible = false
+	_root.add_child(_boss_name)
+	_boss_bar_bg = ColorRect.new()
+	_boss_bar_bg.color = PixelUI.OUTLINE
+	_boss_bar_bg.position = Vector2(340, 88)
+	_boss_bar_bg.size = Vector2(600, 16)
+	_boss_bar_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_boss_bar_bg.visible = false
+	_root.add_child(_boss_bar_bg)
+	_boss_bar_fill = ColorRect.new()
+	_boss_bar_fill.color = PixelUI.HP
+	_boss_bar_fill.position = Vector2(343, 91)
+	_boss_bar_fill.size = Vector2(594, 10)
+	_boss_bar_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_boss_bar_fill.visible = false
+	_root.add_child(_boss_bar_fill)
+
+
+## 區塊面板（行動／狀態）：半透明格子＋標題頁籤，頁籤垂直中線卡在格子上邊線（對齊 Canvas-2 設計）。
+func _titled_panel(title: String, pos: Vector2, sz: Vector2) -> void:
+	var box := Panel.new()
+	box.add_theme_stylebox_override("panel", PixelUI.panel_style(Color(0.345, 0.357, 0.482, 0.46), 3))
+	box.position = pos
+	box.size = sz
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(box)
+	var tab := PixelUI.panel(Color(0.071, 0.078, 0.11, 1.0), 2)
+	var tst := tab.get_theme_stylebox("panel") as StyleBoxFlat
+	tst.content_margin_left = 12
+	tst.content_margin_right = 12
+	tst.content_margin_top = 2
+	tst.content_margin_bottom = 2
+	tab.add_child(PixelUI.label(title, 16, PixelUI.GOLD, 3))
+	tab.position = pos + Vector2(18, -13)
+	_root.add_child(tab)
+
+
+func _build_action_panel() -> void:
+	_titled_panel("行動", Vector2(30, 556), Vector2(432, 150))
+	# 指令 2×2：攻擊/技能 上排、道具/逃跑 下排
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.position = Vector2(62, 588)
+	grid.add_theme_constant_override("h_separation", 40)
+	grid.add_theme_constant_override("v_separation", 16)
+	for nm in ["攻擊", "技能", "道具", "逃跑"]:
+		var l := PixelUI.label(String(nm), 26, PixelUI.WHITE, 4)
+		l.custom_minimum_size = Vector2(150, 0)
+		grid.add_child(l)
+		_cmd_labels.append(l)
+	_root.add_child(grid)
+	# 技能／道具清單（覆在行動面板區，依狀態切換顯示）
+	_skill_box = VBoxContainer.new()
+	_skill_box.position = Vector2(52, 574)
+	_skill_box.add_theme_constant_override("separation", 3)
+	_root.add_child(_skill_box)
+	for i in range(5):
+		var sl := PixelUI.label("", 18, PixelUI.WHITE, 3)
+		_skill_box.add_child(sl)
+		_skill_labels.append(sl)
+	_item_box = VBoxContainer.new()
+	_item_box.position = Vector2(52, 574)
+	_item_box.add_theme_constant_override("separation", 3)
+	_root.add_child(_item_box)
+	for i in range(5):
+		var il := PixelUI.label("", 18, PixelUI.WHITE, 3)
+		_item_box.add_child(il)
+		_item_labels.append(il)
+
+
+func _build_portrait_panel() -> void:
+	var bg := Panel.new()
+	bg.add_theme_stylebox_override("panel", PixelUI.panel_style(Color(0.051, 0.059, 0.094, 1.0), 3))
+	bg.position = Vector2(478, 556)
+	bg.size = Vector2(156, 150)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(bg)
+	_portrait = TextureRect.new()
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_portrait.position = Vector2(484, 562)
+	_portrait.size = Vector2(144, 138)
+	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_portrait)
+
+
+func _build_status_panel() -> void:
+	_titled_panel("狀態", Vector2(650, 556), Vector2(600, 150))
+	var col := VBoxContainer.new()
+	col.position = Vector2(664, 586)
+	col.custom_minimum_size = Vector2(576, 0)
+	col.add_theme_constant_override("separation", 9)
+	_root.add_child(col)
 	for h in heroes:
 		var row := HBoxContainer.new()
-		var name_label := Label.new()
-		name_label.custom_minimum_size = Vector2(360, 0)
-		row.add_child(name_label)
-		var hp_bar := ProgressBar.new()
-		hp_bar.custom_minimum_size = Vector2(120, 16)
-		hp_bar.show_percentage = false
-		row.add_child(hp_bar)
-		var atb_bar := ProgressBar.new()
-		atb_bar.custom_minimum_size = Vector2(120, 16)
-		atb_bar.show_percentage = false
-		row.add_child(atb_bar)
-		_ui_hero_list.add_child(row)
-		_hero_rows.append({"unit": h, "name": name_label, "hp": hp_bar, "atb": atb_bar})
+		row.custom_minimum_size = Vector2(576, 26)
+		row.add_theme_constant_override("separation", 6)
+		var nm := _srow_label(String(h.get("name", "")), 19, PixelUI.GOLD, 54.0)
+		row.add_child(nm)
+		row.add_child(_srow_label("HP", 13, Color(0.62, 0.77, 0.74), 0.0))
+		var hp := _bar(PixelUI.HP, 98.0)
+		row.add_child(hp["wrap"])
+		var hptxt := _srow_label("", 15, Color(0.84, 0.94, 0.91), 66.0)
+		row.add_child(hptxt)
+		row.add_child(_srow_label("MP", 13, Color(0.64, 0.72, 0.83), 0.0))
+		var mp := _bar(PixelUI.MP, 78.0)
+		row.add_child(mp["wrap"])
+		var mptxt := _srow_label("", 15, Color(0.88, 0.92, 0.96), 48.0)
+		row.add_child(mptxt)
+		row.add_child(_srow_label("行動", 13, Color(0.71, 0.67, 0.82), 0.0))
+		var atb := _bar(Color(0.76, 0.72, 0.91), 54.0)
+		row.add_child(atb["wrap"])
+		col.add_child(row)
+		_status_rows.append({"unit": h, "name": nm, "hp": hp, "hptxt": hptxt, "mp": mp, "mptxt": mptxt, "atb": atb})
 
-	for f in foes:
-		var frow := HBoxContainer.new()
-		var fname := Label.new()
-		fname.custom_minimum_size = Vector2(220, 0)
-		frow.add_child(fname)
-		var fhp := ProgressBar.new()
-		fhp.custom_minimum_size = Vector2(120, 12)
-		fhp.show_percentage = false
-		frow.add_child(fhp)
-		_ui_foe_list.add_child(frow)
-		_foe_rows.append({"unit": f, "name": fname, "hp": fhp})
+
+## 狀態列元素：垂直置中對齊、同一基準線（解決名稱/血條/文字高度不統一）。w>0 給固定寬。
+func _srow_label(txt: String, size: int, color: Color, w: float) -> Label:
+	var l := PixelUI.label(txt, size, color, 2)
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if w > 0.0:
+		l.custom_minimum_size = Vector2(w, 0)
+	return l
+
+
+## 固定寬度的條（bg + fill），垂直置中。fill 寬度在 _refresh_ui 依比例設定。回傳 {wrap, fill, w}。
+func _bar(color: Color, w: float) -> Dictionary:
+	var wrap := Control.new()
+	wrap.custom_minimum_size = Vector2(w, 14)
+	wrap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var bg := ColorRect.new()
+	bg.color = Color(0.09, 0.12, 0.16, 0.55)
+	bg.size = Vector2(w, 14)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(bg)
+	var fill := ColorRect.new()
+	fill.color = color
+	fill.position = Vector2(2, 2)
+	fill.size = Vector2(w - 4, 10)
+	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(fill)
+	return {"wrap": wrap, "fill": fill, "w": w}
+
+
+func _build_result_overlay() -> void:
+	_result_overlay = Control.new()
+	_result_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_result_overlay.visible = false
+	_root.add_child(_result_overlay)
+	var dim := ColorRect.new()
+	dim.color = Color(0.03, 0.035, 0.06, 0.82)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_result_overlay.add_child(dim)
+	_result_title = PixelUI.label("", 84, PixelUI.GOLD, 6)
+	_result_title.anchor_left = 0.0
+	_result_title.anchor_right = 1.0
+	_result_title.offset_left = 0.0
+	_result_title.offset_right = 0.0
+	_result_title.offset_top = 168.0
+	_result_title.offset_bottom = 300.0
+	_result_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_result_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_result_overlay.add_child(_result_title)
+	_result_msg = PixelUI.label("", 24, PixelUI.WHITE, 3)
+	_result_msg.anchor_right = 1.0
+	_result_msg.offset_left = 120.0
+	_result_msg.offset_right = -120.0
+	_result_msg.offset_top = 312.0
+	_result_msg.offset_bottom = 520.0
+	_result_msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_result_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_result_overlay.add_child(_result_msg)
+	_result_hint = PixelUI.label("", 16, PixelUI.DIM, 2)
+	_result_overlay.add_child(_result_hint)
+	_result_btn = PixelUI.button("繼續", PixelUI.WHITE, 24)
+	_result_btn.anchor_left = 0.5
+	_result_btn.anchor_right = 0.5
+	_result_btn.offset_left = -150.0
+	_result_btn.offset_right = 150.0
+	_result_btn.anchor_top = 1.0
+	_result_btn.anchor_bottom = 1.0
+	_result_btn.offset_top = -110.0
+	_result_btn.offset_bottom = -60.0
+	_result_btn.pressed.connect(_on_result_confirm)
+	_result_overlay.add_child(_result_btn)
+
+
+func _on_auto_pressed() -> void:
+	if state == "win" or state == "lose":
+		return
+	var enabled := AutoBattle.toggle()
+	_banner("自動戰鬥：" + ("開啟──我方自動普攻" if enabled else "關閉"))
+	if enabled and state == "menu" and actor != null:
+		_auto_attack(actor)
+
+
+func _on_result_confirm() -> void:
+	if state == "win" or state == "lose":
+		SceneRouter.battle_result(state)
+
+
+func _hero_node_of(u: Variant) -> Variant:
+	for n in _hero_nodes:
+		if n["unit"] == u:
+			return n
+	return null
+
+
+func _foe_node_of(u: Variant) -> Variant:
+	for n in _foe_nodes:
+		if n["unit"] == u:
+			return n
+	return null
 
 
 func _refresh_ui() -> void:
-	_ui_banner.text = msg
-
-	for row in _hero_rows:
-		var h: Dictionary = row["unit"]
-		var alive := bool(h.get("alive", false))
-		var maxhp := maxf(1.0, float(h.get("maxhp", 1)))
-		var maxmp := maxf(1.0, float(h.get("maxmp", 1)))
-		var hp := float(h.get("hp", 0))
-		var mp := float(h.get("mp", 0))
-		var atb := float(h.get("atb", 0))
-		var name_lbl: Label = row["name"]
-		name_lbl.text = "%s Lv%d%s  HP %d/%d  MP %d/%d" % [
-			String(h.get("name", "")), int(h.get("lv", 1)),
-			("〔防〕" if bool(h.get("defending", false)) else ""),
-			int(maxf(0.0, hp)), int(maxhp), int(mp), int(maxmp)
-		]
-		if not alive:
-			name_lbl.modulate = Color(0.47, 0.47, 0.51)
-		elif actor == h:
-			name_lbl.modulate = Color(1.0, 0.96, 0.67)
-		elif atb >= 100.0:
-			name_lbl.modulate = Color(1.0, 0.88, 0.47)
-		else:
-			name_lbl.modulate = Color.WHITE
-		var hp_bar: ProgressBar = row["hp"]
-		hp_bar.max_value = maxhp
-		hp_bar.value = clampf(hp, 0.0, maxhp)
-		var atb_bar: ProgressBar = row["atb"]
-		atb_bar.max_value = 100.0
-		atb_bar.value = clampf(atb, 0.0, 100.0)
-
-	var boss: Variant = null
-	for row in _foe_rows:
-		var f: Dictionary = row["unit"]
-		var alive := bool(f.get("alive", false))
-		var big := bool(f.get("big", false))
-		if big and alive:
-			boss = f
-		var show_row := alive and not big
-		row["name"].visible = show_row
-		row["hp"].visible = show_row
-		if show_row:
-			row["name"].text = String(f.get("name", ""))
-			var fmaxhp := maxf(1.0, float(f.get("maxhp", 1)))
-			var hp_bar2: ProgressBar = row["hp"]
-			hp_bar2.max_value = fmaxhp
-			hp_bar2.value = clampf(float(f.get("hp", 0)), 0.0, fmaxhp)
-
+	if _root == null:
+		return
+	_log_label.text = msg
+	var frame := int(_view_time / FRAME_DT)
+	var hero_turn := actor != null and String(actor.get("side", "")) == "hero"
 	var is_end := state == "win" or state == "lose"
+
+	# --- 敵人 sprite/名稱/血條 ---
+	for node in _foe_nodes:
+		var f: Dictionary = node["unit"]
+		var alive := bool(f.get("alive", false))
+		node["wrap"].visible = alive and not is_end
+		if not alive:
+			continue
+		var frames: Array = node["frames"]
+		if not frames.is_empty():
+			node["sprite"].texture = frames[frame % frames.size()]
+		if node["name"] != null:
+			node["name"].text = ("☠ " if bool(f.get("big", false)) else "") + String(f.get("name", ""))
+		if node["hp_fill"] != null:
+			var r := clampf(float(f.get("hp", 0)) / maxf(1.0, float(f.get("maxhp", 1))), 0.0, 1.0)
+			var hpf: ColorRect = node["hp_fill"]
+			hpf.size = Vector2(96.0 * r, hpf.size.y)
+
+	# --- Boss（大敵）名稱＋血條→畫面中上 ---
+	var boss: Variant = null
+	for f2 in foes:
+		if bool(f2.get("big", false)) and bool(f2.get("alive", false)):
+			boss = f2
+			break
 	var show_boss := boss != null and not is_end
-	_ui_boss_name.visible = show_boss
-	_ui_boss_hp.visible = show_boss
+	_boss_name.visible = show_boss
+	_boss_bar_bg.visible = show_boss
+	_boss_bar_fill.visible = show_boss
 	if show_boss:
 		var b: Dictionary = boss
-		# see specs/BATTLE_FORMULAS.md F-8：Boss 血條只顯示「☠ 名稱」不露數字，血條本身仍會畫。
-		_ui_boss_name.text = "☠ " + String(b.get("name", ""))
-		var bmaxhp := maxf(1.0, float(b.get("maxhp", 1)))
-		_ui_boss_hp.max_value = bmaxhp
-		_ui_boss_hp.value = clampf(float(b.get("hp", 0)), 0.0, bmaxhp)
+		_boss_name.text = "☠ " + String(b.get("name", ""))
+		var br := clampf(float(b.get("hp", 0)) / maxf(1.0, float(b.get("maxhp", 1))), 0.0, 1.0)
+		_boss_bar_fill.size = Vector2(594.0 * br, _boss_bar_fill.size.y)
 
-	var hero_turn := actor != null and String(actor.get("side", "")) == "hero"
+	# --- 我方 sprite（陣亡變暗；發動攻擊時向前踏步出招）---
+	for node in _hero_nodes:
+		var h: Dictionary = node["unit"]
+		var wnode: Control = node["wrap"]
+		var base: Vector2 = node["base"]
+		var off := 0.0
+		if _lunge_unit != null and is_same(node["unit"], _lunge_unit) and _lunge_t < LUNGE_DUR:
+			off = -LUNGE_DIST * sin(PI * _lunge_t / LUNGE_DUR)   # 向前(−x，敵方在左)踏出再回
+		wnode.position = base + Vector2(off, 0.0)
+		wnode.visible = not is_end
+		var frames: Array = node["frames"]
+		if not frames.is_empty():
+			node["sprite"].texture = frames[frame % frames.size()]
+		node["sprite"].modulate = Color(0.4, 0.4, 0.45, 0.9) if not bool(h.get("alive", false)) else Color.WHITE
 
+	# --- 行動者箭頭 ---
+	_actor_arrow.visible = hero_turn and (state == "menu" or state == "skill" or state == "item")
+	if _actor_arrow.visible:
+		var hn = _hero_node_of(actor)
+		if hn != null:
+			var w: Control = hn["wrap"]
+			_actor_arrow.position = w.position + Vector2(-10.0, -float(hn["h"]) - 54.0)
+
+	# --- 目標游標 ---
+	_cursor.visible = state == "target" or state == "target_ally"
+	if _cursor.visible:
+		var pool: Array = (foes if state == "target" else heroes).filter(func(u): return bool(u.get("alive", false)))
+		if not pool.is_empty():
+			var tgt: Dictionary = pool[t_sel % pool.size()]
+			var tn = (_foe_node_of(tgt) if state == "target" else _hero_node_of(tgt))
+			if tn != null:
+				var tw: Control = tn["wrap"]
+				_cursor.position = tw.position + Vector2(-20.0, -float(tn["h"]) - 48.0)
+
+	# --- 狀態列（HP/MP/行動條）---
+	for row in _status_rows:
+		var h: Dictionary = row["unit"]
+		var maxhp := maxf(1.0, float(h.get("maxhp", 1)))
+		var maxmp := maxf(1.0, float(h.get("maxmp", 1)))
+		var hp := maxf(0.0, float(h.get("hp", 0)))
+		var hpf2: ColorRect = row["hp"]["fill"]
+		var mpf: ColorRect = row["mp"]["fill"]
+		var atbf: ColorRect = row["atb"]["fill"]
+		hpf2.size = Vector2((float(row["hp"]["w"]) - 4.0) * clampf(hp / maxhp, 0.0, 1.0), hpf2.size.y)
+		mpf.size = Vector2((float(row["mp"]["w"]) - 4.0) * clampf(float(h.get("mp", 0)) / maxmp, 0.0, 1.0), mpf.size.y)
+		atbf.size = Vector2((float(row["atb"]["w"]) - 4.0) * clampf(float(h.get("atb", 0)) / 100.0, 0.0, 1.0), atbf.size.y)
+		row["hptxt"].text = "%d/%d" % [int(hp), int(maxhp)]
+		row["mptxt"].text = "%d/%d" % [int(float(h.get("mp", 0))), int(maxmp)]
+		var nm: Label = row["name"]
+		if not bool(h.get("alive", false)):
+			nm.add_theme_color_override("font_color", PixelUI.DIM)
+		elif actor == h:
+			nm.add_theme_color_override("font_color", PixelUI.SEL)
+		else:
+			nm.add_theme_color_override("font_color", PixelUI.GOLD)
+
+	# --- 行動者頭像（無人行動時用預設圖 assets/ui/face_default.png）---
+	if hero_turn:
+		var pt := _tex("res://assets/ui/face_%s.png" % String(actor.get("sprite", "")))
+		if pt != null:
+			_portrait.texture = pt
+	else:
+		var pd := _tex("res://assets/ui/face_default.png")
+		if pd != null:
+			_portrait.texture = pd
+
+	# --- 行動格（攻/技/道/逃）：永遠顯示；非本回合選單時淡化（不可操作但字還在）；技能/道具子選單開啟時讓位 ---
 	var show_cmd := hero_turn and state == "menu"
-	_ui_cmd_menu.visible = show_cmd
-	if show_cmd:
-		var labels := ["攻擊", "技能", "道具", "防禦", "逃跑"]
-		var children := _ui_cmd_menu.get_children()
-		for i in range(mini(children.size(), labels.size())):
-			var lbl: Label = children[i]
-			lbl.text = ("▶ " if i == sel else "　") + labels[i]
-			lbl.modulate = Color(1.0, 0.92, 0.47) if i == sel else Color.WHITE
+	var cmd_hidden := hero_turn and (state == "skill" or state == "item")
+	for i in _cmd_labels.size():
+		var l: Label = _cmd_labels[i]
+		l.visible = not cmd_hidden
+		l.add_theme_color_override("font_color", (PixelUI.SEL if i == sel else PixelUI.WHITE) if show_cmd else PixelUI.DIM)
 
+	# --- 技能清單 ---
 	var show_skill := hero_turn and state == "skill"
-	_ui_skill_menu.visible = show_skill
+	_skill_box.visible = show_skill
 	if show_skill:
 		var sl := _skills_for(actor)
-		var actor_sk: Dictionary = actor.get("sk", {})
-		var children2 := _ui_skill_menu.get_children()
-		for i in range(children2.size()):
-			var lbl2: Label = children2[i]
+		var ask: Dictionary = actor.get("sk", {})
+		for i in _skill_labels.size():
+			var lbl: Label = _skill_labels[i]
 			if i < sl.size():
 				var sd: SkillDef = sl[i]
-				var slv := int(actor_sk.get(sd.id, 1))
-				lbl2.visible = true
-				lbl2.text = ("▶" if i == s_sel else "　") + sd.display_name + " Lv" + str(slv) + " (" + str(sd.mp) + "MP)"
-				var affordable := float(actor.get("mp", 0)) >= float(sd.mp)
-				if not affordable:
-					lbl2.modulate = Color(0.47, 0.47, 0.51)
-				elif i == s_sel:
-					lbl2.modulate = Color(1.0, 0.92, 0.47)
-				else:
-					lbl2.modulate = Color.WHITE
+				var slv := int(ask.get(sd.id, 1))
+				lbl.visible = true
+				lbl.text = ("▶ " if i == s_sel else "　") + sd.display_name + " Lv" + str(slv) + "（" + str(sd.mp) + "MP）"
+				var afford := float(actor.get("mp", 0)) >= float(sd.mp)
+				lbl.add_theme_color_override("font_color", PixelUI.SEL if (i == s_sel and afford) else (PixelUI.WHITE if afford else PixelUI.DIM))
 			else:
-				lbl2.visible = false
+				lbl.visible = false
 
+	# --- 道具清單 ---
 	var show_item := hero_turn and state == "item"
-	_ui_item_menu.visible = show_item
+	_item_box.visible = show_item
 	if show_item:
 		var items := _battle_items()
-		var children3 := _ui_item_menu.get_children()
-		for i in range(children3.size()):
-			var lbl3: Label = children3[i]
+		for i in _item_labels.size():
+			var lbl2: Label = _item_labels[i]
 			if i < items.size():
 				var it: Dictionary = items[i]
 				var meta: ItemDef = it["meta"]
-				lbl3.visible = true
-				lbl3.text = ("▶" if i == i_sel else "　") + meta.display_name + " x" + str(it["n"])
-				lbl3.modulate = Color.WHITE if DamageCalc.item_usable_in_battle(meta) else Color(0.47, 0.47, 0.51)
+				lbl2.visible = true
+				lbl2.text = ("▶ " if i == i_sel else "　") + meta.display_name + " ×" + str(it["n"])
+				lbl2.add_theme_color_override("font_color", PixelUI.SEL if i == i_sel else PixelUI.WHITE)
 			elif i == 0 and items.is_empty():
-				lbl3.visible = true
-				lbl3.text = "（沒有可用的道具）"
-				lbl3.modulate = Color(0.47, 0.47, 0.51)
+				lbl2.visible = true
+				lbl2.text = "（沒有可用的道具）"
+				lbl2.add_theme_color_override("font_color", PixelUI.DIM)
 			else:
-				lbl3.visible = false
+				lbl2.visible = false
 
-	_ui_target_hint.visible = state == "target" or state == "target_ally"
-	if state == "target":
-		_ui_target_hint.text = "選擇攻擊目標（←→ 切換、Enter 確定、Esc 返回）"
-	elif state == "target_ally":
-		_ui_target_hint.text = "選擇對象（←→ 切換、Enter 確定、Esc 返回）"
+	# --- 自動鈕 ---
+	var auto_on := AutoBattle.is_enabled()
+	_auto_btn.text = "自動　開" if auto_on else "自動　關"
+	_auto_btn.add_theme_color_override("font_color", PixelUI.SEL if auto_on else PixelUI.CYAN)
 
-	_ui_auto_label.text = ("⚙ 自動:開" if AutoBattle.is_enabled() else "⚙ 自動:關") + "　[A]"
-
-	_ui_result_panel.visible = is_end
+	# --- 勝敗結算 ---
+	_result_overlay.visible = is_end
 	if is_end:
-		_ui_result_title.text = "勝　利！" if state == "win" else "戰　敗"
-		_ui_result_msg.text = win_msg
-		_ui_result_hint.text = "繼續" if state == "win" else "回到鎮上"
+		_result_title.text = "勝　利！" if state == "win" else "敗　北"
+		_result_title.add_theme_color_override("font_color", PixelUI.GOLD if state == "win" else PixelUI.HP)
+		_result_msg.text = win_msg
+		_result_btn.text = "繼續" if state == "win" else "回到鎮上"

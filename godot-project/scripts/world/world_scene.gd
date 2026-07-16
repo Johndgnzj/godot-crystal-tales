@@ -2,7 +2,7 @@ extends Node2D
 class_name WorldScene
 
 ## MOD-H 產出：世界場景通用控制器（Town/Forest/Forest2/Mine/Cave 五張室外地圖共用一支腳本，
-## per-scene 差異全部走下方 @export 資料，由 scripts/map/gen_maps.py 生成 .tscn 時填入）。
+## per-scene 差異全部走下方 @export 資料，由 scripts/map/region_generator.gd 生成新地圖時填入；既有 5 圖為凍結 authored 內容）。
 ##
 ## 對應 build_cq2.py WORLD_JS 的「場景生命週期」部分（init 出生點 L1425-1449、劇情佇列、
 ## 出口/觸發/撿取閘門 L2298-2392、NPC 對話/寶箱互動 L1711-1808、隊伍跟隨 L2272-2296）。
@@ -59,8 +59,12 @@ const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
 @export var npc_list: Array = []             ## [{"id","sprite","x","y","face"}]（tile 座標；Town 只含戶外 NPC）
 @export var prop_list: Array = []            ## [{"tex","x","y","w","h"}]（x/y=GDevelop 左上像素；w/h=0 用原生尺寸）
 @export var chest_list: Array = []           ## [{"id","tx","ty"}]（loot 資料查 ContentDB.get_chest()）
+@export var door_list: Array = []            ## [{"tx","ty","key","label","owners":[id...]}]（僅 Town 有；立繪選單式室內進屋資料）
 @export var tileset_path: String = ""        ## res://resources/map/tileset_*.tres
 @export var atlas_path: String = ""          ## res://assets/map/atlas*.png（存在檢查用）
+## 室外相機縮放（對應 GDevelop 室外固定 zoom 1.8，build_cq2.py L2574）：值越大＝畫面越拉近、可視範圍
+## 越小。五張室外場景共用本腳本，改這裡的預設即全套；也可在各場景根節點 Inspector 覆寫微調手感。
+@export_range(0.5, 3.0, 0.05) var camera_zoom: float = 1.8
 
 var world_state: WorldSceneState = WorldSceneState.new()
 
@@ -75,9 +79,11 @@ var _prompt_timer: float = 0.0
 var _missing_textures: int = 0
 
 # UI（選單/HUD）由本控制器在 _ready() 以程式建立，不進 .tscn ext_resource——這樣地圖生成器
-# （gen_maps.py）重生成場景檔時不會覆蓋掉 UI 掛載，也避免與地圖資料工作搶同一個 .tscn。
+# （region_generator.gd）生成場景檔時不會覆蓋掉 UI 掛載，也避免與地圖資料工作搶同一個 .tscn。
 var _menu: CanvasLayer = null
 var _hud_full: CanvasLayer = null
+# 室內 overlay（立繪選單式進屋）；同樣以程式掛載，理由同上。無門的場景也掛，但永不開啟（無害）。
+var _interior: CanvasLayer = null
 
 # 對話推進與世界互動搶同一個 ui_accept 的協調狀態：對話結束後要求該鍵先放開，才能再次開啟新對話，
 # 否則「結束對話的那一下」會在同一幀被 _update_interactions 當成開啟輸入導致無限重開。
@@ -104,6 +110,7 @@ func _ready() -> void:
 	DialogueSystem.battle_requested.connect(_on_cut_battle)
 	DialogueSystem.scene_transfer_requested.connect(_on_cut_transfer)
 	_play_enter_cutscenes()
+	AudioManager.play_bgm(bgm)   # CFG.bgm；空字串＝維持現況（見 AudioManager.play_bgm）
 	if _missing_textures > 0:
 		push_warning(
 			"WorldScene(%s): %d 張貼圖尚未就位（MOD-I 資產複製未合併？），先以隱形方式運作"
@@ -119,7 +126,8 @@ func _physics_process(delta: float) -> void:
 		_accept_release_needed = true
 	_was_busy = busy_now
 	var menu_open: bool = _menu != null and _menu.is_open()
-	world_state.set_lock(busy_now or menu_open)
+	var interior_open: bool = _interior != null and _interior.is_open()
+	world_state.set_lock(busy_now or menu_open or interior_open)
 	if _tracker != null:
 		# mine_step0 特例每幀重解析（見 encounter_tracker.gd 檔頭「encounter_id 語意」）。
 		_tracker.encounter_id = _resolve_encounter_group()
@@ -137,6 +145,8 @@ func _physics_process(delta: float) -> void:
 @warning_ignore("integer_division")
 func _fill_ground() -> void:
 	var layer: TileMapLayer = $Ground
+	if not layer.get_used_cells().is_empty():
+		return   # 地磚已烘進場景（生成器產出，編輯器可見可編）——不重填
 	if tileset_path == "" or not ResourceLoader.exists(tileset_path) \
 			or (atlas_path != "" and not ResourceLoader.exists(atlas_path)):
 		_missing_textures += 1
@@ -283,6 +293,7 @@ func _setup_followers() -> void:
 
 func _setup_camera_limits() -> void:
 	var cam: Camera2D = $YSort/Player/Camera2D
+	cam.zoom = Vector2(camera_zoom, camera_zoom)   # 室外拉近（見 camera_zoom export）
 	cam.limit_left = 0
 	cam.limit_top = 0
 	cam.limit_right = map_w * TS
@@ -401,6 +412,20 @@ func _setup_ui() -> void:
 		if hud.has_method("set_scene_id"):
 			hud.set_scene_id(scene_id)
 		_hud_full = hud
+	# 室內 overlay：進屋時顯示室內大圖＋主人立繪＋指令選單。leave 訊號回頭讓本控制器重定位玩家並退出。
+	if ResourceLoader.exists("res://scenes/ui/interior.tscn"):
+		var interior: Node = load("res://scenes/ui/interior.tscn").instantiate()
+		interior.name = "InteriorRuntime"
+		add_child(interior)
+		if interior.has_signal("leave_requested"):
+			interior.leave_requested.connect(_exit_building)
+		_interior = interior
+	# 商店 UI：室內「交易」指令會發 DialogueSystem.shop_requested，shop.tscn 自行監聽開店。
+	# 之前從未掛載（POC 進不了屋、談不到主人），這裡補上；無門場景掛了也不會被觸發。
+	if ResourceLoader.exists("res://scenes/ui/shop.tscn"):
+		var shop: Node = load("res://scenes/ui/shop.tscn").instantiate()
+		shop.name = "ShopRuntime"
+		add_child(shop)
 
 
 func _apply_entry_state() -> void:
@@ -512,6 +537,14 @@ func _update_interactions(delta: float) -> void:
 		_accept_release_needed = false
 	var near_npc := _find_near_npc()
 	var near_chest := _find_near_chest()
+	# 走到門口格「自動進屋」，不用按鍵（John 要求）。只認門口格本身（_find_near_door 判 pty==dty），
+	# 離開時玩家被放到門下一格（dty+1），不落在門口格上 → 不會一出來就立刻重進。NPC/寶箱優先（保險，
+	# 門口一般不會有戶外 NPC）。
+	if near_npc == "" and near_chest.is_empty():
+		var near_door := _find_near_door()
+		if not near_door.is_empty():
+			_enter_building(near_door)
+			return
 	if not _accept_release_needed and InputBridge.is_action_hit("ui_accept"):
 		if near_npc != "":
 			DialogueSystem.open_npc_dialogue(near_npc)
@@ -549,6 +582,54 @@ func _find_near_chest() -> Dictionary:
 		if absi(ptx - int(c["tx"])) <= 1 and absi(pty - int(c["ty"])) <= 1:
 			return c
 	return {}
+
+
+## 門偵測（自動進屋）：玩家腳點 tile 落在「門內一格」(dx, dy-1) 才命中——即玩家沿門洞往上走、
+## 被建築蓋住（進門視覺）後，真正進到門內才觸發（John 2026-07-16：要進到門內才算，非站在下緣）。
+## 門格兩側牆面擋在 dy（town 場景資料已烘入），玩家只能沿門洞走上來，離開時放回 dy+1（門洞外
+## 兩格），不會一出屋就重新命中。Godot 玩家 origin＝腳點。
+func _find_near_door() -> Dictionary:
+	if door_list.is_empty():
+		return {}
+	var ptx := int(_player.global_position.x / TS)
+	var pty := int(_player.global_position.y / TS)
+	for d in door_list:
+		if typeof(d) != TYPE_DICTIONARY:
+			continue
+		if ptx == int(d.get("tx", -999)) and pty == int(d.get("ty", -999)) - 1:
+			return d
+	return {}
+
+
+## 進屋（對應 enterBuilding menu 路徑 L1588-1613）。玩家先移到門外一格中央（＝離開時位置＝室內存檔
+## 座標，見 world_scene_state.get_save_position）——overlay 會遮住世界，此移動不影響視覺。世界層只切
+## 狀態＋開 overlay；室內 UI/選單互動全在 interior.gd。
+func _enter_building(door: Dictionary) -> void:
+	if _interior == null:
+		return
+	world_state.enter_building(door)
+	_player.global_position = _door_outside_pos(door)
+	_player.facing = "Down"
+	$HUD/Prompt.text = ""
+	_interior.open(door)
+	AudioManager.sfx("select.mp3")
+
+
+## 離開（interior.leave_requested → 本函式；對應 exitBuilding L1631-1648）：還原狀態、把玩家放到門外一格。
+func _exit_building() -> void:
+	var door: Dictionary = world_state.exit_building()
+	if door.has("tx") and door.has("ty"):
+		_player.global_position = _door_outside_pos(door)
+		_player.facing = "Down"
+	if _interior != null:
+		_interior.close()
+	AudioManager.sfx("return.mp3")
+	_accept_release_needed = true   # 選「離開」那次 ui_accept 不要立刻又觸發進屋
+
+
+## 門外一格中央的腳點座標（對應 build_cq2.py exitBuilding L1644-1645 換算到 Godot 腳點 origin）。
+func _door_outside_pos(door: Dictionary) -> Vector2:
+	return Vector2((int(door["tx"]) + 0.5) * TS, (int(door["ty"]) + 1.5) * TS)
 
 
 ## 對應 openChest()（build_cq2.py L1608-1618）＋ grantChestLoot()/chestLootDesc()（L1590-1607）。

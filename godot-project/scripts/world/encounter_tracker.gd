@@ -164,6 +164,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _trigger(pos: Vector2) -> void:
+	AudioManager.sfx("magic.wav")   # 隨機遇敵音效，對應 build_cq2.py L2494
 	encounter_triggered.emit(encounter_id, pos)
 	SceneRouter.start_battle(encounter_id, return_scene_id, pos.x, pos.y)
 	reset()

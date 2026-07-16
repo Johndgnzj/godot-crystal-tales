@@ -44,7 +44,7 @@ UI 場景 menu/shop/hud 未涵蓋）、實際玩法（存讀檔/戰鬥/移動）
 | MOD-E 戰鬥 ATB | `scripts/battle/{battle_state_machine,atb,damage_calc,exp_scale,auto_battle}.gd` | **L3** | `test_battle_formulas.py` | `--check-only`；戰鬥自動打法實機（見 README E2E-3） |
 | MOD-F 衍生公式 | `scripts/content/{derive,exp_need}.gd` | **L3** | `test_derive.py` | `--check-only`；`Derive.derive()` 引擎內回傳對齊 fixture |
 | MOD-G 遭遇系統 | `scripts/world/encounter_tracker.gd` | **L3** | `test_encounter_tracker.py` | `--check-only`；實機走 ENC 地形觸發間距 |
-| MOD-H 地圖管線 | `scripts/world/world_scene.gd`, 五張 `scenes/world/*.tscn`, `scripts/map/gen_maps.py` | L1（+ 生成器逐格比對） | —（`gen_maps.py` 是 generator，不在 test 聚合） | `--check-only`；五張場景實機載入、TileMapLayer/碰撞正確 |
+| MOD-H 地圖管線 | `scripts/world/world_scene.gd`, 五張 `scenes/world/*.tscn`（凍結 authored）；新地區生成見 MOD-H2 `scripts/map/region_generator.gd` | L1（生成器逐格比對，gen_maps.py 已於 MOD-H2 移除） | —（生成器非 python test，region_generator 走 Godot headless） | `--check-only`；五張場景實機載入、TileMapLayer/碰撞正確 |
 | MOD-I 美術管線 | `assets/**`（612 檔）+ import 設定 | L1（+ 檔案雜湊比對） | — | `--check-only`；編輯器內 Filter 無模糊、bgm loop import |
 
 ## 建議的「開機驗證」執行順序

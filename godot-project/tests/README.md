@@ -28,7 +28,7 @@ python3 tests/run_all_tests.py -k battle # 只跑路徑含 "battle" 的
 ```
 
 掃描規則：從 `godot-project/` 遞迴收集檔名符合 `test_*.py` / `validate_*.py` / `verify_*.py` 的檔案，
-排除 generator（`sync_content.py`/`extract_dialogue.py`/`gen_maps.py`，那些有寫檔副作用）與 `tests/` 目錄
+排除 generator（`sync_content.py`/`extract_dialogue.py`，那些有寫檔副作用）與 `tests/` 目錄
 本身。每支測試以自己的 exit code 表態，runner 只彙整。
 
 **目前收斂到的 5 支（撰寫時全綠）：**

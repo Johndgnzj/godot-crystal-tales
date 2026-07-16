@@ -229,6 +229,26 @@ script = ExtResource("3_hsbra")
 map_id = "ch2_bear"
 formations = [["bear_dire"]]
 
+[sub_resource type="Resource" id="Resource_vcnnr"]
+script = ExtResource("3_hsbra")
+map_id = "eforest1"
+formations = [["goblin"], ["bird", "goblin"], ["gslime", "bird"], ["bird", "gslime", "goblin"]]
+
+[sub_resource type="Resource" id="Resource_1bx6f"]
+script = ExtResource("3_hsbra")
+map_id = "eforest2"
+formations = [["worm"], ["goblin", "goblin"], ["goblin", "worm"], ["bird", "goblin", "goblin"]]
+
+[sub_resource type="Resource" id="Resource_hsbra"]
+script = ExtResource("3_hsbra")
+map_id = "eforest3"
+formations = [["goblin"], ["wolf", "goblin"], ["goblin", "wolf"], ["goblin", "wolf", "worm"]]
+
+[sub_resource type="Resource" id="Resource_hoq51"]
+script = ExtResource("3_hsbra")
+map_id = "eforest3_boss"
+formations = [["goblin_chief", "goblin", "worm"]]
+
 [sub_resource type="Resource" id="Resource_v4bx3"]
 script = ExtResource("4_hoq51")
 id = "bird"
@@ -965,6 +985,21 @@ maps = {
 "entryLv": 8.0,
 "targetLv": 11.0
 },
+"eforest1": {
+"battles": 14,
+"entryLv": 1,
+"targetLv": 3
+},
+"eforest2": {
+"battles": 16,
+"entryLv": 2,
+"targetLv": 4
+},
+"eforest3": {
+"battles": 18,
+"entryLv": 3,
+"targetLv": 5
+},
 "forest": {
 "battles": 14.0,
 "entryLv": 1.0,
@@ -1144,7 +1179,7 @@ equipment = Array[ExtResource("5_vtoea")]([SubResource("Resource_qyo2q"), SubRes
 skills = Array[ExtResource("11_ksis1")]([SubResource("Resource_x4swj"), SubResource("Resource_y2ggn"), SubResource("Resource_qgsim"), SubResource("Resource_5234b"), SubResource("Resource_macem")])
 items = Array[ExtResource("6_gqqnr")]([SubResource("Resource_x6djv"), SubResource("Resource_pni1o"), SubResource("Resource_khpay"), SubResource("Resource_cuqn5"), SubResource("Resource_kkpf5"), SubResource("Resource_2mls8"), SubResource("Resource_iqrol"), SubResource("Resource_wfoeg"), SubResource("Resource_ww16q"), SubResource("Resource_yy8o7"), SubResource("Resource_nhh40"), SubResource("Resource_t0u0x"), SubResource("Resource_ldt1x"), SubResource("Resource_x4fll"), SubResource("Resource_q20xv"), SubResource("Resource_544ya"), SubResource("Resource_001vv"), SubResource("Resource_4o5ij")])
 enemies = Array[ExtResource("4_hoq51")]([SubResource("Resource_v4bx3"), SubResource("Resource_2d226"), SubResource("Resource_38aoo"), SubResource("Resource_1f648"), SubResource("Resource_7ak06"), SubResource("Resource_auvyr"), SubResource("Resource_j7mbp"), SubResource("Resource_wykaa"), SubResource("Resource_dfnc1"), SubResource("Resource_sahc2"), SubResource("Resource_vjhig"), SubResource("Resource_hnf0v"), SubResource("Resource_1s8rn"), SubResource("Resource_cs8nw"), SubResource("Resource_f55ks")])
-encounters = Array[ExtResource("3_hsbra")]([SubResource("Resource_ll363"), SubResource("Resource_7wl3i"), SubResource("Resource_idhf2"), SubResource("Resource_olkl2"), SubResource("Resource_s2xj1"), SubResource("Resource_liudx"), SubResource("Resource_sb6r6"), SubResource("Resource_vyme8")])
+encounters = Array[ExtResource("3_hsbra")]([SubResource("Resource_ll363"), SubResource("Resource_7wl3i"), SubResource("Resource_idhf2"), SubResource("Resource_olkl2"), SubResource("Resource_s2xj1"), SubResource("Resource_liudx"), SubResource("Resource_sb6r6"), SubResource("Resource_vyme8"), SubResource("Resource_vcnnr"), SubResource("Resource_1bx6f"), SubResource("Resource_hsbra"), SubResource("Resource_hoq51")])
 shops = Array[ExtResource("10_08ale")]([SubResource("Resource_drtlc"), SubResource("Resource_ov5de")])
 chests = Array[ExtResource("1_vcnnr")]([SubResource("Resource_4mco2"), SubResource("Resource_po4de"), SubResource("Resource_gykii"), SubResource("Resource_3u0vo"), SubResource("Resource_eid4v"), SubResource("Resource_5urhr"), SubResource("Resource_d2ft4"), SubResource("Resource_8txt0"), SubResource("Resource_klaos"), SubResource("Resource_lx0cd"), SubResource("Resource_jrofq"), SubResource("Resource_ybc1w")])
 derived = SubResource("Resource_b7rfi")

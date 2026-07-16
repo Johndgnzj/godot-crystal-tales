@@ -5,3 +5,7 @@
 
 # Claude Code 專案 MCP 設定（含機器絕對路徑，各機器自備）
 .mcp.json
+
+# 系統/暫存垃圾檔
+.DS_Store
+~$*

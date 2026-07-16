@@ -42,20 +42,23 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 
 ## 音效（Pixabay，2026-07-11 新增）
 - 授權：Pixabay Content License（可免費商用、毋須標註；仍列出以示感謝）
-- levelup.mp3 — "Level Up 06" by Universfield（pixabay.com/sound-effects/film-special-effects-level-up-06-370051/）
 - learn.mp3 — "Level Up, Skill Upgrade 4" by yodguard（…/film-special-effects-level-up-skill-upgrade-4-387909/，剪輯至 2.2s）
 - menu.mp3 — "UI Open SFX" by litupsubway（…/technology-ui-open-sfx-513358/）
-- cursor.mp3 — "UI Hologram Interface Blip" by soundshelfstudio（…/film-special-effects-ui-hologram-interface-blip-527096/，剪輯）
-- cancel.mp3 — "UI Swipe Cancel" by soundshelfstudio（…/film-special-effects-ui-swipe-cancel-522217/，剪輯）
-- 其餘 .wav 為 Python 生成之 8-bit 音效（自製，無授權限制）
+- cursor.mp3 — "Button Click" by freesoundeffects（…/film-special-effects-button-click-289742/）（鍵盤選單變換項目；2026-07-16 換入，原為 "UI Hologram Interface Blip" by soundshelfstudio）
+- select.mp3 — "Click 2" by freesound_gamestudio（…/film-special-effects-click-2-384920/）（點選/確認；2026-07-16 換入，原為 Python 生成之 8-bit select.wav）
+- return.mp3 — 返回/取消音效；Pixabay Music（Pixabay Content License，可商用毋須標註）。2026-07-16 換入取代 cancel.mp3（原為 "UI Swipe Cancel" by soundshelfstudio）。曲名/作者待補。
+- 其餘 .wav 為 Python 生成之 8-bit 音效（自製，無授權限制）：atk / hurt / heal / win / lose / magic（select 已於 2026-07-16 改用 Pixabay，見上）
 
 ## 背景音樂（Pixabay Music，2026-07-12 新增）
-- 授權：Pixabay Content License（免費商用、毋須標註；仍列出以示感謝）。皆經響度正規化與 128kbps 壓製。
-- bgm_title.mp3 — "Fantasy Adventure Quest" by alex-morgan（標題）
-- bgm_town.mp3 — "Medieval Folk Music" by watermelon_beats（芳蕾鎮）
+- 授權：Pixabay Content License（免費商用、毋須標註；仍列出以示感謝）。
+- bgm_title.mp3 — "Calm Ambient Music – Wizard's Road (Fantasy Background)" by Clavier-Music（標題；1:58。2026-07-16 換入，原為 "Fantasy Adventure Quest" by alex-morgan）
+- bgm_town.mp3 — "Fantasy RPG Exploration V2" by RubyZephyr（芳蕾鎮；3:23。2026-07-16 換入，原為 "Medieval Folk Music" by watermelon_beats。Pixabay 標記為 AI 生成，授權仍為 Pixabay Content License）
 - bgm_forest.mp3 — "Adventure Forest Exploration" by nathan-180（東之森）
 - bgm_dungeon.mp3 — "Dark Fantasy Ambient Dungeon Synth" by deuslower（礦山/洞穴）
 - bgm_battle.mp3 — "Powerful Epic Orchestral History Loop" by sonican（戰鬥）
+- bgm_battle_win.mp3 — 戰鬥勝利短曲（一般）；Pixabay Music（Pixabay Content License，可商用毋須標註）。2026-07-16 新增，戰鬥結算時一次性播放不循環（見 battle_state_machine._settle_win）。曲名/作者待補。
+- bgm_battle_level_up.mp3 — 戰鬥勝利短曲（有升級）；來源/授權/用法同上。曲名/作者待補。
+- 處理：2026-07-12 首批曲目皆經響度正規化與 128kbps 壓製；2026-07-16 換入的 title/town 與勝利短曲已做響度正規化（線性增益對齊 ≈ -17.9 LUFS，同基準批次；128kbps 重壓）。sfx 的 select/cursor 同日以峰值對齊至 ≈ -1.5 dBTP。
 
 ## 對話立繪與戰鬥大圖
 - `assets/ui/face_*.png`（全 13 位：三主角＋十位鎮民）：AI 生成立繪
@@ -69,10 +72,12 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   另 `menuart_<id>`（三主角全身，選單「故事」頁 MenuArt）同法產生（裁邊去浮水印→去背→正規化畫布）。
 - `assets/battle/hero_*.png`：由 LPC 合成角色幀放大裁切（沿用 LPC CC-BY-SA/GPL 授權），
   武器圖層取自 LPC weapon walk（longsword/dagger/saber，CC-BY-SA/GPL）。
-- `assets/ui/battlebg_*.png`：程序化生成（自製）。
-- `assets/props/ext_*.png`（六棟 45° 建築外觀）：AI 生成素材（Gemini gemini-2.5-flash-image，
-  提示詞作者 John/協作 Agent，2026-07-12，由 /gen-art skill 的 building type 生成，原圖在 design/buildings/）。
-  build 時去洋紅底＋**統一石造重上色**（磚紅屋頂→深色石板、暖乳白牆→灰米石）產生衍生版 `extc_*.png`（自動生成、不入版控，見 build_cq2.py `_clean_ext(stone=True)`）。
+- `assets/ui/battlebg_*.png`：程序化生成（自製）。2026-07-15：`battlebg_forest.png` 換成 John 提供的「東之森戰鬥背景」圖（取代原程序化版）。
+- `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。
+- `assets/props/ext_*.png`（六棟建築外觀，洋紅底原圖）：AI 生成素材（Gemini gemini-2.5-flash-image，
+  提示詞作者 John/協作 Agent，由 /gen-art skill 的 building type 生成）。2026-07-15 重生成為**正面平視、門在正面下緣**的日系像素風（取代原 2026-07-12 的 45° isometric 版，便於在正交地圖擺進入點）。
+  2026-07-16 再把公會/旅店/鎮長宅/鐵匠鋪四棟重繪成**「正面朝前＋屋頂從上方可見」的俯視 45° 感**（比照原本就是此風的神殿/道具店，用 gen-art raw type＋以 extc_shrine/extc_shop 當風格參考圖 image-to-image 生成；門仍在正面下緣，不是舊的 isometric 側視）。
+  Godot 端去洋紅底（洋紅特徵 key，非 GDevelop 的 `_clean_ext` 石造重上色）＋裁透明邊產去背版 `extc_*.png`（town.tscn 實際使用；**維持暖色 JRPG 原色**，未套舊灰石調）。
 - `assets/props/f_*.png`（室內家具：床/桌椅/櫃架/櫃檯/壁爐/祭壇/鐵砧/武具架…）與
   `assets/props/int_room_wood/stone.png`（室內房間外殼）：**程序化像素繪製（自製，`art_v12_furniture.py` 以 PIL 繪，無授權限制）**。
 - `assets/props/int_<key>.png`（六棟室內大圖：公會/旅店/神殿/鎮長宅/道具店/鐵匠鋪）：AI 生成素材

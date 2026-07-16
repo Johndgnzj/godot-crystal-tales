@@ -70,6 +70,12 @@ func _on_line_changed(speaker: String, text: String) -> void:
 ## 依當前說話者顯示名切換半身立繪（NPC 對話與過場共用；比照 build_cq2.py setFace L1410-1421）。
 ## 對照走 PortraitMap（顯示名→立繪 id）；查不到（旁白/無立繪角色）或素材缺檔一律隱藏，不擋對話。
 func _set_portrait(speaker: String) -> void:
+	# 立繪＋選單式室內：室內已有右下角的大型主人立繪（interior.gd），對話框不再重複顯示小頭像
+	# （對應 build_cq2.py setFace L1414：intMode==="menu" 時 hide DlgArt）。
+	var interior := get_tree().get_first_node_in_group("cq_interior")
+	if interior != null and interior.has_method("is_open") and interior.is_open():
+		_portrait.visible = false
+		return
 	var pid := PortraitMap.portrait_id(speaker)
 	if pid == "":
 		_portrait.visible = false

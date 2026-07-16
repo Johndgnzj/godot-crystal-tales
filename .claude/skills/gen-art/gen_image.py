@@ -9,9 +9,9 @@
   python3 .claude/skills/gen-art/gen_image.py --type raw      --prompt "..." --ar 1:1 --out /tmp/test.png
 
 金鑰：讀環境變數 GEMINI_API_KEY，否則往上層目錄找 .env（KEY=VALUE 格式）。
-      Godot 專案根目錄（godot-crystal-tales/）目前沒有 .env；腳本會繼續往上找到
-      GameCreator/GDevelop/.env（沿用同一把金鑰）。若要獨立管理，在 godot-crystal-tales/
-      根目錄自備一份 .env 即可（記得 gitignore）。詳見 SKILL.md「金鑰」段。
+      建議放專案根 godot-crystal-tales/.env（根 .gitignore 已排除 .env，不會進 git）；
+      若根目錄沒有，會繼續往上找（例如舊的 GameCreator/GDevelop/.env，沿用同一把金鑰）。
+      詳見 SKILL.md「金鑰」段。
 模型：gemini-2.5-flash-image（失敗時退 gemini-2.0-flash-preview-image-generation）。
 """
 import argparse, base64, json, os, sys, time, urllib.request, urllib.error
@@ -54,11 +54,16 @@ STYLES = {
               "No logo, no text, no letters, no numbers, no watermark, no UI. Scene: "),
     "icon": ("Single game icon, centered subject, dark background, clean silhouette, no text. "
              "Subject: "),
-    # 45° 斜角像素建築外觀（洋紅底去背 → 縮放置放於地圖）
-    "building": ("Pixel art game asset sprite, 45-degree oblique isometric view, clean readable 2D "
-                 "JRPG style matching a classic pixel-art fantasy town, cohesive warm palette, "
-                 "centered, on a solid flat magenta #ff00ff background for easy cutout, no ground "
-                 "plane, no drop shadow, no text, no letters, no numbers, no people. Building: "),
+    # 正面平視日系像素建築、門在正面下緣（洋紅底去背 → 縮放置放於地圖）
+    "building": ("Pixel art game asset sprite, FLAT FRONT ELEVATION view: the facade is square to "
+                 "the viewer and seen only slightly from above so the pitched roof shows; the "
+                 "building is NOT rotated and this is NOT an isometric or angled 3/4 corner view "
+                 "(do not show two receding side walls). Classic SNES-era Japanese RPG town "
+                 "building with the main door / entrance centered on the FRONT-BOTTOM edge facing "
+                 "the viewer, so the player can walk up from below onto the doorway to enter. Clean "
+                 "readable 2D JRPG style, cohesive warm palette, centered, on a solid flat magenta "
+                 "#ff00ff background for easy cutout, no ground plane, no drop shadow, no text, no "
+                 "letters, no numbers, no people. Building: "),
     # 室內背景大圖（水彩手繪，滿版場景，與立繪同一套風格 DNA；作立繪＋選單式室內背景）。
     # Godot 端：存 assets/props/int_<key>.png，由編輯器 import；GDevelop build 的 _clean_ext
     #   去背產 intc_<key>.png 那套後處理在 Godot 沒有對應（整合方式待設計，見 SKILL.md）。
@@ -104,11 +109,20 @@ def find_key():
     sys.exit("找不到 GEMINI_API_KEY（環境變數或上層 .env）")
 
 
-def generate(key, model, prompt, aspect):
+def _img_part(path):
+    ext = os.path.splitext(path)[1].lower()
+    mime = "image/jpeg" if ext in (".jpg", ".jpeg") else "image/png"
+    with open(path, "rb") as f:
+        return {"inlineData": {"mimeType": mime, "data": base64.b64encode(f.read()).decode()}}
+
+
+def generate(key, model, prompt, aspect, ref_images=None):
     gc = {"responseModalities": ["IMAGE"]}
     if aspect:
         gc["imageConfig"] = {"aspectRatio": aspect}
-    body = json.dumps({"contents": [{"parts": [{"text": prompt}]}],
+    # 參考圖（image-to-image / 多圖風格錨）放在文字前面，讓模型先看風格再讀指令。
+    parts = [_img_part(p) for p in (ref_images or [])] + [{"text": prompt}]
+    body = json.dumps({"contents": [{"parts": parts}],
                        "generationConfig": gc}).encode()
     req = urllib.request.Request(
         f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}",
@@ -129,6 +143,8 @@ def main():
     ap.add_argument("--prompt", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--ar", default=None, help="覆寫長寬比，如 16:9 / 1:1 / 3:4")
+    ap.add_argument("--ref-image", action="append", default=[], dest="ref_images",
+                    help="參考圖路徑（可重複）：image-to-image／多圖風格錨，例如用現有素材當風格參考")
     a = ap.parse_args()
 
     key = find_key()
@@ -142,7 +158,7 @@ def main():
     for model in MODELS:
         for attempt in range(3):
             try:
-                png = generate(key, model, prompt, aspect)
+                png = generate(key, model, prompt, aspect, a.ref_images)
                 os.makedirs(os.path.dirname(os.path.abspath(a.out)) or ".", exist_ok=True)
                 open(a.out, "wb").write(png)
                 print(f"OK {a.out} ({len(png)} bytes, model={model})")

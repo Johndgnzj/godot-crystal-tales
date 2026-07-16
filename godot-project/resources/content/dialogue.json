@@ -1,24 +1,15 @@
 {
   "_meta": {
     "generated_by": "godot-project/scripts/dialogue/extract_dialogue.py",
-    "source": "gd-crystal-tales/projects/crystal-quest/scripts/build_cq2.py",
-    "extracted_at": "2026-07-13T17:52:26+00:00",
+    "source": "GDevelop/projects/crystal-quest/scripts/build_cq2.py",
+    "extracted_at": "2026-07-15T15:19:54+00:00",
     "dlg_npc_count": 10,
-    "dlg_entry_count": 38,
+    "dlg_entry_count": 44,
     "cuts_count": 8,
     "note": "DialogueSystem 只讀取 dlg/cuts 兩個頂層 key，_meta 是抽取溯源用，會被忽略。"
   },
   "dlg": {
     "tina": [
-      {
-        "when": "step==0",
-        "speaker": "緹娜",
-        "lines": [
-          "這不是路德嗎？要去礦山見習？",
-          "等你正式登錄的那天，公會隨時歡迎你。"
-        ],
-        "action": null
-      },
       {
         "when": "ch1==2",
         "speaker": "緹娜",
@@ -27,7 +18,10 @@
           "報酬 200 金幣已支付。你們是本鎮的驕傲！",
           "（第一章完──「重返礦山」即將開放）"
         ],
-        "action": "ch1_reward"
+        "action": "ch1_reward",
+        "cmd": "quest",
+        "label": "委託",
+        "done": null
       },
       {
         "when": "ch1==1",
@@ -36,26 +30,10 @@
           "委託進行中：討伐東之森深處的哥布林頭目。",
           "牠就在森林最東邊的空地，小心點！"
         ],
-        "action": null
-      },
-      {
-        "when": "ch2>=1",
-        "speaker": "緹娜",
-        "lines": [
-          "礦坑的委託，是老葛雷私下拜託你們的吧？",
-          "那些失蹤的礦工……公會這邊也一直很掛心。",
-          "小心點，別逞強——活著回來才是好冒險者。"
-        ],
-        "action": null
-      },
-      {
-        "when": "ch1==3",
-        "speaker": "緹娜",
-        "lines": [
-          "哥布林頭目的委託已經結案囉，辛苦了！",
-          "接下來想找活兒的話，水井旁的老葛雷正在找人幫忙。"
-        ],
-        "action": null
+        "action": null,
+        "cmd": "quest",
+        "label": "委託",
+        "done": null
       },
       {
         "when": "reg==1",
@@ -66,7 +44,10 @@
           "【委託】討伐哥布林頭目（報酬 200G）。接受嗎？就當你接受了！",
           "頭目比雜魚強得多——建議練到 Lv5、跟漢克拿把好劍再去。"
         ],
-        "action": "ch1_take"
+        "action": "ch1_take",
+        "cmd": "quest",
+        "label": "委託",
+        "done": null
       },
       {
         "when": "step>=3",
@@ -76,19 +57,74 @@
           "……路德和瑪琳，兩位都登錄完成！",
           "從今天起你們就是 F 級冒險者了。委託隨時來找我。"
         ],
-        "action": "register"
+        "action": "register",
+        "cmd": "quest",
+        "label": "委託",
+        "done": null
+      },
+      {
+        "when": "always",
+        "speaker": "緹娜",
+        "lines": [
+          "目前沒有適合你們的新委託。",
+          "升上一階、或到週邊多探探，說不定就有新工作囉。"
+        ],
+        "action": null,
+        "cmd": "quest",
+        "label": "委託",
+        "done": null
+      },
+      {
+        "when": "step==0",
+        "speaker": "緹娜",
+        "lines": [
+          "這不是路德嗎？要去礦山見習？",
+          "等你正式登錄的那天，公會隨時歡迎你。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
+      },
+      {
+        "when": "ch1==3",
+        "speaker": "緹娜",
+        "lines": [
+          "哥布林頭目的委託已經結案囉，辛苦了！",
+          "接下來想找活兒的話，水井旁的老葛雷正在找人幫忙。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
+      },
+      {
+        "when": "ch2>=1",
+        "speaker": "緹娜",
+        "lines": [
+          "礦坑的委託，是老葛雷私下拜託你們的吧？",
+          "那些失蹤的礦工……公會這邊也一直很掛心。",
+          "小心點，別逞強——活著回來才是好冒險者。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
+      },
+      {
+        "when": "always",
+        "speaker": "緹娜",
+        "lines": [
+          "委託都貼在牆上的告示板，慢慢看。",
+          "有什麼想問的，儘管來櫃檯找我。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       }
     ],
     "dora": [
-      {
-        "when": "step==0",
-        "speaker": "朵拉",
-        "lines": [
-          "要跟亞倫先生出門？路上小心。",
-          "回來我煮好吃的等你們。"
-        ],
-        "action": null
-      },
       {
         "when": "always",
         "speaker": "朵拉",
@@ -96,7 +132,34 @@
           "累了吧？床鋪都幫你們鋪好了。",
           "（隊伍完全恢復了！）"
         ],
-        "action": "heal"
+        "action": "heal",
+        "cmd": "rest",
+        "label": "住宿",
+        "done": null
+      },
+      {
+        "when": "step==0",
+        "speaker": "朵拉",
+        "lines": [
+          "要跟亞倫先生出門？路上小心。",
+          "回來我煮好吃的等你們。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
+      },
+      {
+        "when": "always",
+        "speaker": "朵拉",
+        "lines": [
+          "瑪琳那孩子，就拜託你多照應了。",
+          "想歇歇隨時說一聲，自己家不收錢的。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       }
     ],
     "sister": [
@@ -109,29 +172,48 @@
           "（隊伍完全恢復了！）",
           "……路德，女神在你身上的記號，又亮了一分。"
         ],
-        "action": "heal"
+        "action": "heal",
+        "cmd": "pray",
+        "label": "祈禱",
+        "done": null
       },
       {
-        "when": "step>=3",
+        "when": "always",
         "speaker": "希雅修女",
         "lines": [
-          "蓋婭女神看顧著每一位旅人。",
-          "……女神在你身上留了記號呢。願風平息。",
-          "（隊伍完全恢復了！）"
+          "願蓋婭女神看顧你們的旅途。",
+          "（在女神像前禱告，隊伍完全恢復了！）"
         ],
-        "action": "heal"
+        "action": "heal",
+        "cmd": "pray",
+        "label": "祈禱",
+        "done": null
+      },
+      {
+        "when": "step==0",
+        "speaker": "希雅修女",
+        "lines": [
+          "蓋婭女神看顧著每一位旅人。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
+      },
+      {
+        "when": "always",
+        "speaker": "希雅修女",
+        "lines": [
+          "……女神在你身上留了記號呢。願風平息。",
+          "累了就來祈禱，女神的恩澤不分你我。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       }
     ],
     "barton": [
-      {
-        "when": "step==0",
-        "speaker": "巴頓鎮長",
-        "lines": [
-          "聽說亞倫先生要帶你去礦山見習？",
-          "好好跟著學，別亂跑。"
-        ],
-        "action": null
-      },
       {
         "when": "ch2>=3",
         "speaker": "巴頓鎮長",
@@ -140,7 +222,10 @@
           "孩子，你們比這鎮上所有大人都勇敢。",
           "把礦山看到的一切，原原本本告訴大城的人吧。"
         ],
-        "action": null
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       },
       {
         "when": "ch1==3",
@@ -149,7 +234,22 @@
           "哥布林的事多虧你們了。",
           "但礦山的異變……我總覺得沒那麼簡單。"
         ],
-        "action": null
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
+      },
+      {
+        "when": "step==0",
+        "speaker": "巴頓鎮長",
+        "lines": [
+          "聽說亞倫先生要帶你去礦山見習？",
+          "好好跟著學，別亂跑。"
+        ],
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       },
       {
         "when": "always",
@@ -158,37 +258,47 @@
           "礦山最近不太平靜，連老獵人都不敢靠近。",
           "亞倫先生的事……我很遺憾。孩子，別勉強自己。"
         ],
-        "action": null
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       }
     ],
     "hank": [
-      {
-        "when": "gotSword==1",
-        "speaker": "漢克",
-        "lines": [
-          "要補貨就直說，鐵匠鋪隨時開著。"
-        ],
-        "action": "shop_hank"
-      },
       {
         "when": "ch1>=1",
         "speaker": "漢克",
         "lines": [
           "……路德，你也要出去闖了啊。",
           "拿去，我打的劍。別死在外面。",
-          "（獲得『鐵劍』！開啟 選單→裝備 分頁換上它）",
-          "往後要打點裝備，儘管來鐵匠鋪。"
+          "（獲得『鐵劍』！開啟 選單→裝備 分頁換上它）"
         ],
-        "action": "shop_hank_gift"
+        "action": "give_sword",
+        "cmd": "hank_gift",
+        "label": "臨別贈言",
+        "done": "gotSword"
       },
       {
         "when": "reg==1",
         "speaker": "漢克",
         "lines": [
-          "冒險者？裝備可不能馬虎。",
-          "來，看看我的貨。"
+          "冒險者？裝備可不能馬虎。來，看看我的貨。"
         ],
-        "action": "shop_hank"
+        "action": "shop_hank",
+        "cmd": "trade",
+        "label": "交易",
+        "done": null
+      },
+      {
+        "when": "always",
+        "speaker": "漢克",
+        "lines": [
+          "要補貨就直說，鐵匠鋪隨時開著。"
+        ],
+        "action": "shop_hank",
+        "cmd": "trade",
+        "label": "交易",
+        "done": null
       },
       {
         "when": "step==0",
@@ -197,7 +307,10 @@
           "哼，礦山？",
           "……跟緊亞倫先生，別給他添麻煩。"
         ],
-        "action": null
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       },
       {
         "when": "always",
@@ -206,19 +319,25 @@
           "冒險者？哼，那不是鬧著玩的。",
           "你亞倫大哥那麼強的人都……算了。要去就去吧。"
         ],
-        "action": null
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       }
     ],
     "martha": [
       {
-        "when": "gotRing==0",
+        "when": "always",
         "speaker": "瑪莎",
         "lines": [
           "你這孩子，越來越像年輕時的你爸了。",
           "這枚戒指你戴著——是我年輕時你爸打的，保平安。",
           "（獲得『活力戒指』！開啟 選單→裝備 可以裝上）"
         ],
-        "action": "give_ring"
+        "action": "give_ring",
+        "cmd": "martha_gift",
+        "label": "母親的心意",
+        "done": "gotRing"
       },
       {
         "when": "always",
@@ -227,27 +346,48 @@
           "你這孩子，越來越像年輕時的你爸了。",
           "路上一定要吃飽穿暖，聽到沒？"
         ],
-        "action": null
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       }
     ],
     "gid": [
       {
-        "when": "gotPotion==1",
+        "when": "always",
         "speaker": "吉德",
         "lines": [
-          "歡迎光臨！補給要趁早，這是老冒險者的鐵則。"
+          "第一次上門吧？來，先送你 2 瓶藥水，別客氣。",
+          "補給要趁早，這是老冒險者的鐵則！",
+          "（獲得『藥水』×2！）"
         ],
-        "action": "shop_gid"
+        "action": "give_potion",
+        "cmd": "gid_gift",
+        "label": "新客招待",
+        "done": "gotPotion"
+      },
+      {
+        "when": "always",
+        "speaker": "吉德",
+        "lines": [
+          "歡迎光臨！要看看我店裡的商品嗎？"
+        ],
+        "action": "shop_gid",
+        "cmd": "trade",
+        "label": "交易",
+        "done": null
       },
       {
         "when": "always",
         "speaker": "吉德",
         "lines": [
           "藥水備齊再出門，這是老冒險者的鐵則！",
-          "（先送你 2 瓶藥水，別客氣。）",
-          "要看看我店裡的商品嗎？"
+          "缺什麼儘管開口，我這什麼都有。"
         ],
-        "action": "shop_gid_gift"
+        "action": null,
+        "cmd": "talk",
+        "label": null,
+        "done": null
       }
     ],
     "gray": [
@@ -260,7 +400,10 @@
           "這是我僅有的一點謝禮，別嫌少。",
           "（獲得 100 金幣）"
         ],
-        "action": "relic_turnin"
+        "action": "relic_turnin",
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "ch2==3",
@@ -270,7 +413,10 @@
           "你們替這座礦山、也替我這老頭子，了了一樁心事。",
           "剩下的——深處那股邪氣的源頭，就拜託你們了。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "ch2==2",
@@ -281,7 +427,10 @@
           "（老葛雷沉默了好久）謝謝你們告訴我真相。這點心意收下。",
           "聽說深處的落石被你們清開了？那底下的東西，才是禍首。快去回報鎮長吧。"
         ],
-        "action": "ch2_report"
+        "action": "ch2_report",
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "ch2==1",
@@ -291,7 +440,10 @@
           "失蹤的老夥計要是還在……不，你們親眼去看看吧。",
           "（記得先把裝備和藥水在鎮上備齊）"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "ch1==3",
@@ -302,7 +454,10 @@
           "官府當是逃工不管，可我知道——他們絕不會丟下家人跑掉。",
           "【委託】重返北方礦山外圍，查明礦工失蹤的真相。接下嗎？就當你們答應了。"
         ],
-        "action": "ch2_take"
+        "action": "ch2_take",
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "step==0",
@@ -311,7 +466,10 @@
           "那礦坑二十年前就封了……最近夜裡卻有聲音。",
           "要進去？……跟緊亞倫先生。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "always",
@@ -320,7 +478,10 @@
           "那礦坑二十年前就封了……最近夜裡卻有聲音。",
           "你們就是在裡面出事的吧。唉，可憐的亞倫先生。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       }
     ],
     "mira": [
@@ -331,7 +492,10 @@
           "那些鏡草夠我熬好一陣子的藥了，真是幫了大忙！",
           "路上也別忘了照顧自己的傷。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "herb==3",
@@ -341,7 +505,10 @@
           "來，這些藥水你們拿去——採藥的謝禮。",
           "（獲得『藥水』×3！）"
         ],
-        "action": "mira_reward"
+        "action": "mira_reward",
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "mira2==1",
@@ -350,7 +517,10 @@
           "東之森裡三株會發光的『鏡草』，就麻煩你們了。",
           "它們喜歡長在水邊和大石頭旁。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "gotEar==0",
@@ -362,7 +532,10 @@
           "（獲得『凝神耳環』！）",
           "（【支線】到東之森採集鏡草×3）"
         ],
-        "action": "mira_start"
+        "action": "mira_start",
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "always",
@@ -371,7 +544,10 @@
           "鏡草要三株才夠熬一鍋藥。",
           "東之森的水邊和大石頭旁比較好找。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       }
     ],
     "guard": [
@@ -382,7 +558,10 @@
           "南方大道還在封鎖中。",
           "等王都的指示一到就放行——你們的事蹟我會寫進報告。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       },
       {
         "when": "always",
@@ -391,7 +570,10 @@
           "前方道路因魔物騷動封閉中，王都的援軍還沒到。",
           "想去大城的話，再等等吧。"
         ],
-        "action": null
+        "action": null,
+        "cmd": null,
+        "label": null,
+        "done": null
       }
     ]
   },

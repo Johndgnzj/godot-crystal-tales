@@ -11,6 +11,21 @@ maps = {
 "entryLv": 8.0,
 "targetLv": 11.0
 },
+"eforest1": {
+"battles": 14,
+"entryLv": 1,
+"targetLv": 3
+},
+"eforest2": {
+"battles": 16,
+"entryLv": 2,
+"targetLv": 4
+},
+"eforest3": {
+"battles": 18,
+"entryLv": 3,
+"targetLv": 5
+},
 "forest": {
 "battles": 14.0,
 "entryLv": 1.0,

@@ -172,7 +172,8 @@ func _do_transaction(tr: Dictionary, list: Array) -> void:
 func _render(buy_list: Array, sell_list: Array, shop_name: String) -> void:
 	var rows: Array = []
 	var vlist: Array = buy_list if _tab == 0 else sell_list
-	var base := max(0, min(_sel - 5, vlist.size() - 11))
+	# maxi/mini（回傳 int）而非 max/min（回傳 Variant）：本專案把「型別從 Variant 推斷」當 error。
+	var base := maxi(0, mini(_sel - 5, vlist.size() - 11))
 	if base < 0:
 		base = 0
 	if vlist.size() == 0:

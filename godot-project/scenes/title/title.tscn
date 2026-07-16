@@ -1,6 +1,6 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://cwmdcdoetyp7s"]
 
-[ext_resource type="Script" path="res://scenes/title/title.gd" id="1_title"]
+[ext_resource type="Script" uid="uid://ou3wy0ds5i" path="res://scenes/title/title.gd" id="1_title"]
 [ext_resource type="Texture2D" uid="uid://jdw60al30ghd" path="res://assets/ui/menubg.png" id="2_bg"]
 [ext_resource type="Texture2D" uid="uid://bpnlxwxr7rh5a" path="res://assets/ui/t_new.png" id="3_new"]
 [ext_resource type="Texture2D" uid="uid://h1g4aei8u1m6" path="res://assets/ui/t_cont.png" id="4_cont"]
@@ -15,15 +15,15 @@ font_color = Color(0.823, 0.862, 0.949, 1)
 outline_size = 4
 outline_color = Color(0.086, 0.102, 0.172, 0.85)
 
-[node name="Title" type="Node2D"]
+[node name="Title" type="Node2D" unique_id=31095622]
 script = ExtResource("1_title")
 
-[node name="Bg" type="TextureRect" parent="."]
+[node name="Bg" type="TextureRect" parent="." unique_id=1370194452]
 offset_right = 1280.0
 offset_bottom = 720.0
 texture = ExtResource("2_bg")
 
-[node name="OptNew" type="TextureRect" parent="."]
+[node name="OptNew" type="TextureRect" parent="." unique_id=1747199384]
 offset_left = 507.0
 offset_top = 500.0
 offset_right = 773.0
@@ -31,7 +31,7 @@ offset_bottom = 570.0
 texture = ExtResource("3_new")
 stretch_mode = 3
 
-[node name="OptCont" type="TextureRect" parent="."]
+[node name="OptCont" type="TextureRect" parent="." unique_id=856306649]
 offset_left = 531.0
 offset_top = 584.0
 offset_right = 749.0
@@ -39,13 +39,13 @@ offset_bottom = 654.0
 texture = ExtResource("4_cont")
 stretch_mode = 3
 
-[node name="Help" type="Label" parent="."]
+[node name="Help" type="Label" parent="." unique_id=1052196427]
 offset_top = 678.0
 offset_right = 1280.0
 offset_bottom = 710.0
-horizontal_alignment = 1
 text = "方向鍵選擇 · 空白鍵或 Enter 確定"
 label_settings = SubResource("LabelSettings_help")
+horizontal_alignment = 1
 
-[node name="Menu" type="Label" parent="."]
+[node name="Menu" type="Label" parent="." unique_id=566566673]
 visible = false

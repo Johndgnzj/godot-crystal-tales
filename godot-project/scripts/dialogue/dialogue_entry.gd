@@ -9,6 +9,12 @@ extends Resource
 @export var lines: PackedStringArray = PackedStringArray()
 @export var action: String = ""         ## 空字串＝無 action（來源可能是 JSON null）
 
+## 以下三欄僅室內（立繪＋選單式室內，town 六棟主人）用到，戶外 NPC 一律空字串。
+## 見 build_cq2.py buildIntCmds L1575-1582 與 dialogue_system.get_interior_commands()。
+@export var cmd: String = ""            ## 指令分類：talk/quest/rest/pray/trade／一次性事件（hank_gift…）
+@export var label: String = ""          ## 功能/事件在室內選單顯示的中文（cmd==talk 者為空）
+@export var done: String = ""           ## 一次性事件的完成旗標名；旗標設立後此指令從選單消失
+
 
 static func from_dict(d: Dictionary) -> DialogueEntry:
 	var result := DialogueEntry.new()
@@ -19,6 +25,13 @@ static func from_dict(d: Dictionary) -> DialogueEntry:
 	for l in raw_lines:
 		arr.append(str(l))
 	result.lines = arr
-	var action_raw = d.get("action")
-	result.action = action_raw if action_raw != null else ""
+	result.action = _str_or_empty(d.get("action"))
+	result.cmd = _str_or_empty(d.get("cmd"))
+	result.label = _str_or_empty(d.get("label"))
+	result.done = _str_or_empty(d.get("done"))
 	return result
+
+
+## JSON null（缺省欄位）→ ""，其餘轉字串。統一 action/cmd/label/done 的空值處理。
+static func _str_or_empty(v: Variant) -> String:
+	return str(v) if v != null else ""

@@ -20,9 +20,9 @@ var _has_save := false
 
 func _ready() -> void:
 	_has_save = SaveManager.has_save()
-	if not _has_save:
-		_sel = 0
+	_sel = 1 if _has_save else 0   # 有存檔：預設游標停在「繼續冒險」；新遊戲位置不動、仍是第一個
 	_render()
+	AudioManager.play_bgm("bgm_title.mp3")   # 對應 build_cq2.py L3546
 
 
 func _process(_delta: float) -> void:
@@ -38,14 +38,17 @@ func _move(dir: int) -> void:
 	if not _has_save:
 		return
 	_sel = wrapi(_sel + dir, 0, OPTIONS.size())
+	AudioManager.sfx("cursor.mp3")
 	_render()
 
 
 func _confirm() -> void:
 	if _sel == 0:
+		AudioManager.sfx("select.mp3")
 		GameFlow.new_game()
 		SceneRouter.go_to("Town", "home")
 	elif _has_save and SaveManager.load_game():
+		AudioManager.sfx("select.mp3")
 		SceneRouter.go_to(SaveManager.loaded_scene, "")
 
 
