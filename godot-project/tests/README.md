@@ -14,6 +14,7 @@
 | headless 冒煙測試 | `smoke_test.gd` | ✅ 4.7 實機綠 | 純 SceneTree、零外部依賴；load autoload + 8 個場景確認不報錯 |
 | GUT 單元測試 | `gut/test_smoke_gut.gd` + `.gutconfig.json` | ⏸ 骨架 | 需先 vendor GUT addon；斷言/報表更完整 |
 | debug hook | `debug_hooks.gd` | ⏸ 骨架 | GDevelop `window.__W/__B/__forceEnc` 的 Godot 等價 autoload |
+| UI 截圖工具 | `screenshot.gd` | ✅ 需**非** headless | 開 title／選單分頁／世界場景算圖存 PNG，供改 UI/立繪時目視驗收；用法見檔頭註解 |
 
 ---
 
