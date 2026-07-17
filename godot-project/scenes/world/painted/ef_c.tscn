@@ -25,7 +25,6 @@ scene_id = "EFC"
 spawns = {
 "from_b": Vector2(627, 100),
 "from_d": Vector2(627, 1154),
-"from_f": Vector2(1154, 627),
 "start": Vector2(627, 727)
 }
 
@@ -56,15 +55,6 @@ spawn_id = "from_c"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/ExitS" unique_id=1957726475]
 shape = SubResource("RectangleShape2D_6kx3o")
-
-[node name="ExitE" type="Area2D" parent="Zones" unique_id=1181841729]
-position = Vector2(1232, 627)
-script = ExtResource("4_vu4qs")
-to_scene = "EFF"
-spawn_id = "from_c"
-
-[node name="Shape" type="CollisionShape2D" parent="Zones/ExitE" unique_id=792355182]
-shape = SubResource("RectangleShape2D_eivja")
 
 [node name="YSort" type="Node2D" parent="." unique_id=1498101008]
 y_sort_enabled = true

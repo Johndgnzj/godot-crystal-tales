@@ -26,10 +26,9 @@ size = Vector2(22, 14)
 script = ExtResource("1_ogmie")
 scene_id = "EFE"
 spawns = {
-"from_b": Vector2(100, 627),
+"from_a": Vector2(100, 627),
+"from_b": Vector2(1154, 627),
 "from_f": Vector2(627, 1154),
-"from_g": Vector2(1154, 627),
-"from_h": Vector2(627, 100),
 "start": Vector2(627, 727)
 }
 
@@ -46,7 +45,7 @@ tile_set = ExtResource("3_duj5m")
 [node name="ExitW" type="Area2D" parent="Zones" unique_id=247611861]
 position = Vector2(22, 627)
 script = ExtResource("4_ia4no")
-to_scene = "EFB"
+to_scene = "EFA"
 spawn_id = "from_e"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/ExitW" unique_id=1925562877]
@@ -55,20 +54,11 @@ shape = SubResource("RectangleShape2D_a0g1n")
 [node name="ExitE" type="Area2D" parent="Zones" unique_id=1568325444]
 position = Vector2(1232, 627)
 script = ExtResource("4_ia4no")
-to_scene = "EFG"
+to_scene = "EFB"
 spawn_id = "from_e"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/ExitE" unique_id=357074493]
 shape = SubResource("RectangleShape2D_htt2b")
-
-[node name="ExitN" type="Area2D" parent="Zones" unique_id=1449577044]
-position = Vector2(627, 22)
-script = ExtResource("4_ia4no")
-to_scene = "EFH"
-spawn_id = "from_e"
-
-[node name="Shape" type="CollisionShape2D" parent="Zones/ExitN" unique_id=1136781862]
-shape = SubResource("RectangleShape2D_2csse")
 
 [node name="ExitS" type="Area2D" parent="Zones" unique_id=985017012]
 position = Vector2(627, 1232)

@@ -17,7 +17,7 @@ size = Vector2(22, 14)
 script = ExtResource("1_6b3we")
 scene_id = "EFG"
 spawns = {
-"from_e": Vector2(100, 627),
+"from_b": Vector2(100, 627),
 "start": Vector2(627, 727)
 }
 
@@ -34,7 +34,7 @@ tile_set = ExtResource("3_vgpnl")
 [node name="ExitW" type="Area2D" parent="Zones" unique_id=2095587519]
 position = Vector2(22, 627)
 script = ExtResource("4_lxkhu")
-to_scene = "EFE"
+to_scene = "EFB"
 spawn_id = "from_g"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/ExitW" unique_id=32806142]

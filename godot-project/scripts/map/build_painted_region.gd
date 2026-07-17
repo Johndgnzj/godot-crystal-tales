@@ -1,11 +1,11 @@
 extends SceneTree
 ## 批次建構：M3 東邊森林 9 張手繪畫面場景（ef_a 已存在→只補出口/落點；b–i 全新建）。
 ## 依 assets-source/map/map-def.xlsx 的空間網格接連通：
-##       i
-##       h
-##  M1 a b e g (M4)
-##      c f
-##      d(boss)
+##          i
+##          h
+##  M1 a e b g (M4)
+##      f c
+##        d(boss)
 ## 每個連通邊：本圖該邊放「整邊出口帶」Area2D（to=對面、spawn=from_本圖），對面圖建 from_本圖 落點。
 ## CollisionPaint 只預刷「圖外深灰背景」（/tmp/ef_bg_cells.json，Python 產）；圖內留白由 John 手刷。
 ## 執行：Godot --headless -s res://scripts/map/build_painted_region.gd --path .
@@ -22,14 +22,14 @@ const PLAYER_TEX := "res://assets/char/aaron_Down_0.png"
 
 ## key: 畫面 id；exits: 邊(W/E/N/S) -> 目標（小寫=本 region 畫面；其他=既有場景名）
 const SCREENS := {
-	"a": {"W": "Town", "E": "b"},
-	"b": {"W": "a", "E": "e", "S": "c"},
-	"c": {"N": "b", "S": "d", "E": "f"},
+	"a": {"W": "Town", "E": "e"},
+	"b": {"W": "e", "E": "g", "N": "h", "S": "c"},
+	"c": {"N": "b", "S": "d"},
 	"d": {"N": "c"},
-	"e": {"W": "b", "E": "g", "N": "h", "S": "f"},
-	"f": {"N": "e", "W": "c"},
-	"g": {"W": "e"},
-	"h": {"S": "e", "N": "i"},
+	"e": {"W": "a", "E": "b", "S": "f"},
+	"f": {"N": "e"},
+	"g": {"W": "b"},
+	"h": {"S": "b", "N": "i"},
 	"i": {"S": "h"},
 }
 const OPP := {"W": "E", "E": "W", "N": "S", "S": "N"}

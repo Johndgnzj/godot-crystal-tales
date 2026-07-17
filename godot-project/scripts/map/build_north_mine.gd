@@ -37,6 +37,8 @@ func _run() -> void:
 				spawns_of[target]["from_%s" % key] = _edge_spawn(OPP[edge])
 	# a↔b 的東側接口是嵌在岩壁的向上洞口，不在畫布右邊界。
 	spawns_of["a"]["from_b"] = Vector2(1080, 720)
+	# b 的西向連線在美術上改為左下方「由下往上」的入口。
+	spawns_of["b"]["from_a"] = Vector2(150, 1120)
 	spawns_of["a"]["from_Town"] = _edge_spawn("S")
 
 	for key: String in SCREENS:
@@ -82,7 +84,12 @@ func _build_screen(key: String, spawns: Dictionary) -> void:
 		var area := Area2D.new()
 		area.name = "Exit%s" % edge
 		area.set_script(load(EZ))
-		area.position = Vector2(1080, 625) if key == "a" and edge == "E" else _exit_pos(edge)
+		if key == "a" and edge == "E":
+			area.position = Vector2(1080, 625)
+		elif key == "b" and edge == "W":
+			area.position = Vector2(150, SIZE - 22)
+		else:
+			area.position = _exit_pos(edge)
 		if SCREENS.has(target):
 			area.set("to_scene", _scene_key(target))
 			area.set("spawn_id", "from_%s" % key)
@@ -94,7 +101,7 @@ func _build_screen(key: String, spawns: Dictionary) -> void:
 		var shape := CollisionShape2D.new()
 		shape.name = "Shape"
 		var rect := RectangleShape2D.new()
-		if key == "a" and edge == "E":
+		if (key == "a" and edge == "E") or (key == "b" and edge == "W"):
 			rect.size = Vector2(128, 44)
 		else:
 			rect.size = Vector2(44, 160) if edge in ["W", "E"] else Vector2(160, 44)
@@ -147,6 +154,8 @@ func _paint_collision(layer: TileMapLayer, key: String) -> void:
 	for edge: String in SCREENS[key]:
 		if key == "a" and edge == "E":
 			_carve_a_east_tunnel(layer)
+		elif key == "b" and edge == "W":
+			_carve_b_lower_left_entrance(layer)
 		else:
 			_carve_exit(layer, edge)
 	# a 的北側通往 M6，該地區尚未實作；先封住畫面邊界避免玩家離開地圖。
@@ -179,6 +188,12 @@ func _carve_a_east_tunnel(layer: TileMapLayer) -> void:
 	# 洞口朝上：只清掉洞口與下方接近路徑，保留右側畫布邊界岩壁。
 	for y in range(18, 24):
 		for x in range(32, 36):
+			layer.erase_cell(Vector2i(x, y))
+
+
+func _carve_b_lower_left_entrance(layer: TileMapLayer) -> void:
+	for y in range(28, N):
+		for x in range(3, 7):
 			layer.erase_cell(Vector2i(x, y))
 
 
