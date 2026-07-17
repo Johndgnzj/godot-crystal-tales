@@ -51,6 +51,17 @@ godot-crystal-tales/
 - **`reference/gdevelop/DEV_開發指南.md`**（凍結快照）是系統邊界的權威說明（WORLD_JS/BATTLE_JS 的
   各子系統列表），`TASKS/` 底下的模組任務拆分直接對應這份文件的系統清單，不要另外發明系統邊界。
 
+## 產圖驗收流程（必須分階段）
+
+任何 AI 產圖或圖片編輯任務，必須依下列兩階段執行：
+
+1. **預覽驗收階段**：只產生候選圖並顯示給 John 驗收。此階段不得覆蓋或複製到
+   `godot-project/assets/`，不得更新 `CREDITS_素材授權.md`，不得重建場景／碰撞，不得執行 import、build 或測試。
+2. **正式整合階段**：只有當 John 明確回覆「可以了」、「這張可以」或其他等價的驗收通過語句後，
+   才可將圖片放入專案，同步授權與相關文件，重建場景／碰撞，並執行必要的 import、build 與測試。
+
+驗收前若 John 要求修改，必須繼續留在預覽驗收階段，不可提前做任何專案整合工作。
+
 ## 文件同步規則（重要，避免文件與實際脫勾）
 
 **調整遊戲內容後，必須同步更新對應文件——這是硬性規則，不是可選項。** 文件與實際脫勾是本專案最該避免的技術債。
@@ -59,7 +70,7 @@ godot-crystal-tales/
 
 | 你改了什麼 | 必須同步更新 |
 |---|---|
-| 劇情 / 對話 / 過場（`dialogue.json` 等）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
+| 劇情 / 對話 / 過場（`resources/content/dialogue/**/*.tres`；種子 `dialogue.json`）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
 | 數值 / 角色 / 裝備（`resources/content/*.tres`）| 對應 `docs/` 敘事或設計文件、**設定集 Artifact**（見下）|
 | 素材（`godot-project/assets/`）| `CREDITS_素材授權.md`（授權帳本）、必要時 `docs/素材管理規範.md`|
 | 新增/移除/搬動任何文件 | `README.md` 索引、`docs/README.md` 索引 |
