@@ -1,0 +1,32 @@
+{
+  "region_id": "crystal_mine",
+  "seed": 51,
+  "maps": [
+    {
+      "id": "cmine_b1",
+      "scene_name": "CMineB1",
+      "kind": "mine",
+      "w": 34,
+      "h": 26,
+      "complexity": "medium",
+      "level_band": [5, 8],
+      "enemies": "auto",
+      "exits": [
+        { "to": "cmine_b2", "at": "down" }
+      ]
+    },
+    {
+      "id": "cmine_b2",
+      "scene_name": "CMineB2",
+      "kind": "cave",
+      "w": 40,
+      "h": 30,
+      "complexity": "high",
+      "level_band": [8, 11],
+      "enemies": "auto",
+      "exits": [
+        { "to": "cmine_b1", "at": "up" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "region_id": "east_forest",
+  "seed": 71,
+  "maps": [
+    {
+      "id": "eforest1",
+      "scene_name": "EForest1",
+      "kind": "forest",
+      "w": 40,
+      "h": 28,
+      "complexity": "low",
+      "level_band": [1, 3],
+      "openness": "medium",
+      "enemies": ["bird", "gslime", "goblin"],
+      "entries": ["Town"],
+      "exits": [
+        { "to": "Town", "at": "west", "spawn": "shrine" },
+        { "to": "eforest2", "at": "east" }
+      ]
+    },
+    {
+      "id": "eforest2",
+      "scene_name": "EForest2",
+      "kind": "forest",
+      "w": 44,
+      "h": 30,
+      "complexity": "low",
+      "level_band": [2, 4],
+      "openness": "medium",
+      "enemies": ["bird", "gslime", "goblin", "worm"],
+      "exits": [
+        { "to": "eforest1", "at": "west" },
+        { "to": "eforest3", "at": "south" }
+      ]
+    },
+    {
+      "id": "eforest3",
+      "scene_name": "EForest3",
+      "kind": "forest",
+      "w": 40,
+      "h": 28,
+      "complexity": "low",
+      "level_band": [3, 5],
+      "openness": "medium",
+      "enemies": ["goblin", "worm", "wolf"],
+      "boss": { "enemy": "goblin_chief", "show_when": "", "adds": true },
+      "exits": [
+        { "to": "eforest2", "at": "north" }
+      ]
+    }
+  ]
+}

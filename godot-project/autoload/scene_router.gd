@@ -38,7 +38,7 @@ signal scene_change_requested(scene_path: String, spawn_id: String)
 
 const SCENE_PATHS := {
 	"Title": "res://scenes/title/title.tscn",
-	"Town": "res://scenes/world/town.tscn",
+	"Town": "res://scenes/world/painted/town.tscn",  # M1 芳蕾鎮手繪版（舊 tile 版封存於 scenes/world/town.tscn）
 	"Forest": "res://scenes/world/forest.tscn",
 	"Forest2": "res://scenes/world/forest2.tscn",
 	"Mine": "res://scenes/world/mine.tscn",
@@ -50,7 +50,7 @@ const SCENE_PATHS := {
 	"EForest1": "res://scenes/world/eforest1.tscn",
 	"EForest2": "res://scenes/world/eforest2.tscn",
 	"EForest3": "res://scenes/world/eforest3.tscn",
-	# M3 東邊森林：手繪畫面地圖（新美術路線試作，見 temp_assets/map/map-def.xlsx）
+	# M3 東邊森林：手繪畫面地圖（新美術路線試作，見 assets-source/map/map-def.xlsx）
 	"EFA": "res://scenes/world/painted/ef_a.tscn",
 	"EFB": "res://scenes/world/painted/ef_b.tscn",
 	"EFC": "res://scenes/world/painted/ef_c.tscn",
@@ -60,6 +60,13 @@ const SCENE_PATHS := {
 	"EFG": "res://scenes/world/painted/ef_g.tscn",
 	"EFH": "res://scenes/world/painted/ef_h.tscn",
 	"EFI": "res://scenes/world/painted/ef_i.tscn",
+	# M2 北方礦山：手繪畫面地圖
+	"NMA": "res://scenes/world/painted/nm_a.tscn",
+	"NMB": "res://scenes/world/painted/nm_b.tscn",
+	"NMC": "res://scenes/world/painted/nm_c.tscn",
+	"NMD": "res://scenes/world/painted/nm_d.tscn",
+	"NME": "res://scenes/world/painted/nm_e.tscn",
+	"NMF": "res://scenes/world/painted/nm_f.tscn",
 }
 
 ## `back()` 的 fallback（build_cq2.py L2820：`g.get("g_returnScene").getAsString()||"Town"`）：

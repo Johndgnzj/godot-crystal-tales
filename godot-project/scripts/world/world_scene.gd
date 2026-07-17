@@ -56,7 +56,7 @@ const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
 @export var enc_group: String = ""           ## CFG.encGroup；"" = 本場景無隨機遭遇
 @export var bgm: String = ""                 ## CFG.bgm（目前無音訊系統，先保留資料）
 @export var cut_on_enter: Array = []         ## CFG.cutOnEnter：[{"cut": String, "step": int?}]
-@export var npc_list: Array = []             ## [{"id","sprite","x","y","face"}]（tile 座標；Town 只含戶外 NPC）
+@export var npc_list: Array = []             ## [{"id","sprite","x","y","face"}]；手繪圖可用 pos: Vector2 覆寫 tile 座標
 @export var prop_list: Array = []            ## [{"tex","x","y","w","h"}]（x/y=GDevelop 左上像素；w/h=0 用原生尺寸）
 @export var chest_list: Array = []           ## [{"id","tx","ty"}]（loot 資料查 ContentDB.get_chest()）
 @export var door_list: Array = []            ## [{"tx","ty","key","label","owners":[id...]}]（僅 Town 有；立繪選單式室內進屋資料）
@@ -95,6 +95,8 @@ func _ready() -> void:
 	_player = $YSort/Player
 	_player.add_to_group("player")  # 保險；場景檔已宣告 groups=["player"]
 	_player.world_state = world_state
+	_ensure_prompt_ui()
+	_clear_handpainted_doorways()
 	_fill_ground()
 	_spawn_props()
 	_spawn_npcs()
@@ -116,6 +118,43 @@ func _ready() -> void:
 			"WorldScene(%s): %d 張貼圖尚未就位（MOD-I 資產複製未合併？），先以隱形方式運作"
 			% [scene_id, _missing_textures]
 		)
+
+
+## 新的手繪地圖只放遊戲內容節點；互動提示 UI 缺少時由共用控制器補上。
+func _ensure_prompt_ui() -> void:
+	var hud := get_node_or_null("HUD") as CanvasLayer
+	if hud == null:
+		hud = CanvasLayer.new()
+		hud.name = "HUD"
+		hud.layer = 5
+		add_child(hud)
+	if hud.get_node_or_null("Prompt") != null:
+		return
+	var prompt := Label.new()
+	prompt.name = "Prompt"
+	prompt.position = Vector2(240, 500)
+	prompt.size = Vector2(800, 32)
+	prompt.add_theme_font_size_override("font_size", 22)
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hud.add_child(prompt)
+
+
+## 手繪屋舍的門洞可能落在舊有的繪制碰撞格上。entry_pos/outside_pos 開出的直線通道
+## 只在場景執行期清除，不會改掉設計師在 Inspector 手刷的其他碰撞。
+func _clear_handpainted_doorways() -> void:
+	var collision := get_node_or_null("CollisionPaint") as TileMapLayer
+	if collision == null:
+		return
+	for door in door_list:
+		if typeof(door) != TYPE_DICTIONARY \
+				or not door.has("entry_pos") or not door.has("outside_pos") \
+				or not (door["entry_pos"] is Vector2) or not (door["outside_pos"] is Vector2):
+			continue
+		var entry_cell := Vector2i((door["entry_pos"] as Vector2) / TS)
+		var outside_cell := Vector2i((door["outside_pos"] as Vector2) / TS)
+		for y in range(mini(entry_cell.y, outside_cell.y), maxi(entry_cell.y, outside_cell.y) + 1):
+			for x in range(mini(entry_cell.x, outside_cell.x), maxi(entry_cell.x, outside_cell.x) + 1):
+				collision.erase_cell(Vector2i(x, y))
 
 
 func _physics_process(delta: float) -> void:
@@ -147,6 +186,8 @@ func _fill_ground() -> void:
 	var layer: TileMapLayer = $Ground
 	if not layer.get_used_cells().is_empty():
 		return   # 地磚已烘進場景（生成器產出，編輯器可見可編）——不重填
+	if ground_tiles.is_empty():
+		return   # 手繪背景不使用地磚 atlas
 	if tileset_path == "" or not ResourceLoader.exists(tileset_path) \
 			or (atlas_path != "" and not ResourceLoader.exists(atlas_path)):
 		_missing_textures += 1
@@ -207,6 +248,8 @@ func _spawn_npcs() -> void:
 	for n in npc_list:
 		var node := Node2D.new()
 		node.position = Vector2(float(n["x"]) * TS + 32.0, float(n["y"]) * TS + 48.0)
+		if n.has("pos") and n["pos"] is Vector2:
+			node.position = n["pos"]
 		var tex_path := "%s/%s_%s_0.png" % [CHAR_DIR, str(n["sprite"]), str(n.get("face", "Down"))]
 		if ResourceLoader.exists(tex_path):
 			var spr := Sprite2D.new()
@@ -584,10 +627,8 @@ func _find_near_chest() -> Dictionary:
 	return {}
 
 
-## 門偵測（自動進屋）：玩家腳點 tile 落在「門內一格」(dx, dy-1) 才命中——即玩家沿門洞往上走、
-## 被建築蓋住（進門視覺）後，真正進到門內才觸發（John 2026-07-16：要進到門內才算，非站在下緣）。
-## 門格兩側牆面擋在 dy（town 場景資料已烘入），玩家只能沿門洞走上來，離開時放回 dy+1（門洞外
-## 兩格），不會一出屋就重新命中。Godot 玩家 origin＝腳點。
+## 門偵測（自動進屋）：手繪圖優先使用 entry_pos 像素落點，避免門洞被舊 tile 座標綁住；
+## 沒有 entry_pos 的舊場景才沿用「門內一格」tile 判定。Godot 玩家 origin＝腳點。
 func _find_near_door() -> Dictionary:
 	if door_list.is_empty():
 		return {}
@@ -595,6 +636,11 @@ func _find_near_door() -> Dictionary:
 	var pty := int(_player.global_position.y / TS)
 	for d in door_list:
 		if typeof(d) != TYPE_DICTIONARY:
+			continue
+		if d.has("entry_pos") and d["entry_pos"] is Vector2:
+			var radius := float(d.get("entry_radius", 22.0))
+			if _player.global_position.distance_to(d["entry_pos"]) <= radius:
+				return d
 			continue
 		if ptx == int(d.get("tx", -999)) and pty == int(d.get("ty", -999)) - 1:
 			return d
@@ -629,6 +675,8 @@ func _exit_building() -> void:
 
 ## 門外一格中央的腳點座標（對應 build_cq2.py exitBuilding L1644-1645 換算到 Godot 腳點 origin）。
 func _door_outside_pos(door: Dictionary) -> Vector2:
+	if door.has("outside_pos") and door["outside_pos"] is Vector2:
+		return door["outside_pos"]
 	return Vector2((int(door["tx"]) + 0.5) * TS, (int(door["ty"]) + 1.5) * TS)
 
 

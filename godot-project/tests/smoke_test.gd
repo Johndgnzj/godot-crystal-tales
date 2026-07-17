@@ -41,7 +41,7 @@ const AUTOLOADS := {
 const SCENES := {
 	"Title": "res://scenes/title/title.tscn",
 	"Battle": "res://scenes/battle/battle.tscn",
-	"Town": "res://scenes/world/town.tscn",
+	"Town": "res://scenes/world/painted/town.tscn",
 	"Forest": "res://scenes/world/forest.tscn",
 	"Forest2": "res://scenes/world/forest2.tscn",
 	"Mine": "res://scenes/world/mine.tscn",
@@ -59,6 +59,12 @@ const SCENES := {
 	"EFG": "res://scenes/world/painted/ef_g.tscn",
 	"EFH": "res://scenes/world/painted/ef_h.tscn",
 	"EFI": "res://scenes/world/painted/ef_i.tscn",
+	"NMA": "res://scenes/world/painted/nm_a.tscn",
+	"NMB": "res://scenes/world/painted/nm_b.tscn",
+	"NMC": "res://scenes/world/painted/nm_c.tscn",
+	"NMD": "res://scenes/world/painted/nm_d.tscn",
+	"NME": "res://scenes/world/painted/nm_e.tscn",
+	"NMF": "res://scenes/world/painted/nm_f.tscn",
 	"DialogueBox": "res://scenes/ui/dialogue_box.tscn",
 }
 

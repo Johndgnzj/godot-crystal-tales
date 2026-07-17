@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://cwmdcdoetyp7s"]
 
 [ext_resource type="Script" uid="uid://ou3wy0ds5i" path="res://scenes/title/title.gd" id="1_title"]
-[ext_resource type="Texture2D" uid="uid://jdw60al30ghd" path="res://assets/ui/menubg.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_bg.png" id="2_bg"]
 [ext_resource type="Texture2D" uid="uid://bpnlxwxr7rh5a" path="res://assets/ui/t_new.png" id="3_new"]
 [ext_resource type="Texture2D" uid="uid://h1g4aei8u1m6" path="res://assets/ui/t_cont.png" id="4_cont"]
+[ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_crystal.png" id="5_crystal"]
+[ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_zh.png" id="6_zh"]
+[ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_en.png" id="7_en"]
+[ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_heroes.png" id="8_heroes"]
 
 [sub_resource type="SystemFont" id="SystemFont_help"]
 font_names = PackedStringArray("PingFang SC", "Heiti SC", "STHeiti", "Hiragino Sans GB", "sans-serif")
@@ -22,6 +26,42 @@ script = ExtResource("1_title")
 offset_right = 1280.0
 offset_bottom = 720.0
 texture = ExtResource("2_bg")
+
+[node name="Heroes" type="TextureRect" parent="."]
+offset_left = 465.0
+offset_top = 310.0
+offset_right = 815.0
+offset_bottom = 720.0
+texture = ExtResource("8_heroes")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Crystal" type="TextureRect" parent="."]
+offset_left = 570.0
+offset_top = 10.0
+offset_right = 710.0
+offset_bottom = 140.0
+texture = ExtResource("5_crystal")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleZh" type="TextureRect" parent="."]
+offset_left = 300.0
+offset_top = 115.0
+offset_right = 980.0
+offset_bottom = 385.0
+texture = ExtResource("6_zh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleEn" type="TextureRect" parent="."]
+offset_left = 390.0
+offset_top = 300.0
+offset_right = 890.0
+offset_bottom = 500.0
+texture = ExtResource("7_en")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="OptNew" type="TextureRect" parent="." unique_id=1747199384]
 offset_left = 507.0

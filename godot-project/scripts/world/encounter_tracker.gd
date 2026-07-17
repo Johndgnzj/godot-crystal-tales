@@ -138,6 +138,8 @@ func _physics_process(delta: float) -> void:
 
 	if player == null or encounter_id == "":
 		return
+	if DebugHooks.no_encounter:   # 除錯選單「不會遇敵」開關：測地區移動時關閉隨機遭遇
+		return
 	if world_state != null and world_state.lock:
 		return
 	if grace > 0.0:

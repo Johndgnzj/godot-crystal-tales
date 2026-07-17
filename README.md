@@ -14,8 +14,9 @@
 
 | 目錄/檔案 | 內容 |
 |---|---|
-| `CLAUDE.md` | 給開發者/AI agent：目錄結構、Godot 技術選型、程式碼規範、協作總則、權威來源 |
-| `設計員指南.md` | **給遊戲設計員（不需寫程式）**：怎麼加/改角色·道具·武器數值、美術、地圖 |
+| `CLAUDE.md` | 給開發者/AI agent：目錄結構、Godot 技術選型、程式碼規範、協作總則、權威來源、**文件同步規則** |
+| `docs/` | **文件中樞**：敘事聖經（世界觀/大綱/角色）、劇本寫作心法、素材管理規範、設計層文件（`docs/design/`）。總索引見 `docs/README.md` |
+| `docs/design/設計員指南.md` | **給遊戲設計員（不需寫程式）**：怎麼加/改角色·道具·武器數值、美術、地圖 |
 | `TASKS/` | 可執行任務清單，核心 CORE-* ＋ 模組 MOD-* |
 | `specs/` | 從 GDevelop `build_cq2.py` 凍結抄錄的權威規格：存檔 schema、戰鬥公式、對話格式 |
 | `reference/gdevelop/` | 原 GDevelop 專案的凍結快照（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`），唯讀 |
@@ -31,7 +32,13 @@ cd godot-project
 /Applications/Godot.app/Contents/MacOS/Godot --headless -s res://tests/smoke_test.gd --path .
 ```
 
-**設計員（做角色/劇情/數值/美術/地圖）**：直接讀 **`設計員指南.md`**，不用碰程式碼。
+**設計員（做角色/數值/美術/地圖）**：直接讀 **`docs/design/設計員指南.md`**，不用碰程式碼。
+
+**構思劇情/世界觀**：讀 **`docs/`**（`docs/README.md` 是總索引）——世界觀設定、故事大綱、角色設定、劇本寫作心法都在裡面。
+
+**找/處理素材**：讀 **`docs/素材管理規範.md`**——素材放哪、進 Godot 後怎麼處理、授權怎麼記。
+
+> ⚠️ **改任何內容後，記得同步文件**（對應 docs、本 README 索引、設定集 Artifact）。規則見 `CLAUDE.md` 的「文件同步規則」。
 
 ## 權威來源
 - 數值資料：**Godot 端 `godot-project/resources/content/**/*.tres`**（唯一真相源，設計員在編輯器 Inspector 編輯）。

@@ -34,8 +34,8 @@ var history_size: int = 160
 ## 4px 的平方（原始碼固定 16），跟原始碼一致用平方距離比較，省開根號。
 var min_step_sq: float = 16.0
 
-## 每個跟隨者之間的取樣點間隔，對應原始碼固定 13。
-var step_per_follower: int = 13
+## 每個跟隨者之間的取樣點間隔。原版是 13；目前縮短為一半（6.5）。
+var step_per_follower: float = 6.5
 
 ## 最多跟隨者數，對應原始碼 `i<4`（i 從 1 起算，最多 3 個跟隨者：ps9[1]/ps9[2]/ps9[3]）。
 var max_followers: int = 3
@@ -76,7 +76,7 @@ func update_leader(pos: Vector2, facing: String) -> void:
 func sample_follower(rank: int) -> Variant:
 	if _trail.is_empty():
 		return null
-	var idx: int = mini(_trail.size() - 1, rank * step_per_follower)
+	var idx: int = mini(_trail.size() - 1, roundi(rank * step_per_follower))
 	return _trail[idx]
 
 

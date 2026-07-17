@@ -139,7 +139,7 @@ def main() -> int:
     # ---- 第 2 層：.gd 欄位對應邏輯 vs 來源實際 schema ----
     print("\n=== 第 2 層：*_def.gd 靜態掃描的 JSON key 讀取 vs CONTENT.json 實際欄位 ===")
 
-    # icon/rarity/attr_type（道具武器設計.md）、base_drop_rate（specs/BATTLE_FORMULAS.md F-10）都是
+    # icon/rarity/attr_type（docs/design/道具武器設計.md）、base_drop_rate（specs/BATTLE_FORMULAS.md F-10）都是
     # Godot 端原生新增欄位，GDevelop 的 CONTENT.json 從未有過也不會有（不是要抄錄的既有規則，是新設計），
     # 從 typo 檢查排除，避免每次跑這支腳本都誤報「疑似打錯字」。
     GODOT_NATIVE_EXTRA_KEYS = {

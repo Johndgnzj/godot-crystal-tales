@@ -123,6 +123,8 @@ func is_gate_open() -> bool:
 ## 存檔座標校正：室內時回傳門口外座標，否則回傳原樣（`fallback` 通常是玩家目前 `global_position`）。
 ## 對應 build_cq2.py:1281（見 `cur_door` 欄位註解）。`tile_size` 預設 32，對應 build_cq2.py `TS=32`。
 func get_save_position(fallback: Vector2, tile_size: int = 32) -> Vector2:
+	if inside and cur_door.has("outside_pos") and cur_door["outside_pos"] is Vector2:
+		return cur_door["outside_pos"]
 	if inside and cur_door.has("tx") and cur_door.has("ty"):
 		return Vector2(float(cur_door["tx"]) * tile_size, float(int(cur_door["ty"]) + 1) * tile_size)
 	return fallback

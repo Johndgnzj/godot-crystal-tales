@@ -6,6 +6,14 @@
 # Claude Code 專案 MCP 設定（含機器絕對路徑，各機器自備）
 .mcp.json
 
+# Codex 本機 MCP 設定（含機器絕對路徑，各機器自備）
+.codex/config.toml
+
 # 系統/暫存垃圾檔
 .DS_Store
 ~$*
+__pycache__/
+*.py[cod]
+
+# 產圖/工具 scratch（非可回溯素材；原始素材請放 assets-source/，見 docs/素材管理規範.md）
+tmp/

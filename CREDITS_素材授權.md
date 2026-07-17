@@ -73,6 +73,8 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/battle/hero_*.png`：由 LPC 合成角色幀放大裁切（沿用 LPC CC-BY-SA/GPL 授權），
   武器圖層取自 LPC weapon walk（longsword/dagger/saber，CC-BY-SA/GPL）。
 - `assets/ui/battlebg_*.png`：程序化生成（自製）。2026-07-15：`battlebg_forest.png` 換成 John 提供的「東之森戰鬥背景」圖（取代原程序化版）。
+- `assets/map/north_mine/nm_{a,b,c,d,e,f}.png`（原圖保留於 `assets-source/map/M2-north-mine/`）：
+  AI 生成素材（ChatGPT 內建圖片生成功能，提示詞作者 John/協作 Agent，2026-07-16）；北方礦山 a～f 手繪畫面地圖，f 為 boss 房。
 - `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。
 - `assets/props/ext_*.png`（六棟建築外觀，洋紅底原圖）：AI 生成素材（Gemini gemini-2.5-flash-image，
   提示詞作者 John/協作 Agent，由 /gen-art skill 的 building type 生成）。2026-07-15 重生成為**正面平視、門在正面下緣**的日系像素風（取代原 2026-07-12 的 45° isometric 版，便於在正交地圖擺進入點）。
@@ -102,9 +104,13 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - 洞熊／狂暴洞熊：[**[LPC] bears, deer, lions and more**](https://opengameart.org/content/lpc-bears-deer-lions-and-more)（grizzly bear）—— **CC-BY 4.0** —— tapatilorenzo（部分衍生自 Sevarihk）。
 - 野狼（取代先前的熊 recolor 佔位）：[**[LPC] Wolf Animation**](https://opengameart.org/content/lpc-wolf-animation) —— CC-BY 4.0/3.0 / GPL / OGA-BY 3.0 —— Stephen "Redshrike" Challener ＋ William.Thompsonj。
 - 掠翅鳥：[**[LPC] Birds**](https://opengameart.org/content/lpc-birds)（eagle）—— CC-BY 4.0/3.0 / CC-BY-SA / GPL / OGA-BY —— bluecarrot16（castelonia 委製）。
-- `assets/ui/menubg.png`（水晶奇譚標題畫面）：背景與 Logo 徽記為 AI 生成
-  （Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，原圖 design/title/：
-  2026-07-13 改用手繪奇幻森林 `title_new.png`，由 `art_v13_title.py` 合成既有 logo；舊版 title_a 保留），
-  標題文字「水晶奇譚／CRYSTAL TALE」以 PIL＋系統字體(STHeiti/Arial)合成（自製）。
+- `assets/ui/menubg.png`（水晶奇譚標題畫面）：背景與 Logo 徽記為 AI 生成。
+  2026-07-17 依 /gen-art 的 title 構圖規格，以 OpenAI Imagen 重新生成 16:9 手繪奇幻森林版本
+  （提示詞作者 John/協作 Agent），並保留標題文字「水晶奇譚／CRYSTAL TALE」與水晶徽記；
+  原 2026-07-13 Gemini 版由 `art_v13_title.py` 合成既有 logo。
+- `assets/ui/title_layers/title_bg.png`、`title_crystal.png`、`title_zh.png`、`title_en.png`、
+  `title_heroes.png`（模組化標題畫面圖層）：AI 生成（OpenAI Imagen，提示詞作者 John/協作 Agent，
+  2026-07-17，依 /gen-art 的 title 構圖規格生成）。背景、水晶徽記、中英文標題與男女主角剪影皆為
+  獨立 PNG；標題文字為「水晶傳說／TALE of CRYSTAL」，透明圖層由洋紅色鍵去背。
   標題選單描邊字 `t_start/t_cont/t_restart.png` 亦為 PIL 系統字體烘製（自製）。
   ※ 遊戲更名：水晶戰記 → 水晶奇譚（Crystal Tale）；專案資料夾 crystal-quest 維持為代號。

@@ -51,6 +51,23 @@ godot-crystal-tales/
 - **`reference/gdevelop/DEV_開發指南.md`**（凍結快照）是系統邊界的權威說明（WORLD_JS/BATTLE_JS 的
   各子系統列表），`TASKS/` 底下的模組任務拆分直接對應這份文件的系統清單，不要另外發明系統邊界。
 
+## 文件同步規則（重要，避免文件與實際脫勾）
+
+**調整遊戲內容後，必須同步更新對應文件——這是硬性規則，不是可選項。** 文件與實際脫勾是本專案最該避免的技術債。
+
+改動 → 要一起更新的文件對照：
+
+| 你改了什麼 | 必須同步更新 |
+|---|---|
+| 劇情 / 對話 / 過場（`dialogue.json` 等）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
+| 數值 / 角色 / 裝備（`resources/content/*.tres`）| 對應 `docs/` 敘事或設計文件、**設定集 Artifact**（見下）|
+| 素材（`godot-project/assets/`）| `CREDITS_素材授權.md`（授權帳本）、必要時 `docs/素材管理規範.md`|
+| 新增/移除/搬動任何文件 | `README.md` 索引、`docs/README.md` 索引 |
+| 系統/規格（`specs/*`）| 版本區塊遞增（見下）、引用該 spec 的 `TASKS/` 與程式註解 |
+
+- **設定集 Artifact（game-codex）**：內容（角色/數值/劇情全文）改動後不會自動更新——需重跑 `build_codex.py` → 用 Artifact 工具帶 `url` 參數重發佈同一網址（網址與機制見 memory `game-codex-artifact`）。
+- **一句話**：改內容 → 更新 `docs/` 對應文件 → 更新 `README` 索引 → 更新設定集 Artifact →（動素材再加 `CREDITS`）。
+
 ## 版本規則
 
 每個 `specs/*.md` 與 `TASKS/*.md` 檔案開頭要有版本區塊：

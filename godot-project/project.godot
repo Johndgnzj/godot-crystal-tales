@@ -41,7 +41,7 @@ window/handheld/orientation="landscape"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg")
+enabled=PackedStringArray("res://addons/funplay_mcp/plugin.cfg", "res://addons/godot_mcp/plugin.cfg")
 
 [input]
 

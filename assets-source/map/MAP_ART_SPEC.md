@@ -13,7 +13,7 @@
 | **網格單位** | 32×32 px | 碰撞格、門寬、落點全以此為單位 |
 | **圖片尺寸** | **1280×1280**（=40×40 格）；同一地區所有圖同尺寸 | 邊長必須是 32 的倍數才能整除刷格。M3 現有的 1254 不整除，是用 38px 格遷就的——新圖照 1280 來 |
 | **圖外背景** | 統一素色深灰（近 #3a3a3a），無雜訊無漸層 | 機器能自動把圖外區域預刷成碰撞，省你手刷外圈 |
-| **出入口** | 在邊緣開缺口＋**箭頭標示**（照 M3 現有畫法）；開口寬 **≥2 格（64px）** | 箭頭讓人和機器都能對位；太窄玩家會卡 |
+| **出入口** | 在邊緣開缺口，開口寬 **≥2 格（64px）**；**不要在地圖上繪製指引箭頭** | 依缺口位置對位；太窄玩家會卡 |
 | **開口對位** | 相鄰兩張圖的開口要在**同一軸線位置**（A 東口的 y ≈ B 西口的 y） | 過圖時玩家視覺連續，落點不用亂搬 |
 | **牆/路寬** | 牆厚 ≥1 格；主要通道寬 ≥2 格 | 1 格窄道刷碰撞後實際可走空間很緊 |
 | **視角** | top-down 3/4（RPG 俯視、微透視），同地區統一 | 與 M3 現有一致 |
@@ -56,7 +56,7 @@ everything OUTSIDE the map border is flat uniform dark gray (#3a3a3a), no textur
 Grid-friendly layout: walls, paths and doorways align to a 32px grid;
 walls at least 32px thick, main paths at least 64px wide.
 Every exit is an opening (at least 64px wide) in the border wall,
-marked with a small wooden arrow sign, at the position I specify.
+at the position I specify. Do not draw directional arrows on the map.
 Muted, low-saturation cohesive palette; walkable ground is even, low-detail
 and brighter; obstacles (walls/trees/rocks) one shade darker than ground.
 Soft top-down lighting, no long cast shadows across paths.
@@ -69,7 +69,7 @@ with text (interactive objects are placed by the game engine).
 Theme: <地貌，如 dense pine forest / rocky mine tunnels>
 Mood/palette: <如 mossy green with grey stone, slightly misty>
 Layout: <空間骨架，如 a winding path from west to east, small clearing in the center>
-Exits: <如 west edge middle → arrow; east edge middle → arrow; north edge upper-right → stone stairs>
+Exits: <如 west edge middle → opening; east edge middle → opening; north edge upper-right → stone stairs>
 Landmarks: <如 a ring of standing stones in the north clearing>（純裝飾）
 
 【互動型房子】（城鎮才填）
@@ -84,10 +84,10 @@ door 32–64px wide, at least 64px of clear ground in front of each door.
 
 1. [ ] 尺寸 1280×1280（或同地區統一尺寸，且能被 32 整除）
 2. [ ] 圖外是素色深灰
-3. [ ] 每個出入口有箭頭、開口 ≥2 格，位置跟 map-def 的鄰接關係一致
+3. [ ] 地圖上沒有指引箭頭；每個出入口開口 ≥2 格，位置跟 map-def 的鄰接關係一致
 4. [ ] 相鄰圖開口對位
 5. [ ] 圖裡沒有寶箱/告示牌/角色
-6. [ ] 檔名照慣例：`temp_assets/map/<Mx>-<region>/<region>-<id>.png`（boss 房加 `-boss-room`）
+6. [ ] 檔名照慣例：`assets-source/map/<Mx>-<region>/<region>-<id>.png`（boss 房加 `-boss-room`）
 7. [ ] map-def.xlsx 網格已更新（新圖的空間位置）
 
 之後我接手：檢查尺寸→複製進 `assets/map/<region>/`→建場景＋依 map-def 接連通＋預刷圖外背景→交回給你刷碰撞。

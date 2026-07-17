@@ -1,6 +1,6 @@
 extends SceneTree
 ## 批次建構：M3 東邊森林 9 張手繪畫面場景（ef_a 已存在→只補出口/落點；b–i 全新建）。
-## 依 temp_assets/map/map-def.xlsx 的空間網格接連通：
+## 依 assets-source/map/map-def.xlsx 的空間網格接連通：
 ##       i
 ##       h
 ##  M1 a b e g (M4)

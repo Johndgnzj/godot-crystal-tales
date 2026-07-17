@@ -139,11 +139,18 @@ func _close_debug() -> void:
 
 
 func _show_debug_main() -> void:
+	var enc_t := "不會遇敵：開" if DebugHooks.no_encounter else "不會遇敵：關"
 	_rebuild_panel("除錯選單", [
 		{"t": "直接回城", "cb": _dbg_go_town},
 		{"t": "立刻戰鬥", "cb": _dbg_battle},
+		{"t": enc_t, "cb": _dbg_toggle_enc},
 		{"t": "自動導航", "cb": _show_debug_nav},
 	])
+
+
+func _dbg_toggle_enc() -> void:
+	DebugHooks.no_encounter = not DebugHooks.no_encounter
+	_show_debug_main()   # 就地重建面板反映新狀態，不關閉方便連續切
 
 
 func _show_debug_nav() -> void:

@@ -34,6 +34,10 @@ extends Node
 
 var enabled: bool = false
 
+## 除錯用「不會遇敵」開關：true 時 EncounterTracker 完全跳過隨機遭遇觸發，方便測地區移動。
+## 僅測試便利用，不寫進存檔（SaveManager 不理它），每次啟動遊戲重設為 false。由 HUD 除錯選單切換。
+var no_encounter: bool = false
+
 
 func _ready() -> void:
 	enabled = OS.is_debug_build() or OS.get_environment("CQ_DEBUG_HOOKS") == "1"
