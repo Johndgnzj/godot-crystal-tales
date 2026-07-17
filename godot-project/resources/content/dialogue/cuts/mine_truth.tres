@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_7ygb3"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_ksu8l"]
+
+[sub_resource type="Resource" id="Resource_7hk58"]
+script = ExtResource("1_7ygb3")
+speaker = "路德"
+text = "（這裡的空氣……比序章那次更冷了。）"
+
+[sub_resource type="Resource" id="Resource_3h4mv"]
+script = ExtResource("1_7ygb3")
+speaker = "瑪琳"
+text = "路德，那邊有東西在動——是礦工？他們還活著？！"
+
+[sub_resource type="Resource" id="Resource_jqad8"]
+script = ExtResource("1_7ygb3")
+speaker = "路德"
+text = "不對……瑪琳，退後！牠的臉……牠根本沒有臉！"
+
+[sub_resource type="Resource" id="Resource_gl0g0"]
+script = ExtResource("1_7ygb3")
+speaker = "瑪琳"
+text = "拿著鎬子、戴著礦工帽的骷髏……老葛雷說的失蹤礦工，難道就是……"
+
+[sub_resource type="Resource" id="Resource_l4y6r"]
+script = ExtResource("1_7ygb3")
+speaker = "路德"
+text = "（他們早就死了。是有人……把他們變成了這個樣子。）"
+
+[sub_resource type="Resource" id="Resource_hvo38"]
+script = ExtResource("1_7ygb3")
+text = "（深處的舊礦道被落石半掩，一頭巨影在崩石後低吼——先解決擋路的東西）"
+
+[resource]
+script = ExtResource("2_ksu8l")
+id = "mine_truth"
+once = "c_mine_truth"
+lines = Array[ExtResource("1_7ygb3")]([SubResource("Resource_7hk58"), SubResource("Resource_3h4mv"), SubResource("Resource_jqad8"), SubResource("Resource_gl0g0"), SubResource("Resource_l4y6r"), SubResource("Resource_hvo38")])
+transfer = PackedStringArray()
+party = PackedStringArray()

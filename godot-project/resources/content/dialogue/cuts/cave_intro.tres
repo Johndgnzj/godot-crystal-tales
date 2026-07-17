@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_kyf30"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_v46s0"]
+
+[sub_resource type="Resource" id="Resource_ahp2a"]
+script = ExtResource("1_kyf30")
+speaker = "亞倫"
+text = "……深處的氣息不對勁。跟在我身後，別亂跑。"
+
+[sub_resource type="Resource" id="Resource_tdolw"]
+script = ExtResource("1_kyf30")
+speaker = "路德"
+text = "（好冷……這裡真的只是廢棄礦坑嗎？）"
+
+[resource]
+script = ExtResource("2_v46s0")
+id = "cave_intro"
+once = "c_cave_intro"
+lines = Array[ExtResource("1_kyf30")]([SubResource("Resource_ahp2a"), SubResource("Resource_tdolw")])
+transfer = PackedStringArray()
+party = PackedStringArray()

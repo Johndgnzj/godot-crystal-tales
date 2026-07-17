@@ -1,0 +1,78 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_xbcy2"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_tl4r8"]
+
+[sub_resource type="Resource" id="Resource_uquab"]
+script = ExtResource("1_xbcy2")
+when = "ch1==2"
+speaker = "緹娜"
+lines = PackedStringArray("委託完成確認——哥布林頭目討伐！", "報酬 200 金幣已支付。你們是本鎮的驕傲！", "（第一章完──「重返礦山」即將開放）")
+action = "ch1_reward"
+cmd = "quest"
+label = "委託"
+
+[sub_resource type="Resource" id="Resource_vbns8"]
+script = ExtResource("1_xbcy2")
+when = "ch1==1"
+speaker = "緹娜"
+lines = PackedStringArray("委託進行中：討伐東之森深處的哥布林頭目。", "牠就在森林最東邊的空地，小心點！")
+cmd = "quest"
+label = "委託"
+
+[sub_resource type="Resource" id="Resource_t4r0m"]
+script = ExtResource("1_xbcy2")
+when = "reg==1"
+speaker = "緹娜"
+lines = PackedStringArray("有新委託喔——農家回報東之森的哥布林越來越囂張，", "牠們的頭目就盤踞在森林深處。", "【委託】討伐哥布林頭目（報酬 200G）。接受嗎？就當你接受了！", "頭目比雜魚強得多——建議練到 Lv5、跟漢克拿把好劍再去。")
+action = "ch1_take"
+cmd = "quest"
+label = "委託"
+
+[sub_resource type="Resource" id="Resource_3jokc"]
+script = ExtResource("1_xbcy2")
+when = "step>=3"
+speaker = "緹娜"
+lines = PackedStringArray("歡迎來到冒險者公會！要登錄成為冒險者嗎？", "……路德和瑪琳，兩位都登錄完成！", "從今天起你們就是 F 級冒險者了。委託隨時來找我。")
+action = "register"
+cmd = "quest"
+label = "委託"
+
+[sub_resource type="Resource" id="Resource_4lxds"]
+script = ExtResource("1_xbcy2")
+speaker = "緹娜"
+lines = PackedStringArray("目前沒有適合你們的新委託。", "升上一階、或到週邊多探探，說不定就有新工作囉。")
+cmd = "quest"
+label = "委託"
+
+[sub_resource type="Resource" id="Resource_6s27o"]
+script = ExtResource("1_xbcy2")
+when = "step==0"
+speaker = "緹娜"
+lines = PackedStringArray("這不是路德嗎？要去礦山見習？", "等你正式登錄的那天，公會隨時歡迎你。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_rxnxi"]
+script = ExtResource("1_xbcy2")
+when = "ch1==3"
+speaker = "緹娜"
+lines = PackedStringArray("哥布林頭目的委託已經結案囉，辛苦了！", "接下來想找活兒的話，水井旁的老葛雷正在找人幫忙。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_nnjto"]
+script = ExtResource("1_xbcy2")
+when = "ch2>=1"
+speaker = "緹娜"
+lines = PackedStringArray("礦坑的委託，是老葛雷私下拜託你們的吧？", "那些失蹤的礦工……公會這邊也一直很掛心。", "小心點，別逞強——活著回來才是好冒險者。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_aq6kc"]
+script = ExtResource("1_xbcy2")
+speaker = "緹娜"
+lines = PackedStringArray("委託都貼在牆上的告示板，慢慢看。", "有什麼想問的，儘管來櫃檯找我。")
+cmd = "talk"
+
+[resource]
+script = ExtResource("2_tl4r8")
+id = "tina"
+entries = Array[ExtResource("1_xbcy2")]([SubResource("Resource_uquab"), SubResource("Resource_vbns8"), SubResource("Resource_t4r0m"), SubResource("Resource_3jokc"), SubResource("Resource_4lxds"), SubResource("Resource_6s27o"), SubResource("Resource_rxnxi"), SubResource("Resource_nnjto"), SubResource("Resource_aq6kc")])

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_nx5ay"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_3q866"]
+
+[sub_resource type="Resource" id="Resource_big8q"]
+script = ExtResource("1_nx5ay")
+when = "ch1==3"
+speaker = "羅素隊長"
+lines = PackedStringArray("南方大道還在封鎖中。", "等王都的指示一到就放行——你們的事蹟我會寫進報告。")
+
+[sub_resource type="Resource" id="Resource_tbw4f"]
+script = ExtResource("1_nx5ay")
+speaker = "羅素隊長"
+lines = PackedStringArray("前方道路因魔物騷動封閉中，王都的援軍還沒到。", "想去大城的話，再等等吧。")
+
+[resource]
+script = ExtResource("2_3q866")
+id = "guard"
+entries = Array[ExtResource("1_nx5ay")]([SubResource("Resource_big8q"), SubResource("Resource_tbw4f")])

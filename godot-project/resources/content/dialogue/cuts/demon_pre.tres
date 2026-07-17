@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_2kq2n"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_wu4pk"]
+
+[sub_resource type="Resource" id="Resource_n7hit"]
+script = ExtResource("1_2kq2n")
+speaker = "？？？"
+text = "（低沉的咆哮迴盪在洞穴深處──）"
+
+[sub_resource type="Resource" id="Resource_dl2d4"]
+script = ExtResource("1_2kq2n")
+speaker = "亞倫"
+text = "趴下！路德──這傢伙不是這裡該有的東西！"
+
+[sub_resource type="Resource" id="Resource_m2k75"]
+script = ExtResource("1_2kq2n")
+text = "（撐過 3 回合！）"
+
+[resource]
+script = ExtResource("2_wu4pk")
+id = "demon_pre"
+once = "c_demon"
+lines = Array[ExtResource("1_2kq2n")]([SubResource("Resource_n7hit"), SubResource("Resource_dl2d4"), SubResource("Resource_m2k75")])
+battle = "prologue_demon"
+transfer = PackedStringArray()
+party = PackedStringArray()

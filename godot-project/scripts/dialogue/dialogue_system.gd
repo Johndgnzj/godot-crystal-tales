@@ -5,8 +5,10 @@ extends Node
 ## L1516）與 st.cut/st.cutIdx/st.queue（劇情佇列, L1620-1625, L1676-1709）。
 ##
 ## 規格來源：specs/DIALOGUE_SPEC.md D-1（matchWhen／FlagMatcher）、D-2（DLG）、D-3（CUTS）。
-## 資料來源：resources/content/dialogue.json（由 scripts/dialogue/extract_dialogue.py 從
-## build_cq2.py 的 DLG/CUTS dict literal 抽取，不是手動抄寫，見該腳本檔頭）。
+## 資料來源：resources/content/dialogue/dialogue_db.tres（DialogueDatabase 聚合，設計員在 Godot
+## Inspector 直接編輯個別 NPC／過場 .tres）。dialogue.json 已降級為「種子」，由
+## scripts/dialogue/build_dialogue_tres.gd 轉成 .tres；json 本身由 extract_dialogue.py 從
+## build_cq2.py 抽取（見該腳本檔頭）。
 ##
 ## 依賴（重要，見 TASKS/01_對話劇情.md 與 11_並行協作規則.md）：
 ## - `FlagMatcher`（res://scripts/dialogue/flag_matcher.gd）：**指定由 MOD-B 建立**，本檔案假設它
@@ -41,7 +43,7 @@ signal battle_requested(encounter_id: String)
 ## 過場帶 "transfer" 欄位時發這個；世界場景負責呼叫 `SceneRouter.go_to(to_scene, spawn_id)`。
 signal scene_transfer_requested(to_scene: String, spawn_id: String)
 
-const DIALOGUE_PATH := "res://resources/content/dialogue.json"
+const DB_PATH := "res://resources/content/dialogue/dialogue_db.tres"
 
 var is_loaded: bool = false
 
@@ -67,33 +69,21 @@ func _ready() -> void:
 
 
 func _load() -> void:
-	if not FileAccess.file_exists(DIALOGUE_PATH):
-		push_error("DialogueSystem: 找不到 %s，請先跑 scripts/dialogue/extract_dialogue.py" % DIALOGUE_PATH)
+	if not ResourceLoader.exists(DB_PATH):
+		push_error("DialogueSystem: 找不到 %s，請先跑 scripts/dialogue/build_dialogue_tres.gd 產生 .tres" % DB_PATH)
 		return
-	var file := FileAccess.open(DIALOGUE_PATH, FileAccess.READ)
-	if file == null:
-		push_error("DialogueSystem: 開檔失敗 %s（error=%s）" % [DIALOGUE_PATH, FileAccess.get_open_error()])
-		return
-	var text := file.get_as_text()
-	file.close()
-
-	var parsed = JSON.parse_string(text)
-	if typeof(parsed) != TYPE_DICTIONARY:
-		push_error("DialogueSystem: dialogue.json 格式錯誤，頂層必須是物件")
+	var db: DialogueDatabase = load(DB_PATH)
+	if db == null:
+		push_error("DialogueSystem: 載入 %s 失敗（不是合法 DialogueDatabase）" % DB_PATH)
 		return
 
 	_dlg.clear()
-	var dlg_raw: Dictionary = parsed.get("dlg", {})
-	for npc_id in dlg_raw.keys():
-		var entries: Array = []
-		for e in dlg_raw[npc_id]:
-			entries.append(DialogueEntry.from_dict(e))
-		_dlg[npc_id] = entries
+	for npc in db.npcs:
+		_dlg[npc.id] = npc.entries
 
 	_cuts.clear()
-	var cuts_raw: Dictionary = parsed.get("cuts", {})
-	for cut_id in cuts_raw.keys():
-		_cuts[cut_id] = CutsceneEntry.from_dict(cuts_raw[cut_id])
+	for cut in db.cutscenes:
+		_cuts[cut.id] = cut
 
 	is_loaded = true
 
@@ -265,12 +255,14 @@ func play_defeat_narration() -> bool:
 
 func _start_defeat_narration() -> void:
 	var cut := CutsceneEntry.new()
-	cut.lines = [{"speaker": "", "text": "你們在芳蕾鎮教堂的祭壇前醒來……蓋婭女神接住了倒下的旅人。（隊伍已完全恢復）"}]
+	var line := CutsceneLine.new()
+	line.text = "你們在芳蕾鎮教堂的祭壇前醒來……蓋婭女神接住了倒下的旅人。（隊伍已完全恢復）"
+	cut.lines.append(line)
 	_current_cut_id = ""
 	_current_cut = cut
 	_cut_idx = 0
 	cutscene_started.emit("")
-	cutscene_line_changed.emit("", cut.lines[0].get("text", ""))
+	cutscene_line_changed.emit("", cut.lines[0].text)
 
 
 func _drain_cut_queue() -> void:
@@ -295,15 +287,15 @@ func _start_cutscene(cut_id: String) -> void:
 	AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L1695：過場開啟
 	cutscene_started.emit(cut_id)
 	if cut.lines.size() > 0:
-		var line: Dictionary = cut.lines[0]
-		cutscene_line_changed.emit(line.get("speaker", ""), line.get("text", ""))
+		var line: CutsceneLine = cut.lines[0]
+		cutscene_line_changed.emit(line.speaker, line.text)
 
 
 func _advance_cutscene() -> void:
 	_cut_idx += 1
 	if _cut_idx < _current_cut.lines.size():
-		var line: Dictionary = _current_cut.lines[_cut_idx]
-		cutscene_line_changed.emit(line.get("speaker", ""), line.get("text", ""))
+		var line: CutsceneLine = _current_cut.lines[_cut_idx]
+		cutscene_line_changed.emit(line.speaker, line.text)
 		return
 
 	var cut := _current_cut

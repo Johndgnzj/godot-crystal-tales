@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_i3oc4"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_0o1ty"]
+
+[sub_resource type="Resource" id="Resource_u2c5k"]
+script = ExtResource("1_i3oc4")
+when = "ch2>=2"
+speaker = "希雅修女"
+lines = PackedStringArray("你們從礦山帶回來的……不只是疲憊。", "那是亡者未能安息的哀嘆。願蓋婭女神接引他們。", "（隊伍完全恢復了！）", "……路德，女神在你身上的記號，又亮了一分。")
+action = "heal"
+cmd = "pray"
+label = "祈禱"
+
+[sub_resource type="Resource" id="Resource_h8r6j"]
+script = ExtResource("1_i3oc4")
+speaker = "希雅修女"
+lines = PackedStringArray("願蓋婭女神看顧你們的旅途。", "（在女神像前禱告，隊伍完全恢復了！）")
+action = "heal"
+cmd = "pray"
+label = "祈禱"
+
+[sub_resource type="Resource" id="Resource_50r4l"]
+script = ExtResource("1_i3oc4")
+when = "step==0"
+speaker = "希雅修女"
+lines = PackedStringArray("蓋婭女神看顧著每一位旅人。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_xvfwu"]
+script = ExtResource("1_i3oc4")
+speaker = "希雅修女"
+lines = PackedStringArray("……女神在你身上留了記號呢。願風平息。", "累了就來祈禱，女神的恩澤不分你我。")
+cmd = "talk"
+
+[resource]
+script = ExtResource("2_0o1ty")
+id = "sister"
+entries = Array[ExtResource("1_i3oc4")]([SubResource("Resource_u2c5k"), SubResource("Resource_h8r6j"), SubResource("Resource_50r4l"), SubResource("Resource_xvfwu")])

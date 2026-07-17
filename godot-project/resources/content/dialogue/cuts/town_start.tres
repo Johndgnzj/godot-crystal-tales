@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_kxqxs"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_11btm"]
+
+[sub_resource type="Resource" id="Resource_5038f"]
+script = ExtResource("1_kxqxs")
+speaker = "瑪琳"
+text = "路德！你總算肯出房門了。"
+
+[sub_resource type="Resource" id="Resource_2smny"]
+script = ExtResource("1_kxqxs")
+speaker = "瑪琳"
+text = "……亞倫先生的事，不是你的錯。"
+
+[sub_resource type="Resource" id="Resource_kfu2b"]
+script = ExtResource("1_kxqxs")
+speaker = "路德"
+text = "瑪琳。我決定了——我要成為真正的冒險者，查出那天的真相。"
+
+[sub_resource type="Resource" id="Resource_who7y"]
+script = ExtResource("1_kxqxs")
+speaker = "瑪琳"
+text = "一個人？想得美。要去，就一起去。"
+
+[sub_resource type="Resource" id="Resource_80o10"]
+script = ExtResource("1_kxqxs")
+text = "（瑪琳加入了隊伍！先去公會找緹娜登錄吧）"
+
+[resource]
+script = ExtResource("2_11btm")
+id = "town_start"
+once = "c_town"
+lines = Array[ExtResource("1_kxqxs")]([SubResource("Resource_5038f"), SubResource("Resource_2smny"), SubResource("Resource_kfu2b"), SubResource("Resource_who7y"), SubResource("Resource_80o10")])
+transfer = PackedStringArray()
+setstep = 4
+party = PackedStringArray("ludo", "marin")

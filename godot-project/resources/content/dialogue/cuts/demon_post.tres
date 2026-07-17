@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_mxn74"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_s4de8"]
+
+[sub_resource type="Resource" id="Resource_385q8"]
+script = ExtResource("1_mxn74")
+speaker = "亞倫"
+text = "（擋在路德身前）……快跑！把這裡的事告訴鎮上的人！"
+
+[sub_resource type="Resource" id="Resource_p2mda"]
+script = ExtResource("1_mxn74")
+speaker = "路德"
+text = "亞倫大哥──！！"
+
+[sub_resource type="Resource" id="Resource_fkqop"]
+script = ExtResource("1_mxn74")
+text = "──三天後，芳蕾鎮。"
+
+[resource]
+script = ExtResource("2_s4de8")
+id = "demon_post"
+lines = Array[ExtResource("1_mxn74")]([SubResource("Resource_385q8"), SubResource("Resource_p2mda"), SubResource("Resource_fkqop")])
+transfer = PackedStringArray("Town", "home")
+setstep = 3
+party = PackedStringArray()

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_leeos"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_t21pt"]
+
+[sub_resource type="Resource" id="Resource_6seby"]
+script = ExtResource("1_leeos")
+speaker = "朵拉"
+lines = PackedStringArray("累了吧？床鋪都幫你們鋪好了。", "（隊伍完全恢復了！）")
+action = "heal"
+cmd = "rest"
+label = "住宿"
+
+[sub_resource type="Resource" id="Resource_8477t"]
+script = ExtResource("1_leeos")
+when = "step==0"
+speaker = "朵拉"
+lines = PackedStringArray("要跟亞倫先生出門？路上小心。", "回來我煮好吃的等你們。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_ltfa2"]
+script = ExtResource("1_leeos")
+speaker = "朵拉"
+lines = PackedStringArray("瑪琳那孩子，就拜託你多照應了。", "想歇歇隨時說一聲，自己家不收錢的。")
+cmd = "talk"
+
+[resource]
+script = ExtResource("2_t21pt")
+id = "dora"
+entries = Array[ExtResource("1_leeos")]([SubResource("Resource_6seby"), SubResource("Resource_8477t"), SubResource("Resource_ltfa2")])

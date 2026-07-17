@@ -1,11 +1,22 @@
 # 規格：對話／過場／觸發／撿取資料格式
 
-- Spec 版本: v2.0
+- Spec 版本: v3.0
 - 對應 GDevelop 原始碼快照: `reference/gdevelop/build_cq2.py`（2026-07 快照）L941-1015（DLG）、
   L1016-1036（CUTS）、L1302-1306（matchWhen）、L1564-1566（openOwnerCmd）、L1575-1582（buildIntCmds）、
   L1859-1864（室外 NPC 對話）；其餘段落（劇情佇列/出口/觸發區/pickups）行號仍對應 v1.1 舊快照，待全面校對
 - 狀態: 定案
 - 用途: MOD-A（對話/劇情）、MOD-B（撿取/觸發）實作依據
+- v3.0 變更記錄（2026-07-18，對話資料 .tres 化，John 拍板）：
+  1. 對話資料真相源從「run-time parse dialogue.json」改為原生 .tres（比照 content_db.tres 慣例，見
+     CLAUDE.md「權威來源與資料流向」）：個別檔 `resources/content/dialogue/npc/<id>.tres`（NpcDialogue，
+     內嵌 DialogueEntry）＋ `cuts/<id>.tres`（CutsceneEntry，內嵌 CutsceneLine），由聚合
+     `resources/content/dialogue/dialogue_db.tres` 以 ExtResource 引用，DialogueSystem 只 load 聚合檔。
+     dialogue.json 降級為「種子」（同 content.json 地位），僅重匯入時用；轉檔腳本
+     `scripts/dialogue/build_dialogue_tres.gd`。設計員直接在 Inspector 編個別 .tres 即生效。
+  2. **破壞性變更**：CutsceneEntry.lines 從 `Array[Dictionary{speaker,text}]`（v1.1/D-8 原定案）改為
+     `Array[CutsceneLine]`（新子資源 class，speaker/text 兩欄），讓過場台詞能在 Inspector 逐句編、與 DLG
+     編輯體驗一致。CutsceneEntry 另新增 `id` 欄位（原為 dict 的 key）。不影響存檔 schema（過場內容不進
+     save）。詳見 D-8。
 - v2.0 變更記錄（2026-07-16，verify_dialogue.py 抽樣失敗調查時發現並修正）：
   1. GDevelop 端 DLG 改版：室內 NPC 條目新增 `cmd`/`label`/`done` 三欄位，條目選擇從單軌扁平掃描變成
      「室外扁平／室內先按 cmd 分組再組內由上而下」雙軌；一次性贈禮（`done`）在互動選單層過濾，不是 when
@@ -75,7 +86,8 @@ DLG = {
 - 對話資料目前**寫死在 build_cq2.py 的 Python dict 裡**，不是獨立資料檔。**Godot 遷移時建議把 DLG/CUTS
   抽成獨立的資料檔**（例如 `resources/content/dialogue.json` 或 `.tres`），與 CONTENT.json 同層級管理，
   這是相對於 GDevelop 現況的刻意改善，不是照搬——理由：現況台詞跟地圖生成程式碼混在同一支 3487 行的腳本裡，
-  不利於「John 只改劇情」的分工模式。
+  不利於「John 只改劇情」的分工模式。**（v3.0 已落實：真相源為 `resources/content/dialogue/**/*.tres`，
+  設計員在 Inspector 編個別 NPC／過場檔，見 D-8 與版本記錄。）**
 
 ## D-3　過場資料表 `CUTS`（L991+）
 
@@ -193,15 +205,27 @@ pickups: [
 ## D-8　Godot 端資料結構（MOD-A 實作定案，2026-07-13）
 
 - `DialogueEntry`（`class_name`, `extends Resource`，`godot-project/scripts/dialogue/dialogue_entry.gd`）：
-  `when: String`, `speaker: String`, `lines: PackedStringArray`, `action: String`（空字串＝無 action）。
-- `CutsceneEntry`（`godot-project/scripts/dialogue/cutscene_entry.gd`）：`once: String`,
-  `lines: Array`（元素是 `Dictionary{speaker:String, text:String}`——**已定案用 Dictionary 陣列**，
-  不是陣列的陣列，理由：Godot 端用欄位名稱存取比索引 `[0]`/`[1]` 可讀），`battle: String`,
-  `transfer: PackedStringArray`（`[to_scene, spawn_id]`），`setstep: int`（`-1` 表示未設定，因為 0 是
-  合法的 step 值不能借用當 sentinel），`party: PackedStringArray`。
-- `godot-project/resources/content/dialogue.json`：`{dlg: {npc_id: [DialogueEntry...]}, cuts: {cut_id:
-  CutsceneEntry}}`，由 `godot-project/scripts/dialogue/extract_dialogue.py` 對 `build_cq2.py` 做
-  AST 解析＋`ast.literal_eval()` 抽取（不是手動轉寫），欄位轉寫規則見該腳本檔頭。
+  `when: String`, `speaker: String`, `lines: PackedStringArray`, `action: String`（空字串＝無 action），
+  以及室內用 `cmd`/`label`/`done: String`（v2.0 起，見 D-2）。
+- `CutsceneLine`（`godot-project/scripts/dialogue/cutscene_line.gd`，**v3.0 新增**）：`speaker: String`,
+  `text: String`（`@export_multiline`）。過場的一句台詞，speaker 空＝旁白。取代原本的
+  `Dictionary{speaker,text}`，讓過場台詞在 Inspector 逐句可編。
+- `CutsceneEntry`（`godot-project/scripts/dialogue/cutscene_entry.gd`）：`id: String`（**v3.0 新增**，原為
+  cuts dict 的 key）, `once: String`, `lines: Array[CutsceneLine]`（**v3.0 改**，原為 Dictionary 陣列，見
+  版本記錄）, `battle: String`, `transfer: PackedStringArray`（`[to_scene, spawn_id]`）, `setstep: int`
+  （`-1` 表示未設定，因為 0 是合法的 step 值不能借用當 sentinel）, `party: PackedStringArray`。
+- `NpcDialogue`（`godot-project/scripts/dialogue/npc_dialogue.gd`，**v3.0 新增**）：`id: String`,
+  `entries: Array[DialogueEntry]`。單一 NPC 的整張對話表，一個 NPC 一個 .tres；entries 陣列順序＝優先權
+  （保留 D-2「順序即優先權」語意，勿用檔名/字母序取代）。
+- `DialogueDatabase`（`godot-project/scripts/dialogue/dialogue_database.gd`，**v3.0 新增**）：
+  `npcs: Array[NpcDialogue]`, `cutscenes: Array[CutsceneEntry]`。聚合入口，存成
+  `resources/content/dialogue/dialogue_db.tres`，以 ExtResource 引用個別檔（比照 ContentDatabase）；
+  DialogueSystem 只 load 這一個檔（匯出 .pck 安全、型別安全）。
+- 資料檔（**v3.0 起**）：真相源＝`resources/content/dialogue/**/*.tres`（設計員在 Inspector 編個別檔），
+  由 `dialogue_db.tres` 聚合、DialogueSystem load。`resources/content/dialogue.json`
+  （`{dlg: {npc_id: [DialogueEntry...]}, cuts: {cut_id: CutsceneEntry}}`）降級為「種子」：由
+  `scripts/dialogue/extract_dialogue.py` 對 `build_cq2.py` 做 AST 解析＋`ast.literal_eval()` 抽取
+  （不是手動轉寫），再由 `scripts/dialogue/build_dialogue_tres.gd` 轉成 .tres——兩者僅「重新匯入種子」時才跑。
 - `DialogueSystem`（autoload，`godot-project/scripts/dialogue/dialogue_system.gd`）：
   `open_npc_dialogue(npc_id)`／`play_cutscene(cut_id)`／`advance()`／`show_message(speaker, lines)`／
   `play_defeat_narration()`，透過 signal（`dialogue_line_changed`/`cutscene_line_changed`/

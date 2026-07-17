@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_dgtl8"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_sd1di"]
+
+[sub_resource type="Resource" id="Resource_r27mq"]
+script = ExtResource("1_dgtl8")
+speaker = "吉德"
+lines = PackedStringArray("第一次上門吧？來，先送你 2 瓶藥水，別客氣。", "補給要趁早，這是老冒險者的鐵則！", "（獲得『藥水』×2！）")
+action = "give_potion"
+cmd = "gid_gift"
+label = "新客招待"
+done = "gotPotion"
+
+[sub_resource type="Resource" id="Resource_rwc45"]
+script = ExtResource("1_dgtl8")
+speaker = "吉德"
+lines = PackedStringArray("歡迎光臨！要看看我店裡的商品嗎？")
+action = "shop_gid"
+cmd = "trade"
+label = "交易"
+
+[sub_resource type="Resource" id="Resource_akxfe"]
+script = ExtResource("1_dgtl8")
+speaker = "吉德"
+lines = PackedStringArray("藥水備齊再出門，這是老冒險者的鐵則！", "缺什麼儘管開口，我這什麼都有。")
+cmd = "talk"
+
+[resource]
+script = ExtResource("2_sd1di")
+id = "gid"
+entries = Array[ExtResource("1_dgtl8")]([SubResource("Resource_r27mq"), SubResource("Resource_rwc45"), SubResource("Resource_akxfe")])
