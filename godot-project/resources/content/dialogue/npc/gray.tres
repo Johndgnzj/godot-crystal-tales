@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_giiuj"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_tvgty"]
+
+[sub_resource type="Resource" id="Resource_llmdq"]
+script = ExtResource("1_giiuj")
+when = "relic==1"
+speaker = "老葛雷"
+lines = PackedStringArray("這頂頭盔……是阿吉的！你們在裡頭找到的？", "（老葛雷的手抖個不停）……謝謝你們，把他的東西帶了回來。", "這是我僅有的一點謝禮，別嫌少。", "（獲得 100 金幣）")
+action = "relic_turnin"
+
+[sub_resource type="Resource" id="Resource_e1ekh"]
+script = ExtResource("1_giiuj")
+when = "ch2==3"
+speaker = "老葛雷"
+lines = PackedStringArray("那些孩子……總算能入土為安了。", "你們替這座礦山、也替我這老頭子，了了一樁心事。", "剩下的——深處那股邪氣的源頭，就拜託你們了。")
+
+[sub_resource type="Resource" id="Resource_ddpr3"]
+script = ExtResource("1_giiuj")
+when = "ch2==2"
+speaker = "老葛雷"
+lines = PackedStringArray("你們臉色不對……在裡頭看到什麼了？", "……戴著礦工帽、掄著鎬子的骷髏？那就是我那些老夥計沒錯了。", "（老葛雷沉默了好久）謝謝你們告訴我真相。這點心意收下。", "聽說深處的落石被你們清開了？那底下的東西，才是禍首。快去回報鎮長吧。")
+action = "ch2_report"
+
+[sub_resource type="Resource" id="Resource_ttvvb"]
+script = ExtResource("1_giiuj")
+when = "ch2==1"
+speaker = "老葛雷"
+lines = PackedStringArray("礦坑外圍就從鎮北的舊軌道進去。", "失蹤的老夥計要是還在……不，你們親眼去看看吧。", "（記得先把裝備和藥水在鎮上備齊）")
+
+[sub_resource type="Resource" id="Resource_d3sql"]
+script = ExtResource("1_giiuj")
+when = "ch1==3"
+speaker = "老葛雷"
+lines = PackedStringArray("解決了哥布林？好身手。", "那……礦坑的事，能拜託你們嗎？我的老夥計們一個接一個失蹤，", "官府當是逃工不管，可我知道——他們絕不會丟下家人跑掉。", "【委託】重返北方礦山外圍，查明礦工失蹤的真相。接下嗎？就當你們答應了。")
+action = "ch2_take"
+
+[sub_resource type="Resource" id="Resource_g6s6g"]
+script = ExtResource("1_giiuj")
+when = "step==0"
+speaker = "老葛雷"
+lines = PackedStringArray("那礦坑二十年前就封了……最近夜裡卻有聲音。", "要進去？……跟緊亞倫先生。")
+
+[sub_resource type="Resource" id="Resource_my4tj"]
+script = ExtResource("1_giiuj")
+speaker = "老葛雷"
+lines = PackedStringArray("那礦坑二十年前就封了……最近夜裡卻有聲音。", "你們就是在裡面出事的吧。唉，可憐的亞倫先生。")
+
+[resource]
+script = ExtResource("2_tvgty")
+id = "gray"
+entries = Array[ExtResource("1_giiuj")]([SubResource("Resource_llmdq"), SubResource("Resource_e1ekh"), SubResource("Resource_ddpr3"), SubResource("Resource_ttvvb"), SubResource("Resource_d3sql"), SubResource("Resource_g6s6g"), SubResource("Resource_my4tj")])

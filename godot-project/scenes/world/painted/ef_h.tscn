@@ -5,7 +5,7 @@
 [ext_resource type="TileSet" path="res://resources/map/collision_tileset.tres" id="3_jv5xu"]
 [ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_55234"]
 [ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_a4x2n"]
-[ext_resource type="Texture2D" path="res://assets/char/aaron_Down_0.png" id="6_u3ktr"]
+[ext_resource type="Texture2D" path="res://assets/char/alan_Down_0.png" id="6_u3ktr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nmp5m"]
 size = Vector2(1100, 44)
@@ -20,7 +20,7 @@ size = Vector2(22, 14)
 script = ExtResource("1_bfc3p")
 scene_id = "EFH"
 spawns = {
-"from_e": Vector2(627, 1154),
+"from_b": Vector2(627, 1154),
 "from_i": Vector2(627, 100),
 "start": Vector2(627, 727)
 }
@@ -38,7 +38,7 @@ tile_set = ExtResource("3_jv5xu")
 [node name="ExitS" type="Area2D" parent="Zones" unique_id=1937157452]
 position = Vector2(627, 1232)
 script = ExtResource("4_55234")
-to_scene = "EFE"
+to_scene = "EFB"
 spawn_id = "from_h"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/ExitS" unique_id=976051902]

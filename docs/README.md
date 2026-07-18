@@ -12,7 +12,8 @@
 |---|---|
 | [story/世界觀設定.md](story/世界觀設定.md) | 世界觀權威整理：信仰/地理/勢力/威脅/核心意象。**含「待拍板」清單** |
 | [story/故事大綱.md](story/故事大綱.md) | 主軸、章節結構表、flag/step 對照、伏筆與破綻清單 |
-| [story/角色設定.md](story/角色設定.md) | 主角/NPC/反派設定（缺點與動機）|
+| [story/角色設定.md](story/角色設定.md) | 主角/NPC/反派設定（缺點與動機）＋外觀設定（立繪用）|
+| [story/第一章劇本草稿.md](story/第一章劇本草稿.md) | 第一章六小節可讀劇本草稿（待審→轉對話 .tres，見 DIALOGUE_SPEC v3.0）|
 | [劇本寫作心法.md](劇本寫作心法.md) | 劇本寫作教材（訪談整理，構思時的方法論）|
 
 ## 二、素材治理 — 本目錄
@@ -21,6 +22,8 @@
 |---|---|
 | [素材管理規範.md](素材管理規範.md) | 素材放哪、進 Godot 後怎麼處理、授權標註規則、檢查清單 |
 | [`../CREDITS_素材授權.md`](../CREDITS_素材授權.md) | 授權帳本（每個進遊戲的素材一條）|
+| [`../assets-source/map/MAP_ART_SPEC.md`](../assets-source/map/MAP_ART_SPEC.md) | 手繪畫面地圖產圖規格（`gen-map-prompt` skill 的權威來源）|
+| [`../assets-source/role/ROLE_ART_SPEC.md`](../assets-source/role/ROLE_ART_SPEC.md) | 角色立繪產圖規格：a 戰鬥頭像／b 對話半身／c 全身＋去背螢光底規則（`gen-role-prompt` skill 的權威來源）|
 
 ## 三、設計層（給不寫程式的設計員）— `docs/design/`
 
@@ -28,6 +31,7 @@
 |---|---|
 | [design/設計員指南.md](design/設計員指南.md) | 怎麼在 Godot 編輯器改角色/道具/武器/數值/美術/地圖 |
 | [design/道具武器設計.md](design/道具武器設計.md) | 道具與武器的屬性/圖示/稀有度設計（equipment_def.gd / validate_content.py 以此為 spec）|
+| [design/prompt/roles.md](design/prompt/roles.md) | 角色立繪 prompt 集（全 15 位的全身 c prompt，`gen-role-prompt` 產；路德＝風格基準）|
 
 ## 四、工程 / 規範 / 權威來源 — 在原位
 

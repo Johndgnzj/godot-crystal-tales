@@ -11,7 +11,7 @@ extends RefCounted
 ## 注意：本檔 make_member() 與 dialogue_system._make_party_member() 產生的隊員形狀相同（前者多做
 ## derive+補血魔）；未來可統一成單一 builder（暫各自保留，避免動到 MOD-A 檔案）。
 
-const START_PARTY: Array[String] = ["ludo", "aaron"]
+const START_PARTY: Array[String] = ["ludo", "alan"]
 
 
 ## 重置 GameState 成全新一局（不切場景——切場景由呼叫端決定）。對應 build_cq2 newGame() 的全域變數設定。

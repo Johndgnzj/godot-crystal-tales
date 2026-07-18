@@ -2479,7 +2479,7 @@ start_eq = {
 "weapon": "short_sword",
 "wrist": "cloth_wraps"
 }
-story = ["芳蕾鎮鐵匠漢克與瑪莎的獨生子，十五歲。", "從小聽著往來旅人的冒險故事長大，一心嚮往外面的世界，", "行動總是比思考快半拍，闖禍後道歉的速度倒是全鎮最快。", "十五歲那年，偷跟著借宿鎮上的冒險者亞倫進入北方礦山，", "在深處遭遇了不該存在的魔物——亞倫為掩護他而下落不明。", "「我要成為真正的冒險者，查出那一天的真相。」"]
+story = ["芳蕾鎮一對退休冒險者——漢克與瑪莎——的兒子，十五歲，還有個小一歲的妹妹瑪琳。", "從小聽著父母當年闖蕩的冒險故事長大，一心嚮往外面的世界，", "行動總是比思考快半拍，闖禍後道歉的速度倒是全鎮最快。", "偷偷跟著借宿鎮上的冒險者亞倫進入北方礦山，", "在深處遭遇了不該存在的魔影——亞倫為掩護他而下落不明。", "身上的蓋婭女神記號，會隨著冒險一分分變亮。", "「我要成為真正的冒險者，查出那一天的真相。」"]
 
 [sub_resource type="Resource" id="Resource_s60oe"]
 script = ExtResource("8_j105i")
@@ -2504,15 +2504,15 @@ start_eq = {
 "boots": "leather_boots",
 "weapon": "hunting_knife"
 }
-story = ["旅店老闆娘朵拉的女兒，與路德一起長大的青梅竹馬。", "冷靜務實，是路德闖禍前的最後一道煞車——雖然常常煞不住。", "身手靈巧，一手獵刀是幫旅店處理野味時練出來的本事，", "戴著的瑪瑙護符，是母親朵拉在她出發前偷偷塞進行囊的。", "礦山意外後，看著把自己關在房裡的路德，她只說了一句：", "「要去就一起去。你一個人，我不放心。」"]
+story = ["路德的妹妹，小他一歲，同為退休冒險者漢克與瑪莎之女。", "冷靜務實，是路德闖禍前的最後一道煞車——雖然常常煞不住。", "身手靈巧、主敏捷，關鍵時刻比誰都可靠。", "戴著的瑪瑙護符，是母親瑪莎在她出發前偷偷塞進行囊的。", "礦山意外後，看著把自己關在房裡的路德，她只說了一句：", "「要去就一起去。你一個人，我不放心。」"]
 
 [sub_resource type="Resource" id="Resource_n1ogd"]
 script = ExtResource("8_j105i")
-id = "aaron"
+id = "alan"
 display_name = "亞倫"
 char_class = "veteran"
 main_attr = "str"
-sprite = "aaron"
+sprite = "alan"
 base = {
 "agi": 24.0,
 "int": 14.0,
@@ -2525,7 +2525,7 @@ start_eq = {
 "weapon": "iron_sword",
 "wrist": "iron_bracer"
 }
-story = ["借宿芳蕾鎮的 A 級冒險者。話少，劍快。", "來歷成謎，只知道他一直在調查北方礦山的異變。", "看出路德眼裡的光和「年輕時的某人」很像，", "嘴上嫌麻煩，卻默許了少年的跟隨。", "礦山深處遭遇異變魔影時，他擋在路德身前——", "「快跑！把這裡的事告訴鎮上的人！」", "此後下落不明。他留下的劍術與背影，成了路德的目標。"]
+story = ["借宿芳蕾鎮的資深冒險者，二十六歲。平時輕浮、吊兒郎當，遇到麻煩第一個想偷懶——但實力貨真價實。", "年輕當菜鳥時受過路德的退休冒險者父母照顧，欠他們一份人情，", "因此把這鎮上的少年當弟弟看，也默許了他的跟隨。", "接下公會「調查北方礦山」的委託才動身，路德偷偷跟了上去。", "礦山深處遭遇異變魔影時，這個最愛偷懶的人卻擋在路德身前——", "「快跑！把這裡的事回報公會！」", "此後下落不明。他留下的劍與背影，成了路德的目標。"]
 guest = true
 
 [sub_resource type="Resource" id="Resource_drtlc"]
@@ -2537,9 +2537,9 @@ sell_ids = ["potion", "hi_potion", "mana_herb", "antidote", "revive_feather", "t
 
 [sub_resource type="Resource" id="Resource_ov5de"]
 script = ExtResource("10_08ale")
-id = "hank"
-display_name = "漢克的鐵匠鋪"
-greet = "看看我新打的傢伙？"
+id = "don"
+display_name = "唐恩的鐵匠鋪"
+greet = "我這手藝……堪用啦。要看看嗎？"
 sell_ids = ["short_sword", "hunting_knife", "iron_sword", "traveler_garb", "leather_vest", "leather_boots", "swift_boots", "cloth_wraps", "hunter_bracer", "iron_bracer", "bronze_sword", "refined_steel_sword", "mithril_sword", "dragonfang_sword", "sacred_greatsword", "honed_knife", "shadow_claw", "twin_crescent", "shade_shortblade", "windfang_dagger", "nightfall_edge", "apprentice_wand", "oak_wand", "rune_staff", "crystal_focus", "sage_staff", "starlight_staff", "abyssal_scepter", "goddess_whisper_staff", "hardened_vest", "riveted_cuirass", "plate_cuirass", "dragonscale_mail", "paladin_plate", "light_tunic", "leather_bodysuit", "ranger_coat", "nightwalker_garb", "gale_wrap", "phantom_cloak_armor", "shadowdance_armor", "windspirit_garb", "apprentice_robe", "warded_robe", "starweave_robe", "arcane_robe", "sage_robe", "starlight_robe", "profound_arcane_robe", "studded_boots", "traveler_greaves", "iron_ringed_boots", "steel_greaves", "bedrock_boots", "dragonscale_boots", "titan_greaves", "soft_leather_shoes", "lightstep_boots", "hunter_shortboots", "swiftwind_boots", "phantom_dash_boots", "windgod_boots", "cloth_soft_shoes", "warded_soft_boots", "arcane_slippers", "starweave_boots", "sage_soft_boots", "moonlight_boots", "starlight_boots", "profound_arcane_boots"]
 
 [sub_resource type="Resource" id="Resource_x4swj"]

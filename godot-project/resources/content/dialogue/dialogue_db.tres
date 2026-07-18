@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="DialogueDatabase" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="1_mheqe"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/prologue_town.tres" id="2_jnunl"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/mine_intro.tres" id="3_0hvef"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/cave_intro.tres" id="4_jvhwk"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/demon_pre.tres" id="5_mfmo3"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/demon_post.tres" id="6_movar"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/town_start.tres" id="7_o0ytv"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/mine_truth.tres" id="8_pmyqt"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/mine_after.tres" id="9_yo858"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/necro_intro.tres" id="23_nec00"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="10_j0vgd"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/tina.tres" id="11_xwnol"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/dora.tres" id="12_ksmd7"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/shea.tres" id="13_6521e"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/barton.tres" id="14_0cqli"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/hank.tres" id="15_pimf7"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/martha.tres" id="16_bc6eq"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/gid.tres" id="17_ldcmo"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/gray.tres" id="18_pjvw3"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/mira.tres" id="19_0akta"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/rossel.tres" id="20_koq7g"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/npc/don.tres" id="22_don00"]
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_database.gd" id="21_oivy1"]
+
+[resource]
+script = ExtResource("21_oivy1")
+npcs = Array[ExtResource("10_j0vgd")]([ExtResource("11_xwnol"), ExtResource("12_ksmd7"), ExtResource("13_6521e"), ExtResource("14_0cqli"), ExtResource("15_pimf7"), ExtResource("16_bc6eq"), ExtResource("17_ldcmo"), ExtResource("18_pjvw3"), ExtResource("19_0akta"), ExtResource("20_koq7g"), ExtResource("22_don00")])
+cutscenes = Array[ExtResource("1_mheqe")]([ExtResource("2_jnunl"), ExtResource("3_0hvef"), ExtResource("4_jvhwk"), ExtResource("5_mfmo3"), ExtResource("6_movar"), ExtResource("7_o0ytv"), ExtResource("8_pmyqt"), ExtResource("9_yo858"), ExtResource("23_nec00")])

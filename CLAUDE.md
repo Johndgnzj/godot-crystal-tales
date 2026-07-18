@@ -51,6 +51,17 @@ godot-crystal-tales/
 - **`reference/gdevelop/DEV_開發指南.md`**（凍結快照）是系統邊界的權威說明（WORLD_JS/BATTLE_JS 的
   各子系統列表），`TASKS/` 底下的模組任務拆分直接對應這份文件的系統清單，不要另外發明系統邊界。
 
+## 產圖驗收流程（必須分階段）
+
+任何 AI 產圖或圖片編輯任務，必須依下列兩階段執行：
+
+1. **預覽驗收階段**：只產生候選圖並顯示給 John 驗收。此階段不得覆蓋或複製到
+   `godot-project/assets/`，不得更新 `CREDITS_素材授權.md`，不得重建場景／碰撞，不得執行 import、build 或測試。
+2. **正式整合階段**：只有當 John 明確回覆「可以了」、「這張可以」或其他等價的驗收通過語句後，
+   才可將圖片放入專案，同步授權與相關文件，重建場景／碰撞，並執行必要的 import、build 與測試。
+
+驗收前若 John 要求修改，必須繼續留在預覽驗收階段，不可提前做任何專案整合工作。
+
 ## 文件同步規則（重要，避免文件與實際脫勾）
 
 **調整遊戲內容後，必須同步更新對應文件——這是硬性規則，不是可選項。** 文件與實際脫勾是本專案最該避免的技術債。
@@ -59,7 +70,7 @@ godot-crystal-tales/
 
 | 你改了什麼 | 必須同步更新 |
 |---|---|
-| 劇情 / 對話 / 過場（`dialogue.json` 等）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
+| 劇情 / 對話 / 過場（`resources/content/dialogue/**/*.tres`；種子 `dialogue.json`）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
 | 數值 / 角色 / 裝備（`resources/content/*.tres`）| 對應 `docs/` 敘事或設計文件、**設定集 Artifact**（見下）|
 | 素材（`godot-project/assets/`）| `CREDITS_素材授權.md`（授權帳本）、必要時 `docs/素材管理規範.md`|
 | 新增/移除/搬動任何文件 | `README.md` 索引、`docs/README.md` 索引 |
@@ -90,13 +101,14 @@ godot-crystal-tales/
   只能有一個目標版本**：日後只跟 4.7 的點版（4.7.x），要跨大版升級須另開任務評估 breaking change 後再全專案切換。
 - **語言：GDScript**（不用 C#）——理由：GDevelop 端邏輯本來就是動態語言(JS)風格、資料驅動；GDScript 生態與
   debug 工具鏈更輕量，團隊目前是 John + AI agent 協作，不需要 C# 的型別工程量。
-- **渲染：2D，像素風**，比照 GDevelop 設定：`windowWidth=1280 windowHeight=720`，`scaleMode: nearest`
-  （對應 Godot 的 `Viewport` texture filter = Nearest；`stretch mode` **CORE-1 決定採用 `viewport`**——
-  tile-based 像素風遊戲用 `viewport` 模式整張畫面以固定基準解析度算圖後再整體縮放＋nearest filter，避免
-  `canvas_items` 模式下各節點各自縮放造成的 tile 接縫/次像素抖動。**注意**：CORE-1 執行當下環境內沒有可用的
-  Godot 執行檔可以實機開專案測試（多方管道嘗試下載皆被網路政策擋下，見 `TASKS/00_核心任務.md` CORE-1 狀態
-  說明），這個決定是依 Godot 官方文件＋社群慣例做的書面判斷、**尚未實機驗證**，之後拿到可用的 Godot 編輯器
-  時應實際開專案確認縮放/像素對齊行為，如與預期不符再回來調整）。
+- **渲染：2D 手繪風（2026-07-18 定案，取代原「像素風」方向）**：`stretch mode = canvas_items`＋全域
+  `texture filter = Linear`（`project.godot` 的 `default_texture_filter=1`），讓手繪地圖與水彩立繪以**視窗原生
+  解析度**算圖、平滑取樣。base 視窗 `1280×720` 保留為設計/座標參考，實際視窗 `1920×1080`。
+  - **沿革**：CORE-1 原採 `viewport`＋Nearest（像素風的**書面判斷、未實機驗證**），理由是 tile 像素風要避免
+    接縫/次像素抖動。2026-07-18 John 實機發現手繪素材偏糊，且**美術方向已轉手繪**（地圖改成整張手繪畫面圖、
+    非 tilemap，接縫理由消失；角色改水彩立繪），故正式改 `canvas_items`＋Linear。縮放/清晰度以 John 實機觀感為準。
+  - **例外**：若仍保留**真正的像素小圖**（LPC 行走圖／戰鬥圖／tile atlas／虛擬搖桿等），那幾張要在各自的
+    `.import` 個別設 `Nearest` 覆蓋全域 Linear，避免被糊化（待製作，逐一挑出）。
 - **狀態管理：Autoload 單例**取代 GDevelop 的全域變數（`g_party`/`g_flags`/…），詳見 `specs/SAVE_SCHEMA.md`。
 - **場景切換**：用 `get_tree().change_scene_to_file()` 或自訂 `SceneRouter` autoload，取代 GDevelop 的
   `replaceScene` + `g_result`/`g_returnScene` 機制（規格照搬，實作方式改用 Godot Signal）。

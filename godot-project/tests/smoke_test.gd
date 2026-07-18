@@ -138,7 +138,7 @@ func _check_data_layer() -> void:
 	if dsys != null and bool(dsys.get("is_loaded")):
 		_ok("DialogueSystem.is_loaded == true")
 	elif dsys != null:
-		_bad("DialogueSystem.is_loaded == false（dialogue.json 載入失敗？）")
+		_bad("DialogueSystem.is_loaded == false（dialogue_db.tres 載入失敗？）")
 
 
 func _check_scenes_load() -> void:

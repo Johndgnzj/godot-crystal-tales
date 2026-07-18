@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_f6rrr"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_0u2vl"]
+
+[sub_resource type="Resource" id="Resource_q1udw"]
+script = ExtResource("1_f6rrr")
+speaker = "瑪琳"
+text = "路德！聽說你要跟亞倫先生去礦山見習？"
+
+[sub_resource type="Resource" id="Resource_nehei"]
+script = ExtResource("1_f6rrr")
+speaker = "路德"
+text = "嗯！我很快就回來——等著聽我的冒險故事吧！"
+
+[sub_resource type="Resource" id="Resource_vrtpb"]
+script = ExtResource("1_f6rrr")
+speaker = "亞倫"
+text = "（在鎮北等著）……準備好了就從北邊出口出發。想先逛逛鎮子也行。"
+
+[sub_resource type="Resource" id="Resource_i28k3"]
+script = ExtResource("1_f6rrr")
+text = "（可以先和鎮民聊聊。準備好了就走北邊出口前往礦山）"
+
+[resource]
+script = ExtResource("2_0u2vl")
+id = "prologue_town"
+once = "c_pro_town"
+lines = Array[ExtResource("1_f6rrr")]([SubResource("Resource_q1udw"), SubResource("Resource_nehei"), SubResource("Resource_vrtpb"), SubResource("Resource_i28k3")])
+transfer = PackedStringArray()
+party = PackedStringArray()

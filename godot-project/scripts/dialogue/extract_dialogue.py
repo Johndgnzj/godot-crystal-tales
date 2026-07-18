@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""MOD-A 抽取腳本：把 build_cq2.py 的 DLG/CUTS dict literal 轉成 dialogue.json。
+"""MOD-A 抽取腳本：把 build_cq2.py 的 DLG/CUTS dict literal 轉成 dialogue.json（種子）。
+
+注意（v3.0 起）：dialogue.json 已不是遊戲直接讀的資料——它是「種子」，之後由
+scripts/dialogue/build_dialogue_tres.gd 轉成原生 .tres（真相源＝resources/content/dialogue/**/*.tres，
+DialogueSystem 讀聚合 dialogue_db.tres）。本腳本＋build_dialogue_tres.gd 只在「重新匯入種子」時才跑；
+平時設計員直接在 Godot Inspector 編個別 .tres。
 
 決定（見 TASKS/01_對話劇情.md「已知風險」與 specs/DIALOGUE_SPEC.md D-2 最後一段）：不要手動抄
 DLG/CUTS 到 Godot 端資料檔，容易漏抄/抄錯；改用這支腳本直接對 build_cq2.py 做 AST 解析，取出
@@ -16,8 +21,8 @@ JSON。之後 GDevelop 端台詞異動，重跑這支腳本即可重新抽取，
     組動態指令選單（交談／功能／一次性事件／離開），見 interior.gd 與 dialogue_system.get_interior_commands()。
     戶外 NPC（gray/mira/guard）沒有 cmd，維持既有「首個 when 命中」的對話行為，不受影響。
   - CUTS 的 "lines" 從 `[[speaker, text], ...]` 轉成 `[{"speaker":..., "text":...}, ...]`
-    （解決 specs/DIALOGUE_SPEC.md D-8「待確認事項」——本次抽取時定案為 Dictionary 陣列，比陣列的
-    陣列更適合 Godot 端用欄位名稱存取，見 cutscene_entry.gd）。
+    （json 種子層仍是 Dictionary 陣列；Godot 端 v3.0 起已進一步轉為 Array[CutsceneLine]，轉換在
+    build_dialogue_tres.gd／cutscene_entry.gd from_dict，見 DIALOGUE_SPEC v3.0）。
   - CUTS 額外欄位 "battle"/"transfer"/"setstep"/"party" 目前不在 spec D-3 文件內（该文件只寫了
     once/lines），是本次抽取時從原始碼發現的既有欄位（L995-997 的 demon_pre/demon_post/town_start）：
     一併保留，並回頭更新了 specs/DIALOGUE_SPEC.md D-3（見該檔案版本註記）。缺省一律補 null / 空陣列，

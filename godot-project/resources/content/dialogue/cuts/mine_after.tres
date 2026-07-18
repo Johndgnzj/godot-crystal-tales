@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_pkg4r"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_s8suj"]
+
+[sub_resource type="Resource" id="Resource_ht41l"]
+script = ExtResource("1_pkg4r")
+text = "（洞熊倒下，崩石隨著牠的重量嘩啦鬆開，露出一道向下的黑暗礦道）"
+
+[sub_resource type="Resource" id="Resource_1baov"]
+script = ExtResource("1_pkg4r")
+speaker = "瑪琳"
+text = "這股味道……和那天，我們遇上那東西的時候一模一樣。"
+
+[sub_resource type="Resource" id="Resource_5ypnl"]
+script = ExtResource("1_pkg4r")
+speaker = "路德"
+text = "下面有東西。骷髏、洞熊……都是被它從這裡……"
+
+[sub_resource type="Resource" id="Resource_v7kiy"]
+script = ExtResource("1_pkg4r")
+speaker = "路德"
+text = "（亞倫大哥……當年擋在我面前的，是不是也和這底下的東西有關？）"
+
+[sub_resource type="Resource" id="Resource_reb33"]
+script = ExtResource("1_pkg4r")
+text = "（深處的路開了。先回鎮上把所見告訴老葛雷與鎮長吧）"
+
+[resource]
+script = ExtResource("2_s8suj")
+id = "mine_after"
+once = "c_mine_after"
+lines = Array[ExtResource("1_pkg4r")]([SubResource("Resource_ht41l"), SubResource("Resource_1baov"), SubResource("Resource_5ypnl"), SubResource("Resource_v7kiy"), SubResource("Resource_reb33")])
+transfer = PackedStringArray()
+party = PackedStringArray()

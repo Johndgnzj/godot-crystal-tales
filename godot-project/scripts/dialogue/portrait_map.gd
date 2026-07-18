@@ -13,17 +13,18 @@ extends RefCounted
 const FACE := {
 	"路德": "ludo",
 	"瑪琳": "marin",
-	"亞倫": "aaron",
+	"亞倫": "alan",
 	"緹娜": "tina",
 	"朵拉": "dora",
-	"希雅修女": "sister",
+	"希雅修女": "shea",
 	"巴頓鎮長": "barton",
 	"吉德": "gid",
 	"漢克": "hank",
 	"瑪莎": "martha",
 	"老葛雷": "gray",
 	"米拉": "mira",
-	"羅素隊長": "guard",
+	"羅素隊長": "rossel",
+	"死靈術士": "necro",
 }
 
 

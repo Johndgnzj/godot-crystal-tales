@@ -853,7 +853,7 @@ const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vec
 const HERO_H := 104.0   # 原 156 縮成 2/3（John 要求）
 const FOE_H := 82.0     # 原 122 縮成 2/3
 const BOSS_H := 140.0   # 原 210 縮成 2/3
-const HERO_RATIO := {"ludo": 0.92, "marin": 0.58, "aaron": 0.80}   # 由 assets/battle/hero_dims.json 換算（w/h）
+const HERO_RATIO := {"ludo": 0.92, "marin": 0.58, "alan": 0.80}   # 由 assets/battle/hero_dims.json 換算（w/h）
 const FRAME_DT := 0.18
 # 我方發動攻擊時向前（敵方在左＝-x）踏步出招再回位。
 const LUNGE_DUR := 0.55

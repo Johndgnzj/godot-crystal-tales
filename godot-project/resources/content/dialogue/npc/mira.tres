@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_l7kfg"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_qnjam"]
+
+[sub_resource type="Resource" id="Resource_e3tsm"]
+script = ExtResource("1_l7kfg")
+when = "mira2==2"
+speaker = "米拉"
+lines = PackedStringArray("那些鏡草夠我熬好一陣子的藥了，真是幫了大忙！", "路上也別忘了照顧自己的傷。")
+
+[sub_resource type="Resource" id="Resource_dmsa6"]
+script = ExtResource("1_l7kfg")
+when = "herb==3"
+speaker = "米拉"
+lines = PackedStringArray("三株鏡草都採齊了？太好了！", "來，這些藥水你們拿去——採藥的謝禮。", "（獲得『藥水』×3！）")
+action = "mira_reward"
+
+[sub_resource type="Resource" id="Resource_xtldj"]
+script = ExtResource("1_l7kfg")
+when = "mira2==1"
+speaker = "米拉"
+lines = PackedStringArray("東之森裡三株會發光的『鏡草』，就麻煩你們了。", "它們喜歡長在水邊和大石頭旁。")
+
+[sub_resource type="Resource" id="Resource_w03wb"]
+script = ExtResource("1_l7kfg")
+when = "gotEar==0"
+speaker = "米拉"
+lines = PackedStringArray("東之森的藥草最近都採不到了……草叢裡老是冒出怪物。", "你們要進森林嗎？能不能順手幫我採三株『鏡草』回來？", "對了，這耳環是我在森林邊撿到的，先送你們——就當訂金。", "（獲得『凝神耳環』！）", "（【支線】到東之森採集鏡草×3）")
+action = "mira_start"
+
+[sub_resource type="Resource" id="Resource_80qoe"]
+script = ExtResource("1_l7kfg")
+speaker = "米拉"
+lines = PackedStringArray("鏡草要三株才夠熬一鍋藥。", "東之森的水邊和大石頭旁比較好找。")
+
+[resource]
+script = ExtResource("2_qnjam")
+id = "mira"
+entries = Array[ExtResource("1_l7kfg")]([SubResource("Resource_e3tsm"), SubResource("Resource_dmsa6"), SubResource("Resource_xtldj"), SubResource("Resource_w03wb"), SubResource("Resource_80qoe")])

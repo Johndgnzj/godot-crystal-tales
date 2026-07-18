@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_b7qdl"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_ybrlc"]
+
+[sub_resource type="Resource" id="Resource_r5yxm"]
+script = ExtResource("1_b7qdl")
+speaker = "瑪莎"
+lines = PackedStringArray("你這孩子，越來越像年輕時的你爸了。", "這枚戒指你戴著——是我年輕時你爸打的，保平安。", "（獲得『活力戒指』！開啟 選單→裝備 可以裝上）")
+action = "give_ring"
+cmd = "martha_gift"
+label = "母親的心意"
+done = "gotRing"
+
+[sub_resource type="Resource" id="Resource_hvfht"]
+script = ExtResource("1_b7qdl")
+speaker = "瑪莎"
+lines = PackedStringArray("你這孩子，越來越像年輕時的你爸了。", "路上一定要吃飽穿暖，聽到沒？")
+cmd = "talk"
+
+[resource]
+script = ExtResource("2_ybrlc")
+id = "martha"
+entries = Array[ExtResource("1_b7qdl")]([SubResource("Resource_r5yxm"), SubResource("Resource_hvfht")])

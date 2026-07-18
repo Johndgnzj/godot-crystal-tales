@@ -14,7 +14,7 @@ const SCENE_OUT := "res://scenes/world/painted/ef_a.tscn"
 const PC := "res://scripts/world/player_controller.gd"
 const EZ := "res://scripts/world/exit_zone.gd"
 const PS := "res://scripts/world/painted_screen.gd"
-const PLAYER_TEX := "res://assets/char/aaron_Down_0.png"
+const PLAYER_TEX := "res://assets/char/alan_Down_0.png"
 
 
 func _initialize() -> void:

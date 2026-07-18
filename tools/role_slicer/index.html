@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>角色立繪切圖工具 — 水晶戰記</title>
+<style>
+  :root{
+    --bg:#14161c; --panel:#1d212b; --line:#2c313d; --ink:#e6e9f0; --dim:#8b93a7;
+    --accent:#5ac8fa; --a:#5ad1c4; --b:#ffb454; --ok:#59d98a; --err:#ff7b7b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.5 -apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+       background:var(--bg);color:var(--ink)}
+  header{padding:14px 20px;border-bottom:1px solid var(--line)}
+  header h1{margin:0;font-size:17px}
+  header p{margin:3px 0 0;color:var(--dim);font-size:12.5px}
+  main{display:flex;gap:18px;padding:18px;align-items:flex-start;flex-wrap:wrap}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .controls{width:290px;flex:0 0 auto;display:flex;flex-direction:column;gap:14px}
+  .stagewrap{flex:1 1 420px;min-width:320px}
+  .viewbar{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+  .viewbar button{padding:4px 10px}
+  .zoomval{font-variant-numeric:tabular-nums;color:var(--dim);min-width:56px;text-align:center}
+  .viewhint{margin-left:auto;font-size:11.5px;color:var(--dim)}
+  .viewtoggle{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--dim);cursor:pointer}
+  .viewport{width:100%;height:600px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#0f1116}
+
+  label.field{display:block;font-size:12px;color:var(--dim);margin-bottom:5px}
+  input[type=text]{width:100%;padding:8px 10px;background:#12141a;border:1px solid var(--line);
+       border-radius:8px;color:var(--ink);font-size:14px}
+  input[type=text]:focus{outline:none;border-color:var(--accent)}
+  input[type=range]{width:100%}
+  .row{display:flex;align-items:center;gap:8px}
+  .row .val{margin-left:auto;color:var(--dim);font-variant-numeric:tabular-nums}
+
+  button{font:inherit;border:1px solid var(--line);background:#242a36;color:var(--ink);
+       padding:8px 12px;border-radius:8px;cursor:pointer}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#06222e;border-color:var(--accent);font-weight:700}
+  button.on{background:var(--accent);color:#06222e;border-color:var(--accent)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  .btns{display:flex;gap:8px}
+  .btns button{flex:1}
+
+  .swatch{width:26px;height:26px;border-radius:6px;border:1px solid var(--line);flex:0 0 auto}
+  .hex{font-variant-numeric:tabular-nums;color:var(--dim)}
+  .file{position:relative;overflow:hidden;display:inline-block;width:100%}
+  .file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+  .stage{position:relative;display:inline-block;
+       background-color:#2a2f3a;
+       background-image:
+         linear-gradient(45deg,#3a4150 25%,transparent 25%),
+         linear-gradient(-45deg,#3a4150 25%,transparent 25%),
+         linear-gradient(45deg,transparent 75%,#3a4150 75%),
+         linear-gradient(-45deg,transparent 75%,#3a4150 75%);
+       background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0}
+  canvas{display:block}
+  .boxes{position:absolute;inset:0}
+  .box{position:absolute;border:2px solid #fff;cursor:move;touch-action:none}
+  .box[data-box=a]{border-color:var(--a);color:var(--a);z-index:3}
+  .box[data-box=b]{border-color:var(--b);color:var(--b);z-index:2}
+  .box::before,.box::after{content:"";position:absolute;background:currentColor;opacity:0;
+       pointer-events:none;box-shadow:0 0 1px rgba(0,0,0,.55)}
+  .box::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-.5px)}   /* 垂直中線 */
+  .box::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-.5px)}    /* 水平中線 */
+  .boxes.guides .box::before,.boxes.guides .box::after{opacity:.85}
+  .box .tag{position:absolute;top:-2px;left:-2px;font-size:11px;font-weight:700;padding:1px 6px;
+       color:#06222e;white-space:nowrap;border-radius:0 0 6px 0}
+  .box[data-box=a] .tag{background:var(--a)}
+  .box[data-box=b] .tag{background:var(--b)}
+  .box .h{position:absolute;width:12px;height:12px;background:#fff;border-radius:3px;
+       border:1px solid #000;touch-action:none}
+  .box[data-box=a] .h{background:var(--a)}
+  .box[data-box=b] .h{background:var(--b)}
+  .h.nw{left:-6px;top:-6px;cursor:nwse-resize}
+  .h.ne{right:-6px;top:-6px;cursor:nesw-resize}
+  .h.sw{left:-6px;bottom:-6px;cursor:nesw-resize}
+  .h.se{right:-6px;bottom:-6px;cursor:nwse-resize}
+  .drophint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+       color:var(--dim);font-size:14px;pointer-events:none;text-align:center;padding:20px}
+
+  .legend{margin-top:12px;font-size:12px;color:var(--dim);display:flex;flex-direction:column;gap:4px}
+  .legend b{color:var(--ink)}
+  .swatchdot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  .status{min-height:20px;font-size:12.5px}
+  .status.ok{color:var(--ok)} .status.err{color:var(--err)}
+  .hint{font-size:11.5px;color:var(--dim);margin-top:-6px}
+  hr.sep{border:none;border-top:1px solid var(--line);margin:2px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>角色立繪切圖工具</h1>
+  <p>上傳一張「去背前的全身圖」→ 去螢光底 → 框選頭像(a)/半身(b) → 匯出三張到 <code>assets-source/role/&lt;id&gt;/</code>（暫存，不會動到遊戲專案）</p>
+</header>
+
+<main>
+  <section class="panel controls">
+    <div>
+      <label class="field" for="charId">角色 id（英數底線，字母開頭）</label>
+      <input type="text" id="charId" placeholder="例：ludo" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="file">
+      <button style="width:100%">📁 選擇 / 更換全身圖</button>
+      <input type="file" id="fileIn" accept="image/*">
+    </div>
+
+    <hr class="sep">
+
+    <div>
+      <label class="field">去背底色（螢光純色）</label>
+      <div class="row">
+        <span class="swatch" id="swatch"></span>
+        <span class="hex" id="hex">—</span>
+        <input type="color" id="colorIn" value="#00ff00" title="手動指定底色">
+        <button id="pickBtn" title="點圖片背景取色">滴管</button>
+        <button id="autoBtn" title="從四角自動偵測">自動</button>
+      </div>
+      <p class="hint">拿到圖先按「自動」；邊緣殘留就開滴管點背景，或調容差。</p>
+    </div>
+
+    <div>
+      <div class="row"><label class="field" style="margin:0">容差 tolerance</label><span class="val" id="tolVal">120</span></div>
+      <input type="range" id="tol" min="0" max="320" value="120">
+    </div>
+    <div>
+      <div class="row"><label class="field" style="margin:0">邊緣柔化 feather</label><span class="val" id="featVal">10</span></div>
+      <input type="range" id="feather" min="0" max="80" value="10">
+    </div>
+    <div class="row">
+      <label class="field" style="margin:0"><input type="checkbox" id="despill" checked> 去色溢（含髮絲殘綠）</label>
+      <label class="field" style="margin:0 0 0 auto"><input type="checkbox" id="preview" checked> 去背預覽</label>
+    </div>
+
+    <hr class="sep">
+
+    <label class="field" style="margin:0"><input type="checkbox" id="resize"> 匯出縮到規格尺寸（a 144² / b·c 高 1024）</label>
+    <p class="hint" style="margin-top:0">關閉＝原始解析度（暫存來源建議用原尺寸，整合時再縮）。</p>
+
+    <div class="btns">
+      <button class="primary" id="exportBtn" disabled>匯出到專案暫存</button>
+      <button id="downloadBtn" disabled title="改用瀏覽器下載三張">下載</button>
+    </div>
+    <div class="status" id="status"></div>
+
+    <div class="legend">
+      <span><span class="swatchdot" style="background:var(--a)"></span><b>頭像 a</b> · 1:1 → <code>face_&lt;id&gt;.png</code></span>
+      <span><span class="swatchdot" style="background:var(--b)"></span><b>半身 b</b> · 3:4 → <code>portrait_&lt;id&gt;.png</code></span>
+      <span><span class="swatchdot" style="background:#889"></span><b>全身 c</b> · 整張去背 → <code>menuart_&lt;id&gt;.png</code></span>
+    </div>
+  </section>
+
+  <section class="stagewrap">
+    <div class="viewbar">
+      <button id="zoomOut" title="縮小">－</button>
+      <button id="zoomFit" title="符合視窗">符合</button>
+      <button id="zoom1" title="原圖 100%（像素級檢視）">1:1</button>
+      <button id="zoomIn" title="放大">＋</button>
+      <span class="zoomval" id="zoomVal">—</span>
+      <label class="viewtoggle"><input type="checkbox" id="guides"> 中線</label>
+      <span class="viewhint">滾輪縮放（對準游標）、拖捲軸平移</span>
+    </div>
+    <div class="viewport" id="viewport">
+      <div class="stage" id="stage">
+        <canvas id="view" width="420" height="560"></canvas>
+        <div class="boxes" id="boxes" hidden>
+          <div class="box" data-box="b">
+            <span class="tag" id="tagB">半身 b</span>
+            <i class="h nw" data-h="nw"></i><i class="h ne" data-h="ne"></i>
+            <i class="h sw" data-h="sw"></i><i class="h se" data-h="se"></i>
+          </div>
+          <div class="box" data-box="a">
+            <span class="tag" id="tagA">頭像 a</span>
+            <i class="h nw" data-h="nw"></i><i class="h ne" data-h="ne"></i>
+            <i class="h sw" data-h="sw"></i><i class="h se" data-h="se"></i>
+          </div>
+        </div>
+        <div class="drophint" id="drophint">拖曳一張全身圖到這裡，或用左側「選擇全身圖」</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const clamp = (v,lo,hi) => v<lo?lo:(v>hi?hi:v);
+
+// 離屏畫布：src=原圖、cut=去背結果（皆原始解析度）
+const srcCanvas = document.createElement("canvas"), srcCtx = srcCanvas.getContext("2d", {willReadFrequently:true});
+const cutCanvas = document.createElement("canvas"), cutCtx = cutCanvas.getContext("2d");
+const view = $("#view"), viewCtx = view.getContext("2d");
+const stage = $("#stage"), boxesEl = $("#boxes"), drophint = $("#drophint"), viewport = $("#viewport");
+
+const state = {
+  img:null, iw:0, ih:0,
+  key:{r:0,g:255,b:0}, tol:120, feather:10, despill:true, preview:true, eyedrop:false,
+  scale:1, fitScale:1, zoom:1, dispW:0, dispH:0,
+  boxes:{ a:{x:0,y:0,w:0,h:0,ratio:1}, b:{x:0,y:0,w:0,h:0,ratio:0.75} },
+};
+let srcData=null, cutData=null;   // 快取 ImageData
+
+/* ---------- 載入圖片 ---------- */
+$("#fileIn").addEventListener("change", e => { const f=e.target.files[0]; if(f) loadFile(f); });
+["dragover","dragleave","drop"].forEach(ev => stage.addEventListener(ev, e=>e.preventDefault()));
+stage.addEventListener("drop", e => { const f=e.dataTransfer.files[0]; if(f && f.type.startsWith("image/")) loadFile(f); });
+
+function loadFile(file){
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    URL.revokeObjectURL(url);
+    state.img=img; state.iw=img.naturalWidth; state.ih=img.naturalHeight;
+    srcCanvas.width=cutCanvas.width=state.iw; srcCanvas.height=cutCanvas.height=state.ih;
+    srcCtx.drawImage(img,0,0);
+    srcData = srcCtx.getImageData(0,0,state.iw,state.ih);
+    cutData = cutCtx.createImageData(state.iw,state.ih);
+    // 若沒手動改過 id，就用檔名當預設
+    if(!$("#charId").value) $("#charId").value = file.name.replace(/\.[^.]+$/,"").toLowerCase().replace(/[^a-z0-9_]/g,"").slice(0,32);
+    state.zoom=1;
+    autoKey();                 // 自動偵測底色（內含 recompute+render）
+    defaultBoxes(); fit(); render(); updateZoomReadout();
+    drophint.hidden=true; boxesEl.hidden=false;
+    $("#exportBtn").disabled=false; $("#downloadBtn").disabled=false;
+    setStatus(`已載入 ${state.iw}×${state.ih}`, "");
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); setStatus("圖片載入失敗", "err"); };
+  img.src = url;
+}
+
+/* ---------- 去背底色 ---------- */
+function setKey(r,g,b){
+  state.key={r,g,b};
+  const hex = "#"+[r,g,b].map(v=>v.toString(16).padStart(2,"0")).join("");
+  $("#swatch").style.background=hex; $("#hex").textContent=hex.toUpperCase();
+  $("#colorIn").value=hex;
+  scheduleRecompute();
+}
+function autoKey(){
+  // 沿邊界「內縮 6%」取周邊點，用各通道中位數 —— 內縮是為了避開外框／圓角（角落常是深色描邊，
+  // 不是背景色）；中位數對少數混到角色的取樣點（如底部斗篷/腳）穩健。
+  const s=srcData.data, iw=state.iw, ih=state.ih;
+  const inset=Math.round(Math.min(iw,ih)*0.06), N=16;
+  const rs=[],gs=[],bs=[];
+  const push=(x,y)=>{ x=clamp(x,0,iw-1); y=clamp(y,0,ih-1); const i=(y*iw+x)*4; rs.push(s[i]); gs.push(s[i+1]); bs.push(s[i+2]); };
+  for(let k=0;k<=N;k++){
+    const x=inset+Math.round((iw-1-2*inset)*k/N), y=inset+Math.round((ih-1-2*inset)*k/N);
+    push(x,inset); push(x,ih-1-inset); push(inset,y); push(iw-1-inset,y);   // 上下左右四邊
+  }
+  const med=a=>{ a.sort((p,q)=>p-q); return a[a.length>>1]; };
+  setKey(med(rs),med(gs),med(bs));
+}
+$("#autoBtn").addEventListener("click", ()=>{ if(state.img) autoKey(); });
+$("#colorIn").addEventListener("input", e=>{
+  const h=e.target.value; setKey(parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16));
+});
+$("#pickBtn").addEventListener("click", ()=> toggleEyedrop(!state.eyedrop));
+function toggleEyedrop(on){
+  state.eyedrop=on; $("#pickBtn").classList.toggle("on",on);
+  boxesEl.style.pointerEvents = on ? "none" : "auto";
+  stage.style.cursor = on ? "crosshair" : "";
+}
+view.addEventListener("pointerdown", e=>{
+  if(!state.eyedrop || !state.img) return;
+  const p=toImg(e), x=clamp(Math.floor(p.x),0,state.iw-1), y=clamp(Math.floor(p.y),0,state.ih-1);
+  const d=srcData.data, i=(y*state.iw+x)*4;
+  setKey(d[i],d[i+1],d[i+2]); toggleEyedrop(false);
+});
+
+/* ---------- 參數 ---------- */
+$("#tol").addEventListener("input", e=>{ state.tol=+e.target.value; $("#tolVal").textContent=e.target.value; scheduleRecompute(); });
+$("#feather").addEventListener("input", e=>{ state.feather=+e.target.value; $("#featVal").textContent=e.target.value; scheduleRecompute(); });
+$("#despill").addEventListener("change", e=>{ state.despill=e.target.checked; scheduleRecompute(); });
+$("#preview").addEventListener("change", e=>{ state.preview=e.target.checked; render(); });
+$("#resize").addEventListener("change", updateReadouts);
+
+/* ---------- 去背運算 ---------- */
+let pending=false;
+function scheduleRecompute(){ if(pending||!state.img) return; pending=true; requestAnimationFrame(()=>{ pending=false; recomputeCut(); render(); }); }
+function recomputeCut(){
+  const {r:kr,g:kg,b:kb}=state.key, tol=state.tol, feather=state.feather;
+  const s=srcData.data, o=cutData.data;
+  const hi=[kr>140,kg>140,kb>140];              // 底色的「亮」通道
+  for(let i=0;i<s.length;i+=4){
+    const r=s[i],g=s[i+1],b=s[i+2];
+    const dr=r-kr,dg=g-kg,db=b-kb;
+    const dist=Math.sqrt(dr*dr+dg*dg+db*db);
+    let a;
+    if(dist<=tol) a=0;
+    else if(feather>0 && dist<=tol+feather) a=((dist-tol)/feather)*255;
+    else a=255;
+    let nr=r,ng=g,nb=b;
+    if(state.despill && a>0){                    // 壓色溢：把「底色亮通道」壓到非底色通道的上限。
+      // 對所有保留像素做（不只半透明邊緣）——這樣連髮絲那種「不透明但帶殘綠」的邊也清得掉。
+      // 只在該通道確實高過非底色通道時才壓，故角色本體（配色已避開底色）不受影響。
+      let lo=0;
+      if(!hi[0]) lo=Math.max(lo,r);
+      if(!hi[1]) lo=Math.max(lo,g);
+      if(!hi[2]) lo=Math.max(lo,b);
+      if(hi[0]&&nr>lo) nr=lo;
+      if(hi[1]&&ng>lo) ng=lo;
+      if(hi[2]&&nb>lo) nb=lo;
+    }
+    o[i]=nr; o[i+1]=ng; o[i+2]=nb; o[i+3]=a;
+  }
+  cutCtx.putImageData(cutData,0,0);
+}
+
+/* ---------- 顯示 ---------- */
+function sizeViewport(){
+  // 用 JS 定高（不靠 CSS vh）：某些嵌入式瀏覽器 window.innerHeight 會回報 0、vh 就變 0，
+  // viewport 會塌成一條線——用 || 後備值擋掉並設下限。
+  viewport.style.height = Math.max(360, Math.round((window.innerHeight||900)*0.74)) + "px";
+}
+function fit(){
+  sizeViewport();
+  const maxW = viewport.clientWidth - 4, maxH = viewport.clientHeight - 4;
+  state.fitScale = Math.max(0.02, Math.min(maxW/state.iw, maxH/state.ih));
+  applyScale();
+}
+function applyScale(){
+  state.scale = state.fitScale * state.zoom;
+  state.dispW = Math.max(1,Math.round(state.iw*state.scale));
+  state.dispH = Math.max(1,Math.round(state.ih*state.scale));
+}
+function render(){
+  if(!state.img) return;
+  view.width=state.dispW; view.height=state.dispH;
+  viewCtx.clearRect(0,0,view.width,view.height);
+  viewCtx.imageSmoothingEnabled=true; viewCtx.imageSmoothingQuality="high";
+  viewCtx.drawImage(state.preview?cutCanvas:srcCanvas, 0,0,state.iw,state.ih, 0,0,state.dispW,state.dispH);
+  positionBoxes(); updateReadouts();
+}
+window.addEventListener("resize", ()=>{ sizeViewport(); if(state.img){ fit(); render(); } });
+sizeViewport();   // 頁面一開就給 viewport 正確高度（空狀態的拖放區也要夠大）
+
+/* ---------- 縮放／平移 ---------- */
+function updateZoomReadout(){ $("#zoomVal").textContent = state.img ? Math.round(state.scale*100)+"%" : "—"; }
+function centerScroll(){ viewport.scrollLeft=(state.dispW-viewport.clientWidth)/2; viewport.scrollTop=(state.dispH-viewport.clientHeight)/2; }
+function zoomAt(factor, clientX, clientY){
+  if(!state.img) return;
+  const vp=viewport.getBoundingClientRect();
+  const fx=(clientX-vp.left)+viewport.scrollLeft, fy=(clientY-vp.top)+viewport.scrollTop;
+  const rx=fx/state.dispW, ry=fy/state.dispH;                              // 游標對準的影像相對位置
+  state.zoom=clamp(state.zoom*factor, 0.2, 8/Math.max(1e-4,state.fitScale)); // scale 上限 ~800%
+  applyScale(); render();
+  viewport.scrollLeft=rx*state.dispW-(clientX-vp.left);                    // 讓同一點維持在游標下
+  viewport.scrollTop =ry*state.dispH-(clientY-vp.top);
+  updateZoomReadout();
+}
+viewport.addEventListener("wheel", e=>{ if(!state.img) return; e.preventDefault(); zoomAt(e.deltaY<0?1.15:1/1.15, e.clientX, e.clientY); }, {passive:false});
+$("#zoomIn").addEventListener("click", ()=>{ const r=viewport.getBoundingClientRect(); zoomAt(1.25, r.left+r.width/2, r.top+r.height/2); });
+$("#zoomOut").addEventListener("click", ()=>{ const r=viewport.getBoundingClientRect(); zoomAt(1/1.25, r.left+r.width/2, r.top+r.height/2); });
+$("#zoomFit").addEventListener("click", ()=>{ if(!state.img)return; state.zoom=1; applyScale(); render(); viewport.scrollTo(0,0); updateZoomReadout(); });
+$("#zoom1").addEventListener("click", ()=>{ if(!state.img)return; state.zoom=1/state.fitScale; applyScale(); render(); centerScroll(); updateZoomReadout(); });
+$("#guides").addEventListener("change", e=>{ boxesEl.classList.toggle("guides", e.target.checked); });
+
+/* ---------- 框選 ---------- */
+function defaultBoxes(){
+  const iw=state.iw, ih=state.ih;
+  let bw=iw, bh=bw*4/3;
+  if(bh>ih*0.92){ bh=ih*0.92; bw=bh*0.75; }
+  state.boxes.b={x:(iw-bw)/2,y:0,w:bw,h:bh,ratio:0.75};
+  let aw=Math.min(iw*0.5, ih*0.42);
+  state.boxes.a={x:(iw-aw)/2,y:ih*0.02,w:aw,h:aw,ratio:1};
+}
+function positionBoxes(){
+  for(const key of ["a","b"]){
+    const box=state.boxes[key], el=boxesEl.querySelector(`[data-box=${key}]`);
+    el.style.left=(box.x*state.scale)+"px"; el.style.top=(box.y*state.scale)+"px";
+    el.style.width=(box.w*state.scale)+"px"; el.style.height=(box.h*state.scale)+"px";
+  }
+}
+function toImg(e){ const r=view.getBoundingClientRect(); return {x:(e.clientX-r.left)/state.scale, y:(e.clientY-r.top)/state.scale}; }
+
+let drag=null;
+boxesEl.addEventListener("pointerdown", e=>{
+  const el=e.target.closest(".box"); if(!el||!state.img) return;
+  const key=el.dataset.box, p=toImg(e);
+  if(e.target.classList.contains("h")) drag={key,mode:"resize",handle:e.target.dataset.h};
+  else drag={key,mode:"move",sx:p.x,sy:p.y,start:{...state.boxes[key]}};
+  el.setPointerCapture?.(e.pointerId); e.preventDefault();
+});
+window.addEventListener("pointermove", e=>{
+  if(!drag) return;
+  const p=toImg(e), box=state.boxes[drag.key];
+  if(drag.mode==="move"){
+    box.x=clamp(drag.start.x+(p.x-drag.sx),0,state.iw-box.w);
+    box.y=clamp(drag.start.y+(p.y-drag.sy),0,state.ih-box.h);
+  } else applyResize(box,drag.handle,p.x,p.y);
+  positionBoxes(); updateReadouts();
+});
+window.addEventListener("pointerup", ()=>{ drag=null; });
+
+function applyResize(box,handle,imgX,imgY){
+  const ratio=box.ratio, MIN=24;
+  const west=handle.includes("w"), north=handle.includes("n");
+  const ax=west?box.x+box.w:box.x, ay=north?box.y+box.h:box.y;   // 固定不動的錨點
+  let w=Math.max(MIN,Math.abs(imgX-ax)), h=w/ratio;
+  const hv=Math.max(MIN/ratio,Math.abs(imgY-ay));                // 也看垂直距離，取大者，拖起來自然
+  if(hv>h){ h=hv; w=h*ratio; }
+  const maxW=west?ax:state.iw-ax, maxH=north?ay:state.ih-ay;      // 依錨點方向的可用空間
+  const s=Math.min(1,maxW/w,maxH/h);                             // 等比縮到不超界
+  w*=s; h*=s;
+  box.w=w; box.h=h;
+  box.x=west?ax-w:ax; box.y=north?ay-h:ay;
+}
+
+/* ---------- 讀數 ---------- */
+function targetH(key){ if(!$("#resize").checked) return null; return key==="a"?144:1024; }
+function fmt(box,key){
+  const w=Math.round(box.w),h=Math.round(box.h), t=targetH(key);
+  if(!t) return `${w}×${h}`;
+  const dh=(key==="a")?144:t, dw=Math.round(box.w*dh/box.h);
+  return `${w}×${h} → ${dw}×${dh}`;
+}
+function updateReadouts(){
+  if(!state.img) return;
+  $("#tagA").textContent=`頭像 a · ${fmt(state.boxes.a,"a")}`;
+  $("#tagB").textContent=`半身 b · ${fmt(state.boxes.b,"b")}`;
+}
+
+/* ---------- 匯出 ---------- */
+function cropDataURL(box,key){
+  const t=targetH(key);
+  let dw=Math.round(box.w), dh=Math.round(box.h);
+  if(t){ dh=(key==="a")?144:t; dw=Math.round(box.w*dh/box.h); }
+  const c=document.createElement("canvas"); c.width=Math.max(1,dw); c.height=Math.max(1,dh);
+  const g=c.getContext("2d"); g.imageSmoothingEnabled=true; g.imageSmoothingQuality="high";
+  g.drawImage(cutCanvas, box.x,box.y,box.w,box.h, 0,0,c.width,c.height);
+  return c.toDataURL("image/png");
+}
+function buildFiles(id){
+  return [
+    {name:`face_${id}.png`,     dataURL:cropDataURL(state.boxes.a,"a")},
+    {name:`portrait_${id}.png`, dataURL:cropDataURL(state.boxes.b,"b")},
+    {name:`menuart_${id}.png`,  dataURL:cropDataURL({x:0,y:0,w:state.iw,h:state.ih,ratio:state.iw/state.ih},"c")},
+  ];
+}
+function validId(){
+  const id=$("#charId").value.trim().toLowerCase();
+  if(!/^[a-z][a-z0-9_]{0,31}$/.test(id)){ setStatus("角色 id 需字母開頭、只含英數底線","err"); return null; }
+  return id;
+}
+$("#exportBtn").addEventListener("click", async ()=>{
+  if(!state.img) return; const id=validId(); if(!id) return;
+  setStatus("匯出中…","");
+  try{
+    const r=await fetch("/save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,files:buildFiles(id)})});
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||("HTTP "+r.status));
+    setStatus("✓ 已存到 "+j.dir+"／："+j.saved.map(p=>p.split("/").pop()).join("、"),"ok");
+  }catch(err){ setStatus("匯出失敗："+err.message+"（伺服器沒開？可改按「下載」）","err"); }
+});
+$("#downloadBtn").addEventListener("click", ()=>{
+  if(!state.img) return; const id=validId(); if(!id) return;
+  for(const f of buildFiles(id)){
+    const a=document.createElement("a"); a.href=f.dataURL; a.download=f.name; a.click();
+  }
+  setStatus("已觸發下載三張到瀏覽器下載資料夾","ok");
+});
+function setStatus(msg,kind){ const el=$("#status"); el.textContent=msg; el.className="status "+(kind||""); }
+</script>
+</body>
+</html>
