@@ -124,8 +124,8 @@ npc_list = [{
 "y": 24
 }, {
 "face": "Down",
-"id": "guard",
-"sprite": "guard",
+"id": "rossel",
+"sprite": "rossel",
 "x": 21,
 "y": 27
 }]
@@ -144,7 +144,7 @@ door_list = [{
 }, {
 "key": "shrine",
 "label": "神殿",
-"owners": ["sister"],
+"owners": ["shea"],
 "tx": 30,
 "ty": 8
 }, {
@@ -162,7 +162,7 @@ door_list = [{
 }, {
 "key": "smithy",
 "label": "鐵匠鋪",
-"owners": ["hank", "martha"],
+"owners": ["don"],
 "tx": 14,
 "ty": 24
 }]

@@ -18,7 +18,7 @@ const TILESET := "res://resources/map/collision_tileset.tres"
 const PC := "res://scripts/world/player_controller.gd"
 const EZ := "res://scripts/world/exit_zone.gd"
 const PSC := "res://scripts/world/painted_screen.gd"
-const PLAYER_TEX := "res://assets/char/aaron_Down_0.png"
+const PLAYER_TEX := "res://assets/char/alan_Down_0.png"
 
 ## key: 畫面 id；exits: 邊(W/E/N/S) -> 目標（小寫=本 region 畫面；其他=既有場景名）
 const SCREENS := {

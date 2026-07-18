@@ -60,9 +60,9 @@ npc_list = [{
 "y": 16
 }, {
 "face": "Down",
-"id": "guard",
+"id": "rossel",
 "pos": Vector2(640, 400),
-"sprite": "guard",
+"sprite": "rossel",
 "x": 19,
 "y": 11
 }]
@@ -87,7 +87,7 @@ door_list = [{
 "key": "shrine",
 "label": "教會",
 "outside_pos": Vector2(394, 882),
-"owners": ["sister"],
+"owners": ["shea"],
 "tx": 12,
 "ty": 27
 }, {
@@ -111,7 +111,7 @@ door_list = [{
 "key": "smithy",
 "label": "鐵匠鋪",
 "outside_pos": Vector2(1054, 896),
-"owners": ["hank", "martha"],
+"owners": ["don"],
 "tx": 32,
 "ty": 28
 }]

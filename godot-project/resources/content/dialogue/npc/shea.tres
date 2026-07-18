@@ -35,5 +35,5 @@ cmd = "talk"
 
 [resource]
 script = ExtResource("2_0o1ty")
-id = "sister"
+id = "shea"
 entries = Array[ExtResource("1_i3oc4")]([SubResource("Resource_u2c5k"), SubResource("Resource_h8r6j"), SubResource("Resource_50r4l"), SubResource("Resource_xvfwu")])

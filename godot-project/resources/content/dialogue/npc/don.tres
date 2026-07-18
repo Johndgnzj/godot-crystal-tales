@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_don00"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_don01"]
+
+[sub_resource type="Resource" id="Resource_don_trade"]
+script = ExtResource("1_don00")
+speaker = "唐恩"
+lines = PackedStringArray("我這手藝……堪用啦。要看看嗎？")
+action = "shop_don"
+cmd = "trade"
+label = "交易"
+
+[sub_resource type="Resource" id="Resource_don_first"]
+script = ExtResource("1_don00")
+when = "step==0"
+speaker = "唐恩"
+lines = PackedStringArray("喔？新面孔。要打鐵、修東西，找我唐恩就對了……", "雖然賣相差了點，耐操是真的。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_don_talk"]
+script = ExtResource("1_don00")
+speaker = "唐恩"
+lines = PackedStringArray("這把年紀，手藝就這樣嘍。", "……欸，別嫌鈍，那叫『有個性』。", "真要好傢伙，得往大城找嘍。")
+cmd = "talk"
+
+[resource]
+script = ExtResource("2_don01")
+id = "don"
+entries = Array[ExtResource("1_don00")]([SubResource("Resource_don_trade"), SubResource("Resource_don_first"), SubResource("Resource_don_talk")])

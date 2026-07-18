@@ -12,15 +12,15 @@ const TS := 32
 const DOORS := [
 	{"tx": 13, "ty": 16, "key": "guild", "label": "公會", "owners": ["tina"], "entry_pos": Vector2(416, 512), "outside_pos": Vector2(416, 560)},
 	{"tx": 25, "ty": 18, "key": "inn", "label": "旅店", "owners": ["dora"], "entry_pos": Vector2(804, 560), "outside_pos": Vector2(804, 608)},
-	{"tx": 12, "ty": 27, "key": "shrine", "label": "教會", "owners": ["sister"], "entry_pos": Vector2(394, 832), "outside_pos": Vector2(394, 882)},
+	{"tx": 12, "ty": 27, "key": "shrine", "label": "教會", "owners": ["shea"], "entry_pos": Vector2(394, 832), "outside_pos": Vector2(394, 882)},
 	{"tx": 18, "ty": 31, "key": "mayor", "label": "鎮長宅", "owners": ["barton"], "entry_pos": Vector2(580, 982), "outside_pos": Vector2(580, 1032)},
 	{"tx": 25, "ty": 27, "key": "shop", "label": "道具店", "owners": ["gid"], "entry_pos": Vector2(808, 820), "outside_pos": Vector2(808, 870)},
-	{"tx": 32, "ty": 28, "key": "smithy", "label": "鐵匠鋪", "owners": ["hank", "martha"], "entry_pos": Vector2(1054, 846), "outside_pos": Vector2(1054, 896)},
+	{"tx": 32, "ty": 28, "key": "smithy", "label": "鐵匠鋪", "owners": ["don"], "entry_pos": Vector2(1054, 846), "outside_pos": Vector2(1054, 896)},
 ]
 const NPCS := [
 	{"id": "gray", "sprite": "gray", "x": 17, "y": 18, "pos": Vector2(576, 640), "face": "Right"},
 	{"id": "mira", "sprite": "villager", "x": 7, "y": 16, "pos": Vector2(250, 576), "face": "Down"},
-	{"id": "guard", "sprite": "guard", "x": 19, "y": 11, "pos": Vector2(640, 400), "face": "Down"},
+	{"id": "rossel", "sprite": "rossel", "x": 19, "y": 11, "pos": Vector2(640, 400), "face": "Down"},
 ]
 const SPAWNS := {
 	"home": Vector2(628, 720),        # 廣場（水井南側）

@@ -5,7 +5,7 @@
 [ext_resource type="TileSet" path="res://resources/map/collision_tileset.tres" id="3_274u3"]
 [ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_vu4qs"]
 [ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_u307c"]
-[ext_resource type="Texture2D" path="res://assets/char/aaron_Down_0.png" id="6_2b7i6"]
+[ext_resource type="Texture2D" path="res://assets/char/alan_Down_0.png" id="6_2b7i6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ukj6t"]
 size = Vector2(1100, 44)

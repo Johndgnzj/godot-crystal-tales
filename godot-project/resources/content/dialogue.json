@@ -162,7 +162,7 @@
         "done": null
       }
     ],
-    "sister": [
+    "shea": [
       {
         "when": "ch2>=2",
         "speaker": "希雅修女",
@@ -550,7 +550,7 @@
         "done": null
       }
     ],
-    "guard": [
+    "rossel": [
       {
         "when": "ch1==3",
         "speaker": "羅素隊長",

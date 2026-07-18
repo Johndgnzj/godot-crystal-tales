@@ -42,8 +42,8 @@ const SPRITE_FEET_OFFSET := Vector2(0.0, -22.0)
 const TALK_RADIUS := 72.0
 const PROMPT_SECONDS := 3.0
 const CHAR_DIR := "res://assets/char"
-## 跟隨者可用的行走圖白名單，對應 WORLD_JS `FSPRITES={marin:1,aaron:1}`（L2282）。
-const FOLLOWER_SPRITES := ["marin", "aaron"]
+## 跟隨者可用的行走圖白名單，對應 WORLD_JS `FSPRITES={marin:1,aaron:1}`（L2282；aaron 本專案已改名 alan）。
+const FOLLOWER_SPRITES := ["marin", "alan"]
 const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
 
 @export var scene_id: String = ""            ## CFG.SCENE 邏輯名稱（"Town"…），交給 SceneRouter 用。
@@ -281,7 +281,7 @@ func _chest_tex(opened: bool) -> String:
 
 func _build_char_frames(sprite_names: Array, prefix_with_name: bool) -> SpriteFrames:
 	# 動畫命名對齊 GDevelop char_anims()/follower_anims()（build_cq2.py L494-509）：
-	# 玩家＝"WalkDown"/"IdleDown"…；跟隨者＝"marin_WalkDown"/"aaron_IdleDown"…。
+	# 玩家＝"WalkDown"/"IdleDown"…；跟隨者＝"marin_WalkDown"/"alan_IdleDown"…。
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
 	var any := false

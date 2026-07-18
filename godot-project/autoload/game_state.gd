@@ -37,7 +37,7 @@ extends Node
 ##   補上呼叫**——目前所有寫入 `party` 的地方（例如 dialogue_system.gd 的 `_apply_party()`）都已經在
 ##   註解裡記錄了同樣的已知限制。
 ## - **不實作 `newGame()`/預設隊伍建立**：build_cq2.py 的 `newGame()`（L3368-3380）與 `mk(id)`
-##   （L3357-3364）會建立初始隊伍（ludo/aaron）並內嵌計算 maxhp/maxmp——這同樣牽涉 derive() 等價公式，
+##   （L3357-3364）會建立初始隊伍（ludo/alan）並內嵌計算 maxhp/maxmp——這同樣牽涉 derive() 等價公式，
 ##   而且初始隊伍成員 id 屬於內容資料（應該從 ContentDB 讀，不該在 GameState 硬編碼）。這屬於「新遊戲」
 ##   流程的職責（title 場景 + CORE-3 存檔系統 + MOD-F derive() 整合後才能正確組裝），不是 GameState
 ##   欄位容器本身的職責，所以本檔案只提供空欄位預設值（`party = []` 等），不提供 `reset_to_defaults()`

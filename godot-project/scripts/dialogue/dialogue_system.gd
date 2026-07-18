@@ -395,8 +395,8 @@ func _run_action(action: String) -> void:
 			GameState.gold += 200
 		"shop_gid":
 			shop_requested.emit("gid")
-		"shop_hank":
-			shop_requested.emit("hank")
+		"shop_don":
+			shop_requested.emit("don")
 		"give_sword":
 			# 漢克臨別贈言（build_cq2.py L1836，cmd hank_gift／done gotSword）：贈鐵劍，不開店。
 			if GameState.flag_get("gotSword") == 0:

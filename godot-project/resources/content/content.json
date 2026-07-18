@@ -65,11 +65,11 @@
       ]
     },
     {
-      "id": "aaron",
+      "id": "alan",
       "name": "亞倫",
       "class": "veteran",
       "mainAttr": "str",
-      "sprite": "aaron",
+      "sprite": "alan",
       "base": {
         "str": 30,
         "agi": 24,

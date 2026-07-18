@@ -27,7 +27,7 @@
 測試涵蓋（對應 TASKS/06「至少 3 名不同 mainAttr 隊伍成員」）：
   - ludo（str，CONTENT.json 真實角色）：無裝備 / 滿裝備+多次升級點
   - marin（agi，CONTENT.json 真實角色）：m.eq undefined -> 套用 startEq 模板分支
-  - aaron（str，CONTENT.json 真實 guest 角色，startLevel=20）：guest 高等級邊界
+  - alan（str，CONTENT.json 真實 guest 角色，startLevel=20）：guest 高等級邊界
   - synthetic_mage（int，**CONTENT.json 目前沒有 int 主屬性角色**，見下方 _SYNTHETIC_NOTE）：滿裝備
   - 技能解鎖等級邊界（whirl unlockLv=5，Lv4 vs Lv5 各測一次）
   - hp/mp clamp（超過上限的舊存檔數值、hp 完全未定義兩種情境）
@@ -150,7 +150,7 @@ def py_exp_need(lv: int, content: dict) -> int:
 # 測試案例（見檔頭清單；_SYNTHETIC_NOTE 說明 int 主屬性角色為何是合成資料）
 # =========================================================================
 
-# _SYNTHETIC_NOTE：CONTENT.json 目前只有 3 名隊伍成員（ludo/str、marin/agi、aaron/str），沒有
+# _SYNTHETIC_NOTE：CONTENT.json 目前只有 3 名隊伍成員（ludo/str、marin/agi、alan/str），沒有
 # int 主屬性角色（截至 2026-07-14）。TASKS/06 要求「至少涵蓋 3 名不同 mainAttr 的隊伍成員」，但真實
 # 資料無法滿足（缺 int 分支）。這裡用一個明確標記為合成（synthetic_mage，id 不存在於 CONTENT.json）
 # 的測試 member 補上 int 分支覆蓋，驗證 `patk = weaponAtk + attrs[mainAttr]*2` 對任意 mainAttr 字串都
@@ -169,7 +169,7 @@ DERIVE_CASES = [
                                 "attrs": {"str": 5, "agi": 5, "int": 10},
                                 "eq": {"weapon": "keen_dagger", "armor": "mage_robe", "boots": "silver_boots",
                                        "wrist": "steel_bracer", "acc1": "focus_earring"}}),
-    ("aaron_guest_lv20", {"id": "aaron", "cls": "veteran", "mainAttr": "str", "lv": 20,
+    ("alan_guest_lv20", {"id": "alan", "cls": "veteran", "mainAttr": "str", "lv": 20,
                            "attrs": {"str": 30, "agi": 24, "int": 14}, "guest": True}),  # 無 eq -> startEq
     ("ludo_skill_boundary_lv4", {"id": "ludo", "cls": "explorer", "mainAttr": "str", "lv": 4,
                                   "attrs": {"str": 10, "agi": 6, "int": 5}, "eq": {}}),
@@ -190,14 +190,14 @@ EXP_NEED_LEVELS = [1, 2, 3, 5, 10, 15, 20, 30, 50]
 # 技術債版本）derive() 字面原始碼算出來的結果。derive.gd 應該對齊 EXPECTED_WORLD，不是 EXPECTED_BATTLE。
 EXPECTED_WORLD_CRITV = {
     "ludo_no_eq": 6.7, "ludo_full_eq_lv5": 9.3, "marin_default_eq": 10.9,
-    "synthetic_int_full_eq": 15.0, "aaron_guest_lv20": 9.9,
+    "synthetic_int_full_eq": 15.0, "alan_guest_lv20": 9.9,
     "ludo_skill_boundary_lv4": 7.2, "ludo_skill_boundary_lv5": 7.3,
     "hp_clamp_stale": 6.7, "hp_undefined": 6.7, "sk_already_empty_not_recomputed": 7.3,
 }
 # BATTLE 版（無 round）在這幾筆的 critV 跟 WORLD 版不同（浮點誤差讓「取一位小數」實際改變了數值，
 # 不是巧合）：用來證明 derive.gd 確實套用了 F-1 修正、不是意外跟舊 BATTLE 版一樣。
 EXPECTED_BATTLE_CRITV_DIVERGENT = {
-    "marin_default_eq": 10.85, "aaron_guest_lv20": 9.85, "ludo_skill_boundary_lv4": 7.15,
+    "marin_default_eq": 10.85, "alan_guest_lv20": 9.85, "ludo_skill_boundary_lv4": 7.15,
 }
 
 EXPECTED_WORLD_FULL = {
@@ -216,7 +216,7 @@ EXPECTED_WORLD_FULL = {
                                "dodgeV": 11, "critV": 15.0, "spd": 5, "hp": 70, "mp": 83,
                                "sk": {"power_strike": 1, "swift_stab": 1, "heal_wind": 1, "whirl": 1},
                                "spts": 0},
-    "aaron_guest_lv20": {"maxhp": 270, "maxmp": 78, "patk": 74, "matk": 28, "pdef": 36, "mdef": 11,
+    "alan_guest_lv20": {"maxhp": 270, "maxmp": 78, "patk": 74, "matk": 28, "pdef": 36, "mdef": 11,
                           "dodgeV": 40, "critV": 9.9, "spd": 24, "hp": 270, "mp": 78,
                           "sk": {"flash": 1}, "spts": 0,
                           "eq": {"weapon": "iron_sword", "armor": "leather_vest",
