@@ -67,7 +67,7 @@ DLG = {
 - **條目選擇分兩軌**（v2.0 快照起）：
   - **室外 NPC**（gray/mira/rossel…，條目無 `cmd`）：貼近對話時扁平掃全表，由上到下第一個 `when` 成立的
     條目勝出（L1859-1864）。
-  - **室內主人**（tina/hank/dora/sister/mayor/martha/gid…，條目有 `cmd`）：先由互動選單選指令
+  - **室內主人**（tina/hank/dora/shea/mayor/martha/gid…，條目有 `cmd`）：先由互動選單選指令
     （buildIntCmds L1575-1582——`talk` 永遠有；trade/quest/rest/pray 有條目就出現；其他 cmd 是一次性
     事件，`when` 成立**且 `done` 旗標未設**才出現），再在**同 cmd 組內**由上到下取第一個 `when` 成立的
     條目（openOwnerCmd L1564-1566，`e.cmd||"talk"`）。

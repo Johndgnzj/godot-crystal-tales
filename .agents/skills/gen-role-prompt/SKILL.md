@@ -49,7 +49,7 @@ prompt**（中文或英文，執行前先問；產圖工具吃的），不是 ma
 **英文版**：
 
 ```
-High-quality Japanese anime JRPG character portrait, delicate line art with soft watercolor rendering: gentle gradients, translucent washes, subtle paper texture. Not thick-black cel outline, not flat cel shading, not pixel art, not 3D. Expressive anime eyes, an appealing face that looks slightly younger than the stated age, illustration-grade finish and rich detail. One character only, centered, facing the viewer, no frame.
+High-quality Japanese anime JRPG character illustration, modern JRPG / light-novel illustration style: clean and refined anime line art (with line-weight variation, NOT thick heavy black outlines), delicate anime cel shading with soft gradients and clean highlights, illustration-grade finish and rich detail. Anime-style large expressive eyes, a refined, good-looking, age-honest face, well-separated hair strands. One character only, centered, facing the viewer, no frame.
 Trace the character's own body contour with one clean, continuous dark (#1A1A1A) ink line about 2-4px thick that hugs the figure's silhouette (inked lineart following the edge of the body), so the character separates cleanly from the background for easy background removal. This line follows the body's shape ONLY — it is NOT a rectangle, border, or frame around the image.
 Background: a single flat uniform {KEY_COLOR} fill covering the whole canvas edge to edge (full bleed) — no gradient, no texture, no shadow, no border, no frame, no rounded card edge, no vignette, and no colored light from the background spilling onto the character.
 No text, no letters, no numbers, no character name, no logo, no watermark, no UI.
@@ -58,7 +58,7 @@ No text, no letters, no numbers, no character name, no logo, no watermark, no UI
 **中文版**（與英文等義；依所選語言擇一整段貼）：
 
 ```
-高品質日系動漫 JRPG 角色立繪，細線稿＋柔和水彩：柔和漸層、透明水洗、淡紙紋。非粗黑 cel 描邊、非平塗、非像素、非 3D。有神的眼睛、五官好看且比實際年齡小的臉，插畫等級的完成度與豐富細節。畫面只有一個角色、置中、面向鏡頭、無外框。
+高品質日系動漫 JRPG 角色立繪，現代日式 RPG／輕小說插畫風：乾淨精緻的動漫線稿（線條粗細有變化、非粗黑描邊），細膩的動漫賽璐璐上色搭配柔和漸層與乾淨高光，插畫等級的完成度與豐富細節。anime 風格大而有神的眼睛、精緻好看且年齡誠實的臉、髮絲層次分明。畫面只有一個角色、置中、面向鏡頭、無外框。
 沿角色身體的外輪廓描一條乾淨連續的深色（#1A1A1A）墨線，約 2-4px、緊貼人物外形（順著身體邊緣走的線稿），與背景清楚分離、方便去背；這條線只順著身體形狀走，不是在畫面四周加矩形邊界或外框。
 背景：單一平塗純色 {KEY_COLOR} 滿版填滿整個畫面到邊——無漸層、無材質、無陰影、無邊框、無外框、無圓角卡片邊、無暗角，且背景色不可有光暈打到角色身上。
 不要文字、字母、數字、角色名、logo、浮水印、UI。
@@ -88,7 +88,7 @@ No text, no letters, no numbers, no character name, no logo, no watermark, no UI
 配色無綠 → 螢光綠。輸出（純文字，一個 code block）：
 
 ```
-高品質日系動漫 JRPG 角色立繪，細線稿＋柔和水彩：柔和漸層、透明水洗、淡紙紋。非粗黑 cel 描邊、非平塗、非像素、非 3D。有神的眼睛、五官好看且比實際年齡小的臉，插畫等級的完成度與豐富細節。畫面只有一個角色、置中、面向鏡頭、無外框。
+高品質日系動漫 JRPG 角色立繪，現代日式 RPG／輕小說插畫風：乾淨精緻的動漫線稿（線條粗細有變化、非粗黑描邊），細膩的動漫賽璐璐上色搭配柔和漸層與乾淨高光，插畫等級的完成度與豐富細節。anime 風格大而有神的眼睛、精緻好看且年齡誠實的臉、髮絲層次分明。畫面只有一個角色、置中、面向鏡頭、無外框。
 沿角色身體的外輪廓描一條乾淨連續的深色（#1A1A1A）墨線，約 2-4px、緊貼人物外形（順著身體邊緣走的線稿），與背景清楚分離、方便去背；這條線只順著身體形狀走，不是在畫面四周加矩形邊界或外框。
 背景：單一平塗純色 螢光綠 #00FF00 滿版填滿整個畫面到邊——無漸層、無材質、無陰影、無邊框、無外框、無圓角卡片邊、無暗角，且背景色不可有光暈打到角色身上。
 不要文字、字母、數字、角色名、logo、浮水印、UI。
