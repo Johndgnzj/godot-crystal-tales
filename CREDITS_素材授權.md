@@ -72,7 +72,8 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   另 `menuart_<id>`（三主角全身，選單「故事」頁 MenuArt）同法產生（裁邊去浮水印→去背→正規化畫布）。
   ※ 2026-07-18：**路德 ludo** 的 face／portrait／menuart 三張改「日系動漫精緻」風重生＋乾淨去背——一張螢光綠底全身圖經
   `tools/role_slicer/`（瀏覽器 chroma-key 去螢光底＋框選）切出 a `face_ludo`(144²)／b `portrait_ludo`(768×1024)／c `menuart_ludo`(768×1024)；
-  portrait 由舊 16:9 改為 **3:4 直幅**（依 ROLE_ART_SPEC v1.1）。原圖保留於 `assets-source/role/ludo_v2/`。AI 生成、提示詞作者 John。
+  portrait 由舊 16:9 改為 **3:4 直幅**（依 ROLE_ART_SPEC v1.1）。原圖保留於 `assets-source/role/ludo/`。AI 生成、提示詞作者 John。
+  ※ 2026-07-18（全角色立繪換裝，15 位）：全部角色改「日系動漫精緻」風、`tools/role_slicer/` 螢光底去背，皆備 a `face_<id>`／b `portrait_<id>`(3:4)／c `menuart_<id>`(3:4)；含改名 `aaron→alan`／`sister→shea`／`guard→rossel`，新增鐵匠 `don`、反派 `necro`。原圖保留於 `assets-source/role/<id>/`。AI 生成（外部產圖工具）、提示詞作者 John。取代先前「13 位／menuart 僅三主角」狀態；同批 `assets/char` 走路圖（`aaron→alan`／`guard→rossel`／`sister→shea`）與 `assets/battle/hero_aaron_*→hero_alan_*` 一併改名。
 - `assets/battle/hero_*.png`：由 LPC 合成角色幀放大裁切（沿用 LPC CC-BY-SA/GPL 授權），
   武器圖層取自 LPC weapon walk（longsword/dagger/saber，CC-BY-SA/GPL）。
 - `assets/ui/battlebg_*.png`：程序化生成（自製）。2026-07-15：`battlebg_forest.png` 換成 John 提供的「東之森戰鬥背景」圖（取代原程序化版）。
@@ -91,7 +92,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/props/int_<key>.png`（六棟室內大圖：公會/旅店/神殿/鎮長宅/道具店/鐵匠鋪）：AI 生成素材
   （Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-13，由 /gen-art skill 的 interior type
   「細線稿＋水彩手繪」風生成、色調隨房間氛圍決定）。現行室內為「立繪＋選單式」，build 去底產衍生版 `intc_<key>.png` 當手繪背景註冊進 game.json。
-- `assets/char/gray_*/guard_*.png`（老葛雷/羅素隊長 36 幀走路圖，戶外遊走 NPC）：
+- `assets/char/gray_*/rossel_*.png`（老葛雷/羅素隊長 36 幀走路圖，戶外遊走 NPC）：
   LPC 角色產生器圖層合成（`art_v10_npcwalk.py`；body＋頭＋鬍/帽/鎖甲染色），授權同主角 **CC-BY-SA 3.0 / GPL 3.0**。
 - `assets/props/chest_closed.png`／`chest_opened.png`（地圖寶箱兩態）、`herb.png`（支線鏡草）、
   `helmet.png`（支線阿吉的頭盔）：程序化像素繪製（自製，build_cq2.py 內以 PIL 繪，無授權限制；
