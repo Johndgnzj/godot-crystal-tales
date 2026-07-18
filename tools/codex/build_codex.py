@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+"""組建水晶戰記設定集：解析 content_db.tres → GAME JSON、注入 base64 圖片與 dialogue.json
+→ crystal_codex.html。資料變更後重跑本腳本＋重新發佈 Artifact 即可同步。"""
+import base64
+import io
+import json
+import pathlib
+import re
+import sys
+
+from PIL import Image
+
+HERE = pathlib.Path(__file__).resolve().parent
+REPO = HERE.parents[1]  # tools/codex/ -> repo 根（跨機器可攜）
+BATTLE = REPO / "godot-project/assets/battle"
+CONTENT_DB = REPO / "godot-project/resources/content/content_db.tres"
+DLG_PATH = REPO / "godot-project/resources/content/dialogue.json"
+UI = REPO / "godot-project/assets/ui"
+
+
+# ── content_db.tres 解析 ──────────────────────────────────────────────
+def godot_value(raw: str):
+    raw = raw.strip()
+    if raw in ("true", "false"):
+        return raw == "true"
+    if raw.startswith(("ExtResource", "SubResource")):
+        return raw
+    if raw.startswith(("[", "{", '"')):
+        return json.loads(raw)  # 本檔的 dict/array/字串字面量皆為 JSON 相容格式
+    try:
+        return int(raw)
+    except ValueError:
+        return float(raw)
+
+
+def parse_body(body: str) -> dict:
+    props, lines, i = {}, body.splitlines(), 0
+    while i < len(lines):
+        m = re.match(r"^(\w+) = (.*)$", lines[i])
+        if not m:
+            i += 1
+            continue
+        key, val = m.groups()
+        depth = sum(val.count(c) for c in "[{") - sum(val.count(c) for c in "]}")
+        buf = [val]
+        while depth > 0:
+            i += 1
+            buf.append(lines[i])
+            depth += sum(lines[i].count(c) for c in "[{") - sum(lines[i].count(c) for c in "]}")
+        props[key] = godot_value("\n".join(buf))
+        i += 1
+    return props
+
+
+def parse_tres(path: pathlib.Path):
+    text = path.read_text(encoding="utf-8")
+    body_text, res_sec = text.split("\n[resource]\n", 1)
+    parts = re.split(r'\[sub_resource type="Resource" id="([^"]+)"\]', body_text)
+    subs = {}
+    for i in range(1, len(parts) - 1, 2):
+        subs[parts[i]] = parse_body(parts[i + 1])
+
+    def order(cat: str) -> list[str]:
+        m = re.search(cat + r" = Array\[[^\]]*\]\(\[(.*?)\]\)", res_sec, re.S)
+        if not m:
+            sys.exit(f"[resource] 區找不到分類 {cat}")
+        return re.findall(r'SubResource\("([^"]+)"\)', m.group(1))
+
+    def single(cat: str) -> dict:
+        rid = re.search(cat + r' = SubResource\("([^"]+)"\)', res_sec).group(1)
+        return subs[rid]
+
+    return subs, order, single
+
+
+def to_int(v, default=0):
+    return int(v) if v is not None else default
+
+
+def build_game_json():
+    subs, order, single = parse_tres(CONTENT_DB)
+
+    def rows(cat):
+        return [subs[rid] for rid in order(cat)]
+
+    game = {}
+
+    d = single("derived")
+    camel = {
+        "hp_base": "hpBase", "hp_per_str": "hpPerStr", "mp_base": "mpBase", "mp_per_int": "mpPerInt",
+        "weapon_atk": "weaponAtk", "points_per_level": "pointsPerLevel",
+        "skill_points_per_level": "skillPointsPerLevel", "skill_max_lv": "skillMaxLv",
+        "skill_power_per_lv": "skillPowerPerLv", "exp_base": "expBase", "exp_coef": "expCoef",
+        "exp_pow": "expPow", "matk_per_int": "matkPerInt", "mdef_per_int": "mdefPerInt",
+        "dodge_per_agi": "dodgePerAgi", "dodge_cap": "dodgeCap", "crit_base": "critBase",
+        "crit_per_agi": "critPerAgi",
+    }
+    game["derived"] = {camel[k]: v for k, v in d.items() if k in camel}
+
+    p = single("pacing")
+    game["pacing"] = {"partySize": to_int(p["party_size"]), "maps": p["maps"]}
+
+    game["party"] = [{
+        "id": r["id"], "name": r["display_name"], "cls": r["char_class"], "main": r["main_attr"],
+        "lv": to_int(r.get("start_level"), 1), "guest": bool(r.get("guest")),
+        "base": r["base"], "growth": r.get("growth"), "eq": r["start_eq"], "story": r["story"],
+    } for r in rows("party")]
+
+    game["skills"] = [{
+        "id": r["id"], "name": r["display_name"], "cls": r["char_class"],
+        "lv": to_int(r.get("unlock_lv"), 1), "mp": r["mp"], "kind": r["kind"], "attr": r["attr"],
+        "mult": r["mult"], "flat": r["flat"], "target": r["target"],
+    } for r in rows("skills")]
+
+    game["equipment"] = [{
+        "id": r["id"], "name": r["display_name"], "slot": r["slot"], "tier": to_int(r.get("tier"), 1),
+        "buy": r.get("buy"), "sell": r.get("sell"), "stats": r.get("stats", {}),
+        "desc": r.get("desc", ""), "attr": r.get("attr_type", ""), "rarity": r.get("rarity", "common"),
+    } for r in rows("equipment")]
+
+    game["items"] = [{
+        "id": r["id"], "name": r["display_name"], "cat": r["cat"],
+        "buy": r.get("buy"), "sell": r.get("sell"), "start": r.get("count"),
+        "effect": r.get("effect", ""), "rarity": r.get("rarity", "common"),
+        "baseDrop": r.get("base_drop_rate", 0),
+    } for r in rows("items")]
+
+    game["enemies"] = [{
+        "id": r["id"], "name": r["display_name"], "spr": r["sprite"], "hp": r["hp"], "atk": r["atk"],
+        "def": r["def_stat"], "spd": r["spd"], "exp": to_int(r.get("exp")), "gold": to_int(r.get("gold")),
+        "big": bool(r.get("big")), "allAttack": bool(r.get("all_attack")), "healer": bool(r.get("healer")),
+        "drops": [[x["id"], x["rate"]] for x in r.get("drops", [])],
+        "foeSkills": r.get("foe_skills"),
+    } for r in rows("enemies")]
+
+    game["encounters"] = {r["map_id"]: r["formations"] for r in rows("encounters")}
+
+    game["shops"] = [{
+        "id": r["id"], "name": r["display_name"], "greet": r["greet"], "sells": r["sell_ids"],
+    } for r in rows("shops")]
+
+    game["chests"] = [{
+        "id": r["id"], "map": r["map"], "tx": r["tx"], "ty": r["ty"], "tier": r["tier"],
+        "loot": r["loot"],
+    } for r in rows("chests")]
+
+    return game
+
+
+# ── 圖片 ─────────────────────────────────────────────────────────────
+def data_uri(p: pathlib.Path) -> str:
+    mime = "image/jpeg" if p.suffix == ".jpg" else "image/png"
+    return f"data:{mime};base64,{base64.b64encode(p.read_bytes()).decode()}"
+
+
+def thumb_uri(png_path, max_px=280):
+    """讀原始立繪 PNG，等比縮到 max_px、保留透明，base64 內嵌（避免內嵌全尺寸大圖）。"""
+    im = Image.open(png_path).convert("RGBA")
+    im.thumbnail((max_px, max_px), Image.LANCZOS)
+    buf = io.BytesIO()
+    im.save(buf, format="PNG", optimize=True)
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
+def build_img():
+    img = {}
+    portrait_ids = ["ludo", "marin", "alan", "tina", "dora", "shea", "barton", "hank", "martha", "gid", "gray", "mira", "rossel", "don", "necro"]
+    for pid in portrait_ids:
+        img[f"p_{pid}"] = thumb_uri(UI / f"portrait_{pid}.png")
+    for s in ["bird", "gslime", "worm", "goblin", "maskedorc", "bear", "wolf", "wogol", "skeleton", "orc", "chort", "necro", "ogre", "demon"]:
+        img[f"f_{s}"] = data_uri(BATTLE / f"foe_{s}_0.png")
+    return img
+
+
+# ── 組裝 ─────────────────────────────────────────────────────────────
+def main():
+    game = build_game_json()
+    counts = {k: len(v) for k, v in game.items() if isinstance(v, list)}
+    print("解析 content_db.tres：", counts)
+
+    dlg = json.loads(DLG_PATH.read_text(encoding="utf-8"))
+    dlg.pop("_meta", None)
+
+    tpl = (HERE / "codex_template.html").read_text(encoding="utf-8")
+    for token, payload in [("__IMG_JSON__", build_img()), ("__DLG_JSON__", dlg), ("__GAME_JSON__", game)]:
+        if token not in tpl:
+            sys.exit(f"模板缺少 {token} 佔位符")
+        tpl = tpl.replace(token, json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+
+    out = HERE / "crystal_codex.html"
+    out.write_text(tpl, encoding="utf-8")
+    print(f"OK {out} ({out.stat().st_size/1024:.0f} KB)")
+
+
+if __name__ == "__main__":
+    main()
