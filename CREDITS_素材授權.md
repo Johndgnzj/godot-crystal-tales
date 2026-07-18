@@ -48,6 +48,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - select.mp3 — "Click 2" by freesound_gamestudio（…/film-special-effects-click-2-384920/）（點選/確認；2026-07-16 換入，原為 Python 生成之 8-bit select.wav）
 - return.mp3 — 返回/取消音效；Pixabay Music（Pixabay Content License，可商用毋須標註）。2026-07-16 換入取代 cancel.mp3（原為 "UI Swipe Cancel" by soundshelfstudio）。曲名/作者待補。
 - 其餘 .wav 為 Python 生成之 8-bit 音效（自製，無授權限制）：atk / hurt / heal / win / lose / magic（select 已於 2026-07-16 改用 Pixabay，見上）
+- **戰鬥攻擊音效（2026-07-18 新增，John 提供 mp3）**：`att_sword.mp3`(劍普攻)、`att_blade.mp3`(短劍/爪普攻)、`att_staff.mp3`(法杖普攻)、`att_sword_skill.mp3`(物理技能)、`att_magic.mp3`(魔法技能)、`att_miss.mp3`(閃避/揮空)、`att_monster_punch.mp3`(敵人普攻)——由武器 `weapon_type`／技能 `sfx`／敵我方資料驅動（見 `battle_state_machine.gd` WTYPE_SFX）。另 `att_bow_arrow.mp3`／`sfx_monster-growl.mp3` 已備未接線，存 `assets-source/sound/`。**授權：Pixabay Content License**（下載自 Pixabay，可免費商用、毋須標註；仍列出以示感謝，同本檔既有 Pixabay 音效/音樂）。
 
 ## 背景音樂（Pixabay Music，2026-07-12 新增）
 - 授權：Pixabay Content License（免費商用、毋須標註；仍列出以示感謝）。
@@ -94,6 +95,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   「細線稿＋水彩手繪」風生成、色調隨房間氛圍決定）。現行室內為「立繪＋選單式」，build 去底產衍生版 `intc_<key>.png` 當手繪背景註冊進 game.json。
 - `assets/char/gray_*/rossel_*.png`（老葛雷/羅素隊長 36 幀走路圖，戶外遊走 NPC）：
   LPC 角色產生器圖層合成（`art_v10_npcwalk.py`；body＋頭＋鬍/帽/鎖甲染色），授權同主角 **CC-BY-SA 3.0 / GPL 3.0**。
+- `assets/char/ludo_*.png`（路德 36 幀走路圖，**2026-07-18 重製**）：由 **Universal LPC Spritesheet Generator**（sanderfrenken）組裝 LPC 圖層（teen body＋messy2 髮＋leather 皮甲＋紅 cape＋cuffed pants＋leather boots＋bracers），採**乾淨無拔劍**版當 overworld 走路圖。授權 **OGA-BY 3.0 / CC-BY-SA 3.0 / GPL 3.0**（shadow 層 CC0）。**逐層完整作者／授權／連結見 `assets-source/role/ludo/ludo_lpc_credits.txt`**；配方存 `assets-source/role/ludo/ludo_lpc_recipe.json`（可 Import 回產生器重出/微調）。主要貢獻者：bluecarrot16、Stephen Challener (Redshrike)、Benjamin K. Smith (BenCreating)、JaidynReiman、ElizaWy、Johannes Sjölund (wulax)、Matthew Krohn (makrohn)、Pierre Vigier (pvigier)、Evert、TheraHedwig、MuffinElZangano、Durrani、Manuel Riecke (MrBeast)、Nila122、drjamgo 等 LPC 貢獻者。**戰鬥圖亦同源**（2026-07-18）：`assets/battle/hero_ludo_f0-3`（idle＝combat 就緒姿）＋`hero_ludo_{slash,thrust,spellcast}_*`（揮劍/突刺/詠唱；slash＝oversized `custom/slash_128`、thrust/spellcast＝standard）皆取自同一 LPC **有劍版**（`ludo_lpc/without_sword`，含紅 cape＋Arming Sword），授權/作者同上。
 - `assets/props/chest_closed.png`／`chest_opened.png`（地圖寶箱兩態）、`herb.png`（支線鏡草）、
   `helmet.png`（支線阿吉的頭盔）：程序化像素繪製（自製，build_cq2.py 內以 PIL 繪，無授權限制；
   同 barrel/crate/lamp 等程序繪 props）。

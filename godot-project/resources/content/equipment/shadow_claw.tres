@@ -16,3 +16,4 @@ stats = {
 }
 rarity = "uncommon"
 attr_type = "agi"
+weapon_type = "claw"
