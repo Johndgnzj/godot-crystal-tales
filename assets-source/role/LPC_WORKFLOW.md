@@ -42,7 +42,7 @@ Claude 讀該角色立繪／`docs/story/角色設定.md` 外觀 → 給對應的
 （painted `ef_*` 場景玩家用靜態圖、看不到走路動畫）。對映剛好吻合 `world_scene._build_char_frames`（frame0=Idle、1-8=Walk）。
 
 **戰鬥圖**（有劍版）：
-- idle ＝ `combat.png` 左列(row1) 2 幀 → `hero_<id>_f0..3`（2 幀對映成 4）
+- idle ＝ **`idle.png`** 左列(row1) 2 幀 → `hero_<id>_f0..3`（2 幀對映成 4）。**⚠️ 不要用 `combat.png`**——LPC 的 `combat` 動畫**缺皮甲/披風等圖層的對應幀**，切出來角色會只剩內衣（2026-07-18 踩過：ludo idle 一度沒披風沒皮甲）。要換其他動畫當來源前，先用紅披風/服裝像素檢查該動畫圖層是否完整。
 - 揮劍 slash ＝ **oversized `custom/slash_128.png`**（**標準 64px slash 看不到劍**、劍弧在格外；oversized 才有完整弧）
 - 突刺 thrust ＝ `standard/thrust.png` 左列｜詠唱 spellcast ＝ `standard/spellcast.png` 左列
 - 全部用「**偵測腳底 → 放同一畫布腳底對齊 → 裁切框以身體置中、含劍弧 → 放大 ×4**」，輸出
