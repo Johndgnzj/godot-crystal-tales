@@ -24,6 +24,7 @@
 | [`../CREDITS_素材授權.md`](../CREDITS_素材授權.md) | 授權帳本（每個進遊戲的素材一條）|
 | [`../assets-source/map/MAP_ART_SPEC.md`](../assets-source/map/MAP_ART_SPEC.md) | 手繪畫面地圖產圖規格（`gen-map-prompt` skill 的權威來源）|
 | [`../assets-source/role/ROLE_ART_SPEC.md`](../assets-source/role/ROLE_ART_SPEC.md) | 角色立繪產圖規格：a 戰鬥頭像／b 對話半身／c 全身＋去背螢光底規則（`gen-role-prompt` skill 的權威來源）|
+| [`../assets-source/role/LPC_WORKFLOW.md`](../assets-source/role/LPC_WORKFLOW.md) | LPC 角色走路圖／戰鬥圖製作流程（可復用四步：配方→匯出→接線驗證→更新文件；ludo 範本）|
 
 ## 三、設計層（給不寫程式的設計員）— `docs/design/`
 

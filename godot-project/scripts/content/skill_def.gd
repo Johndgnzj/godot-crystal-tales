@@ -12,6 +12,7 @@ extends Resource
 @export var mult: float = 0.0
 @export var flat: float = 0.0
 @export var target: String = ""         ## enemy / ally / all_enemies
+@export var sfx: String = ""            ## 攻擊音效檔名（含副檔名，例 slash_skill.wav）；留空＝依 kind/attr 給預設（damage-str→slash_skill、int→magic、heal→heal），缺檔自動 fallback
 
 
 static func from_dict(d: Dictionary) -> SkillDef:
@@ -26,4 +27,5 @@ static func from_dict(d: Dictionary) -> SkillDef:
 	result.mult = float(d.get("mult", 0))
 	result.flat = float(d.get("flat", 0))
 	result.target = d.get("target", "")
+	result.sfx = d.get("sfx", "")
 	return result

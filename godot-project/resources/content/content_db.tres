@@ -923,6 +923,7 @@ stats = {
 }
 rarity = "uncommon"
 attr_type = "agi"
+weapon_type = "claw"
 
 [sub_resource type="Resource" id="Resource_gen_6f1a8"]
 script = ExtResource("5_vtoea")

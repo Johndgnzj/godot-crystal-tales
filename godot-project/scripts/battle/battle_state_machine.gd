@@ -93,6 +93,10 @@ func _process(delta: float) -> void:
 	_view_time += delta
 	if _lunge_unit != null:
 		_lunge_t += delta
+		if not _lunge_sfx_done and _lunge_t >= LUNGE_DUR * IMPACT_FRAC:
+			for _s in _lunge_sfx:
+				AudioManager.sfx(_s)
+			_lunge_sfx_done = true
 		if _lunge_t >= LUNGE_DUR:
 			_lunge_unit = null
 	_handle_auto_toggle()
@@ -460,24 +464,26 @@ func _process_target_ally() -> void:
 
 func _apply_one(ts: Array) -> void:
 	var a: Dictionary = actor
-	if String(a.get("side", "")) == "hero":
-		_lunge_unit = a
-		_lunge_t = 0.0
 	var pd: Dictionary = pend
 	var t: Dictionary = ts[0]
 	var msg_out := ""
+	var sfx: Array = []
+	var anim := ""
 
 	if pd["t"] == "atk":
+		var wt := _weapon_type(a)
+		anim = WTYPE_ANIM.get(wt, "slash")
 		if DamageCalc.is_dodge(a, t):
 			msg_out = String(t.get("name", "")) + " 靈巧地閃開了！"
-			AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L3147（MISS）
+			sfx.append(_sfx_or("att_miss.mp3", "select.mp3"))   # 閃避/揮空音效（缺檔 fallback select.mp3）
 		else:
 			var r := DamageCalc.phys_damage(a, t)
 			t["hp"] = float(t.get("hp", 0)) - float(r["dmg"])
 			msg_out = String(a.get("name", "")) + " 攻擊 " + String(t.get("name", "")) + "，造成 " \
 				+ str(r["dmg"]) + " 傷害" + ("（會心！）" if r["crit"] else "")
-			AudioManager.sfx("atk.wav")   # 對應 build_cq2.py L3245
-			AudioManager.sfx("hurt.wav")
+			var atk_sfx := "att_monster_punch.mp3" if String(a.get("side", "")) != "hero" else String(WTYPE_SFX.get(wt, "atk.wav"))
+			sfx.append(_sfx_or(atk_sfx, "atk.wav"))   # 我方＝武器普攻音效／敵方＝怪物揮擊；缺檔 fallback atk.wav
+			sfx.append("hurt.wav")
 			_kill(t)
 
 	elif pd["t"] == "skill":
@@ -487,20 +493,22 @@ func _apply_one(ts: Array) -> void:
 		var slv: int = int(actor_sk.get(sk.id, 1))
 		var sk_tag := "「" + sk.display_name + (" Lv" + str(slv) if slv > 1 else "") + "」"
 		if sk.kind == "damage":
+			anim = ("spellcast" if sk.attr == "int" else ("thrust" if sk.attr == "agi" else "slash"))
 			var dmg := DamageCalc.skill_damage(a, t, sk)
 			t["hp"] = float(t.get("hp", 0)) - dmg
 			msg_out = String(a.get("name", "")) + sk_tag + "！" + String(t.get("name", "")) \
 				+ " 受到 " + str(dmg) + " 傷害"
-			AudioManager.sfx("magic.wav")   # 對應 build_cq2.py L3159
-			AudioManager.sfx("hurt.wav")
+			sfx.append(_sfx_or(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"), "att_magic.mp3"))   # 技能音效（int魔法/其餘物理斬擊；缺檔 fallback）
+			sfx.append("hurt.wav")
 			_kill(t)
 		else:
+			anim = "spellcast"
 			var heal := DamageCalc.skill_heal(a, sk)
 			var before: float = float(t.get("hp", 0))
 			t["hp"] = minf(float(t.get("maxhp", 0)), before + heal)
 			msg_out = String(a.get("name", "")) + sk_tag + "！" + String(t.get("name", "")) \
 				+ " 恢復 " + str(int(t["hp"] - before)) + " HP"
-			AudioManager.sfx("heal.wav")   # 對應 build_cq2.py L3167
+			sfx.append(_sfx_or(sk.sfx if sk.sfx != "" else "heal.wav", "heal.wav"))   # 補血技音效
 
 	elif pd["t"] == "item":
 		var item_id: String = pd["item"]
@@ -514,7 +522,7 @@ func _apply_one(ts: Array) -> void:
 			power = eff["power"]
 			item_name = meta.display_name
 		GameState.inv_use(item_id)
-		AudioManager.sfx("heal.wav")   # 對應 build_cq2.py L3174/L3177
+		sfx.append("heal.wav")   # 對應 build_cq2.py L3174/L3177
 		if kind == "mp":
 			var before_mp: float = float(t.get("mp", 0))
 			t["mp"] = minf(float(t.get("maxmp", 0)), before_mp + power)
@@ -526,15 +534,22 @@ func _apply_one(ts: Array) -> void:
 			msg_out = String(a.get("name", "")) + " 使用" + item_name + "！" + String(t.get("name", "")) \
 				+ " 恢復 " + str(int(t["hp"] - before_hp)) + " HP"
 
+	if String(a.get("side", "")) == "hero":
+		_lunge_unit = a
+		_lunge_t = 0.0
+		_lunge_anim = anim
+		_lunge_sfx = sfx
+		_lunge_sfx_done = false
+	else:
+		for _s in sfx:
+			AudioManager.sfx(_s)
+
 	_banner(msg_out)
 	_end_action(0.75)
 
 
 func _apply_all(sk: SkillDef) -> void:
 	var a: Dictionary = actor
-	if String(a.get("side", "")) == "hero":
-		_lunge_unit = a
-		_lunge_t = 0.0
 	a["mp"] = float(a.get("mp", 0)) - float(sk.mp)
 	var list: Array = foes.filter(func(u): return bool(u.get("alive", false)))
 	var tot := 0
@@ -544,8 +559,17 @@ func _apply_all(sk: SkillDef) -> void:
 		target["hp"] = float(target.get("hp", 0)) - dmg
 		tot += dmg
 		_kill(target)
-	AudioManager.sfx("magic.wav")   # 對應 build_cq2.py L3197（全體技能）
-	AudioManager.sfx("hurt.wav")
+	var anim := ("spellcast" if sk.attr == "int" else ("thrust" if sk.attr == "agi" else "slash"))
+	var sfx: Array = [_sfx_or(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"), "att_magic.mp3"), "hurt.wav"]   # 全體技能音效（int魔法/其餘物理；缺檔 fallback）
+	if String(a.get("side", "")) == "hero":
+		_lunge_unit = a
+		_lunge_t = 0.0
+		_lunge_anim = anim
+		_lunge_sfx = sfx
+		_lunge_sfx_done = false
+	else:
+		for _s in sfx:
+			AudioManager.sfx(_s)
 	var actor_sk: Dictionary = a.get("sk", {})
 	var slv: int = int(actor_sk.get(sk.id, 1))
 	_banner(String(a.get("name", "")) + "「" + sk.display_name + (" Lv" + str(slv) if slv > 1 else "") \
@@ -853,15 +877,23 @@ const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vec
 const HERO_H := 104.0   # 原 156 縮成 2/3（John 要求）
 const FOE_H := 82.0     # 原 122 縮成 2/3
 const BOSS_H := 140.0   # 原 210 縮成 2/3
-const HERO_RATIO := {"ludo": 0.92, "marin": 0.58, "alan": 0.80}   # 由 assets/battle/hero_dims.json 換算（w/h）
+const HERO_RATIO := {"ludo": 1.77, "marin": 0.58, "alan": 0.80}   # 由 assets/battle/hero_dims.json 換算（w/h）；ludo 改用含揮劍弧的寬幅 LPC 戰鬥幀（idle+slash 同框）
 const FRAME_DT := 0.18
 # 我方發動攻擊時向前（敵方在左＝-x）踏步出招再回位。
 const LUNGE_DUR := 0.55
 const LUNGE_DIST := 120.0
+const ATTACK_POS := Vector2(820, 480)   # 攻擊時角色直接移到的「隊伍前出場位」（隊伍在右、敵在左）
+const IMPACT_FRAC := 0.7                 # 命中音效在動畫此比例處播（≈揮擊命中瞬間）
+const WTYPE_ANIM := {"sword": "slash", "dagger": "thrust", "claw": "slash", "staff": "spellcast"}          # 武器類別→普攻動畫
+const WTYPE_SFX := {"sword": "att_sword.mp3", "dagger": "att_blade.mp3", "claw": "att_blade.mp3", "staff": "att_staff.mp3"}  # 武器類別→普攻音效（claw 暫共用刃音效；缺檔 fallback atk.wav）
+const ATTR_WTYPE := {"str": "sword", "agi": "dagger", "int": "staff"}   # weapon_type 留空時依 attr_type 推定
 
 var _view_time: float = 0.0
 var _lunge_unit: Variant = null
 var _lunge_t: float = 0.0
+var _lunge_anim: String = ""     # 本次攻擊要播的動畫組："slash"/"thrust"/"spellcast"／""＝無（沿用滑步）
+var _lunge_sfx: Array = []       # 延到命中瞬間才播的音效（我方攻擊用）
+var _lunge_sfx_done: bool = false
 var _root: Control
 var _bg: TextureRect
 var _boss_name: Label
@@ -964,6 +996,7 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	_root.add_child(wrap)
 
 	var frames := _load_frames(u, is_hero)
+	var anim_frames: Dictionary = _load_anim_frames(u) if is_hero else {}
 	var h: float = HERO_H if is_hero else (BOSS_H if bool(u.get("big", false)) else FOE_H)
 	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
 	var w := h * ratio
@@ -1010,7 +1043,7 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 		hp_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		wrap.add_child(hp_fill)
 
-	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "is_hero": is_hero, "h": h, "base": wrap.position}
+	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "is_hero": is_hero, "h": h, "base": wrap.position}
 
 
 func _load_frames(u: Dictionary, is_hero: bool) -> Array:
@@ -1026,6 +1059,38 @@ func _load_frames(u: Dictionary, is_hero: bool) -> Array:
 			var p := "res://assets/battle/foe_%s_%d.png" % [s, i]
 			if ResourceLoader.exists(p):
 				out.append(load(p))
+	return out
+
+
+## 取行動者裝備武器的類別（weapon_type；留空則依 attr_type 推定）。敵人/徒手回 ""。
+func _weapon_type(a: Dictionary) -> String:
+	var wid := String(a.get("eq", {}).get("weapon", ""))
+	if wid == "":
+		return ""
+	var w: EquipmentDef = ContentDB.get_equipment(wid)
+	if w == null:
+		return ""
+	if w.weapon_type != "":
+		return w.weapon_type
+	return ATTR_WTYPE.get(w.attr_type, "")
+
+
+## 音效檔存在就用它，否則回 fallback（新音效未備齊前沿用現有 atk/magic）。
+func _sfx_or(name: String, fallback: String) -> String:
+	return name if ResourceLoader.exists("res://assets/sfx/" + name) else fallback
+
+
+func _load_anim_frames(u: Dictionary) -> Dictionary:
+	var s := String(u.get("sprite", ""))
+	var out := {}
+	for anim in ["slash", "thrust", "spellcast"]:
+		var arr: Array = []
+		for i in range(16):
+			var p := "res://assets/battle/hero_%s_%s_%d.png" % [s, anim, i]
+			if ResourceLoader.exists(p):
+				arr.append(load(p))
+		if not arr.is_empty():
+			out[anim] = arr
 	return out
 
 
@@ -1318,19 +1383,25 @@ func _refresh_ui() -> void:
 		var br := clampf(float(b.get("hp", 0)) / maxf(1.0, float(b.get("maxhp", 1))), 0.0, 1.0)
 		_boss_bar_fill.size = Vector2(594.0 * br, _boss_bar_fill.size.y)
 
-	# --- 我方 sprite（陣亡變暗；發動攻擊時向前踏步出招）---
+	# --- 我方 sprite（陣亡變暗；攻擊時直接移到出場位＋依性質播動畫；無對應動畫則沿用滑步）---
 	for node in _hero_nodes:
 		var h: Dictionary = node["unit"]
 		var wnode: Control = node["wrap"]
 		var base: Vector2 = node["base"]
-		var off := 0.0
-		if _lunge_unit != null and is_same(node["unit"], _lunge_unit) and _lunge_t < LUNGE_DUR:
-			off = -LUNGE_DIST * sin(PI * _lunge_t / LUNGE_DUR)   # 向前(−x，敵方在左)踏出再回
-		wnode.position = base + Vector2(off, 0.0)
-		wnode.visible = not is_end
 		var frames: Array = node["frames"]
-		if not frames.is_empty():
-			node["sprite"].texture = frames[frame % frames.size()]
+		var lunging := _lunge_unit != null and is_same(node["unit"], _lunge_unit) and _lunge_t < LUNGE_DUR
+		var anims: Dictionary = node.get("anim_frames", {})
+		var atk_frames: Array = (anims.get(_lunge_anim, []) if lunging else [])
+		if lunging and not atk_frames.is_empty():
+			wnode.position = ATTACK_POS   # 直接移到隊伍前出場位
+			var si := clampi(int(_lunge_t / LUNGE_DUR * atk_frames.size()), 0, atk_frames.size() - 1)
+			node["sprite"].texture = atk_frames[si]
+		else:
+			var off := (-LUNGE_DIST * sin(PI * _lunge_t / LUNGE_DUR) if lunging else 0.0)
+			wnode.position = base + Vector2(off, 0.0)
+			if not frames.is_empty():
+				node["sprite"].texture = frames[frame % frames.size()]
+		wnode.visible = not is_end
 		node["sprite"].modulate = Color(0.4, 0.4, 0.45, 0.9) if not bool(h.get("alive", false)) else Color.WHITE
 
 	# --- 行動者箭頭 ---
