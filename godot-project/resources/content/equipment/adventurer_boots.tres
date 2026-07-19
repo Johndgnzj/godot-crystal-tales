@@ -12,7 +12,7 @@ buy = 0
 sell = 20
 rarity = "uncommon"
 stats = {
-"dodge": 3.0,
+"agi": 2.0,
 "hp": 5.0
 }
 attr_type = "agi"

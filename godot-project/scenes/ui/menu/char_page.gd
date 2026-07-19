@@ -409,7 +409,15 @@ func _build_attr(box: VBoxContainer, m: Dictionary) -> void:
 	grid.add_theme_constant_override("h_separation", 7)
 	grid.add_theme_constant_override("v_separation", 7)
 	for pair in MenuLogic.DERIVED6:
-		grid.add_child(_derived_cell(String(pair[1]), MenuLogic.num(m.get(pair[0], 0)) + ("%" if pair[0] == "critV" else "")))
+		var dk := String(pair[0])
+		var dtxt: String
+		if dk == "critdmg":
+			dtxt = "×" + MenuLogic.num(m.get(dk, 0))            # 爆傷倍率，如 ×1.4
+		elif dk == "critV" or dk == "critresV":
+			dtxt = MenuLogic.num(m.get(dk, 0)) + "%"            # 會心/抗爆為百分比
+		else:
+			dtxt = MenuLogic.num(m.get(dk, 0))
+		grid.add_child(_derived_cell(String(pair[1]), dtxt))
 	box.add_child(grid)
 
 	# 配點

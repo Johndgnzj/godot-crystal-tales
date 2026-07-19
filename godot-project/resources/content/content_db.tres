@@ -187,7 +187,14 @@ mdef_per_int = 0.8
 dodge_per_agi = 1.5
 dodge_cap = 30.0
 crit_base = 6.25
-crit_per_agi = 0.15
+crit_per_agi = 0.2
+crit_per_luck = 0.1
+dodge_per_luck = 0.05
+acc_per_agi = 1.5
+critres_per_luck = 0.1
+crit_dmg_base = 1.4
+crit_cap = 100.0
+drop_per_luck = 0.1
 
 [sub_resource type="Resource" id="Resource_ll363"]
 script = ExtResource("3_hsbra")
@@ -326,6 +333,7 @@ hp = 780.0
 atk = 26.0
 def_stat = 13.0
 spd = 10.0
+luck = 3.0
 exp = 140
 gold = 150
 big = true
@@ -373,6 +381,7 @@ hp = 1200.0
 atk = 36.0
 def_stat = 16.0
 spd = 8.0
+luck = 3.0
 exp = 180
 gold = 100
 big = true
@@ -519,6 +528,7 @@ hp = 1600.0
 atk = 38.0
 def_stat = 18.0
 spd = 6.0
+luck = 4.0
 exp = 400
 gold = 350
 big = true
@@ -550,6 +560,7 @@ hp = 9999.0
 atk = 22.0
 def_stat = 25.0
 spd = 12.0
+luck = 5.0
 big = true
 description = "序章在礦山深處現身的異形存在，連 A 級冒險者都擋不住。牠不屬於這片大地——沒有名字，沒有來歷，只有一股令人窒息的惡意，與近乎必然的壓迫感。牠不過是黑水晶背後那個更深沉威脅的一縷投影；真正的黑幕，還藏在更遠的地方。"
 
@@ -603,9 +614,9 @@ buy = 0
 sell = 40
 rarity = "uncommon"
 stats = {
-"crit": 1.0,
-"dodge": 1.0,
-"patk": 8.0
+"agi": 1.0,
+"patk": 8.0,
+"str": 1.0
 }
 attr_type = "str"
 
@@ -619,9 +630,8 @@ buy = 0
 sell = 30
 rarity = "uncommon"
 stats = {
-"crit": 1.0,
-"dodge": 1.0,
-"hp": 15.0
+"hp": 15.0,
+"luck": 8.0
 }
 
 [sub_resource type="Resource" id="Resource_advboots"]
@@ -634,7 +644,7 @@ buy = 0
 sell = 20
 rarity = "uncommon"
 stats = {
-"dodge": 3.0,
+"agi": 2.0,
 "hp": 5.0
 }
 attr_type = "agi"
@@ -2546,6 +2556,7 @@ sprite = "ludo"
 base = {
 "agi": 3.0,
 "int": 2.0,
+"luck": 2.0,
 "str": 4.0
 }
 growth = {
@@ -2571,6 +2582,7 @@ sprite = "marin"
 base = {
 "agi": 4.0,
 "int": 3.0,
+"luck": 3.0,
 "str": 3.0
 }
 growth = {
@@ -2596,6 +2608,7 @@ sprite = "alan"
 base = {
 "agi": 24.0,
 "int": 14.0,
+"luck": 8.0,
 "str": 30.0
 }
 start_level = 35
