@@ -19,7 +19,8 @@ signal shop_closed
 
 const CATN := {"consumable": "消耗", "material": "素材", "key": "重要"}
 const SLOTN := {"weapon": "武器", "armor": "防具", "boots": "靴子", "wrist": "護腕", "acc": "飾品"}
-const EQSTAT_N := {"patk": "物攻", "matk": "魔攻", "pdef": "物防", "mdef": "魔防", "dodge": "閃避", "crit": "會心", "hp": "生命", "mp": "法力"}
+const EQSTAT_N := {"patk": "物攻", "matk": "魔攻", "pdef": "物防", "mdef": "魔防", "dodge": "閃避", "crit": "會心", "hp": "生命", "mp": "法力",
+	"str": "力量", "agi": "敏捷", "int": "智力", "luck": "幸運", "spd": "行動", "acc": "命中", "critres": "抗爆", "critdmg": "爆傷"}   # v4.0
 const C_NO_AFFORD := Color(0.667, 0.549, 0.549)   # 170;140;140
 
 @onready var _panel: CqMenuPanel = $Panel

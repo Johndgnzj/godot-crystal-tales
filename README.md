@@ -32,6 +32,11 @@
 cd godot-project
 /Applications/Godot.app/Contents/MacOS/Godot --headless -s res://tests/smoke_test.gd --path .
 ```
+改 painted 世界場景（`scenes/world/painted/**`）或 `scripts/world/world_scene.gd` 後，另跑世界場景 harness
+（實際實例化每張主線場景、驗遭遇系統接線；`-- <SCENE_ID>` 可只驗指定張）：
+```bash
+/Applications/Godot.app/Contents/MacOS/Godot --headless -s res://tests/world_harness_test.gd --path .
+```
 
 **設計員（做角色/數值/美術/地圖）**：直接讀 **`docs/design/設計員指南.md`**，不用碰程式碼。
 

@@ -175,6 +175,7 @@ func _init_battle() -> void:
 			"atk": ed.atk,
 			"def": ed.def_stat,
 			"spd": ed.spd,
+			"luck": ed.luck,   # v4.0：敵方會心/抗爆/閃避加成（see specs/BATTLE_FORMULAS.md F-1）
 			"exp": ed.exp,
 			"gold": ed.gold,
 			"big": ed.big,
@@ -818,6 +819,7 @@ func _settle_win() -> void:
 			attrs["str"] = float(attrs.get("str", 0)) + float(growth.get("str", 0))
 			attrs["agi"] = float(attrs.get("agi", 0)) + float(growth.get("agi", 0))
 			attrs["int"] = float(attrs.get("int", 0)) + float(growth.get("int", 0))
+			attrs["luck"] = float(attrs.get("luck", 0)) + float(growth.get("luck", 0))   # v4.0
 			m["attrs"] = attrs
 			m["pts"] = int(m.get("pts", 0)) + int(d.points_per_level)
 			m["spts"] = int(m.get("spts", 0)) + int(d.skill_points_per_level)
@@ -840,17 +842,23 @@ func _settle_win() -> void:
 
 	_sync_party_to_game_state()
 
+	# v4.0 F-10：隊伍幸運加成掉寶。取全隊最高 luckV（Derive 算好、含裝備效果），+drop_per_luck%/luck。
+	var party_luck := 0.0
+	for h in heroes:
+		party_luck = maxf(party_luck, float((h as Dictionary).get("luckV", 0.0)))
+	var luck_drop_bonus := party_luck * d.drop_per_luck / 100.0
+
 	var drop_count: Dictionary = {}
 	for f in foes:
 		var drops: Array = f.get("drops", [])
 		for drop in drops:
 			var dd: Dictionary = drop
 			var did := String(dd.get("id", ""))
-			# see specs/BATTLE_FORMULAS.md F-10：最終掉率 = clamp(物品基礎率 × 怪物加成倍率, 0, 1)
+			# see specs/BATTLE_FORMULAS.md F-10：最終掉率 = clamp(物品基礎率 × 怪物加成倍率 + 幸運加成, 0, 1)
 			var mult := float(dd.get("rate", 0.0))
 			var idef: ItemDef = ContentDB.get_item(did)
 			var base_rate := idef.base_drop_rate if idef != null else 1.0
-			if randf() < clampf(base_rate * mult, 0.0, 1.0):
+			if randf() < clampf(base_rate * mult + luck_drop_bonus, 0.0, 1.0):
 				drop_count[did] = int(drop_count.get(did, 0)) + 1
 	var drop_names: Array = []
 	for did: String in drop_count.keys():

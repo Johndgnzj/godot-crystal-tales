@@ -87,10 +87,16 @@ const SAVE_VERSION := 1
 ## return 座標」的慣例（見 scene_router.gd `should_use_return_position()`）。
 const NO_COORD := -1.0
 
-## resume 讀檔時場景名稱的合法白名單，照抄 build_cq2.py `loadSave()` L3391：
-## `var VALID={Town:1,Forest:1,Forest2:1,Mine:1,Cave:1}`——**不含** Title/Battle，讀檔不會直接
-## resume 進戰鬥或標題畫面。
-const VALID_RESUME_SCENES := ["Town", "Forest", "Forest2", "Mine", "Cave"]
+## resume 讀檔時場景名稱的合法白名單。原照抄 build_cq2.py `loadSave()` L3391 的
+## `{Town,Forest,Forest2,Mine,Cave}`；2026-07-19（第一章 Phase 2，TASKS/13 CH1-06）主線改走 painted
+## 場景（芳蕾鎮 Town＋北礦 NMA-NMF＋東森 EFA-EFI），舊 tile 場景（Forest/Forest2/Mine/Cave）主線已不走、
+## 待 CH1-15 封存，故白名單換成 painted 主線場景名。仍**不含** Title/Battle（讀檔不直接 resume 進戰鬥/標題）。
+## 場景名對齊 SceneRouter.SCENE_PATHS 的 scene_id。
+const VALID_RESUME_SCENES := [
+	"Town",
+	"NMA", "NMB", "NMC", "NMD", "NME", "NMF",
+	"EFA", "EFB", "EFC", "EFD", "EFE", "EFF", "EFG", "EFH", "EFI",
+]
 const DEFAULT_RESUME_SCENE := "Town"
 
 ## `load_game()` 成功時寫入，呼叫端讀取後自行決定何時呼叫 `SceneRouter.go_to(loaded_scene, "")`。

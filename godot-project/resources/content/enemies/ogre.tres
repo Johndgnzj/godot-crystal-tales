@@ -11,6 +11,7 @@ hp = 1600.0
 atk = 38.0
 def_stat = 18.0
 spd = 6.0
+luck = 4.0
 exp = 400
 gold = 350
 big = true

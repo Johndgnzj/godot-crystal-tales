@@ -12,6 +12,7 @@ sprite = "ludo"
 base = {
 "agi": 3.0,
 "int": 2.0,
+"luck": 2.0,
 "str": 4.0
 }
 growth = {

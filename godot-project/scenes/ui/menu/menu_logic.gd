@@ -13,18 +13,19 @@ extends RefCounted
 const TABS := ["角色", "道具", "地圖", "稱號", "系統"]   # 重設後頂部 5 分頁（裝備併入角色子頁）
 const SLOTS := [["weapon", "武器"], ["armor", "防具"], ["boots", "靴子"], ["wrist", "護腕"], ["acc1", "飾品Ⅰ"], ["acc2", "飾品Ⅱ"]]
 const SLOTN := {"weapon": "武器", "armor": "防具", "boots": "靴子", "wrist": "護腕", "acc": "飾品"}
-const EQSTAT_N := {"patk": "物攻", "matk": "魔攻", "pdef": "物防", "mdef": "魔防", "dodge": "閃避", "crit": "會心", "hp": "生命", "mp": "法力"}
+const EQSTAT_N := {"patk": "物攻", "matk": "魔攻", "pdef": "物防", "mdef": "魔防", "dodge": "閃避", "crit": "會心", "hp": "生命", "mp": "法力",
+	"str": "力量", "agi": "敏捷", "int": "智力", "luck": "幸運", "spd": "行動", "acc": "命中", "critres": "抗爆", "critdmg": "爆傷"}   # v4.0 裝備可加主屬性/新戰鬥維度
 const CLS_NAME := {"explorer": "探索者", "veteran": "A級冒險者"}
 const LOC := {"Town": "芳蕾鎮", "Forest": "東之森", "Forest2": "東之森深處", "Mine": "礦山外圍", "Cave": "礦山洞穴"}
 const SORD := {"weapon": 0, "armor": 1, "boots": 2, "wrist": 3, "acc": 4}
-const DIFFK := [["patk", "物攻"], ["matk", "魔攻"], ["pdef", "物防"], ["mdef", "魔防"], ["dodgeV", "閃避"], ["critV", "會心"], ["maxhp", "HP上限"], ["maxmp", "MP上限"]]
+const DIFFK := [["patk", "物攻"], ["matk", "魔攻"], ["pdef", "物防"], ["mdef", "魔防"], ["dodgeV", "閃避"], ["critV", "會心"], ["accV", "命中"], ["critresV", "抗爆"], ["critdmg", "爆傷"], ["maxhp", "HP上限"], ["maxmp", "MP上限"]]
 
-# 衍生 6 格（屬性子頁；對應 derive 後欄位）：key → 顯示名。
-const DERIVED6 := [["patk", "物攻"], ["matk", "魔攻"], ["pdef", "物防"], ["mdef", "魔防"], ["dodgeV", "閃避"], ["critV", "會心"]]
+# 衍生格（屬性子頁；對應 derive 後欄位）：key → 顯示名。v4.0 增命中/抗爆/爆傷，格數 6→9（GridContainer 自動換行）。
+const DERIVED6 := [["patk", "物攻"], ["matk", "魔攻"], ["pdef", "物防"], ["mdef", "魔防"], ["dodgeV", "閃避"], ["critV", "會心"], ["accV", "命中"], ["critresV", "抗爆"], ["critdmg", "爆傷"]]
 # 佔位系統（設計稿有版面、遊戲無資料）。
 const WEAPON_TYPES := ["劍", "槍", "斧", "盾", "投射", "杖", "鎚"]
 const ELEMENTS := ["土", "火", "風", "水", "冰", "雷", "光", "暗"]
-const PRIMARY := [["str", "力量"], ["agi", "敏捷"], ["int", "智力"]]
+const PRIMARY := [["str", "力量"], ["agi", "敏捷"], ["int", "智力"], ["luck", "幸運"]]   # v4.0 新增幸運
 
 
 static func cls_name(m: Dictionary) -> String:

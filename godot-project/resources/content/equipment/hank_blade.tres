@@ -12,8 +12,8 @@ buy = 0
 sell = 40
 rarity = "uncommon"
 stats = {
-"crit": 1.0,
-"dodge": 1.0,
-"patk": 8.0
+"agi": 1.0,
+"patk": 8.0,
+"str": 1.0
 }
 attr_type = "str"
