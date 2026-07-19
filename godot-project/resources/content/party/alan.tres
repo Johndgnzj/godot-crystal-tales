@@ -12,6 +12,7 @@ sprite = "alan"
 base = {
 "agi": 24.0,
 "int": 14.0,
+"luck": 8.0,
 "str": 30.0
 }
 start_level = 20

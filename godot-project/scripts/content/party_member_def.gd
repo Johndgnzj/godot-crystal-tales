@@ -8,8 +8,8 @@ extends Resource
 @export var char_class: String = ""     ## 來源 JSON key: "class"（GDScript 保留字，改名避開）
 @export var main_attr: String = ""      ## str / agi / int，來源 JSON key: "mainAttr"
 @export var sprite: String = ""
-@export var base: Dictionary = {}       ## {str,agi,int}
-@export var growth: Dictionary = {}     ## {str,agi,int}，guest 角色可能是空 dict
+@export var base: Dictionary = {}       ## {str,agi,int,luck}（v4.0 起含 luck；缺 luck 視為 0）
+@export var growth: Dictionary = {}     ## {str,agi,int,luck}，guest 角色可能是空 dict（缺項視為 0）
 @export var start_level: int = 1
 @export var start_eq: Dictionary = {}   ## slot -> equipment id
 @export var story: Array = []           ## Array[String]

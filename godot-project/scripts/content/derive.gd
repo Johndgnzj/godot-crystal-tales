@@ -42,11 +42,15 @@ static func derive(member: Dictionary) -> Dictionary:
 				eq[slot] = tmpl.start_eq[slot]
 		member["eq"] = eq
 
-	var str_v: float = float(attrs.get("str", 0))
-	var agi_v: float = float(attrs.get("agi", 0))
-	var int_v: float = float(attrs.get("int", 0))
+	# 主屬性 = 角色 base + 裝備加成（v4.0 屬性系統擴充：裝備 stats 的 str/agi/int/luck 先疊進「有效
+	# 屬性」，再算衍生——舊版只讀角色 base、裝備加 str 不生效。see specs/BATTLE_FORMULAS.md F-1）。
+	var str_v: float = float(attrs.get("str", 0)) + _eq_stat(member, "str")
+	var agi_v: float = float(attrs.get("agi", 0)) + _eq_stat(member, "agi")
+	var int_v: float = float(attrs.get("int", 0)) + _eq_stat(member, "int")
+	var luck_v: float = float(attrs.get("luck", 0)) + _eq_stat(member, "luck")
 	var main_attr: String = String(member.get("mainAttr", ""))
-	var main_v: float = float(attrs.get(main_attr, 0))
+	# 主屬性值取「有效屬性」（含裝備），讓加主屬性的武器也能撐 patk。
+	var main_v: float = (float(attrs.get(main_attr, 0)) + _eq_stat(member, main_attr)) if main_attr != "" else 0.0
 
 	member["maxhp"] = d.hp_base + str_v * d.hp_per_str + _eq_stat(member, "hp")
 	member["maxmp"] = d.mp_base + int_v * d.mp_per_int + _eq_stat(member, "mp")
@@ -54,11 +58,16 @@ static func derive(member: Dictionary) -> Dictionary:
 	member["matk"] = roundf(int_v * d.matk_per_int) + _eq_stat(member, "matk")
 	member["pdef"] = str_v + _eq_stat(member, "pdef")
 	member["mdef"] = roundf(int_v * d.mdef_per_int) + _eq_stat(member, "mdef")
-	member["dodgeV"] = roundf(agi_v * d.dodge_per_agi) + _eq_stat(member, "dodge")
+	member["dodgeV"] = roundf(agi_v * d.dodge_per_agi + luck_v * d.dodge_per_luck) + _eq_stat(member, "dodge")
 	# critV：見檔頭「刻意行為修正」——統一採用 WORLD 版取一位小數的寫法（round(x*10)/10）。
-	# see specs/BATTLE_FORMULAS.md F-1
-	member["critV"] = roundf((d.crit_base + agi_v * d.crit_per_agi + _eq_stat(member, "crit")) * 10.0) / 10.0
-	member["spd"] = agi_v
+	# v4.0：納入 luck（crit_per_luck）。see specs/BATTLE_FORMULAS.md F-1
+	member["critV"] = roundf((d.crit_base + agi_v * d.crit_per_agi + luck_v * d.crit_per_luck + _eq_stat(member, "crit")) * 10.0) / 10.0
+	# v4.0 新增戰鬥數值（see specs/BATTLE_FORMULAS.md F-1）：命中 accV / 抗爆 critresV / 爆傷 critdmg。
+	member["accV"] = roundf(agi_v * d.acc_per_agi) + _eq_stat(member, "acc")
+	member["critresV"] = roundf((luck_v * d.critres_per_luck) * 10.0) / 10.0 + _eq_stat(member, "critres")
+	member["critdmg"] = d.crit_dmg_base + _eq_stat(member, "critdmg")
+	member["luckV"] = luck_v
+	member["spd"] = agi_v + _eq_stat(member, "spd")
 
 	# hp/mp 初值：未定義或超過上限時 clamp 到 maxhp/maxmp（嚴格對應 m.hp===undefined||m.hp>m.maxhp，
 	# 不是「永遠回滿」，裝備變動導致 maxhp 下降時現有 hp 只會被夾住，不會被治療到滿血以外）。

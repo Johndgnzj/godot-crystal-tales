@@ -18,7 +18,8 @@ static func _randf(rng: RandomNumberGenerator) -> float:
 	return randf()
 
 
-## F-3　普攻傷害（build_cq2.py `phys()` L2945-2953）。回傳 {dmg:int, crit:bool}。
+## F-3　普攻傷害（build_cq2.py `phys()` L2945-2953；v4.0 屬性系統擴充改為三段式的「爆擊＋傷害」兩段，
+## 命中判定拆到 F-4 `is_hit`）。回傳 {dmg:int, crit:bool}。
 static func phys_damage(attacker: Dictionary, defender: Dictionary, rng: RandomNumberGenerator = null) -> Dictionary:
 	# see specs/BATTLE_FORMULAS.md F-3
 	var atk: float = float(attacker.get("patk", 0.0)) if attacker.has("attrs") else float(attacker.get("atk", 0.0))
@@ -28,21 +29,43 @@ static func phys_damage(attacker: Dictionary, defender: Dictionary, rng: RandomN
 		base = 1.0
 	if bool(defender.get("defending", false)):
 		base *= 0.5
-	var crit_chance: float
-	if attacker.has("attrs"):
-		crit_chance = float(attacker.get("critV", 0.0)) / 100.0
-	else:
-		# 敵方一律用基礎會心率，沒有個別敵人會心加成（F-3 明文規則）
-		crit_chance = ContentDB.get_derived().crit_base / 100.0
-	var is_crit: bool = _randf(rng) < crit_chance
+	# 爆擊判定（會心攻 − 抗爆守，見 crit_chance）；爆傷倍率＝攻方 critdmg（基礎 1.4，裝備可撐）。
+	var is_crit: bool = _randf(rng) * 100.0 < crit_chance(attacker, defender)
 	var mult: float = 0.85 + _randf(rng) * 0.15
-	var dmg: float = roundf(base * mult * (1.5 if is_crit else 1.0))
+	var dmg: float = roundf(base * mult * (crit_mult(attacker) if is_crit else 1.0))
 	if dmg < 1.0:
 		dmg = 1.0
 	return {"dmg": int(dmg), "crit": is_crit}
 
 
-## F-4　閃避判定（build_cq2.py `dodge()` L2938-2944）。回傳命中閃避的機率百分比（0~dodgeCap）。
+## F-3　有效會心率（%，0~critCap）＝攻方會心 − 守方抗爆（v4.0 屬性系統擴充新增抗爆）。
+## 角色用 derive() 算好的 critV/critresV；敵人由 crit_base + luck 現場算（一般怪 luck=0＝沿用基礎會心率）。
+static func crit_chance(attacker: Dictionary, defender: Dictionary) -> float:
+	# see specs/BATTLE_FORMULAS.md F-3
+	var d: DerivedParams = ContentDB.get_derived()
+	var crit_att: float
+	if attacker.has("attrs"):
+		crit_att = float(attacker.get("critV", 0.0))
+	else:
+		crit_att = d.crit_base + float(attacker.get("luck", 0.0)) * d.crit_per_luck
+	var res: float
+	if defender.has("attrs"):
+		res = float(defender.get("critresV", 0.0))
+	else:
+		res = float(defender.get("luck", 0.0)) * d.critres_per_luck
+	return clampf(crit_att - res, 0.0, d.crit_cap)
+
+
+## F-3　爆擊傷害倍率（v4.0）：角色用 derive() 的 critdmg（crit_dmg_base + 裝備 critdmg）；敵人用基礎值。
+static func crit_mult(attacker: Dictionary) -> float:
+	# see specs/BATTLE_FORMULAS.md F-3
+	if attacker.has("attrs"):
+		return float(attacker.get("critdmg", ContentDB.get_derived().crit_dmg_base))
+	return ContentDB.get_derived().crit_dmg_base
+
+
+## F-4　閃避判定（build_cq2.py `dodge()` L2938-2944；v4.0 命中值 acc 改用獨立係數 acc_per_agi、閃避納入
+## luck）。回傳「命中閃避」的機率百分比（淨閃避 0~dodgeCap）＝ 100 − 命中率。
 static func dodge_chance(attacker: Dictionary, defender: Dictionary) -> float:
 	# see specs/BATTLE_FORMULAS.md F-4
 	var d: DerivedParams = ContentDB.get_derived()
@@ -50,18 +73,28 @@ static func dodge_chance(attacker: Dictionary, defender: Dictionary) -> float:
 	if defender.has("attrs"):
 		dv = float(defender.get("dodgeV", 0.0))
 	else:
-		dv = float(defender.get("spd", 0.0)) * d.dodge_per_agi
+		dv = float(defender.get("spd", 0.0)) * d.dodge_per_agi + float(defender.get("luck", 0.0)) * d.dodge_per_luck
 	var av: float
 	if attacker.has("attrs"):
-		var attrs: Dictionary = attacker.get("attrs", {})
-		av = float(attrs.get("agi", 0.0)) * d.dodge_per_agi
+		av = float(attacker.get("accV", 0.0))
 	else:
-		av = float(attacker.get("spd", 0.0)) * d.dodge_per_agi
+		av = float(attacker.get("spd", 0.0)) * d.acc_per_agi
 	return clampf(dv - av, 0.0, d.dodge_cap)
 
 
-## 是否命中閃避。**只有普攻（F-3）與敵人具名單體技能（F-8）會呼叫這個**——玩家技能傷害
-## （`applyOne`/`applyAll` 的 `sk.kind==="damage"` 分支）刻意不判閃避，見 F-4 說明。
+## F-4　命中率（%，dodge_chance 的補數）——v4.0「一次攻擊拆三段」的命中段。
+static func hit_chance(attacker: Dictionary, defender: Dictionary) -> float:
+	# see specs/BATTLE_FORMULAS.md F-4
+	return 100.0 - dodge_chance(attacker, defender)
+
+
+## 是否命中（v4.0）。**只有普攻（F-3）與敵人具名單體技能（F-8）會呼叫命中判定**——玩家技能傷害
+## （`applyOne`/`applyAll` 的 `sk.kind==="damage"` 分支）刻意不判命中，見 F-4 說明。
+static func is_hit(attacker: Dictionary, defender: Dictionary, rng: RandomNumberGenerator = null) -> bool:
+	return _randf(rng) * 100.0 < hit_chance(attacker, defender)
+
+
+## 是否被閃避（is_hit 的反面）。保留給既有呼叫端；語意＝隨機落在淨閃避區間。
 static func is_dodge(attacker: Dictionary, defender: Dictionary, rng: RandomNumberGenerator = null) -> bool:
 	return _randf(rng) * 100.0 < dodge_chance(attacker, defender)
 
