@@ -225,6 +225,8 @@ formations = [{"weight": 2.0, "members": [{"id": "gslime", "min": 1, "max": 2}]}
 script = ExtResource("3_hsbra")
 map_id = "prologue_demon"
 formations = [{"weight": 1.0, "members": [{"id": "shadow_demon", "min": 1, "max": 1}]}]
+scripted_survive = 3
+story_cut = "demon_post"
 
 [sub_resource type="Resource" id="Resource_sb6r6"]
 script = ExtResource("3_hsbra")

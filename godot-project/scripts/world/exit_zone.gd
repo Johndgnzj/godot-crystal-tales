@@ -76,6 +76,6 @@ func _on_body_entered(body: Node) -> void:
 ## 純邏輯判定，跟 trigger_zone.gd 同樣的設計理由：脫鉤 Node/Signal 方便測試。
 ## 回傳 {"allowed": true} 或 {"allowed": false, "msg": String}
 func evaluate(flags: Dictionary) -> Dictionary:
-	if has_min_step and int(flags.get("step", 0)) < min_step:
+	if has_min_step and int(flags.get("ch1_step", 0)) < min_step:
 		return {"allowed": false, "msg": deny_msg}
 	return {"allowed": true}

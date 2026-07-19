@@ -80,12 +80,12 @@ func evaluate(flags: Dictionary) -> Dictionary:
 	if not FlagMatcher.matches(flags, when):
 		return {"type": "none"}
 	if cut_id != "":
-		var ok_step: bool = (not has_step) or (int(flags.get("step", 0)) == step)
+		var ok_step: bool = (not has_step) or (int(flags.get("ch1_step", 0)) == step)
 		var once_done: bool = cut_once_flag != "" and int(flags.get(cut_once_flag, 0)) != 0
 		if ok_step and not once_done:
 			return {"type": "cut", "cut_id": cut_id}
 	if msg != "":
-		var ok_min: bool = (not has_min_step) or (int(flags.get("step", 0)) >= min_step)
+		var ok_min: bool = (not has_min_step) or (int(flags.get("ch1_step", 0)) >= min_step)
 		if ok_min:
 			return {"type": "msg", "msg": msg}
 	return {"type": "none"}

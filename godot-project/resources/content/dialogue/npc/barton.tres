@@ -19,7 +19,7 @@ cmd = "talk"
 
 [sub_resource type="Resource" id="Resource_jolwk"]
 script = ExtResource("1_dm2me")
-when = "step==0"
+when = "ch1_step==0"
 speaker = "巴頓鎮長"
 lines = PackedStringArray("聽說亞倫先生要帶你去礦山見習？", "好好跟著學，別亂跑。")
 cmd = "talk"

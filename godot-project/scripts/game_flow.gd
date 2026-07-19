@@ -16,7 +16,7 @@ const START_PARTY: Array[String] = ["ludo", "alan"]
 
 ## 重置 GameState 成全新一局（不切場景——切場景由呼叫端決定）。對應 build_cq2 newGame() 的全域變數設定。
 static func new_game() -> void:
-	GameState.flags = {"step": 0, "reg": 0, "ch1": 0}
+	GameState.flags = {"ch1_step": 0, "reg": 0, "ch1": 0}
 	GameState.party = []
 	for id in START_PARTY:
 		GameState.party.append(make_member(id))

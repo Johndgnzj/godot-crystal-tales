@@ -14,6 +14,14 @@ const MAX_FOES := 5   ## 一場戰鬥的敵人硬上限（＝battle_state_machin
 @export var map_id: String = ""
 @export var formations: Array = []   ## Array[Dictionary]，格式見檔頭
 
+## scripted 劇情戰：>0＝「撐過 N 次敵方行動後以 story 結果收場」（我方保底不死），對應必敗/序章橋段。
+## 0＝一般可勝可敗戰鬥。取代 battle_state_machine 原本寫死的 `enc=="prologue_demon"`，see F-11。
+@export var scripted_survive: int = 0
+## 戰後過場：本場以 story 結果（scripted 撐過）收場時要播的 cutscene id（空＝無）。
+@export var story_cut: String = ""
+## 戰後過場：本場以 win 結果收場時要播的 cutscene id（空＝無）。
+@export var win_cut: String = ""
+
 
 static func from_dict(map_id: String, formations: Array) -> EncounterDef:
 	var result := EncounterDef.new()

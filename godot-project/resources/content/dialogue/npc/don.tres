@@ -13,7 +13,7 @@ label = "交易"
 
 [sub_resource type="Resource" id="Resource_don_first"]
 script = ExtResource("1_don00")
-when = "step==0"
+when = "ch1_step==0"
 speaker = "唐恩"
 lines = PackedStringArray("喔？新面孔。要打鐵、修東西，找我唐恩就對了……", "雖然賣相差了點，耐操是真的。")
 cmd = "talk"

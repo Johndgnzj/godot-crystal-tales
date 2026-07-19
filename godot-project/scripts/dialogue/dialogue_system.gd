@@ -312,7 +312,7 @@ func _finish_cutscene(cut: CutsceneEntry, cut_id: String) -> void:
 	if cut.once != "":
 		GameState.flag_set(cut.once, 1)
 	if cut.setstep >= 0:
-		GameState.flag_set("step", cut.setstep)
+		GameState.flag_set("ch1_step", cut.setstep)
 	if cut.party.size() > 0:
 		_apply_party(cut.party)
 	if cut.once != "" or cut.setstep >= 0 or cut.party.size() > 0:

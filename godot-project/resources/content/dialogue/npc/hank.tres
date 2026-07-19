@@ -15,7 +15,7 @@ done = "gotSword"
 
 [sub_resource type="Resource" id="Resource_ercdf"]
 script = ExtResource("1_x51ct")
-when = "step==0"
+when = "ch1_step==0"
 speaker = "漢克"
 lines = PackedStringArray("哼，礦山？", "……跟緊亞倫先生，別給他添麻煩。")
 cmd = "talk"

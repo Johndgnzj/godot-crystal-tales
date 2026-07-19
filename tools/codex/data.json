@@ -3448,7 +3448,7 @@
           "done": null
         },
         {
-          "when": "step>=3",
+          "when": "ch1_step>=3",
           "speaker": "緹娜",
           "lines": [
             "歡迎來到冒險者公會！要登錄成為冒險者嗎？",
@@ -3473,7 +3473,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "緹娜",
           "lines": [
             "這不是路德嗎？要去礦山見習？",
@@ -3536,7 +3536,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "朵拉",
           "lines": [
             "要跟亞倫先生出門？路上小心。",
@@ -3588,7 +3588,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "希雅修女",
           "lines": [
             "蓋婭女神看顧著每一位旅人。"
@@ -3638,7 +3638,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "巴頓鎮長",
           "lines": [
             "聽說亞倫先生要帶你去礦山見習？",
@@ -3677,7 +3677,7 @@
           "done": "gotSword"
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "漢克",
           "lines": [
             "哼，礦山？",
@@ -3836,7 +3836,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "老葛雷",
           "lines": [
             "那礦坑二十年前就封了……最近夜裡卻有聲音。",
@@ -3965,7 +3965,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "唐恩",
           "lines": [
             "喔？新面孔。要打鐵、修東西，找我唐恩就對了……",

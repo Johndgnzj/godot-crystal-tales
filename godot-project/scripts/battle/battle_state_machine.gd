@@ -142,8 +142,8 @@ func _init_battle() -> void:
 	if encounter_def != null and not encounter_def.formations.is_empty():
 		group = encounter_def.roll()   # 加權抽組＋數量展開＋上限截斷，see EncounterDef / F-11
 
-	scripted = (enc == "prologue_demon")
-	survive_acts = 3
+	scripted = encounter_def != null and encounter_def.scripted_survive > 0
+	survive_acts = encounter_def.scripted_survive if scripted else 3
 	acted = 0
 
 	heroes.clear()
@@ -208,7 +208,7 @@ func _init_battle() -> void:
 	anim_t = 1.0
 	story_end = false
 	win_msg = ""
-	msg = "異變的魔影擋在面前……撐過牠的 3 次攻擊！" if scripted else "遭遇敵人！行動條蓄滿即可下令"
+	msg = ("強敵當前，實力懸殊……先撐過牠的 %d 波攻勢！" % survive_acts) if scripted else "遭遇敵人！行動條蓄滿即可下令"
 	sel = 0
 	s_sel = 0
 	i_sel = 0

@@ -1,6 +1,6 @@
 # 規格：衍生屬性與戰鬥公式
 
-- Spec 版本: v4.0
+- Spec 版本: v4.1
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py`（WORLD 版 `derive()` L1326-1345；BATTLE 版 `derive()`
   L2641-2661 為同一份公式的重複實作——**已知技術債，DEV_開發指南.md L63 有提及「改公式要同步兩處」**）
 - 狀態: 定案（F-1~F-9 原始抄錄自現行程式碼；**F-10/F-11 為 Godot 端刻意新增；v4.0 屬性系統擴充進一步刻意偏離 GDevelop，見版本紀錄**）
@@ -8,6 +8,9 @@
 
 ## 版本紀錄
 
+- **v4.1（2026-07-20，第一章 Phase 3 地基）**：F-11 新增 `scripted_survive`（劇情/必敗戰資料驅動）＋
+  `story_cut`/`win_cut`（戰後過場資料驅動），取代 `battle_state_machine` 原本寫死的 `enc=="prologue_demon"`。
+  純新增，不動 F-1~F-10 數值。
 - **v4.0（2026-07-19，屬性系統擴充；John 指示，see TASKS/14）**：**破壞性變動——新增第四主屬性 `luck`(幸運)、
   裝備可加主屬性、戰鬥拆「命中/爆擊/傷害」三段、新增命中/抗爆/爆傷三個戰鬥數值**。
   1. **F-1 改寫**：裝備 `stats` 的 `str/agi/int/luck/spd` 先疊進「有效屬性」再算衍生（舊版裝備加主屬性不生效）；
@@ -372,6 +375,13 @@ chance    = clamp(baseRate * mult + luckBonus, 0, 1)
 
 **下限**：無全域硬性下限，最少 1 隻（保底）。「一般遭遇 2+ 隻、單隻留給精英/boss/劇情戰」是**編排慣例**
 （由各表 `min` 值落實），非程式強制。
+
+**劇情戰／必敗戰（`scripted_survive`，v4.1 新增）**：`EncounterDef.scripted_survive > 0` 時本場為劇情強制戰
+——我方 hp 保底 1（不會真死），撐過該數值次數的敵方行動後以 `story` 結果收場（`battle_state_machine` 讀此欄位，
+取代原本寫死的 `enc=="prologue_demon"`）。搭配 `EncounterDef.story_cut`（story 收場後播的過場 id）／`win_cut`
+（win 收場後播）做資料驅動的戰後劇情銜接——世界場景 `_apply_entry_state()` 依戰後 `GameState.encounter` 查這兩欄，
+取代原本寫死的 `scene_id=="Cave"→demon_post`。目前 `prologue_demon` = `scripted_survive:3, story_cut:"demon_post"`
+（小節1 熊必敗、小節6 necro 於 CH1-07/CH1-12 各自設定）。
 
 **與 GDevelop 差異**：GDevelop 端 encounter 是固定編成、均勻隨機、無數量範圍與權重；此為遷移期刻意重構。
 種子 JSON（`sync_content.py`）不含新結構，`region_generator._make_formations()` 已同步產出 v2 格式。
