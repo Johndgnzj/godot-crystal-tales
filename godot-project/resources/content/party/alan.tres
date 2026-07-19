@@ -14,7 +14,7 @@ base = {
 "int": 14.0,
 "str": 30.0
 }
-start_level = 20
+start_level = 35
 start_eq = {
 "armor": "leather_vest",
 "boots": "swift_boots",

@@ -70,7 +70,7 @@ godot-crystal-tales/
 
 | 你改了什麼 | 必須同步更新 |
 |---|---|
-| 劇情 / 對話 / 過場（`resources/content/dialogue/**/*.tres`；種子 `dialogue.json`）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
+| 劇情 / 對話 / 過場（`resources/content/dialogue/**/*.tres`）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
 | 數值 / 角色 / 裝備（`resources/content/*.tres`）| 對應 `docs/` 敘事或設計文件、**設定集 Artifact**（見下）|
 | 素材（`godot-project/assets/`）| `CREDITS_素材授權.md`（授權帳本）、必要時 `docs/素材管理規範.md`|
 | 新增/移除/搬動任何文件 | `README.md` 索引、`docs/README.md` 索引 |

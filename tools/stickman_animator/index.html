@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>火柴人骨架動畫工具 — 水晶戰記</title>
+<style>
+  :root{
+    --bg:#14161c; --panel:#1d212b; --panel2:#161a22; --line:#2c313d; --line2:#3a4150;
+    --ink:#e6e9f0; --dim:#8b93a7; --dim2:#616a7e;
+    --accent:#5ac8fa; --ok:#59d98a; --warn:#ffb454; --err:#ff7b7b;
+    /* 火柴人語意色（與 ROLE_ART_SPEC 螢光底 / 前後肢概念對齊） */
+    --front:#4aa3e0; --back:#f5a623; --body:#2b2f38;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font:13.5px/1.5 -apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+       background:var(--bg);color:var(--ink);
+       -webkit-font-smoothing:antialiased}
+  code{font:12px/1.4 ui-monospace,"SF Mono",Menlo,monospace;background:#0e1015;
+       padding:1px 5px;border-radius:5px;color:#b9c2d6}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ---- layout ---- */
+  .app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  header{display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid var(--line);
+         background:linear-gradient(180deg,#191d26,#14161c)}
+  header .logo{display:flex;align-items:center;gap:9px}
+  header .mark{width:26px;height:26px;border-radius:7px;flex:0 0 auto;
+       background:radial-gradient(circle at 30% 25%,var(--front),#2b6da0 70%);
+       box-shadow:inset 0 0 0 1.5px #0006, 0 1px 4px #0007;position:relative}
+  header .mark::after{content:"";position:absolute;inset:0;border-radius:7px;
+       background:linear-gradient(135deg,transparent 55%,var(--back) 55%);opacity:.85;
+       -webkit-mask:radial-gradient(circle at 30% 25%,#000 68%,transparent 69%);mask:radial-gradient(circle at 30% 25%,#000 68%,transparent 69%)}
+  header h1{margin:0;font-size:15px;letter-spacing:.02em;font-weight:700}
+  header .sub{color:var(--dim);font-size:11.5px;margin-top:1px}
+  header .spacer{flex:1}
+  header .filebtns{display:flex;gap:8px}
+
+  main{flex:1;display:flex;min-height:0}
+  .side{width:312px;flex:0 0 auto;border-right:1px solid var(--line);background:var(--panel2);
+        overflow-y:auto;padding:14px}
+  .stagecol{flex:1;min-width:0;display:flex;flex-direction:column}
+
+  .sec{margin-bottom:16px}
+  .sec>h2{margin:0 0 9px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+          color:var(--dim2);font-weight:700;display:flex;align-items:center;gap:7px}
+  .sec>h2::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .field{display:block;font-size:11.5px;color:var(--dim);margin:0 0 5px}
+  .row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .row:last-child{margin-bottom:0}
+  .row .val{margin-left:auto;color:var(--dim);font-size:11.5px;min-width:34px;text-align:right}
+  .grow{flex:1;min-width:0}
+
+  input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+  input[type=color]{width:30px;height:26px;padding:0;border:1px solid var(--line2);border-radius:6px;
+       background:none;cursor:pointer;flex:0 0 auto}
+  input[type=number]{width:58px;padding:5px 7px;background:#12141a;border:1px solid var(--line);
+       border-radius:7px;color:var(--ink);font:inherit}
+  input[type=number]:focus{outline:none;border-color:var(--accent)}
+  select{padding:6px 9px;background:#12141a;border:1px solid var(--line);border-radius:7px;
+       color:var(--ink);font:inherit;cursor:pointer}
+  label.chk{display:inline-flex;align-items:center;gap:7px;cursor:pointer;color:var(--ink);font-size:12.5px}
+  label.chk input{accent-color:var(--accent);width:15px;height:15px}
+
+  button{font:inherit;border:1px solid var(--line);background:#242a36;color:var(--ink);
+       padding:7px 11px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:border-color .12s,background .12s}
+  button:hover:not(:disabled){border-color:var(--accent)}
+  button:active:not(:disabled){transform:translateY(1px)}
+  button.primary{background:var(--accent);color:#06222e;border-color:var(--accent);font-weight:700}
+  button.ghost{background:transparent}
+  button.on{background:var(--accent);color:#06222e;border-color:var(--accent);font-weight:600}
+  button:disabled{opacity:.38;cursor:not-allowed}
+  button.icon{padding:7px 9px;font-size:14px;line-height:1}
+  .btnrow{display:flex;gap:7px;flex-wrap:wrap}
+  .btnrow.split button{flex:1}
+
+  .file{position:relative;overflow:hidden;display:inline-block}
+  .file input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+
+  .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button{border:0;border-radius:0;flex:1;background:transparent;padding:7px 6px;font-size:12px}
+  .seg button+button{border-left:1px solid var(--line)}
+  .seg button.on{background:var(--accent);color:#06222e;font-weight:700}
+
+  /* ---- layers ---- */
+  .layer{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:6px 7px;border:1px solid var(--line);
+       border-radius:8px;margin-bottom:6px;background:#171b23}
+  .layer .name{flex:1;font-size:12.5px}
+  .layer .name small{color:var(--dim2);font-weight:400}
+  .layer .zbtn{font-size:11px;padding:4px 8px;border-radius:6px;min-width:44px}
+  .layer .eye{background:transparent;border:0;font-size:14px;padding:2px 4px;cursor:pointer;opacity:.85}
+  .layer.hidden{opacity:.5}
+  .layer input[type=color]{width:24px;height:22px}
+  .layer .op{flex:0 0 100%;display:flex;align-items:center;gap:8px;margin-top:1px;padding-top:6px;
+       border-top:1px solid var(--line)}
+  .layer .op input[type=range]{flex:1;margin:0;cursor:pointer}
+  .layer .olbl{font-size:13px;color:var(--dim2);line-height:1}
+  .layer .oval{font-size:10.5px;color:var(--dim);min-width:32px;text-align:right;font-variant-numeric:tabular-nums}
+
+  .legend{font-size:11.5px;color:var(--dim);line-height:1.7;background:#12141a;border:1px solid var(--line);
+       border-radius:8px;padding:9px 11px}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:baseline}
+  .hint{font-size:11px;color:var(--dim2);margin-top:6px;line-height:1.55}
+
+  /* ---- stage ---- */
+  .stagebar{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);
+       background:var(--panel);font-size:12px;color:var(--dim)}
+  .stagebar .pill{background:#12141a;border:1px solid var(--line);border-radius:20px;padding:3px 11px;
+       color:var(--ink);font-variant-numeric:tabular-nums}
+  .stagebar .tip{margin-left:auto;color:var(--dim2)}
+  .stagewrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+       padding:18px;overflow:auto;
+       background:
+         radial-gradient(circle at 50% 40%,#1b202b,#0f1116 78%);}
+  .stage{position:relative;box-shadow:0 8px 40px #000a, 0 0 0 1px var(--line2);border-radius:4px;line-height:0}
+  #cv{display:block;border-radius:4px;touch-action:none;cursor:crosshair}
+
+  /* ---- timeline ---- */
+  .timeline{flex:0 0 auto;border-top:1px solid var(--line);background:var(--panel);padding:10px 14px}
+  .tlbar{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+  .tlbar .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);font-weight:700}
+  .tlbar .spacer{flex:1}
+  .tlbar .fps{display:flex;align-items:center;gap:6px;color:var(--dim);font-size:12px}
+  .frames{display:flex;gap:9px;overflow-x:auto;padding:3px 2px 8px}
+  .frm{position:relative;flex:0 0 auto;border:2px solid var(--line);border-radius:8px;overflow:hidden;
+       cursor:pointer;background:#0e1015;transition:border-color .12s}
+  .frm:hover{border-color:var(--line2)}
+  .frm.sel{border-color:var(--accent);box-shadow:0 0 0 3px #5ac8fa33}
+  .frm.playing{border-color:var(--ok)}
+  .frm canvas{display:block}
+  .frm .idx{position:absolute;left:4px;top:3px;font-size:10px;font-weight:700;color:#fff;
+       text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums}
+  .frm .del{position:absolute;right:2px;top:1px;width:17px;height:17px;border:0;border-radius:5px;
+       background:#0008;color:#fff;font-size:12px;line-height:1;cursor:pointer;opacity:0;padding:0}
+  .frm:hover .del{opacity:1}
+  .frm .del:hover{background:var(--err)}
+
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#2c313d;border-radius:8px;border:2px solid var(--panel2)}
+  ::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">
+      <div class="mark"></div>
+      <div>
+        <h1>火柴人骨架動畫工具</h1>
+        <div class="sub">產生分幀骨架參考 · 前後肢分色 · 供 AI／LPC 產圖參照</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="filebtns">
+      <button id="btnSave" class="ghost">↧ 存專案</button>
+      <span class="file"><button class="ghost">↥ 讀專案</button><input type="file" id="fileProj" accept="application/json"></span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ LEFT PANEL ============ -->
+    <aside class="side">
+
+      <div class="sec">
+        <h2>畫布</h2>
+        <div class="row">
+          <span class="field" style="margin:0">尺寸</span>
+          <select id="selSize" class="grow">
+            <option value="256">256 × 256</option>
+            <option value="384">384 × 384</option>
+            <option value="512" selected>512 × 512</option>
+            <option value="640">640 × 640</option>
+          </select>
+        </div>
+        <div class="row">
+          <span class="field" style="margin:0">螢光底色</span>
+          <input type="color" id="inpBg" value="#ff00ff">
+          <code id="bgHex" class="grow" style="text-align:right">#ff00ff</code>
+        </div>
+        <div class="row">
+          <label class="chk"><input type="checkbox" id="chkGrid" checked>參考十字線</label>
+          <label class="chk" style="margin-left:auto"><input type="checkbox" id="chkOnion" checked>洋蔥皮</label>
+        </div>
+        <div class="row">
+          <span class="field" style="margin:0;width:52px">線條粗細</span>
+          <input type="range" id="rngThick" min="0.4" max="2" step="0.05" value="1" class="grow">
+          <span class="val num" id="valThick">1.00</span>
+        </div>
+        <div class="row">
+          <span class="field" style="margin:0;width:52px">頭部大小</span>
+          <input type="range" id="rngHead" min="20" max="110" step="1" value="54" class="grow">
+          <span class="val num" id="valHead">54</span>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2>圖層 · 前後肢</h2>
+        <div id="layerList"></div>
+        <div class="legend" style="margin-top:9px">
+          <div><span class="dot" style="background:var(--front)"></span><b>前側</b>（藍）畫在軀幹之上</div>
+          <div><span class="dot" style="background:var(--back)"></span><b>後側</b>（橙）畫在軀幹之下</div>
+          <div style="margin-top:4px;color:var(--dim2)">點色塊改色 · 點「前/後」切換前後 · 👁 顯示/隱藏</div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2>參考圖 <small style="text-transform:none;letter-spacing:0;color:var(--dim2)">選用</small></h2>
+        <div class="btnrow split" style="margin-bottom:9px">
+          <span class="file grow"><button class="ghost" style="width:100%">↥ 上傳圖片</button>
+            <input type="file" id="fileRef" accept="image/*"></span>
+          <button id="btnRefClear" class="ghost icon" title="移除參考圖">✕</button>
+        </div>
+        <div class="seg" id="refModeSeg" style="margin-bottom:9px">
+          <button data-mode="off" class="on">關閉</button>
+          <button data-mode="trace">描圖底</button>
+          <button data-mode="puppet">貼骨</button>
+        </div>
+        <div id="refCtrls" style="display:none">
+          <div class="row">
+            <span class="field" style="margin:0;width:44px">透明度</span>
+            <input type="range" id="rngRefOp" min="0.1" max="1" step="0.05" value="0.55" class="grow">
+            <span class="val num" id="valRefOp">.55</span>
+          </div>
+          <div class="row">
+            <span class="field" style="margin:0;width:44px">縮放</span>
+            <input type="range" id="rngRefScale" min="0.05" max="3" step="0.01" value="1" class="grow">
+            <span class="val num" id="valRefScale">1.00</span>
+          </div>
+          <div class="row">
+            <span class="field" style="margin:0;width:44px">水平</span>
+            <input type="range" id="rngRefX" min="-640" max="640" step="1" value="0" class="grow">
+          </div>
+          <div class="row">
+            <span class="field" style="margin:0;width:44px">垂直</span>
+            <input type="range" id="rngRefY" min="-640" max="640" step="1" value="0" class="grow">
+          </div>
+          <div id="puppetBox" style="display:none">
+            <div class="btnrow" style="margin-top:4px">
+              <button id="btnBind" class="grow">🔗 依目前姿勢綁定</button>
+            </div>
+            <label class="chk" style="margin-top:8px"><input type="checkbox" id="chkShowRig">同時顯示骨架色塊</label>
+            <div class="hint">先用「描圖底」把圖對到目前骨架姿勢，再切「貼骨」按綁定。之後每一幀圖塊會跟著骨架動（大概對位，接縫難免）。</div>
+          </div>
+          <div class="hint" id="traceHint">半透明疊在骨架上，方便照著圖擺關節。</div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2>匯出</h2>
+        <div class="btnrow split" style="margin-bottom:8px">
+          <button id="btnExpFrame">當前幀 PNG</button>
+          <button id="btnExpSheet" class="primary">精靈表 PNG</button>
+        </div>
+        <label class="chk"><input type="checkbox" id="chkExpGrid">匯出時包含參考十字線</label>
+        <div class="hint">精靈表＝所有幀橫向排列（LPC 慣例）。螢光底方便之後鍵除去背。</div>
+      </div>
+
+    </aside>
+
+    <!-- ============ STAGE ============ -->
+    <section class="stagecol">
+      <div class="stagebar">
+        <span class="pill">幀 <b id="curFrame" class="num">1</b> / <span id="totFrame" class="num">1</span></span>
+        <span class="pill" id="posReadout">— , —</span>
+        <span class="tip">拖<b style="color:var(--ink)">關節</b>調整姿勢 · 拖<b style="color:var(--ink)">空白</b>整體平移 · <b style="color:var(--ink)">方向鍵</b>微調選中關節</span>
+      </div>
+      <div class="stagewrap">
+        <div class="stage"><canvas id="cv"></canvas></div>
+      </div>
+
+      <!-- ============ TIMELINE ============ -->
+      <div class="timeline">
+        <div class="tlbar">
+          <span class="lbl">時間軸</span>
+          <div class="btnrow">
+            <button id="btnDup" class="primary icon" title="複製當前幀（接在後面）">⧉ 複製幀</button>
+            <button id="btnAdd" class="icon" title="新增空白幀（預設站姿）">＋ 空白</button>
+            <button id="btnMoveL" class="icon" title="往前移">◀</button>
+            <button id="btnMoveR" class="icon" title="往後移">▶</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="fps">
+            <button id="btnPlay" class="icon" style="min-width:74px">▶ 播放</button>
+            <label class="field" style="margin:0">FPS</label>
+            <input type="number" id="inpFps" min="1" max="30" value="8">
+          </div>
+        </div>
+        <div class="frames" id="frames"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
