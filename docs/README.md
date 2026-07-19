@@ -32,8 +32,10 @@
 |---|---|
 | [design/設計員指南.md](design/設計員指南.md) | 怎麼在 Godot 編輯器改角色/道具/武器/數值/美術/地圖 |
 | [design/道具武器設計.md](design/道具武器設計.md) | 道具與武器的屬性/圖示/稀有度設計（equipment_def.gd / validate_content.py 以此為 spec）|
+| [design/魔物立繪素材設計.md](design/魔物立繪素材設計.md) | 戰鬥魔物立繪的來源位置、朝向、兩幀呼吸動畫與驗收規格 |
 | [design/屬性戰鬥設計.md](design/屬性戰鬥設計.md) | 四主屬性(str/agi/int/**luck**)→衍生戰鬥數值→三段式攻擊的設計與係數表（對應 BATTLE_FORMULAS v4.0）|
 | [design/prompt/roles.md](design/prompt/roles.md) | 角色立繪 prompt 集（全 15 位的全身 c prompt，`gen-role-prompt` 產；路德＝風格基準）|
+| [design/prompt/emenies.md](design/prompt/emenies.md) | 魔物設定集立繪／公會懸賞黑墨圖的可重出 prompt 集；以角色立繪風格為共同基線 |
 
 ## 四、工程 / 規範 / 權威來源 — 在原位
 
