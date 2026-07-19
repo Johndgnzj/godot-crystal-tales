@@ -125,7 +125,7 @@ func _check_data_layer() -> void:
 	if bool(cdb.get("is_loaded")):
 		_ok("ContentDB.is_loaded == true")
 	else:
-		_bad("ContentDB.is_loaded == false（content.json 載入失敗？）")
+		_bad("ContentDB.is_loaded == false（content_db.tres 載入失敗？）")
 
 	# 抽查既有 id（id 以 CONTENT.json 實際資料為準，見 CORE-2）。
 	var enemy = cdb.call("get_enemy", "goblin_chief")

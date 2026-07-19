@@ -17,3 +17,8 @@ __pycache__/
 
 # 產圖/工具 scratch（非可回溯素材；原始素材請放 assets-source/，見 docs/素材管理規範.md）
 tmp/
+
+# 舊匯入種子 JSON（GDevelop→.tres 的中間產物，可由 sync_content.py／extract_dialogue.py 重生）；
+# 真相源＝resources/content/**/*.tres，種子不進版控（2026-07-18 去重）
+godot-project/resources/content/content.json
+godot-project/resources/content/dialogue.json

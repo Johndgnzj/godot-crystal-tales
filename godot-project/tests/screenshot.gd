@@ -11,6 +11,7 @@ extends SceneTree
 ##   menu[:頁]          new_game 後開遊戲選單；頁 = char/items/map/titles/system（預設 char）
 ##   world:<場景ID>     new_game 後載入世界場景（Town/Mine/EFA…，見 SceneRouter.SCENE_PATHS）
 ##                      ※ 進場可能自動播開場過場（對話框會入鏡），屬正常
+##   battle_preview     LPC 怪物試作，沿用正式 battle.tscn 的 UI／版面
 ##
 ## 例：
 ##   ... -- /tmp/shots title menu:char menu:items menu:map world:Town
@@ -78,6 +79,8 @@ func _shoot(target: String) -> void:
 				print("[SHOT] 略過 world:%s（SceneRouter 無此場景ID或檔案不存在）" % arg)
 				return
 			host = _instance(path)
+		"battle_preview":
+			host = _instance("res://scenes/battle/lpc_preview.tscn")
 		_:
 			print("[SHOT] 未知目標：%s（支援 title / menu[:頁] / world:<ID>）" % target)
 			return

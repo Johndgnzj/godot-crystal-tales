@@ -1,0 +1,20 @@
+#!/bin/sh
+# 水晶戰記 codex 資料同步 hook
+# 當本次 commit 動到遊戲資料（godot-project/resources/content/**）時，自動重跑
+# build_codex.py 重新產生 tools/codex/data.json（.tres 資料的可 diff 快照）並加入本次
+# commit，確保版控上的設定快照永遠跟 .tres 真相源一致，不會脫勾。
+#
+# 只在 content 變更時觸發，其餘 commit 不受影響。
+# 緊急略過： git commit --no-verify
+set -e
+
+changed=$(git diff --cached --name-only --diff-filter=ACMR | grep '^godot-project/resources/content/' || true)
+[ -z "$changed" ] && exit 0
+
+echo "[codex] 偵測到 content 變更 → 重新產生 data.json …"
+if ! python3 tools/codex/build_codex.py; then
+  echo "[codex] build_codex.py 失敗，已中止 commit（修好，或 git commit --no-verify 略過）。" >&2
+  exit 1
+fi
+git add tools/codex/data.json
+echo "[codex] data.json 已更新並加入本次 commit。"
