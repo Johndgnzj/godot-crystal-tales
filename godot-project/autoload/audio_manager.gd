@@ -46,6 +46,14 @@ func sfx(sfx_name: String) -> void:
 	player.play()
 
 
+## 回傳音效檔長度（秒）；查不到檔回 0。供戰鬥「音效先完、再扣血」計時用。
+func sfx_length(sfx_name: String) -> float:
+	if sfx_name == "":
+		return 0.0
+	var stream := _load(SFX_DIR + sfx_name)
+	return stream.get_length() if stream != null else 0.0
+
+
 ## 循環背景音樂。bgm_name 為檔名（例 "bgm_town.mp3"）；空字串＝維持現況不動（部分場景資料留空）。
 ## 已在播同一首則不重頭（對應原版 `if(!mu||!mu.playing())` 的「別重播」語意，但更嚴謹地比對曲目）。
 func play_bgm(bgm_name: String) -> void:
