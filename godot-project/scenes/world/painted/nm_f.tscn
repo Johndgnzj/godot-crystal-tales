@@ -26,6 +26,13 @@ spawns = {
 "start": Vector2(640, 640)
 }
 camera_zoom = 1.8
+cut_on_enter = [{
+"cut": "s3_demon_pre",
+"step": 6
+}, {
+"cut": "necro_intro",
+"step": 12
+}]
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1606765039]
 texture = ExtResource("2_wnu4f")

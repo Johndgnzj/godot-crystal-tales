@@ -388,6 +388,8 @@ func _run_action(action: String) -> void:
 			_heal_all()
 		"register":
 			GameState.flag_set("reg", 1)
+			if not GameState.eq_inv.has("adventurer_boots"):
+				GameState.eq_inv.append("adventurer_boots")   # 登錄贈冒險者靴（小節4）
 		"ch1_take":
 			GameState.flag_set("ch1", 1)
 		"ch1_reward":
@@ -436,6 +438,17 @@ func _run_action(action: String) -> void:
 			GameState.flag_set("relic", 2)
 			GameState.gold += 100
 			GameState.inv_add("miner_helmet", -1)
+		"s5_start":
+			GameState.flag_set("ch1_step", 10)
+		"gid_brew":
+			if int(GameState.inv_get("fire_honey")) > 0:
+				GameState.inv_add("fire_honey", -1)
+				GameState.inv_add("honey_mead", 1)
+				GameState.flag_set("honey_wine", 1)
+		"warden_pass":
+			if GameState.flag_get("honey_wine") == 1:
+				GameState.inv_add("honey_mead", -1)
+				GameState.flag_set("ch1_step", 12)
 		_:
 			push_warning("DialogueSystem: 未知的 action id=%s（略過，不擋對話流程）" % action)
 

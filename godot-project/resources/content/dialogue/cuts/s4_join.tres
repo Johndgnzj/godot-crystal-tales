@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "（推門進來）……你總算肯開門了。"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "……是我害的。要不是我跟去，亞倫大哥就不用……"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "亞倫大哥的事，不是你的錯。（頓）但你一直關在這裡，也不會有答案。"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "……瑪琳，我決定了。我要成為真正的冒險者——查出那天礦山到底發生了什麼，查出亞倫大哥……究竟怎麼了。"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "（忽然笑了）你一個人？想得美。要去就一起去。走了，去公會登錄。"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（瑪琳加入了隊伍！去公會找緹娜登錄，成為正式的冒險者吧。）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s4_join"
+once = "c_s4_join"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6")])
+transfer = PackedStringArray()
+setstep = 9
+party = PackedStringArray("ludo", "marin")

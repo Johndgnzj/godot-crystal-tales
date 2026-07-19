@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "亞倫"
+text = "（頭也不回）……出來吧，跟了一路了。腳步那麼重，是要我裝作沒聽到？"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（心虛現身）我、我也要去！我可以幫忙！"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "亞倫"
+text = "（揉太陽穴）真是……這是公會的委託，不是郊遊。（嘆氣）算了。跟在我後面，別亂跑。出事你就往回跑，聽到沒？"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "嗯！"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（亞倫加入了隊伍。礦坑二十年前就封了，最近卻有人說夜裡有聲音……）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s3_mine_in"
+once = "c_s3_mine_in"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5")])
+transfer = PackedStringArray()
+setstep = 6
+party = PackedStringArray("ludo", "alan")

@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（衝進公會）緹娜姐！礦山裡面……亞倫大哥他——！"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "緹娜"
+text = "（臉色一變，扶住他）慢慢說。……我明白了。礦山即刻封鎖，我立刻向總部請求支援調查。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "緹娜"
+text = "（放柔聲音）你已經做得很好了。剩下的，交給大人們。"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（可是，總部的支援遲遲沒有來。）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s3_report"
+once = "c_s3_report"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4")])
+transfer = PackedStringArray()
+setstep = 8
+party = PackedStringArray()

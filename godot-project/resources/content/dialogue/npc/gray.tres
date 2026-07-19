@@ -1,53 +1,37 @@
 [gd_resource type="Resource" script_class="NpcDialogue" format=3]
 
-[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_giiuj"]
-[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_tvgty"]
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_gray_e"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_gray_n"]
 
-[sub_resource type="Resource" id="Resource_llmdq"]
-script = ExtResource("1_giiuj")
-when = "relic==1"
+[sub_resource type="Resource" id="thanks"]
+script = ExtResource("1_gray_e")
+when = "ch1_step>=12"
 speaker = "老葛雷"
-lines = PackedStringArray("這頂頭盔……是阿吉的！你們在裡頭找到的？", "（老葛雷的手抖個不停）……謝謝你們，把他的東西帶了回來。", "這是我僅有的一點謝禮，別嫌少。", "（獲得 100 金幣）")
-action = "relic_turnin"
+lines = PackedStringArray("那些孩子……總算能讓我有個交代了。", "深處那股邪氣的源頭，就拜託你們了。萬事小心。")
+cmd = "talk"
 
-[sub_resource type="Resource" id="Resource_e1ekh"]
-script = ExtResource("1_giiuj")
-when = "ch2==3"
+[sub_resource type="Resource" id="remind"]
+script = ExtResource("1_gray_e")
+when = "ch1_step>=10"
 speaker = "老葛雷"
-lines = PackedStringArray("那些孩子……總算能入土為安了。", "你們替這座礦山、也替我這老頭子，了了一樁心事。", "剩下的——深處那股邪氣的源頭，就拜託你們了。")
+lines = PackedStringArray("那守衛啊，就好一口酒。", "聽說東之森東邊 f 區有棵老樹，樹上的『烈火蜂蜜』最對味——採回來交給道具店的吉德，他自有辦法。")
+cmd = "talk"
 
-[sub_resource type="Resource" id="Resource_ddpr3"]
-script = ExtResource("1_giiuj")
-when = "ch2==2"
+[sub_resource type="Resource" id="request"]
+script = ExtResource("1_gray_e")
+when = "ch1_step==9"
 speaker = "老葛雷"
-lines = PackedStringArray("你們臉色不對……在裡頭看到什麼了？", "……戴著礦工帽、掄著鎬子的骷髏？那就是我那些老夥計沒錯了。", "（老葛雷沉默了好久）謝謝你們告訴我真相。這點心意收下。", "聽說深處的落石被你們清開了？那底下的東西，才是禍首。快去回報鎮長吧。")
-action = "ch2_report"
+lines = PackedStringArray("（叼著菸斗打量兩人）公會派來的新人？也罷。", "礦坑裡失蹤的，是跟我一起挖了半輩子的老夥伴。官府當他們逃工，不管。", "可我知道——他們絕不會丟下家人不告而別。你們要是有辦法進去，幫我看看他們……到底怎麼了。", "【委託】設法進入被封鎖的北方礦山。拜託了。")
+action = "s5_start"
+cmd = "talk"
 
-[sub_resource type="Resource" id="Resource_ttvvb"]
-script = ExtResource("1_giiuj")
-when = "ch2==1"
+[sub_resource type="Resource" id="generic"]
+script = ExtResource("1_gray_e")
 speaker = "老葛雷"
-lines = PackedStringArray("礦坑外圍就從鎮北的舊軌道進去。", "失蹤的老夥計要是還在……不，你們親眼去看看吧。", "（記得先把裝備和藥水在鎮上備齊）")
-
-[sub_resource type="Resource" id="Resource_d3sql"]
-script = ExtResource("1_giiuj")
-when = "ch1==3"
-speaker = "老葛雷"
-lines = PackedStringArray("解決了哥布林？好身手。", "那……礦坑的事，能拜託你們嗎？我的老夥計們一個接一個失蹤，", "官府當是逃工不管，可我知道——他們絕不會丟下家人跑掉。", "【委託】重返北方礦山外圍，查明礦工失蹤的真相。接下嗎？就當你們答應了。")
-action = "ch2_take"
-
-[sub_resource type="Resource" id="Resource_g6s6g"]
-script = ExtResource("1_giiuj")
-when = "ch1_step==0"
-speaker = "老葛雷"
-lines = PackedStringArray("那礦坑二十年前就封了……最近夜裡卻有聲音。", "要進去？……跟緊亞倫先生。")
-
-[sub_resource type="Resource" id="Resource_my4tj"]
-script = ExtResource("1_giiuj")
-speaker = "老葛雷"
-lines = PackedStringArray("那礦坑二十年前就封了……最近夜裡卻有聲音。", "你們就是在裡面出事的吧。唉，可憐的亞倫先生。")
+lines = PackedStringArray("那礦坑二十年前就封了……最近夜裡卻有聲音。", "唉，可憐的亞倫先生。")
+cmd = "talk"
 
 [resource]
-script = ExtResource("2_tvgty")
+script = ExtResource("2_gray_n")
 id = "gray"
-entries = Array[ExtResource("1_giiuj")]([SubResource("Resource_llmdq"), SubResource("Resource_e1ekh"), SubResource("Resource_ddpr3"), SubResource("Resource_ttvvb"), SubResource("Resource_d3sql"), SubResource("Resource_g6s6g"), SubResource("Resource_my4tj")])
+entries = Array[ExtResource("1_gray_e")]([SubResource("thanks"), SubResource("remind"), SubResource("request"), SubResource("generic")])

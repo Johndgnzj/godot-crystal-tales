@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（喘著氣，看著倒下的熊，又看看手中的蜂蜜）……我們贏了。這次，我沒有逃。"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "（笑）曾經把你打趴的熊，現在換你把牠打趴了。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（『烈火蜂蜜』到手了。拿回去給道具店的吉德調酒吧。）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s5_bear_win"
+once = "c_s5_bear_win"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3")])
+transfer = PackedStringArray()
+setstep = 11
+party = PackedStringArray()

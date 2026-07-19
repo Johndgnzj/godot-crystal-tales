@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（死靈術士踉蹌後退，撞倒了那堆黑水晶。剎那間黑光暴漲，一股冰冷的波動朝兩人湧來——）"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（胸口的記號驟然發燙、亮起微光，替他擋下了寒意）唔——這光是……？"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "（毫無防備，被黑光正面掃中）啊——！"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（瑪琳當場癱軟昏厥。她的手腕上，浮現出一圈淡淡的黑色咒印。）"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = "死靈術士"
+text = "（望著這一幕，眼神複雜）……那女孩沒有『加護』。這下，她跟我落到一樣的處境了。"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = "死靈術士"
+text = "在找到答案之前，我不會停手——我們，還會再見的。（後退，隱入黑暗。骷髏隨之癱倒。）"
+
+[sub_resource type="Resource" id="L7"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（抱起昏迷的瑪琳）亞倫大哥的下落、還有救瑪琳的方法……答案，一定都在這些水晶、還有那個男人身上。……我一定會查清楚。"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s6_curse"
+once = "c_s6_curse"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
+transfer = PackedStringArray("Town", "home")
+setstep = 13
+party = PackedStringArray()
