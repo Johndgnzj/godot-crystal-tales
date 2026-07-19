@@ -22,10 +22,19 @@ Claude 讀該角色立繪／`docs/story/角色設定.md` 外觀 → 給對應的
 - Cape: Solid **red**（強特徵，一定加）｜Weapon: Arming Sword
 - 同時決定該角色武器的 `weapon_type`（sword／dagger／claw／staff）→ 決定普攻的動畫＋音效。
 
+**產出方式（2026-07-18 起改用網址，取代文字清單）**：直接組**產生器網址**，John 貼上瀏覽器即載入＋視覺檢查、免手動勾選。用 `liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/`，格式 `#類別=選項_顏色&…`（值＝顯示名空白換 `_`、`(顏色)`→`_顏色`；例 `Messy2 (chestnut)`→`Messy2_chestnut`、`Solid (red)`→`Solid_red`）。類別：`sex/head/expression/shadow/eyebrows/body/hair/shoulders/armour/legs/shoes/clothes/bracers/cape/weapon…`。**ludo 範本網址**：
+`…/#sex=teen&head=Human_Male_light&expression=Neutral_light&shadow=Shadow_brown&eyebrows=Thick_Eyebrows_orange&body=Body_Color_light&hair=Messy2_chestnut&shoulders=Pauldrons_walnut&armour=Leather_leather&legs=Cuffed_Pants_leather&shoes=Basic_Boots_leather&clothes=Cardigan_white&bracers=Bracers_bronze&cape=Solid_red&weapon=Arming_Sword_steel`
+⚠️ 猜錯/不存在的 option 名或顏色會被**忽略**（那層不載入）→ John 貼上一眼看出缺哪層、回報後修（正好配合「貼上再檢查」的迭代）。
+
 > 誠實預期：拼出來「認得出是誰」，但披風金滾邊／精緻臉／琥珀眼 LPC 沒有 → 像素近似，非立繪還原。
 
 ### 2️⃣ John 匯出下載（**有武器＋無武器兩版**）
-在產生器照配方勾好，下載：
+
+**⚠️ 先勾對「動畫集」再挑圖層**（重要，避免缺衣服）：不是每個圖層都支援每個動畫，缺支援的動畫會掉那層（皮甲/披風）。遊戲**實際用到的 5 個動畫**：**Walk**（走路）／**Idle**（戰鬥待機）／**Slash**（劍普攻·str技）／**Thrust**（dagger普攻·agi技）／**Spellcast**（staff普攻·int/補血技）。用產生器的 **Animation Filter** 只挑「同時支援這 5 個」的圖層來組角色，就不會再發生某動作缺衣服（2026-07-18 踩過：`Combat Idle` 缺皮甲/披風→戰鬥待機改用 `Idle`）。
+- `Combat Idle`：可選（更好的持劍待機姿，但多一個支援限制）；要用再另外勾。
+- `Run`／`Hurt`：目前沒用到，日後加 overworld 衝刺/戰鬥受擊再勾。勾越多＝可選圖層越少。
+
+在產生器照配方＋上述動畫集勾好，下載：
 - **「ZIP: Split by animation」**（要 `standard/` 的 `walk`、`combat`，以及 `custom/` 的 `slash_128`）
 - **「Credits (TXT)」**（LPC 署名，必留）
 - **「Export to Clipboard (JSON)」**（配方存檔，可 Import 回產生器微調/重出）
@@ -33,6 +42,9 @@ Claude 讀該角色立繪／`docs/story/角色設定.md` 外觀 → 給對應的
 
 > ⚠️ 雷：產生器的資料夾名可能**標反**（路德 `without_sword` 其實含劍、`with_sword` 反而無劍）——
 > **以各自 `character.json` 有無 `Arming Sword` 為準**，別信資料夾名。檔案放 `assets-source/role/<id>/`。
+
+**精簡交付（其實不用整包 ZIP）**：切圖只需**這 5 張透明動畫整張圖**（原始匯出、frame 網格、勿裁改）：
+無劍版 `walk.png`；有劍版 `idle.png`、`custom/slash_128.png`（oversized，揮劍靠它）、`thrust.png`、`spellcast.png`。4 張戰鬥圖要一起給（要一起算腳底對齊框）。`credits.txt`（更新授權）／`character.json`（存配方）選給、切圖用不到。
 
 ### 3️⃣ Claude 接進專案＋驗證移動/戰鬥
 
@@ -63,7 +75,7 @@ Claude 讀該角色立繪／`docs/story/角色設定.md` 外觀 → 給對應的
 ---
 
 ## 範本：路德 ludo（首例，2026-07-18）
-- 來源：`assets-source/role/ludo/ludo_lpc/`（`with_sword`＝無劍乾淨、`without_sword`＝含劍，**名字反**）＋
+- 來源：`assets-source/role/main/ludo/ludo_lpc/`（`with_sword`＝無劍乾淨、`without_sword`＝含劍，**名字反**）＋
   `ludo_lpc_recipe.json`／`ludo_lpc_credits.txt`。
 - 走路圖：`assets/char/ludo_<Dir>_0..8.png`（無劍乾淨版）。
 - 戰鬥圖：`assets/battle/hero_ludo_f0..3`(idle) ＋ `hero_ludo_{slash,thrust,spellcast}_*`（有劍版；slash 用 oversized）。

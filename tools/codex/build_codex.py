@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""組建水晶戰記設定集：解析 content_db.tres → GAME JSON、注入 base64 圖片與 dialogue.json
-→ crystal_codex.html。資料變更後重跑本腳本＋重新發佈 Artifact 即可同步。"""
+"""組建水晶戰記設定集：解析 content_db.tres → GAME JSON、解析對話 .tres 真相源
+（dialogue_db.tres 聚合）→ DLG/CUTS、注入 base64 圖片 → crystal_codex.html。
+資料變更後重跑本腳本＋重新發佈 Artifact 即可同步。"""
 import base64
 import io
 import json
@@ -12,10 +13,11 @@ from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
 REPO = HERE.parents[1]  # tools/codex/ -> repo 根（跨機器可攜）
-BATTLE = REPO / "godot-project/assets/battle"
-CONTENT_DB = REPO / "godot-project/resources/content/content_db.tres"
-DLG_PATH = REPO / "godot-project/resources/content/dialogue.json"
-UI = REPO / "godot-project/assets/ui"
+GODOT = REPO / "godot-project"
+BATTLE = GODOT / "assets/battle"
+CONTENT_DB = GODOT / "resources/content/content_db.tres"
+DIALOGUE_DB = GODOT / "resources/content/dialogue/dialogue_db.tres"
+UI = GODOT / "assets/ui"
 
 
 # ── content_db.tres 解析 ──────────────────────────────────────────────
@@ -147,6 +149,91 @@ def build_game_json():
     return game
 
 
+# ── 對話 .tres 解析（真相源＝dialogue/**/*.tres，取代舊 dialogue.json 種子）────────
+def _dlg_str(raw: str):
+    """tres 字串字面量（含引號）→ python 字串；tres 逃逸與 JSON 相容。"""
+    return json.loads(raw)
+
+
+def _packed(raw: str) -> list:
+    """PackedStringArray("a","b") → ["a","b"]；PackedStringArray() → []。"""
+    m = re.match(r"PackedStringArray\((.*)\)\s*$", raw, re.S)
+    if not m:
+        sys.exit(f"無法解析 PackedStringArray：{raw!r}")
+    inner = m.group(1).strip()
+    return json.loads("[" + inner + "]") if inner else []
+
+
+def _opt(props: dict, key: str):
+    """省略或空字串 → None，還原舊 json 的 null 語意（template 靠 null 判斷有無此欄）。"""
+    return (_dlg_str(props[key]) or None) if key in props else None
+
+
+def _dlg_props(body: str) -> dict:
+    """對話 .tres 每行 `key = value` 皆單行，逐行取原始右值字串。"""
+    return dict(re.findall(r"^(\w+) = (.*)$", body, re.M))
+
+
+def _split_tres(path: pathlib.Path):
+    """切出 sub_resource(id→props) 與 [resource] props。"""
+    text = path.read_text(encoding="utf-8")
+    if "\n[resource]\n" not in text:
+        sys.exit(f"{path} 缺少 [resource] 區")
+    head, res = text.split("\n[resource]\n", 1)
+    parts = re.split(r'\[sub_resource type="Resource" id="([^"]+)"\]', head)
+    subs = {parts[i]: _dlg_props(parts[i + 1]) for i in range(1, len(parts) - 1, 2)}
+    return subs, _dlg_props(res)
+
+
+def _order(raw: str) -> list[str]:
+    """Array[...]([SubResource("a"), SubResource("b")]) → ["a","b"]（有序）。"""
+    return re.findall(r'SubResource\("([^"]+)"\)', raw)
+
+
+def build_dialogue() -> dict:
+    """解析 dialogue_db.tres → 依聚合順序組出 {dlg, cuts}，結構同舊 dialogue.json。"""
+    db = DIALOGUE_DB.read_text(encoding="utf-8")
+    ext = {eid: rel for rel, eid in re.findall(
+        r'\[ext_resource type="Resource" path="res://([^"]+)" id="([^"]+)"\]', db)}
+    res = db.split("\n[resource]\n", 1)[1]
+
+    def paths(key: str) -> list[pathlib.Path]:
+        m = re.search(key + r" = Array\[[^\]]*\]\(\[(.*?)\]\)", res, re.S)
+        if not m:
+            sys.exit(f"dialogue_db.tres [resource] 找不到 {key}")
+        return [GODOT / ext[e] for e in re.findall(r'ExtResource\("([^"]+)"\)', m.group(1))]
+
+    dlg = {}
+    for path in paths("npcs"):
+        subs, r = _split_tres(path)
+        dlg[_dlg_str(r["id"])] = [{
+            "when": _dlg_str(s["when"]) if "when" in s else "always",
+            "speaker": _dlg_str(s["speaker"]) if "speaker" in s else "",
+            "lines": _packed(s.get("lines", "PackedStringArray()")),
+            "action": _opt(s, "action"), "cmd": _opt(s, "cmd"),
+            "label": _opt(s, "label"), "done": _opt(s, "done"),
+        } for s in (subs[sid] for sid in _order(r["entries"]))]
+
+    cuts = {}
+    for path in paths("cutscenes"):
+        subs, r = _split_tres(path)
+        step = int(r["setstep"]) if "setstep" in r else -1
+        transfer = _packed(r["transfer"]) if "transfer" in r else []
+        party = _packed(r["party"]) if "party" in r else []
+        cuts[_dlg_str(r["id"])] = {
+            "once": _opt(r, "once"),
+            "lines": [{
+                "speaker": _dlg_str(s["speaker"]) if "speaker" in s else "",
+                "text": _dlg_str(s["text"]) if "text" in s else "",
+            } for s in (subs[sid] for sid in _order(r["lines"]))],
+            "battle": _opt(r, "battle"),
+            "transfer": transfer or None,
+            "setstep": step if step >= 0 else None,
+            "party": party or None,
+        }
+    return {"dlg": dlg, "cuts": cuts}
+
+
 # ── 圖片 ─────────────────────────────────────────────────────────────
 def data_uri(p: pathlib.Path) -> str:
     mime = "image/jpeg" if p.suffix == ".jpg" else "image/png"
@@ -178,8 +265,17 @@ def main():
     counts = {k: len(v) for k, v in game.items() if isinstance(v, list)}
     print("解析 content_db.tres：", counts)
 
-    dlg = json.loads(DLG_PATH.read_text(encoding="utf-8"))
-    dlg.pop("_meta", None)
+    dlg = build_dialogue()
+    print("解析對話 .tres：", {k: len(v) for k, v in dlg.items()})
+
+    # 資料快照（不含圖、可 diff、進 git）：pre-commit hook 用此檔讓 .tres 資料與版控同步，
+    # John 也能用 `git diff` 一眼看出「這次 commit 改了哪個數值」。務必保持 deterministic
+    # （不放時間戳），否則每次重跑都變動、diff 失去意義。
+    data_out = HERE / "data.json"
+    data_out.write_text(
+        json.dumps({"game": game, "dialogue": dlg}, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8")
+    print(f"OK {data_out} ({data_out.stat().st_size / 1024:.0f} KB)")
 
     tpl = (HERE / "codex_template.html").read_text(encoding="utf-8")
     for token, payload in [("__IMG_JSON__", build_img()), ("__DLG_JSON__", dlg), ("__GAME_JSON__", game)]:
