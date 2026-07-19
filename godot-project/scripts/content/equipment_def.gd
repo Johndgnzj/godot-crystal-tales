@@ -5,7 +5,11 @@ extends Resource
 ## 統一收進 stats{}，對應 specs/BATTLE_FORMULAS.md F-1 的 eqStat(m,k) 通用查表語意
 ## （沒有該屬性視為 0，不要每個欄位各開一個 @export，否則之後 CONTENT.json 新增屬性種類要跟著改 schema）。
 
-const STAT_KEYS := ["patk", "pdef", "matk", "mdef", "hp", "mp", "crit", "dodge"]
+## v4.0（屬性系統擴充）起，裝備也能加「主屬性」(str/agi/int/luck) 與新戰鬥維度
+## (spd 行動力 / acc 命中 / critres 抗爆 / critdmg 爆傷)。主屬性由 Derive 先疊進有效 attrs
+## 再算衍生（見 specs/BATTLE_FORMULAS.md F-1），其餘照 eqStat 加總語意。
+const STAT_KEYS := ["patk", "pdef", "matk", "mdef", "hp", "mp", "crit", "dodge",
+	"str", "agi", "int", "luck", "spd", "acc", "critres", "critdmg"]
 
 @export var id: String = ""
 @export var display_name: String = ""   ## 來源 JSON key: "name"

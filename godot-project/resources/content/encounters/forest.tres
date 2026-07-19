@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_ikd4f")
 map_id = "forest"
-formations = [["bird", "gslime"], ["goblin", "goblin"], ["bird", "worm"], ["goblin", "worm", "gslime"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "gslime", "min": 1, "max": 2}, {"id": "bird", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "bird", "min": 1, "max": 2}, {"id": "worm", "min": 1, "max": 1}]}, {"weight": 1.0, "members": [{"id": "goblin", "min": 1, "max": 2}, {"id": "worm", "min": 1, "max": 1}, {"id": "gslime", "min": 0, "max": 1}]}]

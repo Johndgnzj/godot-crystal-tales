@@ -99,6 +99,12 @@ func _process(delta: float) -> void:
 			_lunge_sfx_done = true
 		if _lunge_t >= LUNGE_DUR:
 			_lunge_unit = null
+	if not _pending_hits.is_empty():
+		_pending_hit_timer -= delta
+		if _pending_hit_timer <= 0.0:
+			_apply_pending_hits()   # 音效播完 → 扣血＋被打聲＋死亡判定
+	if _shake_t > 0.0:
+		_shake_t -= delta
 	_handle_auto_toggle()
 	match state:
 		"run":
@@ -134,7 +140,7 @@ func _init_battle() -> void:
 		encounter_def = ContentDB.get_encounter("forest")
 	var group: Array = []
 	if encounter_def != null and not encounter_def.formations.is_empty():
-		group = encounter_def.formations[randi() % encounter_def.formations.size()]
+		group = encounter_def.roll()   # 加權抽組＋數量展開＋上限截斷，see EncounterDef / F-11
 
 	scripted = (enc == "prologue_demon")
 	survive_acts = 3
@@ -155,7 +161,7 @@ func _init_battle() -> void:
 		heroes.append(m)
 
 	foes.clear()
-	for i in range(mini(group.size(), 4)):
+	for i in range(mini(group.size(), FOE_SLOTS.size())):
 		var eid := String(group[i])
 		var ed: EnemyDef = ContentDB.get_enemy(eid)
 		if ed == null:
@@ -169,6 +175,7 @@ func _init_battle() -> void:
 			"atk": ed.atk,
 			"def": ed.def_stat,
 			"spd": ed.spd,
+			"luck": ed.luck,   # v4.0：敵方會心/抗爆/閃避加成（see specs/BATTLE_FORMULAS.md F-1）
 			"exp": ed.exp,
 			"gold": ed.gold,
 			"big": ed.big,
@@ -478,13 +485,19 @@ func _apply_one(ts: Array) -> void:
 			sfx.append(_sfx_or("att_miss.mp3", "select.mp3"))   # 閃避/揮空音效（缺檔 fallback select.mp3）
 		else:
 			var r := DamageCalc.phys_damage(a, t)
-			t["hp"] = float(t.get("hp", 0)) - float(r["dmg"])
 			msg_out = String(a.get("name", "")) + " 攻擊 " + String(t.get("name", "")) + "，造成 " \
 				+ str(r["dmg"]) + " 傷害" + ("（會心！）" if r["crit"] else "")
-			var atk_sfx := "att_monster_punch.mp3" if String(a.get("side", "")) != "hero" else String(WTYPE_SFX.get(wt, "atk.wav"))
-			sfx.append(_sfx_or(atk_sfx, "atk.wav"))   # 我方＝武器普攻音效／敵方＝怪物揮擊；缺檔 fallback atk.wav
-			sfx.append("hurt.wav")
-			_kill(t)
+			if String(a.get("side", "")) == "hero":
+				# 我方普攻：只先播武器音效（新音效有 lead-in）；扣血＋被打聲＋死亡判定延到音效播完
+				var wsfx := String(WTYPE_SFX.get(wt, "att_sword.mp3"))
+				sfx.append(_sfx_or(wsfx, "att_sword.mp3"))
+				_defer_hits([{"t": t, "dmg": float(r["dmg"])}], wsfx)
+			else:
+				# 敵方：立即扣血＋怪物揮擊聲＋被打聲（維持原時序）
+				t["hp"] = float(t.get("hp", 0)) - float(r["dmg"])
+				sfx.append("att_monster_punch.mp3")
+				sfx.append("hurt.wav")
+				_kill(t)
 
 	elif pd["t"] == "skill":
 		var sk: SkillDef = pd["sk"]
@@ -495,12 +508,12 @@ func _apply_one(ts: Array) -> void:
 		if sk.kind == "damage":
 			anim = ("spellcast" if sk.attr == "int" else ("thrust" if sk.attr == "agi" else "slash"))
 			var dmg := DamageCalc.skill_damage(a, t, sk)
-			t["hp"] = float(t.get("hp", 0)) - dmg
 			msg_out = String(a.get("name", "")) + sk_tag + "！" + String(t.get("name", "")) \
 				+ " 受到 " + str(dmg) + " 傷害"
-			sfx.append(_sfx_or(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"), "att_magic.mp3"))   # 技能音效（int魔法/其餘物理斬擊；缺檔 fallback）
-			sfx.append("hurt.wav")
-			_kill(t)
+			# 技能傷害同普攻：只先播技能音效，扣血＋被打聲＋死亡判定延到音效播完
+			var sksfx := String(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"))
+			sfx.append(_sfx_or(sksfx, "att_magic.mp3"))
+			_defer_hits([{"t": t, "dmg": float(dmg)}], sksfx)
 		else:
 			anim = "spellcast"
 			var heal := DamageCalc.skill_heal(a, sk)
@@ -545,7 +558,11 @@ func _apply_one(ts: Array) -> void:
 			AudioManager.sfx(_s)
 
 	_banner(msg_out)
-	_end_action(0.75)
+	if not _pending_hits.is_empty():
+		# 延後扣血：回合暫停撐到「音效播完＋扣血」後再 0.4s，確保 _check_end 在扣血後才判勝負
+		_end_action(_pending_hit_timer + 0.4)
+	else:
+		_end_action(0.75)
 
 
 func _apply_all(sk: SkillDef) -> void:
@@ -553,14 +570,16 @@ func _apply_all(sk: SkillDef) -> void:
 	a["mp"] = float(a.get("mp", 0)) - float(sk.mp)
 	var list: Array = foes.filter(func(u): return bool(u.get("alive", false)))
 	var tot := 0
+	var hits: Array = []
 	for f in list:
 		var target: Dictionary = f
 		var dmg := DamageCalc.skill_damage(a, target, sk)
-		target["hp"] = float(target.get("hp", 0)) - dmg
 		tot += dmg
-		_kill(target)
+		hits.append({"t": target, "dmg": float(dmg)})
 	var anim := ("spellcast" if sk.attr == "int" else ("thrust" if sk.attr == "agi" else "slash"))
-	var sfx: Array = [_sfx_or(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"), "att_magic.mp3"), "hurt.wav"]   # 全體技能音效（int魔法/其餘物理；缺檔 fallback）
+	var sksfx := String(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"))
+	var sfx: Array = [_sfx_or(sksfx, "att_magic.mp3")]   # 全體技能音效（扣血＋被打聲延到音效播完）
+	_defer_hits(hits, sksfx)
 	if String(a.get("side", "")) == "hero":
 		_lunge_unit = a
 		_lunge_t = 0.0
@@ -574,7 +593,7 @@ func _apply_all(sk: SkillDef) -> void:
 	var slv: int = int(actor_sk.get(sk.id, 1))
 	_banner(String(a.get("name", "")) + "「" + sk.display_name + (" Lv" + str(slv) if slv > 1 else "") \
 		+ "」橫掃全體敵人！共 " + str(tot) + " 傷害")
-	_end_action(0.8)
+	_end_action(_pending_hit_timer + 0.4 if not _pending_hits.is_empty() else 0.8)
 
 
 func _end_action(t: float) -> void:
@@ -586,6 +605,45 @@ func _end_action(t: float) -> void:
 	anim_t = t
 
 
+## 我方攻擊/技能延後結算：音效播完後才扣血＋播被打聲＋死亡判定（由 _process 的 _pending_hit_timer 觸發）。
+func _apply_pending_hits() -> void:
+	var hits: Array = _pending_hits
+	_pending_hits = []
+	if hits.is_empty():
+		return
+	var last_t: Dictionary = {}
+	for h in hits:
+		var t: Dictionary = h.get("t", {})
+		if t.is_empty():
+			continue
+		t["hp"] = float(t.get("hp", 0)) - float(h.get("dmg", 0))
+		_kill(t)
+		last_t = t
+	AudioManager.sfx("hurt.wav")
+	if not last_t.is_empty():
+		_start_shake(last_t)   # 多體時震動最後命中者作代表
+	_refresh_ui()
+
+
+## 設定延後傷害清單，並依 sound 長度算「音效播完」的時機（命中點＋音效長度）。
+func _defer_hits(hits: Array, sound: String) -> void:
+	_pending_hits = hits
+	_pending_hit_timer = LUNGE_DUR * IMPACT_FRAC + AudioManager.sfx_length(sound)
+
+
+## 讓被攻擊對象震動一下（敵/我皆可）；渲染端由 _shake_offset_for() 套用位移。
+func _start_shake(u: Variant) -> void:
+	_shake_unit = u
+	_shake_t = SHAKE_DUR
+
+
+## 回傳某單位當前的震動位移；非震動對象或已結束回 0。
+func _shake_offset_for(u: Variant) -> Vector2:
+	if _shake_unit == null or not is_same(u, _shake_unit) or _shake_t <= 0.0:
+		return Vector2.ZERO
+	return Vector2(cos(_shake_t * 90.0) * SHAKE_AMP * (_shake_t / SHAKE_DUR), 0.0)
+
+
 # =========================================================================
 # 敵人行動（對應 foeAct()，L3019-3068；精確算式見 specs/BATTLE_FORMULAS.md F-8 v1.1）
 # =========================================================================
@@ -594,6 +652,12 @@ func _foe_act(a: Dictionary) -> void:
 	Atb.reset(a)
 	if scripted:
 		acted += 1
+	# 敵方行動：前進一下（lunge，讓玩家看得出是誰在動）；不借用我方命中音效機制，故 sfx 清空
+	_lunge_unit = a
+	_lunge_t = 0.0
+	_lunge_anim = ""
+	_lunge_sfx = []
+	_lunge_sfx_done = true
 
 	# 第 1 段：healer
 	if bool(a.get("healer", false)):
@@ -629,7 +693,7 @@ func _foe_act(a: Dictionary) -> void:
 				hero["hp"] = float(hero.get("hp", 0)) - float(r["dmg"])
 				tot += r["dmg"]
 				_kill(hero)
-			AudioManager.sfx("atk.wav")   # 對應 build_cq2.py L3222/L3239（敵方傷害）
+			AudioManager.sfx("att_monster_punch.mp3")   # 對應 build_cq2.py L3222/L3239（敵方傷害）
 			AudioManager.sfx("hurt.wav")
 			_banner(String(a.get("name", "")) + " 使出【" + String(fsk.get("name", "")) + "】！全體共受到 " + str(tot) + " 傷害")
 			_finish_foe()
@@ -643,7 +707,7 @@ func _foe_act(a: Dictionary) -> void:
 			var r2 := DamageCalc.foe_named_skill_damage(a, t3, mult)
 			t3["hp"] = float(t3.get("hp", 0)) - float(r2["dmg"])
 			_kill(t3)
-			AudioManager.sfx("atk.wav")
+			AudioManager.sfx("att_monster_punch.mp3")
 			AudioManager.sfx("hurt.wav")
 			_banner(String(a.get("name", "")) + " 使出【" + String(fsk.get("name", "")) + "】，對 " + String(t3.get("name", "")) \
 				+ " 造成 " + str(r2["dmg"]) + " 傷害" + ("（會心！）" if r2["crit"] else ""))
@@ -659,7 +723,7 @@ func _foe_act(a: Dictionary) -> void:
 			hero2["hp"] = float(hero2.get("hp", 0)) - float(r3["dmg"])
 			tot2 += r3["dmg"]
 			_kill(hero2)
-		AudioManager.sfx("atk.wav")
+		AudioManager.sfx("att_monster_punch.mp3")
 		AudioManager.sfx("hurt.wav")
 		_banner(String(a.get("name", "")) + " 的橫掃攻擊！全體共受到 " + str(tot2) + " 傷害")
 		_finish_foe()
@@ -674,7 +738,8 @@ func _foe_act(a: Dictionary) -> void:
 	var r4 := DamageCalc.phys_damage(a, t)
 	t["hp"] = float(t.get("hp", 0)) - float(r4["dmg"])
 	_kill(t)
-	AudioManager.sfx("atk.wav")
+	_start_shake(t)
+	AudioManager.sfx("att_monster_punch.mp3")
 	AudioManager.sfx("hurt.wav")
 	_banner(String(a.get("name", "")) + " 攻擊 " + String(t.get("name", "")) + "，造成 " + str(r4["dmg"]) + " 傷害" \
 		+ ("（會心！）" if r4["crit"] else "") + ("（防禦中）" if bool(t.get("defending", false)) else ""))
@@ -754,6 +819,7 @@ func _settle_win() -> void:
 			attrs["str"] = float(attrs.get("str", 0)) + float(growth.get("str", 0))
 			attrs["agi"] = float(attrs.get("agi", 0)) + float(growth.get("agi", 0))
 			attrs["int"] = float(attrs.get("int", 0)) + float(growth.get("int", 0))
+			attrs["luck"] = float(attrs.get("luck", 0)) + float(growth.get("luck", 0))   # v4.0
 			m["attrs"] = attrs
 			m["pts"] = int(m.get("pts", 0)) + int(d.points_per_level)
 			m["spts"] = int(m.get("spts", 0)) + int(d.skill_points_per_level)
@@ -776,17 +842,23 @@ func _settle_win() -> void:
 
 	_sync_party_to_game_state()
 
+	# v4.0 F-10：隊伍幸運加成掉寶。取全隊最高 luckV（Derive 算好、含裝備效果），+drop_per_luck%/luck。
+	var party_luck := 0.0
+	for h in heroes:
+		party_luck = maxf(party_luck, float((h as Dictionary).get("luckV", 0.0)))
+	var luck_drop_bonus := party_luck * d.drop_per_luck / 100.0
+
 	var drop_count: Dictionary = {}
 	for f in foes:
 		var drops: Array = f.get("drops", [])
 		for drop in drops:
 			var dd: Dictionary = drop
 			var did := String(dd.get("id", ""))
-			# see specs/BATTLE_FORMULAS.md F-10：最終掉率 = clamp(物品基礎率 × 怪物加成倍率, 0, 1)
+			# see specs/BATTLE_FORMULAS.md F-10：最終掉率 = clamp(物品基礎率 × 怪物加成倍率 + 幸運加成, 0, 1)
 			var mult := float(dd.get("rate", 0.0))
 			var idef: ItemDef = ContentDB.get_item(did)
 			var base_rate := idef.base_drop_rate if idef != null else 1.0
-			if randf() < clampf(base_rate * mult, 0.0, 1.0):
+			if randf() < clampf(base_rate * mult + luck_drop_bonus, 0.0, 1.0):
 				drop_count[did] = int(drop_count.get(did, 0)) + 1
 	var drop_names: Array = []
 	for did: String in drop_count.keys():
@@ -873,7 +945,7 @@ func _process_end() -> void:
 # =========================================================================
 
 const HERO_SLOTS := [Vector2(1074, 500), Vector2(1180, 464), Vector2(1044, 410), Vector2(1160, 372)]
-const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vector2(168, 372)]
+const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vector2(168, 372), Vector2(300, 336)]   # 第 5 槽為敵人數上限 5 新增（座標為估值，待實機微調）
 const HERO_H := 104.0   # 原 156 縮成 2/3（John 要求）
 const FOE_H := 82.0     # 原 122 縮成 2/3
 const BOSS_H := 140.0   # 原 210 縮成 2/3
@@ -884,8 +956,12 @@ const LUNGE_DUR := 0.55
 const LUNGE_DIST := 120.0
 const ATTACK_POS := Vector2(820, 480)   # 攻擊時角色直接移到的「隊伍前出場位」（隊伍在右、敵在左）
 const IMPACT_FRAC := 0.7                 # 命中音效在動畫此比例處播（≈揮擊命中瞬間）
+const SHAKE_DUR := 0.25                   # 被攻擊對象震動時長（秒）
+const SHAKE_AMP := 7.0                    # 震動最大水平位移（px），隨時間衰減
+const HP_DRAIN_STEP := 0.045              # 血條每幀往目標值逼近量（≈0.25s 掉滿條）
+const FOE_LUNGE_DIST := 90.0             # 敵方攻擊前進位移（+x 朝我方）
 const WTYPE_ANIM := {"sword": "slash", "dagger": "thrust", "claw": "slash", "staff": "spellcast"}          # 武器類別→普攻動畫
-const WTYPE_SFX := {"sword": "att_sword.mp3", "dagger": "att_blade.mp3", "claw": "att_blade.mp3", "staff": "att_staff.mp3"}  # 武器類別→普攻音效（claw 暫共用刃音效；缺檔 fallback atk.wav）
+const WTYPE_SFX := {"sword": "att_sword.mp3", "dagger": "att_blade.mp3", "claw": "att_blade.mp3", "staff": "att_staff.mp3"}  # 武器類別→普攻音效（claw 暫共用刃音效；無對應武器時 fallback att_sword.mp3）
 const ATTR_WTYPE := {"str": "sword", "agi": "dagger", "int": "staff"}   # weapon_type 留空時依 attr_type 推定
 
 var _view_time: float = 0.0
@@ -894,6 +970,11 @@ var _lunge_t: float = 0.0
 var _lunge_anim: String = ""     # 本次攻擊要播的動畫組："slash"/"thrust"/"spellcast"／""＝無（沿用滑步）
 var _lunge_sfx: Array = []       # 延到命中瞬間才播的音效（我方攻擊用）
 var _lunge_sfx_done: bool = false
+var _pending_hits: Array = []        # 我方攻擊/技能：延到音效播完才套用的傷害清單 [{t, dmg}, ...]
+var _pending_hit_timer: float = 0.0  # delta 倒數，歸零時套用 _pending_hit（音效先完、再扣血＋被打聲）
+var _shake_unit: Variant = null      # 被攻擊而震動中的對象（敵/我皆可）
+var _shake_t: float = 0.0            # 震動剩餘時間（delta 倒數）
+var _boss_disp_r: float = 1.0        # boss 血條顯示比例（漸減動畫用）
 var _root: Control
 var _bg: TextureRect
 var _boss_name: Label
@@ -992,12 +1073,14 @@ func _build_view() -> void:
 func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	var wrap := Control.new()
 	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wrap.position = (HERO_SLOTS if is_hero else FOE_SLOTS)[int(u.get("slot", 0)) % 4]
+	var slots: Array = HERO_SLOTS if is_hero else FOE_SLOTS
+	wrap.position = slots[int(u.get("slot", 0)) % slots.size()]
 	_root.add_child(wrap)
 
 	var frames := _load_frames(u, is_hero)
 	var anim_frames: Dictionary = _load_anim_frames(u) if is_hero else {}
-	var h: float = HERO_H if is_hero else (BOSS_H if bool(u.get("big", false)) else FOE_H)
+	var default_foe_h: float = BOSS_H if bool(u.get("big", false)) else FOE_H
+	var h: float = HERO_H if is_hero else float(u.get("battle_height", default_foe_h))
 	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
 	var w := h * ratio
 
@@ -1354,18 +1437,32 @@ func _refresh_ui() -> void:
 	for node in _foe_nodes:
 		var f: Dictionary = node["unit"]
 		var alive := bool(f.get("alive", false))
-		node["wrap"].visible = alive and not is_end
-		if not alive:
+		# 血條漸減：disp_r 追向目標比例（掉血動畫，與扣血時機解耦）
+		var target_r := clampf(float(f.get("hp", 0)) / maxf(1.0, float(f.get("maxhp", 1))), 0.0, 1.0)
+		var disp_r: float = move_toward(float(node.get("disp_r", target_r)), target_r, HP_DRAIN_STEP)
+		node["disp_r"] = disp_r
+		if node["hp_fill"] != null:
+			var hpf: ColorRect = node["hp_fill"]
+			hpf.size = Vector2(96.0 * disp_r, hpf.size.y)
+		# 死亡：血條掉完（disp_r≈0）才消失並播 enemy_down（一次）；活著或血條還在掉都保持顯示
+		var showing := (alive or disp_r > 0.01) and not is_end
+		node["wrap"].visible = showing
+		if not alive and disp_r <= 0.01 and not bool(node.get("death_sfx", false)):
+			AudioManager.sfx("enemy_down.mp3")
+			node["death_sfx"] = true
+		if not showing:
 			continue
+		# 位置：敵方攻擊前進（lunge，+x 朝我方）＋被攻擊震動
+		var base_pos: Vector2 = node["base"]
+		var foe_off := 0.0
+		if _lunge_unit != null and is_same(node["unit"], _lunge_unit) and _lunge_t < LUNGE_DUR:
+			foe_off = FOE_LUNGE_DIST * sin(PI * _lunge_t / LUNGE_DUR)
+		node["wrap"].position = base_pos + Vector2(foe_off, 0.0) + _shake_offset_for(node["unit"])
 		var frames: Array = node["frames"]
 		if not frames.is_empty():
 			node["sprite"].texture = frames[frame % frames.size()]
 		if node["name"] != null:
 			node["name"].text = ("☠ " if bool(f.get("big", false)) else "") + String(f.get("name", ""))
-		if node["hp_fill"] != null:
-			var r := clampf(float(f.get("hp", 0)) / maxf(1.0, float(f.get("maxhp", 1))), 0.0, 1.0)
-			var hpf: ColorRect = node["hp_fill"]
-			hpf.size = Vector2(96.0 * r, hpf.size.y)
 
 	# --- Boss（大敵）名稱＋血條→畫面中上 ---
 	var boss: Variant = null
@@ -1381,7 +1478,8 @@ func _refresh_ui() -> void:
 		var b: Dictionary = boss
 		_boss_name.text = "☠ " + String(b.get("name", ""))
 		var br := clampf(float(b.get("hp", 0)) / maxf(1.0, float(b.get("maxhp", 1))), 0.0, 1.0)
-		_boss_bar_fill.size = Vector2(594.0 * br, _boss_bar_fill.size.y)
+		_boss_disp_r = move_toward(_boss_disp_r, br, HP_DRAIN_STEP)
+		_boss_bar_fill.size = Vector2(594.0 * _boss_disp_r, _boss_bar_fill.size.y)
 
 	# --- 我方 sprite（陣亡變暗；攻擊時直接移到出場位＋依性質播動畫；無對應動畫則沿用滑步）---
 	for node in _hero_nodes:
@@ -1393,12 +1491,12 @@ func _refresh_ui() -> void:
 		var anims: Dictionary = node.get("anim_frames", {})
 		var atk_frames: Array = (anims.get(_lunge_anim, []) if lunging else [])
 		if lunging and not atk_frames.is_empty():
-			wnode.position = ATTACK_POS   # 直接移到隊伍前出場位
+			wnode.position = ATTACK_POS + _shake_offset_for(node["unit"])   # 直接移到隊伍前出場位
 			var si := clampi(int(_lunge_t / LUNGE_DUR * atk_frames.size()), 0, atk_frames.size() - 1)
 			node["sprite"].texture = atk_frames[si]
 		else:
 			var off := (-LUNGE_DIST * sin(PI * _lunge_t / LUNGE_DUR) if lunging else 0.0)
-			wnode.position = base + Vector2(off, 0.0)
+			wnode.position = base + Vector2(off, 0.0) + _shake_offset_for(node["unit"])
 			if not frames.is_empty():
 				node["sprite"].texture = frames[frame % frames.size()]
 		wnode.visible = not is_end

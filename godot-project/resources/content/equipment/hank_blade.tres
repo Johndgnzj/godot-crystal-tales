@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_hb01"]
+
+[resource]
+script = ExtResource("1_hb01")
+id = "hank_blade"
+display_name = "漢克的舊劍"
+slot = "weapon"
+desc = "漢克年輕闖蕩時的佩劍，鈍了些卻扎實。他嘴上冷淡，還是把它塞給了路德。"
+buy = 0
+sell = 40
+rarity = "uncommon"
+stats = {
+"agi": 1.0,
+"patk": 8.0,
+"str": 1.0
+}
+attr_type = "str"

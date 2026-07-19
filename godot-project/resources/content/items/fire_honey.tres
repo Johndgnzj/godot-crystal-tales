@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_fh01"]
+
+[resource]
+script = ExtResource("1_fh01")
+id = "fire_honey"
+rarity = "key"
+base_drop_rate = 0.0
+display_name = "烈火蜂蜜"
+cat = "key"
+effect = "東之森老樹蜂巢裡的蜂蜜，入口像吞了一團火。吉德調酒的關鍵材料。（第一章小節5）"

@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_yncmq")
 map_id = "forest2"
-formations = [["goblin", "goblin", "gslime"], ["worm", "worm"], ["bird", "goblin", "worm"], ["goblin", "goblin", "goblin"], ["wolf", "goblin"], ["wolf", "wolf"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 3}, {"id": "gslime", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "worm", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "wolf", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "goblin", "min": 1, "max": 2}, {"id": "bird", "min": 1, "max": 2}]}, {"weight": 1.0, "members": [{"id": "wolf", "min": 1, "max": 1}, {"id": "goblin", "min": 2, "max": 3}]}]

@@ -1,10 +1,10 @@
 # MOD-E　戰鬥系統（ATB）
 
-- Task 版本: v1.1
+- Task 版本: v1.2
 - 狀態: 實作中
 - 對應 GDevelop 系統: BATTLE_JS 全部（DEV_開發指南.md L56-59）
-- 規格來源: `specs/BATTLE_FORMULAS.md` F-3~F-9（本模組是 spec 的主要消費者，需要 MOD-F 的 `derive()` 等價物
-  已就緒才能算出角色戰鬥數值）
+- 規格來源: `specs/BATTLE_FORMULAS.md` F-3~F-9、F-11（本模組是 spec 的主要消費者，需要 MOD-F 的 `derive()`
+  等價物已就緒才能算出角色戰鬥數值）
 
 ## 目標
 
@@ -23,6 +23,9 @@
 - `godot-project/scripts/battle/damage_calc.gd`（F-3~F-6、F-8，普攻/技能/道具/敵人技能傷害與治療，全部
   引用 `specs/BATTLE_FORMULAS.md` 條目編號作為程式碼註解錨點）
 - `godot-project/scripts/battle/exp_scale.gd`（F-9 EXPSCALE 現場計算，見下方「與規格書差異」）
+- **遭遇抽選（v1.2，2026-07-19，遭遇系統重製）**：`_init_battle()` 改呼叫 `EncounterDef.roll()`（加權抽組
+  ＋數量範圍展開＋洗牌＋上限 5＋保底 1 隻，見 F-11）；戰場敵人數上限由 4 提到 5（`FOE_SLOTS` 擴到 5 槽、
+  取模改用 `slots.size()`；第 5 槽座標為估值待實機微調）。`exp_scale.gd` 每組平均 EXP 同步改為加權期望（F-9 v3.0 註記）。
 - `godot-project/scripts/battle/auto_battle.gd`（`GameState.auto_battle` 對應邏輯）
 - 勝敗結算（`battle_state_machine.gd` 的 `_settle_win()`/`_settle_lose()`/`_sync_party_to_game_state()`）：
   EXP（含 EXPSCALE，見 F-9）、升級/技能解鎖、掉落物寫入 `GameState.item_inv`/`gold`、

@@ -1,13 +1,36 @@
 # 規格：衍生屬性與戰鬥公式
 
-- Spec 版本: v2.0
+- Spec 版本: v4.0
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py`（WORLD 版 `derive()` L1326-1345；BATTLE 版 `derive()`
   L2641-2661 為同一份公式的重複實作——**已知技術債，DEV_開發指南.md L63 有提及「改公式要同步兩處」**）
-- 狀態: 定案（F-1~F-9 抄錄自現行程式碼；**F-10 為 Godot 端刻意新增、偏離 GDevelop 的平衡設計，見版本紀錄 v2.0**）
-- 用途: MOD-F（衍生屬性/戰鬥公式）、MOD-E（ATB 戰鬥系統）實作依據
+- 狀態: 定案（F-1~F-9 原始抄錄自現行程式碼；**F-10/F-11 為 Godot 端刻意新增；v4.0 屬性系統擴充進一步刻意偏離 GDevelop，見版本紀錄**）
+- 用途: MOD-F（衍生屬性/戰鬥公式）、MOD-E（ATB 戰鬥系統）實作依據；屬性系統擴充見 [TASKS/14](../TASKS/14_屬性系統擴充.md)、`docs/design/屬性戰鬥設計.md`
 
 ## 版本紀錄
 
+- **v4.0（2026-07-19，屬性系統擴充；John 指示，see TASKS/14）**：**破壞性變動——新增第四主屬性 `luck`(幸運)、
+  裝備可加主屬性、戰鬥拆「命中/爆擊/傷害」三段、新增命中/抗爆/爆傷三個戰鬥數值**。
+  1. **F-1 改寫**：裝備 `stats` 的 `str/agi/int/luck/spd` 先疊進「有效屬性」再算衍生（舊版裝備加主屬性不生效）；
+     `attrs` 由 `{str,agi,int}` 擴為 `{str,agi,int,luck}`；新增衍生輸出 `accV`(命中)/`critresV`(抗爆)/`critdmg`(爆傷)/`luckV`；
+     `critV` 納入 luck、`dodgeV` 納入 luck。新增係數 `critPerLuck=0.1`、`dodgePerLuck=0.05`、`accPerAgi=1.5`、
+     `critresPerLuck=0.1`、`critDmgBase=1.4`、`critCap=100`、`dropPerLuck=0.1`；`critPerAgi` 0.15→**0.2**。
+  2. **F-3 改寫（爆擊＋抗爆＋爆傷）**：會心改「有效會心率 = clamp(會心攻 − 抗爆守, 0, critCap)」；爆擊傷害倍率由
+     寫死的 **1.5** 改為攻方 `critdmg`（基礎 `critDmgBase=1.4` + 裝備 `critdmg`）——**全域爆傷小幅下修、改由裝備養成**。
+     敵方會心 = `critBase + luck×critPerLuck`（一般怪 luck=0＝沿用基礎 6.25%）。
+  3. **F-4 改寫（命中/閃避成對）**：命中值 `acc` 改用獨立係數 `accPerAgi`（與 `dodgePerAgi` 同值 1.5，
+     **agi 相等時淨閃避與 v3.0 完全相同、零重平衡震盪**）；`dodge` 納入 luck；新增命中率 `hit% = 100 − 淨閃避`。
+  4. **F-10 掉寶納入 luck**：最終掉率 `+= 全隊最高 luckV × dropPerLuck / 100`（含裝備幸運）。
+  5. **平衡影響**：agi 會心 0.15→0.2（agi 每點多 +0.05% 會心，全體會心微升，低敏角色 <0.5%、alan 約 +1.2%）；
+     爆傷 1.5→1.4（爆擊傷害 −約 6.7%，可用裝備 critdmg 補回）；luck 起始值低（隊員 2/3/8、四 boss 3~5），
+     其餘敵人 luck=0 行為不變。**閃避手感未變**（見 F-4）。伴隨資料在 `.tres`（3 隊員 base 加 luck、
+     4 boss 加 luck、3 件劇情裝備轉正 str/agi/luck）。
+- **v3.0（2026-07-19，遭遇系統重製；John 指示）**：**破壞性變動——`EncounterDef.formations` 資料結構改變**。
+  1. **新增 F-11 遭遇編組與抽選**：`formations` 由 `Array[Array[String]]`（固定編成）改為 `Array[Dictionary]`
+     （帶 `weight` 權重與 `members` 數量範圍），支援同種怪複數、boss+隨從同組、加權抽組；新增戰場敵人上限
+     `MAX_FOES = 5`（`battle_state_machine.FOE_SLOTS` 同步擴到 5 槽）。
+  2. **F-9 EXP 平均改為加權期望**（隨 F-11，見 F-9 v3.0 註記）；member 全 `min=max` 且省略 weight 時與 v2.0 等價。
+  3. **伴隨資料重排（值在 `.tres`）**：12 張 `encounters/*.tres` 重編權重/數量/隨從；15 隻 `enemies/*.tres`
+     新增 `description` 圖鑑欄位（彙整見 `docs/design/魔物圖鑑.md`）。
 - **v2.0（2026-07-15，遊玩回饋平衡調整；John 指示）**：**破壞性變動——非抄錄自 GDevelop，而是 Godot 端刻意偏離**。
   1. **新增 F-10 掉落公式**：`ItemDef` 新增 `rarity` 與 `base_drop_rate` 兩欄；`EnemyDef.drops[].rate` 語意由
      「絕對掉落機率」改為「加成倍率」，最終掉率 = `clamp(item.base_drop_rate × rate, 0, 1)`。
@@ -25,23 +48,38 @@
 > Godot 端**只需要實作一份** `derive()` 等價物（不要複製 GDevelop 的兩份技術債），這是 MOD-F 相對於原始碼的
 > 唯一刻意偏離之處，其餘公式原樣照搬。
 
-## F-1　衍生屬性 `derive(m)`（L1326 / L2641，兩處邏輯相同）
+## F-1　衍生屬性 `derive(m)`（L1326 / L2641，兩處邏輯相同；v4.0 屬性系統擴充改寫）
 
-輸入 `m`：`{id, lv, attrs:{str,agi,int}, mainAttr, eq?, hp?, mp?, sk?, spts?}`，`CONTENT.derived` 提供係數
-表 `d`。
+輸入 `m`：`{id, lv, attrs:{str,agi,int,luck}, mainAttr, eq?, hp?, mp?, sk?, spts?}`，`CONTENT.derived` 提供係數
+表 `d`。**v4.0：主屬性先疊裝備加成成「有效屬性」再算衍生**（舊版只讀角色 base，裝備放 `str/agi/int/luck`
+不生效——本次修正的核心落差）：
 
 ```
-maxhp   = d.hpBase + attrs.str * d.hpPerStr + eqStat(m,"hp")
-maxmp   = d.mpBase + attrs.int * d.mpPerInt + eqStat(m,"mp")
-patk    = d.weaponAtk + attrs[mainAttr] * 2 + eqStat(m,"patk")
-matk    = round(attrs.int * d.matkPerInt) + eqStat(m,"matk")
-pdef    = attrs.str + eqStat(m,"pdef")
-mdef    = round(attrs.int * d.mdefPerInt) + eqStat(m,"mdef")
-dodgeV  = round(attrs.agi * d.dodgePerAgi) + eqStat(m,"dodge")
-critV   = d.critBase + attrs.agi * d.critPerAgi + eqStat(m,"crit")   # WORLD 版額外做 round(...*10)/10，取一位小數；BATTLE 版沒 round——不一致，Godot 版統一採 WORLD 版的取一位小數寫法
-spd     = attrs.agi
+# 有效主屬性 = 角色 base + 裝備（eqStat 加總）
+STR = attrs.str + eqStat(m,"str")
+AGI = attrs.agi + eqStat(m,"agi")
+INT = attrs.int + eqStat(m,"int")
+LUK = attrs.luck + eqStat(m,"luck")
+MAIN = attrs[mainAttr] + eqStat(m,mainAttr)
+
+maxhp    = d.hpBase + STR * d.hpPerStr + eqStat(m,"hp")
+maxmp    = d.mpBase + INT * d.mpPerInt + eqStat(m,"mp")
+patk     = d.weaponAtk + MAIN * 2 + eqStat(m,"patk")
+matk     = round(INT * d.matkPerInt) + eqStat(m,"matk")
+pdef     = STR + eqStat(m,"pdef")
+mdef     = round(INT * d.mdefPerInt) + eqStat(m,"mdef")
+dodgeV   = round(AGI * d.dodgePerAgi + LUK * d.dodgePerLuck) + eqStat(m,"dodge")   # v4.0 納入 luck
+critV    = round((d.critBase + AGI * d.critPerAgi + LUK * d.critPerLuck + eqStat(m,"crit")) * 10)/10   # 取一位小數（WORLD 版）；v4.0 納入 luck
+accV     = round(AGI * d.accPerAgi) + eqStat(m,"acc")           # v4.0 命中值（F-4）
+critresV = round(LUK * d.critresPerLuck * 10)/10 + eqStat(m,"critres")   # v4.0 抗爆（F-3）
+critdmg  = d.critDmgBase + eqStat(m,"critdmg")                  # v4.0 爆擊傷害倍率（F-3），取代寫死的 1.5
+luckV    = LUK                                                  # 有效幸運（供 F-10 掉寶、UI 顯示）
+spd      = AGI + eqStat(m,"spd")                                # v4.0：裝備也能直接加行動力
 ```
 
+- **係數表 `d`（`CONTENT.derived` / `derived.tres`）v4.0 值**：`critPerAgi=0.2`、`critPerLuck=0.1`、
+  `dodgePerAgi=1.5`、`dodgePerLuck=0.05`、`accPerAgi=1.5`、`critresPerLuck=0.1`、`critDmgBase=1.4`、
+  `critCap=100`、`dropPerLuck=0.1`、`dodgeCap=30`、`critBase=6.25`（其餘 hp/mp/exp 等見 `derived.tres`）。
 - `eqStat(m,k)`：把 `m.eq` 裡每個部位對應的 `CONTENT.equipment[eqId][k]` 加總（沒有該屬性視為 0）。
 - 若 `m.eq === undefined`：從 `CONTENT.party` 找同 id 的模板套用 `startEq`（初始裝備），之後才進入上面公式。
 - `hp`/`mp` 初值：未定義或超過上限時 clamp 到 `maxhp`/`maxmp`（不會因裝備變動被治療到滿血以外）。
@@ -55,29 +93,44 @@ spd     = attrs.agi
 expNeed(lv) = d.expBase + round(d.expCoef * lv^d.expPow)
 ```
 
-## F-3　普攻傷害 `phys(att, defn)`（L2945-2953）
+## F-3　普攻傷害 `phys(att, defn)`（L2945-2953；v4.0 加入抗爆與可變爆傷）
 
 ```
 atk = att.attrs ? att.patk : att.atk      # 我方走 patk，敵方走敵人資料表的 atk
 df  = defn.attrs ? defn.pdef : defn.def
 base = atk*1.8 - df; base = max(1, base)
 if defn.defending: base *= 0.5             # 防禦指令減傷 50%
-critCh = att.attrs ? att.critV/100 : d.critBase/100    # 敵方一律用基礎會心率，沒有個別敵人會心加成
-crit = random() < critCh
-final = max(1, round(base * (0.85~1.00 隨機, 均勻分布) * (crit ? 1.5 : 1)))
+critCh% = critChance(att, defn)            # v4.0：有效會心率（含抗爆），見下
+crit = random()*100 < critCh%
+cdm = critMult(att)                         # v4.0：爆擊傷害倍率（角色 critdmg=1.4+裝備；敵人 critDmgBase=1.4）
+final = max(1, round(base * (0.85~1.00 隨機, 均勻分布) * (crit ? cdm : 1)))
 ```
 
-## F-4　閃避判定 `dodge(att, defn)`（L2938-2944）
+**有效會心率 `critChance(att, defn)`（%，0~critCap）＝ 會心攻 − 抗爆守（v4.0 新增抗爆）：**
+```
+critAtt = att.attrs  ? att.critV     : d.critBase + att.luck * d.critPerLuck    # 敵人無 critV，用 base+luck（luck=0＝基礎 6.25%）
+critRes = defn.attrs ? defn.critresV : defn.luck * d.critresPerLuck             # 敵人抗爆由 luck 現算
+critCh% = clamp(critAtt - critRes, 0, d.critCap)
+```
+**爆擊傷害倍率 `critMult(att)`：** 角色＝`att.critdmg`（derive 算好＝`critDmgBase + eqStat("critdmg")`）；敵人＝`d.critDmgBase`。
+取代 v3.0 以前寫死的 `1.5`——爆傷改成可由裝備養成的維度。
+
+## F-4　命中/閃避判定 `dodge(att, defn)`（L2938-2944；v4.0 命中值改用獨立係數、閃避納 luck）
 
 ```
-dv = defn.attrs ? defn.dodgeV : defn.spd * d.dodgePerAgi
-av = att.attrs  ? att.attrs.agi * d.dodgePerAgi : att.spd * d.dodgePerAgi
-chance% = clamp(dv - av, 0, d.dodgeCap)
-是否閃避 = random()*100 < chance%
+dv = defn.attrs ? defn.dodgeV : defn.spd * d.dodgePerAgi + defn.luck * d.dodgePerLuck   # v4.0 敵人閃避納 luck
+av = att.attrs  ? att.accV    : att.spd * d.accPerAgi                                    # v4.0 命中值 acc（角色用 derive 的 accV）
+淨閃避% = clamp(dv - av, 0, d.dodgeCap)
+命中率 hit% = 100 - 淨閃避%
+是否閃避 = random()*100 < 淨閃避%     （＝ 是否命中 = random()*100 < hit%）
 ```
 
-閃避判定在**普攻**才會呼叫（`applyOne` 的 `pd.t==="atk"` 分支）；技能傷害不判定閃避（`sk.kind==="damage"`
-分支沒有呼叫 `dodge`），全體技能 `applyAll` 同樣不判閃避——這是刻意設計，Godot 端不要「順手」補上。
+- **v4.0 關鍵：`accPerAgi = dodgePerAgi`（皆 1.5）**，所以雙方 agi 相等、無裝備 acc/luck 時，淨閃避 =
+  `1.5 × (defn.agi − att.agi)`，**與 v3.0 完全相同**——閃避手感不變，只是把「命中值」明式化成可被裝備
+  `acc` 撐高的獨立維度、並讓 luck 微幅加閃避。要弱化/強化敏捷閃避，改 `dodgePerAgi`（連動）即可。
+- 命中/閃避判定在**普攻**（`applyOne` 的 `pd.t==="atk"`）與**敵人具名單體技能**（F-8）才會呼叫；玩家技能傷害
+  （`sk.kind==="damage"`）與全體技能 `applyAll` 刻意不判——Godot 端不要「順手」補上。`DamageCalc` 提供
+  `hit_chance()`/`is_hit()`（命中視角）與 `dodge_chance()`/`is_dodge()`（閃避視角，互為補數），呼叫端沿用 `is_dodge`。
 
 ## F-5　技能傷害/治療
 
@@ -260,6 +313,11 @@ for map_id, cfg in CONTENT.pacing.maps.items():
 啟動時省一點計算），`exp_scale.gd` 的公式可以直接搬過去，`ContentDB` 加一個 `get_exp_scale(map_id)`
 查詢介面，MOD-E 這邊改成呼叫該介面即可，不影響呼叫端（`battle_state_machine.gd`）簽名。
 
+**Godot v3.0 演進（隨 F-11 遭遇結構升級）**：`formations` 改為帶數量範圍/權重的編組後，上式的 `avg`
+（每組總 exp 的平均）在 `exp_scale.gd` 改算為——每組期望 EXP =`Σ member(期望隻數 × 單隻 exp)`（期望隻數
+=`(min+max)/2`），各組再依 `weight` 加權平均。當 member 全填 `min=max`、`weight` 省略時，與上式算術平均
+完全等價（向下相容）；其餘 need/party/battles 部分不變。
+
 ## F-10　掉落機率（Godot 端設計，非 GDevelop 抄錄）
 
 戰鬥勝利結算時，對每個敵人的每筆 `drops` 元素獨立擲骰（`battle_state_machine.gd` 勝利結算段）：
@@ -267,9 +325,14 @@ for map_id, cfg in CONTENT.pacing.maps.items():
 ```
 mult      = enemy.drops[i].rate           # 怪物端「加成倍率」，不再是絕對機率
 baseRate  = ContentDB.get_item(id).base_drop_rate   # 物品自身基礎掉落率；查不到物品則視同 1.0
-chance    = clamp(baseRate * mult, 0, 1)
+luckBonus = maxPartyLuckV * d.dropPerLuck / 100     # v4.0：全隊最高 luckV（含裝備）× 0.1%/luck
+chance    = clamp(baseRate * mult + luckBonus, 0, 1)
 掉落 = randf() < chance
 ```
+
+- **v4.0 幸運加成（`dropPerLuck=0.1`）**：`luckBonus` 取全隊存活/陣亡英雄中最高的 `luckV`（`derive` 算好、含
+  裝備幸運），加算進最終掉率。例：全隊最高 luckV=8（如戴瑪莎護身戒）→ 每筆掉落 +0.8%。設計為「加法微幅
+  提升」，避免與怪物倍率相乘造成失控。
 
 - **物品端**（`ItemDef`）：`rarity`（common/uncommon/rare/key）為分級標籤；`base_drop_rate` 是該物品的基礎掉率。
   現行分級：普通素材 0.20、優良素材 0.12、稀有素材（水晶碎片）0.05；消耗品/關鍵物品 `base_drop_rate = 0`
@@ -280,6 +343,38 @@ chance    = clamp(baseRate * mult, 0, 1)
   同物品掉率四散、難以維護。
 - 與 GDevelop 差異：GDevelop 端 `drops[].rate` 是絕對機率、且物品無 rarity 概念；此為遷移期刻意重構，回頭若要
   從 GDevelop 重新拉資料，`sync_content.py`/種子 JSON 不含這兩欄，需由設計員在 Godot Inspector 補回。
+
+## F-11　遭遇編組與抽選（Godot 端設計，非 GDevelop 抄錄；v3.0）
+
+`EncounterDef.formations` 由 v2.0 的「固定敵人 id 陣列清單」(`Array[Array[String]]`) 升級為「帶權重與數量
+範圍的編組清單」(`Array[Dictionary]`)。真相源＝`resources/content/encounters/*.tres`。
+
+**單一 formation 結構：**
+
+```
+{
+  "weight": 3.0,                                          # 選填，加權抽組用，預設 1.0
+  "members": [{"id": "goblin", "min": 1, "max": 3}, ...] # 每種怪的數量範圍（同隻可複數）
+}
+```
+
+- boss/精英與其隨從放進**同一組** members 即可（例：`ch1_boss` = 頭目 ×1 + 哥布林 ×2~3 + 野狼 ×0~1）。
+- `min = 0` 代表「該成員有時不出現」。
+
+**遇敵抽選 `EncounterDef.roll()`（`scripts/content/encounter_def.gd`，`battle_state_machine._init_battle` 呼叫）：**
+
+1. 依各 formation 的 `weight` 加權隨機挑一組（權重總和 ≤ 0 時退化為均勻隨機）。
+2. 對該組每個 member，在 `[min, max]` 間均勻隨機決定隻數，展開成敵人 id 陣列。
+3. `shuffle()` 洗牌（讓混編排列多樣）。
+4. **保底**：若展開後為空（所有 member 都抽到 0），補該組第一個有效成員 1 隻——不會有 0 隻空戰鬥。
+5. **上限**：截斷到 `EncounterDef.MAX_FOES = 5`。此值＝`battle_state_machine.FOE_SLOTS` 的槽位數（戰場座標
+   槽）；要放更多敵人必須先擴 `FOE_SLOTS` 佈局，屬另一項工作，故目前 boss 亦受此硬上限約束。
+
+**下限**：無全域硬性下限，最少 1 隻（保底）。「一般遭遇 2+ 隻、單隻留給精英/boss/劇情戰」是**編排慣例**
+（由各表 `min` 值落實），非程式強制。
+
+**與 GDevelop 差異**：GDevelop 端 encounter 是固定編成、均勻隨機、無數量範圍與權重；此為遷移期刻意重構。
+種子 JSON（`sync_content.py`）不含新結構，`region_generator._make_formations()` 已同步產出 v2 格式。
 
 ## 待確認事項
 

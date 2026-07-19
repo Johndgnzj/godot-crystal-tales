@@ -195,8 +195,24 @@ func _dbg_go_town() -> void:
 
 
 func _dbg_battle() -> void:
+	# 第二層選單：選地區魔物或頭目遭遇（對應 encounters/*.tres 的 map_id）
+	_rebuild_panel("立刻戰鬥：選遭遇", [
+		{"t": "— 地區魔物 —", "cb": Callable()},
+		{"t": "　礦山", "cb": _dbg_fight.bind("mine")},
+		{"t": "　東之森", "cb": _dbg_fight.bind("forest")},
+		{"t": "　東之森深處", "cb": _dbg_fight.bind("eforest1")},
+		{"t": "— 頭目 —", "cb": Callable()},
+		{"t": "　哥布林頭目（第一章）", "cb": _dbg_fight.bind("ch1_boss")},
+		{"t": "　哥布林頭目（森林深處）", "cb": _dbg_fight.bind("eforest3_boss")},
+		{"t": "　狂暴洞熊", "cb": _dbg_fight.bind("ch2_bear")},
+		{"t": "　異變的魔影", "cb": _dbg_fight.bind("prologue_demon")},
+		{"t": "‹ 返回", "cb": _show_debug_main},
+	])
+
+
+func _dbg_fight(enc: String) -> void:
 	_close_debug()
-	DebugHooks.force_encounter(_current_enc())
+	DebugHooks.force_encounter(enc)
 
 
 func _current_enc() -> String:

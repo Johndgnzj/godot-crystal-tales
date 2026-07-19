@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_mr01"]
+
+[resource]
+script = ExtResource("1_mr01")
+id = "martha_ring"
+display_name = "瑪莎的護身戒"
+slot = "acc"
+desc = "瑪莎年輕冒險時一直戴著的戒指，據說能保平安。"
+buy = 0
+sell = 30
+rarity = "uncommon"
+stats = {
+"hp": 15.0,
+"luck": 8.0
+}

@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """MOD-E 驗收腳本：atb.gd / damage_calc.gd / exp_scale.gd 的純 Python 單元測試，不依賴 Godot 執行檔。
 
+⚠️ v4.0 屬性系統擴充（2026-07-19，see specs/BATTLE_FORMULAS.md v4.0 / TASKS/14）後，本檔的 F-3/F-4
+   期望值已過時、尚未重寫：爆擊倍率由寫死 1.5 改為 critdmg(1.4+裝備)、會心納入抗爆(critChance)、命中值
+   改用 accPerAgi、閃避/會心納入 luck。且本檔以「與 GDevelop build_cq2.py 逐字交叉驗證」為前提，而 v4.0
+   刻意偏離 GDevelop（無 luck/命中/抗爆/爆傷），parity 交叉驗證對改動部分不再適用。重寫為「無 GDevelop
+   參照的 v4.0 新測試」屬獨立後續工作，未納入本次屬性系統擴充。
+
+
 跟 scripts/content/test_derive.py（MOD-F）同樣的環境限制：這個環境沒有 Godot 執行檔，沒辦法真的執行
 .gd 檔案。這支腳本用兩層交叉驗證逼近「跑過 .gd 再核對」的效果：
 

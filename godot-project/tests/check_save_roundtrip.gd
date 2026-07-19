@@ -42,7 +42,7 @@ func _run() -> void:
 	var potion_saved: int = gs.inv_get("potion")
 
 	# --- 存檔（顯式場景/座標）---
-	sm.save_game("Forest", 123.0, 456.0)
+	sm.save_game("NMA", 123.0, 456.0)   # painted 主線場景（Forest 已退白名單，見 save_manager VALID_RESUME_SCENES）
 
 	# --- 打亂記憶體狀態，證明讀檔真的還原 ---
 	gs.gold = 0
@@ -68,7 +68,7 @@ func _run() -> void:
 	_expect(gs.chest_is_opened("mi_c1"), "chests 含 mi_c1")
 	_expect(gs.auto_battle == true, "auto_battle 還原為 true")
 	_expect(gs.party.size() == party_n, "party 人數還原（%d，期望 %d）" % [gs.party.size(), party_n])
-	_expect(sm.loaded_scene == "Forest", "loaded_scene=Forest（得到 %s）" % sm.loaded_scene)
+	_expect(sm.loaded_scene == "NMA", "loaded_scene=NMA（得到 %s）" % sm.loaded_scene)
 	_expect(gs.result == "resume", "resume 交握 result=resume（得到 %s）" % gs.result)
 	_expect(is_equal_approx(gs.return_x, 123.0), "return_x=123（得到 %s）" % gs.return_x)
 	_expect(is_equal_approx(gs.return_y, 456.0), "return_y=456（得到 %s）" % gs.return_y)
@@ -78,7 +78,7 @@ func _run() -> void:
 	sm.save_game()
 	var raw: Variant = _read_save()
 	if typeof(raw) == TYPE_DICTIONARY:
-		_expect(String(raw.get("scene", "")) == "Forest", "零參 save 沿用舊 scene=Forest（得到 %s）" % raw.get("scene"))
+		_expect(String(raw.get("scene", "")) == "NMA", "零參 save 沿用舊 scene=NMA（得到 %s）" % raw.get("scene"))
 		_expect(is_equal_approx(float(raw.get("x", -1.0)), 123.0), "零參 save 沿用舊 x=123（得到 %s）" % raw.get("x"))
 		_expect(int(raw.get("gold", 0)) == 888, "零參 save 更新 gold=888（得到 %s）" % raw.get("gold"))
 	else:

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EquipmentDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_ab01"]
+
+[resource]
+script = ExtResource("1_ab01")
+id = "adventurer_boots"
+display_name = "冒險者靴"
+slot = "boots"
+desc = "冒險者公會發給新登錄者的標準皮靴，輕便耐走。"
+buy = 0
+sell = 20
+rarity = "uncommon"
+stats = {
+"agi": 2.0,
+"hp": 5.0
+}
+attr_type = "agi"

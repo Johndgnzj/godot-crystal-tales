@@ -28,15 +28,26 @@ static func compute(map_id: String) -> float:
 	if enc == null or enc.formations.is_empty():
 		return 1.0
 
-	var total_exp := 0.0
-	for group in enc.formations:
-		var group_sum := 0.0
-		for enemy_id in group:
-			var ed: EnemyDef = ContentDB.get_enemy(String(enemy_id))
+	# formations v2（F-11）：每組期望 EXP = Σ member(期望隻數 × 單隻 EXP)，各組再依 weight 加權平均。
+	# member 全填 min=max、weight 省略時，等價於舊「各組固定編成 EXP 的算術平均」。
+	var acc := 0.0
+	var total_w := 0.0
+	for f in enc.formations:
+		if typeof(f) != TYPE_DICTIONARY:
+			continue
+		var w: float = maxf(0.0, float(f.get("weight", 1.0)))
+		var group_exp := 0.0
+		for m in f.get("members", []):
+			if typeof(m) != TYPE_DICTIONARY:
+				continue
+			var ed: EnemyDef = ContentDB.get_enemy(String(m.get("id", "")))
 			if ed != null:
-				group_sum += ed.exp
-		total_exp += group_sum
-	var avg: float = total_exp / float(enc.formations.size())
+				var lo := int(m.get("min", 1))
+				var hi := int(m.get("max", lo))
+				group_exp += float(ed.exp) * float(lo + hi) * 0.5
+		acc += w * group_exp
+		total_w += w
+	var avg: float = (acc / total_w) if total_w > 0.0 else 0.0
 	if avg <= 0.0:
 		return 1.0
 

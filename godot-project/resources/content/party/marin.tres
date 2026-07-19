@@ -12,6 +12,7 @@ sprite = "marin"
 base = {
 "agi": 4.0,
 "int": 3.0,
+"luck": 3.0,
 "str": 3.0
 }
 growth = {

@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """MOD-F 驗收腳本：derive.gd / exp_need.gd 的純 Python 單元測試，不依賴 Godot 執行檔。
 
+⚠️ v4.0 屬性系統擴充（2026-07-19，see specs/BATTLE_FORMULAS.md v4.0 / TASKS/14）後，本檔尚未重寫：
+   derive() 已改為「主屬性先疊裝備再算衍生」、attrs 增 luck、新增 accV/critresV/critdmg/luckV、critPerAgi
+   0.15→0.2、critV/dodgeV 納入 luck。本檔以「與 GDevelop build_cq2.py WORLD/BATTLE 版逐字 parity」為前提，
+   而 v4.0 刻意偏離 GDevelop（GDevelop 無 luck 等），EXPECTED_WORLD/BATTLE 對改動欄位不再等值。重寫為
+   「無 GDevelop 參照的 v4.0 新測試」屬獨立後續工作，未納入本次屬性系統擴充。
+
+
 跟 validate_content.py（CORE-2）同樣的環境限制：這個環境拿不到 Godot 執行檔（見 CORE-1 驗收現況），
 沒辦法真的執行 derive.gd。這支腳本改用兩層交叉驗證逼近「跑過 derive.gd 再核對」的效果：
 
