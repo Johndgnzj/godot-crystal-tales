@@ -26,6 +26,10 @@ spawns = {
 "from_c": Vector2(627, 100),
 "start": Vector2(627, 727)
 }
+cut_on_enter = [{
+"cut": "s1_bear_pre",
+"step": 1
+}]
 
 [node name="Background" type="Sprite2D" parent="." unique_id=897742499]
 texture = ExtResource("2_n5m2g")

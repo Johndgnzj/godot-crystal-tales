@@ -10,6 +10,11 @@
 [ext_resource type="Resource" path="res://resources/content/dialogue/cuts/mine_truth.tres" id="8_pmyqt"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/cuts/mine_after.tres" id="9_yo858"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/cuts/necro_intro.tres" id="23_nec00"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s1_open.tres" id="24_s1o"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s1_bear_pre.tres" id="25_s1bp"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s1_bear.tres" id="26_s1b"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s2_home.tres" id="27_s2h"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s2_follow.tres" id="28_s2f"]
 [ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="10_j0vgd"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/npc/tina.tres" id="11_xwnol"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/npc/dora.tres" id="12_ksmd7"]
@@ -27,4 +32,4 @@
 [resource]
 script = ExtResource("21_oivy1")
 npcs = Array[ExtResource("10_j0vgd")]([ExtResource("11_xwnol"), ExtResource("12_ksmd7"), ExtResource("13_6521e"), ExtResource("14_0cqli"), ExtResource("15_pimf7"), ExtResource("16_bc6eq"), ExtResource("17_ldcmo"), ExtResource("18_pjvw3"), ExtResource("19_0akta"), ExtResource("20_koq7g"), ExtResource("22_don00")])
-cutscenes = Array[ExtResource("1_mheqe")]([ExtResource("2_jnunl"), ExtResource("3_0hvef"), ExtResource("4_jvhwk"), ExtResource("5_mfmo3"), ExtResource("6_movar"), ExtResource("7_o0ytv"), ExtResource("8_pmyqt"), ExtResource("9_yo858"), ExtResource("23_nec00")])
+cutscenes = Array[ExtResource("1_mheqe")]([ExtResource("2_jnunl"), ExtResource("3_0hvef"), ExtResource("4_jvhwk"), ExtResource("5_mfmo3"), ExtResource("6_movar"), ExtResource("7_o0ytv"), ExtResource("8_pmyqt"), ExtResource("9_yo858"), ExtResource("23_nec00"), ExtResource("24_s1o"), ExtResource("25_s1bp"), ExtResource("26_s1b"), ExtResource("27_s2h"), ExtResource("28_s2f")])

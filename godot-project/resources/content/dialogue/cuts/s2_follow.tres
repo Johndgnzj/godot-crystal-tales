@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（路德看見亞倫揹著行囊，正往鎮北走去。）"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = ""
+text = "公會給了亞倫一紙委託——調查北方礦山近來的異狀。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（握緊手裡的舊劍）……跟上去。這次，我不會扯後腿。"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s2_follow"
+once = "c_s2_follow"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3")])
+transfer = PackedStringArray()
+setstep = 5
+party = PackedStringArray()

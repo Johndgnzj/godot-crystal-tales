@@ -398,19 +398,20 @@ func _run_action(action: String) -> void:
 		"shop_don":
 			shop_requested.emit("don")
 		"give_sword":
-			# 漢克臨別贈言（build_cq2.py L1836，cmd hank_gift／done gotSword）：贈鐵劍，不開店。
+			# 漢克臨別贈言（cmd hank_gift／done gotSword）：贈劇情專屬『漢克的舊劍』，不開店。
 			if GameState.flag_get("gotSword") == 0:
 				GameState.flag_set("gotSword", 1)
-				GameState.eq_inv.append("iron_sword")
+				GameState.eq_inv.append("hank_blade")
 		"give_potion":
 			# 吉德新客招待（build_cq2.py L1837，cmd gid_gift／done gotPotion）：贈藥水×2，不開店。
 			if GameState.flag_get("gotPotion") == 0:
 				GameState.flag_set("gotPotion", 1)
 				GameState.inv_add("potion", 2)
 		"give_ring":
+			# 瑪莎的心意（cmd martha_gift／done gotRing）：贈劇情專屬『瑪莎的護身戒』。
 			if GameState.flag_get("gotRing") == 0:
 				GameState.flag_set("gotRing", 1)
-				GameState.eq_inv.append("vital_ring")
+				GameState.eq_inv.append("martha_ring")
 		"give_earring":
 			# 注意：目前 dialogue.json 沒有任何條目使用這個 action（build_cq2.py L1769 有實作但
 			# DLG 表裡沒有引用到——疑似既有的死碼／保留供未來用）。保留實作以求跟原始碼行為對稱一致。

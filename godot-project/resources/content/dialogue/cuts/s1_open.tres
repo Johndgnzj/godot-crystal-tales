@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "看好了——這一劍，就是打倒魔王的一劍！"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "……你昨天也這麼說。前天也是。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "這次不一樣！公會貼了告示，東之森最近冒出魔物。我先去清掉牠們，緹娜姐一定馬上讓我登錄！"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "哥，亞倫大哥也說森林深處不能亂闖——喂，路德！"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（話還沒說完，路德已經抓起劍衝了出去。）"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = ""
+text = "勇者的日常，第一天。——才怪。"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s1_open"
+once = "c_s1_open"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6")])
+transfer = PackedStringArray()
+setstep = 1
+party = PackedStringArray()

@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "（叉腰）虧我還追出去！要不是亞倫大哥剛好路過——"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "我知道啦……我只是想證明我可以。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "瑪莎"
+text = "（替他敷上藥草）你這孩子……越來越像你爸年輕的時候了。"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "漢克"
+text = "（抱著手臂靠在門邊）當冒險者？哼，那可不是鬧著玩的。"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "可你們當年不也——"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = "漢克"
+text = "……我和你媽在外面闖了那麼多年，到頭來什麼名堂也沒闖出來，才回這座鎮上。別走我們的老路。"
+
+[sub_resource type="Resource" id="L7"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（去和家人、鎮上的人說說話吧——他們嘴上唸著，手上卻一個個幫你打點行裝。）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s2_home"
+once = "c_s2_home"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
+transfer = PackedStringArray()
+setstep = 4
+party = PackedStringArray()

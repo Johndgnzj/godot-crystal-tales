@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（低沉的咆哮——一頭遠比路德高大的凶暴的熊撞開了樹叢！）"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "這、這麼大隻……沒、沒關係！我可是要當勇者的人！"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（強敵當前——先撐過牠的攻勢！）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s1_bear_pre"
+once = "c_s1_bear_pre"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3")])
+battle = "bear_forced"
+transfer = PackedStringArray()
+setstep = 2
+party = PackedStringArray()

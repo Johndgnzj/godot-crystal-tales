@@ -3,30 +3,30 @@
 [ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_x51ct"]
 [ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_ly16l"]
 
-[sub_resource type="Resource" id="Resource_ba35n"]
+[sub_resource type="Resource" id="Resource_post"]
 script = ExtResource("1_x51ct")
-when = "ch1>=1"
+when = "gotSword==1"
 speaker = "漢克"
-lines = PackedStringArray("……路德，你也要出去闖了啊。", "拿去，我打的劍。別死在外面。", "（獲得『鐵劍』！開啟 選單→裝備 分頁換上它）")
+lines = PackedStringArray("該跑的時候就跑，別逞強。", "……那把劍陪過我不少險路，也讓它護著你。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_gift"]
+script = ExtResource("1_x51ct")
+when = "ch1_step>=3"
+speaker = "漢克"
+lines = PackedStringArray("……路德，你也要出去闖了啊。", "（取下牆上一把用舊的劍）拿去。這把陪我走過不少地方。別死在外面。", "（獲得『漢克的舊劍』！開啟 選單→裝備 分頁換上它）")
 action = "give_sword"
 cmd = "hank_gift"
 label = "臨別贈言"
 done = "gotSword"
 
-[sub_resource type="Resource" id="Resource_ercdf"]
-script = ExtResource("1_x51ct")
-when = "ch1_step==0"
-speaker = "漢克"
-lines = PackedStringArray("哼，礦山？", "……跟緊亞倫先生，別給他添麻煩。")
-cmd = "talk"
-
-[sub_resource type="Resource" id="Resource_fflx4"]
+[sub_resource type="Resource" id="Resource_talk"]
 script = ExtResource("1_x51ct")
 speaker = "漢克"
-lines = PackedStringArray("冒險者？哼，那不是鬧著玩的。", "你亞倫大哥那麼強的人都……算了。要去就去吧。")
+lines = PackedStringArray("冒險者？哼，那可不是鬧著玩的。", "……你亞倫大哥那麼強的人都能出事。別走我們的老路。")
 cmd = "talk"
 
 [resource]
 script = ExtResource("2_ly16l")
 id = "hank"
-entries = Array[ExtResource("1_x51ct")]([SubResource("Resource_ba35n"), SubResource("Resource_ercdf"), SubResource("Resource_fflx4")])
+entries = Array[ExtResource("1_x51ct")]([SubResource("Resource_post"), SubResource("Resource_gift"), SubResource("Resource_talk")])
