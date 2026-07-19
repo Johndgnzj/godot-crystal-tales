@@ -33,7 +33,7 @@ spawns = {
 "from_d": Vector2(640, 104),
 "start": Vector2(640, 640)
 }
-camera_zoom = 1.0
+camera_zoom = 1.8
 
 [node name="Background" type="Sprite2D" parent="." unique_id=288044675]
 texture = ExtResource("2_nva21")
