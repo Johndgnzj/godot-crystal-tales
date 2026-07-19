@@ -351,10 +351,16 @@ func _make_formations(ids: Array) -> Array:
 	var n: int = maxi(3, mini(4, ids.size() + 1))
 	var out: Array = []
 	for k in sizes.slice(0, n):
-		var f: Array = []
+		# 先隨機挑 k 隻累計成「同種數量」，再轉成帶範圍的 members（新 EncounterDef 格式，see F-11）
+		var counts: Dictionary = {}
 		for _j in k:
-			f.append(MapKit.choice(ids, _rng))
-		out.append(f)
+			var eid: String = MapKit.choice(ids, _rng)
+			counts[eid] = int(counts.get(eid, 0)) + 1
+		var members: Array = []
+		for eid in counts:
+			var c: int = counts[eid]
+			members.append({"id": eid, "min": maxi(1, c - 1), "max": c + 1})
+		out.append({"weight": 1.0, "members": members})
 	return out
 
 

@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_7qy7g")
 map_id = "prologue_demon"
-formations = [["shadow_demon"]]
+formations = [{"weight": 1.0, "members": [{"id": "shadow_demon", "min": 1, "max": 1}]}]

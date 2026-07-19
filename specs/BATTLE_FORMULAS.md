@@ -1,13 +1,20 @@
 # 規格：衍生屬性與戰鬥公式
 
-- Spec 版本: v2.0
+- Spec 版本: v3.0
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py`（WORLD 版 `derive()` L1326-1345；BATTLE 版 `derive()`
   L2641-2661 為同一份公式的重複實作——**已知技術債，DEV_開發指南.md L63 有提及「改公式要同步兩處」**）
-- 狀態: 定案（F-1~F-9 抄錄自現行程式碼；**F-10 為 Godot 端刻意新增、偏離 GDevelop 的平衡設計，見版本紀錄 v2.0**）
+- 狀態: 定案（F-1~F-9 抄錄自現行程式碼；**F-10/F-11 為 Godot 端刻意新增、偏離 GDevelop 的平衡設計，見版本紀錄**）
 - 用途: MOD-F（衍生屬性/戰鬥公式）、MOD-E（ATB 戰鬥系統）實作依據
 
 ## 版本紀錄
 
+- **v3.0（2026-07-19，遭遇系統重製；John 指示）**：**破壞性變動——`EncounterDef.formations` 資料結構改變**。
+  1. **新增 F-11 遭遇編組與抽選**：`formations` 由 `Array[Array[String]]`（固定編成）改為 `Array[Dictionary]`
+     （帶 `weight` 權重與 `members` 數量範圍），支援同種怪複數、boss+隨從同組、加權抽組；新增戰場敵人上限
+     `MAX_FOES = 5`（`battle_state_machine.FOE_SLOTS` 同步擴到 5 槽）。
+  2. **F-9 EXP 平均改為加權期望**（隨 F-11，見 F-9 v3.0 註記）；member 全 `min=max` 且省略 weight 時與 v2.0 等價。
+  3. **伴隨資料重排（值在 `.tres`）**：12 張 `encounters/*.tres` 重編權重/數量/隨從；15 隻 `enemies/*.tres`
+     新增 `description` 圖鑑欄位（彙整見 `docs/design/魔物圖鑑.md`）。
 - **v2.0（2026-07-15，遊玩回饋平衡調整；John 指示）**：**破壞性變動——非抄錄自 GDevelop，而是 Godot 端刻意偏離**。
   1. **新增 F-10 掉落公式**：`ItemDef` 新增 `rarity` 與 `base_drop_rate` 兩欄；`EnemyDef.drops[].rate` 語意由
      「絕對掉落機率」改為「加成倍率」，最終掉率 = `clamp(item.base_drop_rate × rate, 0, 1)`。
@@ -260,6 +267,11 @@ for map_id, cfg in CONTENT.pacing.maps.items():
 啟動時省一點計算），`exp_scale.gd` 的公式可以直接搬過去，`ContentDB` 加一個 `get_exp_scale(map_id)`
 查詢介面，MOD-E 這邊改成呼叫該介面即可，不影響呼叫端（`battle_state_machine.gd`）簽名。
 
+**Godot v3.0 演進（隨 F-11 遭遇結構升級）**：`formations` 改為帶數量範圍/權重的編組後，上式的 `avg`
+（每組總 exp 的平均）在 `exp_scale.gd` 改算為——每組期望 EXP =`Σ member(期望隻數 × 單隻 exp)`（期望隻數
+=`(min+max)/2`），各組再依 `weight` 加權平均。當 member 全填 `min=max`、`weight` 省略時，與上式算術平均
+完全等價（向下相容）；其餘 need/party/battles 部分不變。
+
 ## F-10　掉落機率（Godot 端設計，非 GDevelop 抄錄）
 
 戰鬥勝利結算時，對每個敵人的每筆 `drops` 元素獨立擲骰（`battle_state_machine.gd` 勝利結算段）：
@@ -280,6 +292,38 @@ chance    = clamp(baseRate * mult, 0, 1)
   同物品掉率四散、難以維護。
 - 與 GDevelop 差異：GDevelop 端 `drops[].rate` 是絕對機率、且物品無 rarity 概念；此為遷移期刻意重構，回頭若要
   從 GDevelop 重新拉資料，`sync_content.py`/種子 JSON 不含這兩欄，需由設計員在 Godot Inspector 補回。
+
+## F-11　遭遇編組與抽選（Godot 端設計，非 GDevelop 抄錄；v3.0）
+
+`EncounterDef.formations` 由 v2.0 的「固定敵人 id 陣列清單」(`Array[Array[String]]`) 升級為「帶權重與數量
+範圍的編組清單」(`Array[Dictionary]`)。真相源＝`resources/content/encounters/*.tres`。
+
+**單一 formation 結構：**
+
+```
+{
+  "weight": 3.0,                                          # 選填，加權抽組用，預設 1.0
+  "members": [{"id": "goblin", "min": 1, "max": 3}, ...] # 每種怪的數量範圍（同隻可複數）
+}
+```
+
+- boss/精英與其隨從放進**同一組** members 即可（例：`ch1_boss` = 頭目 ×1 + 哥布林 ×2~3 + 野狼 ×0~1）。
+- `min = 0` 代表「該成員有時不出現」。
+
+**遇敵抽選 `EncounterDef.roll()`（`scripts/content/encounter_def.gd`，`battle_state_machine._init_battle` 呼叫）：**
+
+1. 依各 formation 的 `weight` 加權隨機挑一組（權重總和 ≤ 0 時退化為均勻隨機）。
+2. 對該組每個 member，在 `[min, max]` 間均勻隨機決定隻數，展開成敵人 id 陣列。
+3. `shuffle()` 洗牌（讓混編排列多樣）。
+4. **保底**：若展開後為空（所有 member 都抽到 0），補該組第一個有效成員 1 隻——不會有 0 隻空戰鬥。
+5. **上限**：截斷到 `EncounterDef.MAX_FOES = 5`。此值＝`battle_state_machine.FOE_SLOTS` 的槽位數（戰場座標
+   槽）；要放更多敵人必須先擴 `FOE_SLOTS` 佈局，屬另一項工作，故目前 boss 亦受此硬上限約束。
+
+**下限**：無全域硬性下限，最少 1 隻（保底）。「一般遭遇 2+ 隻、單隻留給精英/boss/劇情戰」是**編排慣例**
+（由各表 `min` 值落實），非程式強制。
+
+**與 GDevelop 差異**：GDevelop 端 encounter 是固定編成、均勻隨機、無數量範圍與權重；此為遷移期刻意重構。
+種子 JSON（`sync_content.py`）不含新結構，`region_generator._make_formations()` 已同步產出 v2 格式。
 
 ## 待確認事項
 

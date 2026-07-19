@@ -192,62 +192,62 @@ crit_per_agi = 0.15
 [sub_resource type="Resource" id="Resource_ll363"]
 script = ExtResource("3_hsbra")
 map_id = "forest"
-formations = [["bird", "gslime"], ["goblin", "goblin"], ["bird", "worm"], ["goblin", "worm", "gslime"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "gslime", "min": 1, "max": 2}, {"id": "bird", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "bird", "min": 1, "max": 2}, {"id": "worm", "min": 1, "max": 1}]}, {"weight": 1.0, "members": [{"id": "goblin", "min": 1, "max": 2}, {"id": "worm", "min": 1, "max": 1}, {"id": "gslime", "min": 0, "max": 1}]}]
 
 [sub_resource type="Resource" id="Resource_7wl3i"]
 script = ExtResource("3_hsbra")
 map_id = "forest2"
-formations = [["goblin", "goblin", "gslime"], ["worm", "worm"], ["bird", "goblin", "worm"], ["goblin", "goblin", "goblin"], ["wolf", "goblin"], ["wolf", "wolf"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 3}, {"id": "gslime", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "worm", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "wolf", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "goblin", "min": 1, "max": 2}, {"id": "bird", "min": 1, "max": 2}]}, {"weight": 1.0, "members": [{"id": "wolf", "min": 1, "max": 1}, {"id": "goblin", "min": 2, "max": 3}]}]
 
 [sub_resource type="Resource" id="Resource_idhf2"]
 script = ExtResource("3_hsbra")
 map_id = "mine"
-formations = [["wogol", "skeleton"], ["skeleton", "skeleton"], ["orc", "wogol"], ["wolf", "skeleton"], ["bear"]]
+formations = [{"weight": 3.0, "members": [{"id": "skeleton", "min": 2, "max": 3}, {"id": "wogol", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "orc", "min": 1, "max": 2}, {"id": "wogol", "min": 1, "max": 1}]}, {"weight": 2.0, "members": [{"id": "skeleton", "min": 2, "max": 2}, {"id": "wolf", "min": 1, "max": 1}]}, {"weight": 2.0, "members": [{"id": "wogol", "min": 2, "max": 3}]}, {"weight": 1.0, "members": [{"id": "bear", "min": 1, "max": 1}, {"id": "skeleton", "min": 1, "max": 2}]}]
 
 [sub_resource type="Resource" id="Resource_olkl2"]
 script = ExtResource("3_hsbra")
 map_id = "cave"
-formations = [["chort", "chort"], ["chort", "skeleton", "wogol"], ["necro", "chort"]]
+formations = [{"weight": 3.0, "members": [{"id": "chort", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "chort", "min": 1, "max": 2}, {"id": "wogol", "min": 1, "max": 2}]}, {"weight": 2.0, "members": [{"id": "skeleton", "min": 2, "max": 3}, {"id": "chort", "min": 0, "max": 1}]}, {"weight": 1.0, "members": [{"id": "necro", "min": 1, "max": 1}, {"id": "chort", "min": 1, "max": 2}, {"id": "skeleton", "min": 0, "max": 1}]}]
 
 [sub_resource type="Resource" id="Resource_s2xj1"]
 script = ExtResource("3_hsbra")
 map_id = "tutorial"
-formations = [["bird", "gslime"]]
+formations = [{"weight": 2.0, "members": [{"id": "gslime", "min": 1, "max": 2}]}, {"weight": 1.0, "members": [{"id": "bird", "min": 1, "max": 2}, {"id": "gslime", "min": 1, "max": 1}]}]
 
 [sub_resource type="Resource" id="Resource_liudx"]
 script = ExtResource("3_hsbra")
 map_id = "prologue_demon"
-formations = [["shadow_demon"]]
+formations = [{"weight": 1.0, "members": [{"id": "shadow_demon", "min": 1, "max": 1}]}]
 
 [sub_resource type="Resource" id="Resource_sb6r6"]
 script = ExtResource("3_hsbra")
 map_id = "ch1_boss"
-formations = [["goblin_chief", "goblin", "goblin"]]
+formations = [{"weight": 1.0, "members": [{"id": "goblin_chief", "min": 1, "max": 1}, {"id": "goblin", "min": 2, "max": 3}, {"id": "wolf", "min": 0, "max": 1}]}]
 
 [sub_resource type="Resource" id="Resource_vyme8"]
 script = ExtResource("3_hsbra")
 map_id = "ch2_bear"
-formations = [["bear_dire"]]
+formations = [{"weight": 1.0, "members": [{"id": "bear_dire", "min": 1, "max": 1}]}]
 
 [sub_resource type="Resource" id="Resource_vcnnr"]
 script = ExtResource("3_hsbra")
 map_id = "eforest1"
-formations = [["goblin"], ["bird", "goblin"], ["gslime", "bird"], ["bird", "gslime", "goblin"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 3}]}, {"weight": 2.0, "members": [{"id": "goblin", "min": 1, "max": 2}, {"id": "bird", "min": 1, "max": 2}]}, {"weight": 2.0, "members": [{"id": "gslime", "min": 1, "max": 2}, {"id": "bird", "min": 0, "max": 1}]}, {"weight": 1.0, "members": [{"id": "bird", "min": 1, "max": 1}, {"id": "gslime", "min": 1, "max": 1}, {"id": "goblin", "min": 1, "max": 2}]}]
 
 [sub_resource type="Resource" id="Resource_1bx6f"]
 script = ExtResource("3_hsbra")
 map_id = "eforest2"
-formations = [["worm"], ["goblin", "goblin"], ["goblin", "worm"], ["bird", "goblin", "goblin"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 4}]}, {"weight": 2.0, "members": [{"id": "worm", "min": 2, "max": 3}, {"id": "goblin", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "goblin", "min": 2, "max": 3}, {"id": "bird", "min": 1, "max": 1}]}, {"weight": 1.0, "members": [{"id": "worm", "min": 2, "max": 3}]}]
 
 [sub_resource type="Resource" id="Resource_hsbra"]
 script = ExtResource("3_hsbra")
 map_id = "eforest3"
-formations = [["goblin"], ["wolf", "goblin"], ["goblin", "wolf"], ["goblin", "wolf", "worm"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 3}, {"id": "wolf", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "wolf", "min": 2, "max": 2}, {"id": "goblin", "min": 1, "max": 2}]}, {"weight": 2.0, "members": [{"id": "goblin", "min": 2, "max": 4}]}, {"weight": 1.0, "members": [{"id": "wolf", "min": 2, "max": 2}, {"id": "worm", "min": 1, "max": 2}]}]
 
 [sub_resource type="Resource" id="Resource_hoq51"]
 script = ExtResource("3_hsbra")
 map_id = "eforest3_boss"
-formations = [["goblin_chief", "goblin", "worm"]]
+formations = [{"weight": 1.0, "members": [{"id": "goblin_chief", "min": 1, "max": 1}, {"id": "goblin", "min": 2, "max": 3}, {"id": "worm", "min": 0, "max": 1}]}]
 
 [sub_resource type="Resource" id="Resource_v4bx3"]
 script = ExtResource("4_hoq51")
@@ -264,6 +264,7 @@ drops = [{
 "id": "soft_feather",
 "rate": 1.2
 }]
+description = "成群掠過林梢的猛禽，俯衝時快得只剩一道殘影。單獨一隻不足為懼，偏偏牠們總愛呼朋引伴，等你回過神，肩上往往已經被啄了好幾口。羽毛輕軟，是縫製衣物的搶手貨。"
 
 [sub_resource type="Resource" id="Resource_2d226"]
 script = ExtResource("4_hoq51")
@@ -280,6 +281,7 @@ drops = [{
 "id": "slime_gel",
 "rate": 1.25
 }]
+description = "地脈魔力滲進水窪，日積月累就凝成這麼一坨會抖的綠色果凍。沒腦、沒骨，也沒什麼脾氣，唯一的戰術是「慢慢靠近再黏上去」——以牠的移動速度，這計畫多半在靠近你之前就先失敗了。黏液拿來熬膠意外好用。"
 
 [sub_resource type="Resource" id="Resource_38aoo"]
 script = ExtResource("4_hoq51")
@@ -296,6 +298,7 @@ drops = [{
 "id": "worm_carapace",
 "rate": 1.2
 }]
+description = "潛伏在鬆軟土層裡的環節巨蟲，平時只把顎牙探出地面。牠沒有眼睛，靠地面震動鎖定獵物，所以你的腳步越重，牠就越興奮。外殼硬得出奇，敲下來能湊合當塊護甲。"
 
 [sub_resource type="Resource" id="Resource_1f648"]
 script = ExtResource("4_hoq51")
@@ -312,6 +315,7 @@ drops = [{
 "id": "goblin_fang",
 "rate": 1.1
 }]
+description = "東之森一帶最常見的小型魔物，個頭不高、心眼不少。牠們不擅正面交鋒，專挑落單的旅人下手，得手就往草叢裡一鑽。與其說危險，不如說煩人——尤其當牠們成群結隊、又剛好看上你的行囊時。"
 
 [sub_resource type="Resource" id="Resource_7ak06"]
 script = ExtResource("4_hoq51")
@@ -341,6 +345,7 @@ foe_skills = [{
 "name": "亂舞橫掃",
 "target": "all"
 }]
+description = "盤踞東之森深處的哥布林群首領，體格是尋常同類的兩三倍，一身劫掠來的雜甲彰顯著牠的地位。牠靠蠻力與狡詐坐穩王座，麾下嘍囉為牠賣命。想安然穿過這片森林，就得先讓這傢伙低頭。"
 
 [sub_resource type="Resource" id="Resource_auvyr"]
 script = ExtResource("4_hoq51")
@@ -357,6 +362,7 @@ drops = [{
 "id": "beast_hide",
 "rate": 2.5
 }]
+description = "北方礦山一帶的野生巨獸，厚毛皮下是一身橫練的筋肉。平時窩在洞裡打盹，一旦地盤被闖入就翻臉不認熊。鎮上不少獵人栽在牠掌下——據說連某位未來的冒險者，小時候也曾被牠追著滿山跑。"
 
 [sub_resource type="Resource" id="Resource_j7mbp"]
 script = ExtResource("4_hoq51")
@@ -387,6 +393,7 @@ foe_skills = [{
 "name": "震地怒吼",
 "target": "all"
 }]
+description = "原本只是尋常的洞熊，卻因長期浸在黑水晶的氣息裡而徹底失了心智。牠雙眼滲著不祥的微光，咆哮能震落洞頂的碎石，痛覺與恐懼再也拉不住牠。這已不是野獸的兇性，而是腐化留下的、無從安撫的狂亂。"
 
 [sub_resource type="Resource" id="Resource_wykaa"]
 script = ExtResource("4_hoq51")
@@ -406,6 +413,7 @@ drops = [{
 "id": "beast_hide",
 "rate": 0.75
 }]
+description = "山林間的狩獵者，落單時謹慎，成群時卻膽大包天。牠們懂得包抄與輪番進攻，遇上落單旅人絕不客氣。老獵人說，聽見第一聲狼嚎就該拔腿了——那是呼喚同伴的信號。"
 
 [sub_resource type="Resource" id="Resource_dfnc1"]
 script = ExtResource("4_hoq51")
@@ -422,6 +430,7 @@ drops = [{
 "id": "crystal_shard",
 "rate": 1.0
 }]
+description = "在礦坑深處竄飛的小型魔物，速度快得令人咋舌，總在火把照不到的暗角忽隱忽現。牠們受水晶微光吸引而聚集，體內積著一點碎晶——這也讓牠們成了礦道裡最難纏的小偷。"
 
 [sub_resource type="Resource" id="Resource_sahc2"]
 script = ExtResource("4_hoq51")
@@ -441,6 +450,7 @@ drops = [{
 "id": "iron_ore",
 "rate": 0.8
 }]
+description = "二十年前封礦時失蹤的礦工，如今提著鏽蝕的鎬，重新走回礦道。黑水晶奪走了他們的姓名與安息，只留下不斷挖掘的本能。有些骨手仍緊攥著當年沒能帶出去的礦石——他們，始終沒能下班。"
 
 [sub_resource type="Resource" id="Resource_vjhig"]
 script = ExtResource("4_hoq51")
@@ -460,6 +470,7 @@ drops = [{
 "id": "bone_shard",
 "rate": 0.5
 }]
+description = "被驅使進礦坑挖掘的粗壯獸人，肌肉遠比腦子發達。揮起鎬來連岩壁都吃不消，更別提擋在中間的人。渾身沾滿鐵屑與礦渣，顯然這苦力活，牠們幹的不是一天兩天了。"
 
 [sub_resource type="Resource" id="Resource_hnf0v"]
 script = ExtResource("4_hoq51")
@@ -476,6 +487,7 @@ drops = [{
 "id": "crystal_shard",
 "rate": 1.2
 }]
+description = "形體不定的小型暗影魔物，像從黑水晶的陰影裡滲出來的一團惡意。牠畏光，動作卻刁鑽，專趁人分神時撲上來抓一把。若在礦道裡撞見成群的牠們，意味著黑水晶的汙染已經不遠。"
 
 [sub_resource type="Resource" id="Resource_1s8rn"]
 script = ExtResource("4_hoq51")
@@ -496,6 +508,7 @@ drops = [{
 "id": "mana_herb",
 "rate": 1.5
 }]
+description = "遊走在生死之間的術士。他驅使黑水晶之力，將無法安息的礦工喚為傀儡——鎮民咒他褻瀆亡者，卻無人知道，他這麼做只為換取一線治好垂危妹妹的可能。戰場上他總是先癒合同伴的傷，再冷眼看你倒下。"
 
 [sub_resource type="Resource" id="Resource_cs8nw"]
 script = ExtResource("4_hoq51")
@@ -526,6 +539,7 @@ foe_skills = [{
 "name": "崩山地裂",
 "target": "all"
 }]
+description = "棲身礦坑最深處的龐然巨魔，據說是吞噬了大量水晶，才長成這副駭人的體格。牠揮舞的巨槌足以砸碎岩層，遲緩的身軀底下藏著毀天滅地的力量。膽敢深入母脈的人，牠是一道繞不過去的血肉高牆。"
 
 [sub_resource type="Resource" id="Resource_f55ks"]
 script = ExtResource("4_hoq51")
@@ -537,6 +551,7 @@ atk = 22.0
 def_stat = 25.0
 spd = 12.0
 big = true
+description = "序章在礦山深處現身的異形存在，連 A 級冒險者都擋不住。牠不屬於這片大地——沒有名字，沒有來歷，只有一股令人窒息的惡意，與近乎必然的壓迫感。牠不過是黑水晶背後那個更深沉威脅的一縷投影；真正的黑幕，還藏在更遠的地方。"
 
 [sub_resource type="Resource" id="Resource_qyo2q"]
 script = ExtResource("5_vtoea")
@@ -577,6 +592,52 @@ stats = {
 "patk": 6.0
 }
 attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_hankblade"]
+script = ExtResource("5_vtoea")
+id = "hank_blade"
+display_name = "漢克的舊劍"
+slot = "weapon"
+desc = "漢克年輕闖蕩時的佩劍，鈍了些卻扎實。他嘴上冷淡，還是把它塞給了路德。"
+buy = 0
+sell = 40
+rarity = "uncommon"
+stats = {
+"crit": 1.0,
+"dodge": 1.0,
+"patk": 8.0
+}
+attr_type = "str"
+
+[sub_resource type="Resource" id="Resource_marthring"]
+script = ExtResource("5_vtoea")
+id = "martha_ring"
+display_name = "瑪莎的護身戒"
+slot = "acc"
+desc = "瑪莎年輕冒險時一直戴著的戒指，據說能保平安。"
+buy = 0
+sell = 30
+rarity = "uncommon"
+stats = {
+"crit": 1.0,
+"dodge": 1.0,
+"hp": 15.0
+}
+
+[sub_resource type="Resource" id="Resource_advboots"]
+script = ExtResource("5_vtoea")
+id = "adventurer_boots"
+display_name = "冒險者靴"
+slot = "boots"
+desc = "冒險者公會發給新登錄者的標準皮靴，輕便耐走。"
+buy = 0
+sell = 20
+rarity = "uncommon"
+stats = {
+"dodge": 3.0,
+"hp": 5.0
+}
+attr_type = "agi"
 
 [sub_resource type="Resource" id="Resource_e6sw3"]
 script = ExtResource("5_vtoea")
@@ -2392,6 +2453,24 @@ display_name = "公會登錄證"
 cat = "key"
 effect = "冒險者公會核發的身分證明（F 級）。序章於緹娜處登錄後取得。"
 
+[sub_resource type="Resource" id="Resource_fh01"]
+script = ExtResource("6_gqqnr")
+id = "fire_honey"
+rarity = "key"
+base_drop_rate = 0.0
+display_name = "烈火蜂蜜"
+cat = "key"
+effect = "東之森老樹蜂巢裡的蜂蜜，入口像吞了一團火。吉德調酒的關鍵材料。（第一章小節5）"
+
+[sub_resource type="Resource" id="Resource_hm01"]
+script = ExtResource("6_gqqnr")
+id = "honey_mead"
+rarity = "key"
+base_drop_rate = 0.0
+display_name = "蜂蜜酒"
+cat = "key"
+effect = "吉德用烈火蜂蜜調出的烈酒，一口下肚，站崗的看守就忘了自己在站崗。（第一章小節5）"
+
 [sub_resource type="Resource" id="Resource_001vv"]
 script = ExtResource("6_gqqnr")
 id = "miner_helmet"
@@ -2519,7 +2598,7 @@ base = {
 "int": 14.0,
 "str": 30.0
 }
-start_level = 20
+start_level = 35
 start_eq = {
 "armor": "leather_vest",
 "boots": "swift_boots",
@@ -2609,9 +2688,9 @@ target = "enemy"
 [resource]
 script = ExtResource("9_vcxsc")
 party = Array[ExtResource("8_j105i")]([SubResource("Resource_pcq0f"), SubResource("Resource_s60oe"), SubResource("Resource_n1ogd")])
-equipment = Array[ExtResource("5_vtoea")]([SubResource("Resource_qyo2q"), SubResource("Resource_csqks"), SubResource("Resource_1msp4"), SubResource("Resource_e6sw3"), SubResource("Resource_7idvq"), SubResource("Resource_ydp3b"), SubResource("Resource_i8tu0"), SubResource("Resource_uvrlw"), SubResource("Resource_tnpb5"), SubResource("Resource_mugyq"), SubResource("Resource_daxiu"), SubResource("Resource_atlte"), SubResource("Resource_dlev1"), SubResource("Resource_4k0mt"), SubResource("Resource_0q8wu"), SubResource("Resource_e8jw0"), SubResource("Resource_c1ck4"), SubResource("Resource_epqbo"), SubResource("Resource_j8bx3"), SubResource("Resource_dpwxo"), SubResource("Resource_or0i1"), SubResource("Resource_gen_28e25"), SubResource("Resource_gen_569b8"), SubResource("Resource_gen_9f48a"), SubResource("Resource_gen_de479"), SubResource("Resource_gen_c3e26"), SubResource("Resource_gen_9b633"), SubResource("Resource_gen_d4640"), SubResource("Resource_gen_6f1a8"), SubResource("Resource_gen_09aa9"), SubResource("Resource_gen_25060"), SubResource("Resource_gen_f73cd"), SubResource("Resource_gen_47214"), SubResource("Resource_gen_17617"), SubResource("Resource_gen_7594d"), SubResource("Resource_gen_83565"), SubResource("Resource_gen_c5ab6"), SubResource("Resource_gen_bbef4"), SubResource("Resource_gen_9088a"), SubResource("Resource_gen_a504c"), SubResource("Resource_gen_a9df8"), SubResource("Resource_gen_46c10"), SubResource("Resource_gen_e7b4c"), SubResource("Resource_gen_2e6bb"), SubResource("Resource_gen_f80b4"), SubResource("Resource_gen_1dcab"), SubResource("Resource_gen_f92db"), SubResource("Resource_gen_9dfde"), SubResource("Resource_gen_ad6f2"), SubResource("Resource_gen_56d6f"), SubResource("Resource_gen_7ad84"), SubResource("Resource_gen_6cb4f"), SubResource("Resource_gen_7a1d0"), SubResource("Resource_gen_a8461"), SubResource("Resource_gen_de572"), SubResource("Resource_gen_176e5"), SubResource("Resource_gen_09eba"), SubResource("Resource_gen_19eab"), SubResource("Resource_gen_50b50"), SubResource("Resource_gen_9a291"), SubResource("Resource_gen_a5408"), SubResource("Resource_gen_66b04"), SubResource("Resource_gen_6da2c"), SubResource("Resource_gen_ef3f4"), SubResource("Resource_gen_adc60"), SubResource("Resource_gen_60a5d"), SubResource("Resource_gen_9a9f7"), SubResource("Resource_gen_683d4"), SubResource("Resource_gen_1eafc"), SubResource("Resource_gen_0cced"), SubResource("Resource_gen_f0d37"), SubResource("Resource_gen_fe049"), SubResource("Resource_gen_0729e"), SubResource("Resource_gen_789c7"), SubResource("Resource_gen_e06f3"), SubResource("Resource_gen_ecd4a"), SubResource("Resource_gen_671dc"), SubResource("Resource_gen_3d5cd"), SubResource("Resource_gen_aa041"), SubResource("Resource_gen_f564f"), SubResource("Resource_gen_bafcb"), SubResource("Resource_gen_4f4b4"), SubResource("Resource_gen_5da1a"), SubResource("Resource_gen_db63f"), SubResource("Resource_gen_dac37"), SubResource("Resource_gen_6fc94"), SubResource("Resource_gen_df06f"), SubResource("Resource_gen_dd725"), SubResource("Resource_gen_95989"), SubResource("Resource_gen_76d2c"), SubResource("Resource_gen_fc5a9"), SubResource("Resource_gen_c1f85"), SubResource("Resource_gen_cd472"), SubResource("Resource_gen_930b9"), SubResource("Resource_gen_f50c8"), SubResource("Resource_gen_c0c07"), SubResource("Resource_gen_c6753"), SubResource("Resource_gen_8575c"), SubResource("Resource_gen_1d00b"), SubResource("Resource_gen_71cbe"), SubResource("Resource_gen_24045"), SubResource("Resource_gen_06d75"), SubResource("Resource_gen_0ceed"), SubResource("Resource_gen_c0fdc"), SubResource("Resource_gen_5947e"), SubResource("Resource_gen_bb873"), SubResource("Resource_gen_74dd1"), SubResource("Resource_gen_8d42c"), SubResource("Resource_gen_e8880"), SubResource("Resource_gen_75f6e"), SubResource("Resource_gen_53e9c"), SubResource("Resource_gen_26961"), SubResource("Resource_gen_dc3eb"), SubResource("Resource_gen_aeee1"), SubResource("Resource_gen_ddbdc"), SubResource("Resource_gen_d7010")])
+equipment = Array[ExtResource("5_vtoea")]([SubResource("Resource_qyo2q"), SubResource("Resource_csqks"), SubResource("Resource_1msp4"), SubResource("Resource_e6sw3"), SubResource("Resource_7idvq"), SubResource("Resource_ydp3b"), SubResource("Resource_i8tu0"), SubResource("Resource_uvrlw"), SubResource("Resource_tnpb5"), SubResource("Resource_mugyq"), SubResource("Resource_daxiu"), SubResource("Resource_atlte"), SubResource("Resource_dlev1"), SubResource("Resource_4k0mt"), SubResource("Resource_0q8wu"), SubResource("Resource_e8jw0"), SubResource("Resource_c1ck4"), SubResource("Resource_epqbo"), SubResource("Resource_j8bx3"), SubResource("Resource_dpwxo"), SubResource("Resource_or0i1"), SubResource("Resource_gen_28e25"), SubResource("Resource_gen_569b8"), SubResource("Resource_gen_9f48a"), SubResource("Resource_gen_de479"), SubResource("Resource_gen_c3e26"), SubResource("Resource_gen_9b633"), SubResource("Resource_gen_d4640"), SubResource("Resource_gen_6f1a8"), SubResource("Resource_gen_09aa9"), SubResource("Resource_gen_25060"), SubResource("Resource_gen_f73cd"), SubResource("Resource_gen_47214"), SubResource("Resource_gen_17617"), SubResource("Resource_gen_7594d"), SubResource("Resource_gen_83565"), SubResource("Resource_gen_c5ab6"), SubResource("Resource_gen_bbef4"), SubResource("Resource_gen_9088a"), SubResource("Resource_gen_a504c"), SubResource("Resource_gen_a9df8"), SubResource("Resource_gen_46c10"), SubResource("Resource_gen_e7b4c"), SubResource("Resource_gen_2e6bb"), SubResource("Resource_gen_f80b4"), SubResource("Resource_gen_1dcab"), SubResource("Resource_gen_f92db"), SubResource("Resource_gen_9dfde"), SubResource("Resource_gen_ad6f2"), SubResource("Resource_gen_56d6f"), SubResource("Resource_gen_7ad84"), SubResource("Resource_gen_6cb4f"), SubResource("Resource_gen_7a1d0"), SubResource("Resource_gen_a8461"), SubResource("Resource_gen_de572"), SubResource("Resource_gen_176e5"), SubResource("Resource_gen_09eba"), SubResource("Resource_gen_19eab"), SubResource("Resource_gen_50b50"), SubResource("Resource_gen_9a291"), SubResource("Resource_gen_a5408"), SubResource("Resource_gen_66b04"), SubResource("Resource_gen_6da2c"), SubResource("Resource_gen_ef3f4"), SubResource("Resource_gen_adc60"), SubResource("Resource_gen_60a5d"), SubResource("Resource_gen_9a9f7"), SubResource("Resource_gen_683d4"), SubResource("Resource_gen_1eafc"), SubResource("Resource_gen_0cced"), SubResource("Resource_gen_f0d37"), SubResource("Resource_gen_fe049"), SubResource("Resource_gen_0729e"), SubResource("Resource_gen_789c7"), SubResource("Resource_gen_e06f3"), SubResource("Resource_gen_ecd4a"), SubResource("Resource_gen_671dc"), SubResource("Resource_gen_3d5cd"), SubResource("Resource_gen_aa041"), SubResource("Resource_gen_f564f"), SubResource("Resource_gen_bafcb"), SubResource("Resource_gen_4f4b4"), SubResource("Resource_gen_5da1a"), SubResource("Resource_gen_db63f"), SubResource("Resource_gen_dac37"), SubResource("Resource_gen_6fc94"), SubResource("Resource_gen_df06f"), SubResource("Resource_gen_dd725"), SubResource("Resource_gen_95989"), SubResource("Resource_gen_76d2c"), SubResource("Resource_gen_fc5a9"), SubResource("Resource_gen_c1f85"), SubResource("Resource_gen_cd472"), SubResource("Resource_gen_930b9"), SubResource("Resource_gen_f50c8"), SubResource("Resource_gen_c0c07"), SubResource("Resource_gen_c6753"), SubResource("Resource_gen_8575c"), SubResource("Resource_gen_1d00b"), SubResource("Resource_gen_71cbe"), SubResource("Resource_gen_24045"), SubResource("Resource_gen_06d75"), SubResource("Resource_gen_0ceed"), SubResource("Resource_gen_c0fdc"), SubResource("Resource_gen_5947e"), SubResource("Resource_gen_bb873"), SubResource("Resource_gen_74dd1"), SubResource("Resource_gen_8d42c"), SubResource("Resource_gen_e8880"), SubResource("Resource_gen_75f6e"), SubResource("Resource_gen_53e9c"), SubResource("Resource_gen_26961"), SubResource("Resource_gen_dc3eb"), SubResource("Resource_gen_aeee1"), SubResource("Resource_gen_ddbdc"), SubResource("Resource_gen_d7010"), SubResource("Resource_hankblade"), SubResource("Resource_marthring"), SubResource("Resource_advboots")])
 skills = Array[ExtResource("11_ksis1")]([SubResource("Resource_x4swj"), SubResource("Resource_y2ggn"), SubResource("Resource_qgsim"), SubResource("Resource_5234b"), SubResource("Resource_macem")])
-items = Array[ExtResource("6_gqqnr")]([SubResource("Resource_x6djv"), SubResource("Resource_pni1o"), SubResource("Resource_khpay"), SubResource("Resource_cuqn5"), SubResource("Resource_kkpf5"), SubResource("Resource_2mls8"), SubResource("Resource_iqrol"), SubResource("Resource_wfoeg"), SubResource("Resource_ww16q"), SubResource("Resource_yy8o7"), SubResource("Resource_nhh40"), SubResource("Resource_t0u0x"), SubResource("Resource_ldt1x"), SubResource("Resource_x4fll"), SubResource("Resource_q20xv"), SubResource("Resource_544ya"), SubResource("Resource_001vv"), SubResource("Resource_4o5ij")])
+items = Array[ExtResource("6_gqqnr")]([SubResource("Resource_x6djv"), SubResource("Resource_pni1o"), SubResource("Resource_khpay"), SubResource("Resource_cuqn5"), SubResource("Resource_kkpf5"), SubResource("Resource_2mls8"), SubResource("Resource_iqrol"), SubResource("Resource_wfoeg"), SubResource("Resource_ww16q"), SubResource("Resource_yy8o7"), SubResource("Resource_nhh40"), SubResource("Resource_t0u0x"), SubResource("Resource_ldt1x"), SubResource("Resource_x4fll"), SubResource("Resource_q20xv"), SubResource("Resource_544ya"), SubResource("Resource_001vv"), SubResource("Resource_4o5ij"), SubResource("Resource_fh01"), SubResource("Resource_hm01")])
 enemies = Array[ExtResource("4_hoq51")]([SubResource("Resource_v4bx3"), SubResource("Resource_2d226"), SubResource("Resource_38aoo"), SubResource("Resource_1f648"), SubResource("Resource_7ak06"), SubResource("Resource_auvyr"), SubResource("Resource_j7mbp"), SubResource("Resource_wykaa"), SubResource("Resource_dfnc1"), SubResource("Resource_sahc2"), SubResource("Resource_vjhig"), SubResource("Resource_hnf0v"), SubResource("Resource_1s8rn"), SubResource("Resource_cs8nw"), SubResource("Resource_f55ks")])
 encounters = Array[ExtResource("3_hsbra")]([SubResource("Resource_ll363"), SubResource("Resource_7wl3i"), SubResource("Resource_idhf2"), SubResource("Resource_olkl2"), SubResource("Resource_s2xj1"), SubResource("Resource_liudx"), SubResource("Resource_sb6r6"), SubResource("Resource_vyme8"), SubResource("Resource_vcnnr"), SubResource("Resource_1bx6f"), SubResource("Resource_hsbra"), SubResource("Resource_hoq51")])
 shops = Array[ExtResource("10_08ale")]([SubResource("Resource_drtlc"), SubResource("Resource_ov5de")])

@@ -1,0 +1,4230 @@
+{
+  "game": {
+    "derived": {
+      "hpBase": 30.0,
+      "hpPerStr": 8.0,
+      "mpBase": 8.0,
+      "mpPerInt": 5.0,
+      "weaponAtk": 6.0,
+      "pointsPerLevel": 3.0,
+      "skillPointsPerLevel": 1.0,
+      "skillMaxLv": 10.0,
+      "skillPowerPerLv": 0.15,
+      "expBase": 10.0,
+      "expCoef": 8.0,
+      "expPow": 1.4,
+      "matkPerInt": 2.0,
+      "mdefPerInt": 0.8,
+      "dodgePerAgi": 1.5,
+      "dodgeCap": 30.0,
+      "critBase": 6.25,
+      "critPerAgi": 0.15
+    },
+    "pacing": {
+      "partySize": 2,
+      "maps": {
+        "cave": {
+          "battles": 24.0,
+          "entryLv": 5.0,
+          "targetLv": 7.0
+        },
+        "eforest1": {
+          "battles": 14,
+          "entryLv": 1,
+          "targetLv": 3
+        },
+        "eforest2": {
+          "battles": 16,
+          "entryLv": 2,
+          "targetLv": 4
+        },
+        "eforest3": {
+          "battles": 18,
+          "entryLv": 3,
+          "targetLv": 5
+        },
+        "forest": {
+          "battles": 14.0,
+          "entryLv": 1.0,
+          "targetLv": 2.0
+        },
+        "forest2": {
+          "battles": 16.0,
+          "entryLv": 2.0,
+          "targetLv": 3.0
+        },
+        "mine": {
+          "battles": 24.0,
+          "entryLv": 3.0,
+          "targetLv": 5.0
+        },
+        "tutorial": {
+          "battles": 3.0,
+          "entryLv": 1.0,
+          "party": 1.0,
+          "targetLv": 2.0
+        }
+      }
+    },
+    "party": [
+      {
+        "id": "ludo",
+        "name": "路德",
+        "cls": "explorer",
+        "main": "str",
+        "lv": 1,
+        "guest": false,
+        "base": {
+          "agi": 3.0,
+          "int": 2.0,
+          "str": 4.0
+        },
+        "growth": {
+          "agi": 1.0,
+          "int": 1.0,
+          "str": 2.0
+        },
+        "eq": {
+          "armor": "traveler_garb",
+          "boots": "leather_boots",
+          "weapon": "short_sword",
+          "wrist": "cloth_wraps"
+        },
+        "story": [
+          "芳蕾鎮一對退休冒險者——漢克與瑪莎——的兒子，十五歲，還有個小一歲的妹妹瑪琳。",
+          "從小聽著父母當年闖蕩的冒險故事長大，一心嚮往外面的世界，",
+          "行動總是比思考快半拍，闖禍後道歉的速度倒是全鎮最快。",
+          "偷偷跟著借宿鎮上的冒險者亞倫進入北方礦山，",
+          "在深處遭遇了不該存在的魔影——亞倫為掩護他而下落不明。",
+          "身上的蓋婭女神記號，會隨著冒險一分分變亮。",
+          "「我要成為真正的冒險者，查出那一天的真相。」"
+        ]
+      },
+      {
+        "id": "marin",
+        "name": "瑪琳",
+        "cls": "explorer",
+        "main": "agi",
+        "lv": 1,
+        "guest": false,
+        "base": {
+          "agi": 4.0,
+          "int": 3.0,
+          "str": 3.0
+        },
+        "growth": {
+          "agi": 2.0,
+          "int": 1.0,
+          "str": 1.0
+        },
+        "eq": {
+          "acc1": "agate_charm",
+          "armor": "traveler_garb",
+          "boots": "leather_boots",
+          "weapon": "hunting_knife"
+        },
+        "story": [
+          "路德的妹妹，小他一歲，同為退休冒險者漢克與瑪莎之女。",
+          "冷靜務實，是路德闖禍前的最後一道煞車——雖然常常煞不住。",
+          "身手靈巧、主敏捷，關鍵時刻比誰都可靠。",
+          "戴著的瑪瑙護符，是母親瑪莎在她出發前偷偷塞進行囊的。",
+          "礦山意外後，看著把自己關在房裡的路德，她只說了一句：",
+          "「要去就一起去。你一個人，我不放心。」"
+        ]
+      },
+      {
+        "id": "alan",
+        "name": "亞倫",
+        "cls": "veteran",
+        "main": "str",
+        "lv": 35,
+        "guest": true,
+        "base": {
+          "agi": 24.0,
+          "int": 14.0,
+          "str": 30.0
+        },
+        "growth": null,
+        "eq": {
+          "armor": "leather_vest",
+          "boots": "swift_boots",
+          "weapon": "iron_sword",
+          "wrist": "iron_bracer"
+        },
+        "story": [
+          "借宿芳蕾鎮的資深冒險者，二十六歲。平時輕浮、吊兒郎當，遇到麻煩第一個想偷懶——但實力貨真價實。",
+          "年輕當菜鳥時受過路德的退休冒險者父母照顧，欠他們一份人情，",
+          "因此把這鎮上的少年當弟弟看，也默許了他的跟隨。",
+          "接下公會「調查北方礦山」的委託才動身，路德偷偷跟了上去。",
+          "礦山深處遭遇異變魔影時，這個最愛偷懶的人卻擋在路德身前——",
+          "「快跑！把這裡的事回報公會！」",
+          "此後下落不明。他留下的劍與背影，成了路德的目標。"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "id": "power_strike",
+        "name": "強力斬",
+        "cls": "explorer",
+        "lv": 1,
+        "mp": 3,
+        "kind": "damage",
+        "attr": "str",
+        "mult": 2.0,
+        "flat": 3.0,
+        "target": "enemy"
+      },
+      {
+        "id": "swift_stab",
+        "name": "疾風刺",
+        "cls": "explorer",
+        "lv": 2,
+        "mp": 4,
+        "kind": "damage",
+        "attr": "agi",
+        "mult": 2.1,
+        "flat": 2.0,
+        "target": "enemy"
+      },
+      {
+        "id": "heal_wind",
+        "name": "治癒之風",
+        "cls": "explorer",
+        "lv": 3,
+        "mp": 5,
+        "kind": "heal",
+        "attr": "int",
+        "mult": 2.0,
+        "flat": 18.0,
+        "target": "ally"
+      },
+      {
+        "id": "whirl",
+        "name": "旋風斬",
+        "cls": "explorer",
+        "lv": 5,
+        "mp": 8,
+        "kind": "damage",
+        "attr": "str",
+        "mult": 1.1,
+        "flat": 2.0,
+        "target": "all_enemies"
+      },
+      {
+        "id": "flash",
+        "name": "秘劍・一閃",
+        "cls": "veteran",
+        "lv": 1,
+        "mp": 10,
+        "kind": "damage",
+        "attr": "str",
+        "mult": 1.8,
+        "flat": 15.0,
+        "target": "enemy"
+      }
+    ],
+    "equipment": [
+      {
+        "id": "short_sword",
+        "name": "短劍",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 40,
+        "sell": 12,
+        "stats": {
+          "patk": 2.0
+        },
+        "desc": "鎮上鐵匠隨手打的入門短劍，輕便好上手。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "hunting_knife",
+        "name": "獵刀",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 50,
+        "sell": 15,
+        "stats": {
+          "crit": 4.0,
+          "patk": 1.0
+        },
+        "desc": "處理野味用的獵刀，攻擊低但容易刺中要害。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "iron_sword",
+        "name": "鐵劍",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 120,
+        "sell": 36,
+        "stats": {
+          "patk": 6.0
+        },
+        "desc": "扎實的全鐵長劍，冒險者的標準配備。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "traveler_garb",
+        "name": "旅行衣",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 35,
+        "sell": 10,
+        "stats": {
+          "pdef": 2.0
+        },
+        "desc": "耐磨的旅人布衣，擋不了太多但透氣。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "leather_vest",
+        "name": "皮革護胸",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 90,
+        "sell": 27,
+        "stats": {
+          "pdef": 5.0
+        },
+        "desc": "鞣製皮革製的護胸，兼顧防護與靈活。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "leather_boots",
+        "name": "皮革長靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 15,
+        "sell": 4,
+        "stats": {
+          "pdef": 1.0
+        },
+        "desc": "結實的皮靴，長途跋涉不磨腳。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "swift_boots",
+        "name": "疾風靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 60,
+        "sell": 18,
+        "stats": {
+          "dodge": 4.0
+        },
+        "desc": "輕量化的軟皮靴，步伐輕盈、易於閃避。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "cloth_wraps",
+        "name": "布質護腕",
+        "slot": "wrist",
+        "tier": 1,
+        "buy": 15,
+        "sell": 4,
+        "stats": {
+          "pdef": 1.0
+        },
+        "desc": "纏在手腕上的粗布，聊勝於無的護具。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "iron_bracer",
+        "name": "鐵護腕",
+        "slot": "wrist",
+        "tier": 1,
+        "buy": 70,
+        "sell": 21,
+        "stats": {
+          "patk": 2.0,
+          "pdef": 1.0
+        },
+        "desc": "加了鐵片的護腕，格擋之餘還能增添揮劍力道。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "hunter_bracer",
+        "name": "獵人護腕",
+        "slot": "wrist",
+        "tier": 1,
+        "buy": 40,
+        "sell": 12,
+        "stats": {
+          "crit": 3.0,
+          "dodge": 1.0
+        },
+        "desc": "獵人慣用的護腕，助你抓準破綻、側身避擊。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "agate_charm",
+        "name": "瑪瑙護符",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 50,
+        "sell": 15,
+        "stats": {
+          "mdef": 3.0
+        },
+        "desc": "朵拉塞給瑪琳的瑪瑙護符，能抵禦邪異的力量。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "vital_ring",
+        "name": "活力戒指",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 80,
+        "sell": 24,
+        "stats": {
+          "hp": 20.0
+        },
+        "desc": "溫熱的紅玉戒指，配戴時體力更加充沛。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "focus_earring",
+        "name": "凝神耳環",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 90,
+        "sell": 27,
+        "stats": {
+          "matk": 2.0,
+          "mp": 10.0
+        },
+        "desc": "藍晶耳環，凝神靜氣，強化魔力循環。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "lucky_coin",
+        "name": "幸運銅幣",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 45,
+        "sell": 13,
+        "stats": {
+          "crit": 2.0,
+          "dodge": 2.0
+        },
+        "desc": "磨得發亮的老銅幣，據說能招來一點好運。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "steel_sword",
+        "name": "鋼劍",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 260,
+        "sell": 78,
+        "stats": {
+          "patk": 10.0
+        },
+        "desc": "漢克精心鍛造的鋼劍，鋒利沉穩，第二章的主力武器。",
+        "attr": "str",
+        "rarity": "rare"
+      },
+      {
+        "id": "keen_dagger",
+        "name": "銳鋒匕",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 150,
+        "sell": 45,
+        "stats": {
+          "crit": 8.0,
+          "patk": 4.0
+        },
+        "desc": "刃薄如紙的匕首，靈巧者的利器，會心一擊機率極高。",
+        "attr": "agi",
+        "rarity": "rare"
+      },
+      {
+        "id": "chainmail",
+        "name": "鎖子甲",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 200,
+        "sell": 60,
+        "stats": {
+          "pdef": 9.0
+        },
+        "desc": "細環相扣的鎖子甲，防護扎實但略沉。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "mage_robe",
+        "name": "法師袍",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 190,
+        "sell": 57,
+        "stats": {
+          "matk": 3.0,
+          "mp": 15.0,
+          "pdef": 3.0
+        },
+        "desc": "織入符文的法師長袍，擴充魔力並提升法術威力。",
+        "attr": "int",
+        "rarity": "common"
+      },
+      {
+        "id": "steel_bracer",
+        "name": "精鋼護腕",
+        "slot": "wrist",
+        "tier": 2,
+        "buy": 90,
+        "sell": 27,
+        "stats": {
+          "patk": 3.0,
+          "pdef": 2.0
+        },
+        "desc": "精鋼打造的護腕，攻防兼備的升級品。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "silver_boots",
+        "name": "銀靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 80,
+        "sell": 24,
+        "stats": {
+          "dodge": 3.0,
+          "pdef": 2.0
+        },
+        "desc": "鑲銀的輕靴，兼顧閃避與防護。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "guardian_pendant",
+        "name": "守護墜飾",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 120,
+        "sell": 36,
+        "stats": {
+          "mdef": 3.0,
+          "pdef": 3.0
+        },
+        "desc": "刻有守護紋章的墜飾，同時強化物防與魔防。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "bronze_sword",
+        "name": "銅劍",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 70,
+        "sell": 21,
+        "stats": {
+          "patk": 4.0
+        },
+        "desc": "略帶青綠鏽斑的銅劍，比短劍扎實一些。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "refined_steel_sword",
+        "name": "精鋼劍",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 180,
+        "sell": 54,
+        "stats": {
+          "patk": 8.0
+        },
+        "desc": "反覆回火打造的精鋼劍身，刃口更持久鋒利。",
+        "attr": "str",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "mithril_sword",
+        "name": "秘銀劍",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 340,
+        "sell": 102,
+        "stats": {
+          "patk": 13.0
+        },
+        "desc": "混入秘銀的合金劍，輕盈卻更具穿透力。",
+        "attr": "str",
+        "rarity": "rare"
+      },
+      {
+        "id": "dragonfang_sword",
+        "name": "龍牙劍",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 480,
+        "sell": 144,
+        "stats": {
+          "patk": 16.0
+        },
+        "desc": "以巨龍遺牙磨製劍鋒，據說能撕裂厚甲。",
+        "attr": "str",
+        "rarity": "epic"
+      },
+      {
+        "id": "sacred_greatsword",
+        "name": "聖銀大劍",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 650,
+        "sell": 195,
+        "stats": {
+          "patk": 20.0
+        },
+        "desc": "教會秘藏的聖銀大劍，唯有力量足夠者能揮動。",
+        "attr": "str",
+        "rarity": "epic"
+      },
+      {
+        "id": "honed_knife",
+        "name": "磨尖小刀",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 65,
+        "sell": 20,
+        "stats": {
+          "crit": 5.0,
+          "patk": 1.0
+        },
+        "desc": "刻意磨薄的小刀，找破綻的手感更順了。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "shadow_claw",
+        "name": "影襲爪",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 90,
+        "sell": 27,
+        "stats": {
+          "crit": 6.0,
+          "patk": 2.0
+        },
+        "desc": "貼合指節的鋼爪，適合貼身連續突刺。",
+        "attr": "agi",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "twin_crescent",
+        "name": "雙月刃",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 120,
+        "sell": 36,
+        "stats": {
+          "crit": 7.0,
+          "patk": 3.0
+        },
+        "desc": "一體成形的雙刃彎刀，出手角度難以預測。",
+        "attr": "agi",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "shade_shortblade",
+        "name": "幽影短刃",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 220,
+        "sell": 66,
+        "stats": {
+          "crit": 10.0,
+          "patk": 5.0
+        },
+        "desc": "吸光的暗色刃面，揮動間幾乎無聲。",
+        "attr": "agi",
+        "rarity": "rare"
+      },
+      {
+        "id": "windfang_dagger",
+        "name": "破空迅牙",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 380,
+        "sell": 114,
+        "stats": {
+          "crit": 13.0,
+          "patk": 6.0
+        },
+        "desc": "削鐵如泥的迅捷短劍，一擊直取要害。",
+        "attr": "agi",
+        "rarity": "epic"
+      },
+      {
+        "id": "nightfall_edge",
+        "name": "絕命夜刃",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 520,
+        "sell": 156,
+        "stats": {
+          "crit": 16.0,
+          "patk": 8.0
+        },
+        "desc": "傳說中刺客一族的夜刃，見血封喉。",
+        "attr": "agi",
+        "rarity": "epic"
+      },
+      {
+        "id": "apprentice_wand",
+        "name": "見習法杖",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 55,
+        "sell": 16,
+        "stats": {
+          "matk": 2.0,
+          "mp": 5.0
+        },
+        "desc": "學徒用的簡易法杖，勉強能引導魔力。",
+        "attr": "int",
+        "rarity": "common"
+      },
+      {
+        "id": "oak_wand",
+        "name": "橡木短杖",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 85,
+        "sell": 26,
+        "stats": {
+          "matk": 4.0,
+          "mp": 8.0
+        },
+        "desc": "橡木削製的短杖，適合初階咒語施放。",
+        "attr": "int",
+        "rarity": "common"
+      },
+      {
+        "id": "rune_staff",
+        "name": "符文法杖",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 135,
+        "sell": 40,
+        "stats": {
+          "matk": 6.0,
+          "mp": 11.0
+        },
+        "desc": "刻滿符文的法杖，魔力導引效率更好。",
+        "attr": "int",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "crystal_focus",
+        "name": "水晶魔導器",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 190,
+        "sell": 57,
+        "stats": {
+          "matk": 8.0,
+          "mp": 15.0
+        },
+        "desc": "鑲嵌小型水晶的魔導器，共鳴後威力倍增。",
+        "attr": "int",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "sage_staff",
+        "name": "賢者長杖",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 290,
+        "sell": 87,
+        "stats": {
+          "matk": 10.0,
+          "mp": 20.0
+        },
+        "desc": "賢者議會認證的長杖，法力運行更加穩定。",
+        "attr": "int",
+        "rarity": "rare"
+      },
+      {
+        "id": "starlight_staff",
+        "name": "星辰法杖",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 400,
+        "sell": 120,
+        "stats": {
+          "matk": 13.0,
+          "mp": 26.0
+        },
+        "desc": "杖頭封存著星辰碎光，夜間施法尤其強大。",
+        "attr": "int",
+        "rarity": "rare"
+      },
+      {
+        "id": "abyssal_scepter",
+        "name": "深淵權杖",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 560,
+        "sell": 168,
+        "stats": {
+          "matk": 16.0,
+          "mp": 32.0
+        },
+        "desc": "來歷不明的黑色權杖，蘊藏著深不見底的魔力。",
+        "attr": "int",
+        "rarity": "epic"
+      },
+      {
+        "id": "goddess_whisper_staff",
+        "name": "女神低語法杖",
+        "slot": "weapon",
+        "tier": 2,
+        "buy": 750,
+        "sell": 225,
+        "stats": {
+          "matk": 20.0,
+          "mp": 40.0
+        },
+        "desc": "傳說能聽見女神低語的至聖法杖，魔力近乎無盡。",
+        "attr": "int",
+        "rarity": "epic"
+      },
+      {
+        "id": "hardened_vest",
+        "name": "硬皮背心",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 60,
+        "sell": 18,
+        "stats": {
+          "pdef": 4.0
+        },
+        "desc": "加了硬化處理的皮背心，抵禦鈍器更有效。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "riveted_cuirass",
+        "name": "鉚釘胸甲",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 140,
+        "sell": 42,
+        "stats": {
+          "pdef": 7.0
+        },
+        "desc": "以鉚釘固定的胸甲，防禦扎實，需要練習才能靈活行動。",
+        "attr": "str",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "plate_cuirass",
+        "name": "板金胸甲",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 320,
+        "sell": 96,
+        "stats": {
+          "pdef": 12.0
+        },
+        "desc": "厚重的板金打造，正面幾乎無懈可擊。",
+        "attr": "str",
+        "rarity": "rare"
+      },
+      {
+        "id": "dragonscale_mail",
+        "name": "龍鱗甲",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 460,
+        "sell": 138,
+        "stats": {
+          "pdef": 15.0
+        },
+        "desc": "以巨龍鱗片編織的甲冑，刀劍難以穿透。",
+        "attr": "str",
+        "rarity": "epic"
+      },
+      {
+        "id": "paladin_plate",
+        "name": "聖騎士鎧",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 640,
+        "sell": 192,
+        "stats": {
+          "pdef": 19.0
+        },
+        "desc": "聖騎士團傳承的全身鎧甲，守護之力驚人。",
+        "attr": "str",
+        "rarity": "epic"
+      },
+      {
+        "id": "light_tunic",
+        "name": "輕布衣",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 30,
+        "sell": 9,
+        "stats": {
+          "dodge": 1.0,
+          "pdef": 1.0
+        },
+        "desc": "剪裁貼身的輕薄布衣，方便靈活行動。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "leather_bodysuit",
+        "name": "皮革緊身衣",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 55,
+        "sell": 16,
+        "stats": {
+          "dodge": 2.0,
+          "pdef": 1.0
+        },
+        "desc": "貼合身形的皮革緊身衣，不影響身手。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "ranger_coat",
+        "name": "遊俠外套",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 95,
+        "sell": 28,
+        "stats": {
+          "dodge": 3.0,
+          "pdef": 2.0
+        },
+        "desc": "遊俠慣穿的多層外套，兼顧輕便與防護。",
+        "attr": "agi",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "nightwalker_garb",
+        "name": "夜行輕甲",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 150,
+        "sell": 45,
+        "stats": {
+          "dodge": 4.0,
+          "pdef": 2.0
+        },
+        "desc": "為潛行設計的輕甲，行動間幾乎不發出聲響。",
+        "attr": "agi",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "gale_wrap",
+        "name": "疾風束衣",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 260,
+        "sell": 78,
+        "stats": {
+          "dodge": 6.0,
+          "pdef": 3.0
+        },
+        "desc": "以特殊纖維編織，穿上後步伐輕若疾風。",
+        "attr": "agi",
+        "rarity": "rare"
+      },
+      {
+        "id": "phantom_cloak_armor",
+        "name": "幻影披風甲",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 360,
+        "sell": 108,
+        "stats": {
+          "dodge": 8.0,
+          "pdef": 3.0
+        },
+        "desc": "披風下若隱若現的輕甲，模糊敵人的視線判斷。",
+        "attr": "agi",
+        "rarity": "rare"
+      },
+      {
+        "id": "shadowdance_armor",
+        "name": "影舞輕鎧",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 500,
+        "sell": 150,
+        "stats": {
+          "dodge": 10.0,
+          "pdef": 4.0
+        },
+        "desc": "傳說中舞者刺客的輕鎧，幾乎能與影子融為一體。",
+        "attr": "agi",
+        "rarity": "epic"
+      },
+      {
+        "id": "windspirit_garb",
+        "name": "風靈之衣",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 680,
+        "sell": 204,
+        "stats": {
+          "dodge": 13.0,
+          "pdef": 5.0
+        },
+        "desc": "傳聞由風之精靈織就，穿上者身法快若疾風。",
+        "attr": "agi",
+        "rarity": "epic"
+      },
+      {
+        "id": "apprentice_robe",
+        "name": "學徒長袍",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 45,
+        "sell": 14,
+        "stats": {
+          "matk": 1.0,
+          "mp": 5.0
+        },
+        "desc": "魔法學徒的入門長袍，勉強能穩定魔力波動。",
+        "attr": "int",
+        "rarity": "common"
+      },
+      {
+        "id": "warded_robe",
+        "name": "織符長袍",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 75,
+        "sell": 22,
+        "stats": {
+          "matk": 2.0,
+          "mp": 8.0
+        },
+        "desc": "縫入基礎防護符文的長袍，兼顧法力與安全。",
+        "attr": "int",
+        "rarity": "common"
+      },
+      {
+        "id": "starweave_robe",
+        "name": "星紋披袍",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 120,
+        "sell": 36,
+        "stats": {
+          "matk": 2.0,
+          "mp": 11.0,
+          "pdef": 1.0
+        },
+        "desc": "織入星紋圖案的披袍，據說能安定心神。",
+        "attr": "int",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "arcane_robe",
+        "name": "秘術長袍",
+        "slot": "armor",
+        "tier": 1,
+        "buy": 165,
+        "sell": 50,
+        "stats": {
+          "matk": 3.0,
+          "mp": 13.0,
+          "pdef": 2.0
+        },
+        "desc": "秘術師公會特製的長袍，法力運轉更為順暢。",
+        "attr": "int",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "sage_robe",
+        "name": "賢者長袍",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 300,
+        "sell": 90,
+        "stats": {
+          "matk": 4.0,
+          "mp": 19.0,
+          "pdef": 3.0
+        },
+        "desc": "賢者議會的正式禮袍，法力儲備遠勝常人。",
+        "attr": "int",
+        "rarity": "rare"
+      },
+      {
+        "id": "starlight_robe",
+        "name": "星輝法袍",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 440,
+        "sell": 132,
+        "stats": {
+          "matk": 6.0,
+          "mp": 24.0,
+          "pdef": 4.0
+        },
+        "desc": "綴滿星輝碎片的法袍，施法時彷彿夜空流轉。",
+        "attr": "int",
+        "rarity": "epic"
+      },
+      {
+        "id": "profound_arcane_robe",
+        "name": "深奧秘法袍",
+        "slot": "armor",
+        "tier": 2,
+        "buy": 600,
+        "sell": 180,
+        "stats": {
+          "matk": 8.0,
+          "mp": 30.0,
+          "pdef": 5.0
+        },
+        "desc": "封存深奧咒文的至高法袍，魔力近乎無窮。",
+        "attr": "int",
+        "rarity": "epic"
+      },
+      {
+        "id": "studded_boots",
+        "name": "釘底靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 35,
+        "sell": 10,
+        "stats": {
+          "pdef": 2.0
+        },
+        "desc": "鞋底加了鐵釘的靴子，踩踏更穩固。",
+        "attr": "str",
+        "rarity": "common"
+      },
+      {
+        "id": "traveler_greaves",
+        "name": "行者重靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 70,
+        "sell": 21,
+        "stats": {
+          "pdef": 3.0
+        },
+        "desc": "厚實的皮革重靴，長途跋涉更耐磨損。",
+        "attr": "str",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "iron_ringed_boots",
+        "name": "鐵環靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 110,
+        "sell": 33,
+        "stats": {
+          "pdef": 4.0
+        },
+        "desc": "鞋面嵌著鐵環的靴子，多一分踢擊的分量。",
+        "attr": "str",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "steel_greaves",
+        "name": "精鋼護靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 190,
+        "sell": 57,
+        "stats": {
+          "pdef": 5.0
+        },
+        "desc": "精鋼打造的護靴，正面防禦相當可靠。",
+        "attr": "str",
+        "rarity": "rare"
+      },
+      {
+        "id": "bedrock_boots",
+        "name": "磐石戰靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 270,
+        "sell": 81,
+        "stats": {
+          "pdef": 6.0
+        },
+        "desc": "沉重如磐石的戰靴，站得穩、扛得住。",
+        "attr": "str",
+        "rarity": "rare"
+      },
+      {
+        "id": "dragonscale_boots",
+        "name": "龍鱗戰靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 390,
+        "sell": 117,
+        "stats": {
+          "pdef": 8.0
+        },
+        "desc": "鑲著龍鱗碎片的戰靴，幾乎刀槍不入。",
+        "attr": "str",
+        "rarity": "epic"
+      },
+      {
+        "id": "titan_greaves",
+        "name": "泰坦之靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 520,
+        "sell": 156,
+        "stats": {
+          "pdef": 10.0
+        },
+        "desc": "傳說巨人族工匠打造的戰靴，穿上者步履如山。",
+        "attr": "str",
+        "rarity": "epic"
+      },
+      {
+        "id": "soft_leather_shoes",
+        "name": "軟皮鞋",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 20,
+        "sell": 6,
+        "stats": {
+          "dodge": 1.0
+        },
+        "desc": "柔軟合腳的皮鞋，走起路來輕巧不少。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "lightstep_boots",
+        "name": "輕步靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 38,
+        "sell": 11,
+        "stats": {
+          "dodge": 2.0
+        },
+        "desc": "特別減重處理的靴子，適合需要靈活走位的人。",
+        "attr": "agi",
+        "rarity": "common"
+      },
+      {
+        "id": "hunter_shortboots",
+        "name": "獵人短靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 55,
+        "sell": 16,
+        "stats": {
+          "dodge": 3.0
+        },
+        "desc": "獵人常穿的短靴，方便隨時變換方向。",
+        "attr": "agi",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "swiftwind_boots",
+        "name": "迅風靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 150,
+        "sell": 45,
+        "stats": {
+          "dodge": 6.0
+        },
+        "desc": "鞋底刻著風紋的輕靴，踏步彷彿乘風而行。",
+        "attr": "agi",
+        "rarity": "rare"
+      },
+      {
+        "id": "phantom_dash_boots",
+        "name": "幻影疾靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 260,
+        "sell": 78,
+        "stats": {
+          "dodge": 8.0
+        },
+        "desc": "傳說刺客穿用的疾靴，殘影令人難以捕捉行蹤。",
+        "attr": "agi",
+        "rarity": "epic"
+      },
+      {
+        "id": "windgod_boots",
+        "name": "風神之靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 360,
+        "sell": 108,
+        "stats": {
+          "dodge": 10.0
+        },
+        "desc": "相傳源自風神庇佑的靴子，步伐快得幾乎脫離塵世。",
+        "attr": "agi",
+        "rarity": "epic"
+      },
+      {
+        "id": "cloth_soft_shoes",
+        "name": "布面軟鞋",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 25,
+        "sell": 8,
+        "stats": {
+          "mdef": 1.0,
+          "mp": 3.0
+        },
+        "desc": "布面軟鞋，能稍微緩和魔力波動的干擾。",
+        "attr": "int",
+        "rarity": "common"
+      },
+      {
+        "id": "warded_soft_boots",
+        "name": "符紋軟靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 45,
+        "sell": 14,
+        "stats": {
+          "mdef": 2.0,
+          "mp": 5.0
+        },
+        "desc": "縫上簡易防護符紋的軟靴。",
+        "attr": "int",
+        "rarity": "common"
+      },
+      {
+        "id": "arcane_slippers",
+        "name": "秘法便鞋",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 80,
+        "sell": 24,
+        "stats": {
+          "mdef": 3.0,
+          "mp": 8.0
+        },
+        "desc": "秘術師常穿的便鞋，有助於魔力循環。",
+        "attr": "int",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "starweave_boots",
+        "name": "星紋靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 125,
+        "sell": 38,
+        "stats": {
+          "mdef": 4.0,
+          "mp": 11.0
+        },
+        "desc": "織有星紋圖案的靴子，安神定氣。",
+        "attr": "int",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "sage_soft_boots",
+        "name": "賢者軟靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 210,
+        "sell": 63,
+        "stats": {
+          "mdef": 5.0,
+          "mp": 15.0
+        },
+        "desc": "賢者議會配發的軟靴，法力保護更為周全。",
+        "attr": "int",
+        "rarity": "rare"
+      },
+      {
+        "id": "moonlight_boots",
+        "name": "月光靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 290,
+        "sell": 87,
+        "stats": {
+          "mdef": 6.0,
+          "mp": 19.0
+        },
+        "desc": "月光下若隱若現的靴子，據說能安撫躁動的魔力。",
+        "attr": "int",
+        "rarity": "rare"
+      },
+      {
+        "id": "starlight_boots",
+        "name": "星輝法靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 420,
+        "sell": 126,
+        "stats": {
+          "mdef": 8.0,
+          "mp": 24.0
+        },
+        "desc": "綴著星輝碎片的法靴，抵禦魔法攻擊效果顯著。",
+        "attr": "int",
+        "rarity": "epic"
+      },
+      {
+        "id": "profound_arcane_boots",
+        "name": "深奧秘靴",
+        "slot": "boots",
+        "tier": 2,
+        "buy": 560,
+        "sell": 168,
+        "stats": {
+          "mdef": 10.0,
+          "mp": 30.0
+        },
+        "desc": "封存古老咒文的至高法靴，魔力屏障近乎完美。",
+        "attr": "int",
+        "rarity": "epic"
+      },
+      {
+        "id": "copper_ring",
+        "name": "銅戒指",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 25,
+        "sell": 8,
+        "stats": {
+          "patk": 1.0
+        },
+        "desc": "普通的銅戒指，稍微增添臂力。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "wooden_bead_bracelet",
+        "name": "木珠手鍊",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 25,
+        "sell": 8,
+        "stats": {
+          "mp": 5.0
+        },
+        "desc": "手工串製的木珠手鍊，安定心神。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "rabbit_foot_charm",
+        "name": "兔腳吊飾",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 20,
+        "sell": 6,
+        "stats": {
+          "dodge": 1.0
+        },
+        "desc": "傳統上被認為能帶來好運的兔腳吊飾。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "worn_pocketwatch",
+        "name": "磨損懷錶",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 20,
+        "sell": 6,
+        "stats": {
+          "hp": 3.0
+        },
+        "desc": "老舊的懷錶，指針早已停擺，但戴著讓人心安。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "shell_necklace",
+        "name": "貝殼項鍊",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 22,
+        "sell": 7,
+        "stats": {
+          "mdef": 1.0
+        },
+        "desc": "海貝串成的項鍊，聽說有守護的力量。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "leather_cord_charm",
+        "name": "皮繩護符",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 22,
+        "sell": 7,
+        "stats": {
+          "pdef": 1.0
+        },
+        "desc": "簡單的皮繩護符，聊表心意的防護。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "silver_rim_brooch",
+        "name": "銀邊胸針",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 28,
+        "sell": 8,
+        "stats": {
+          "matk": 1.0
+        },
+        "desc": "鑲銀邊的胸針，微微提升魔力集中。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "polished_stone_ring",
+        "name": "磨亮石戒",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 24,
+        "sell": 7,
+        "stats": {
+          "crit": 1.0
+        },
+        "desc": "打磨光滑的石戒，據說能穩定手感。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "hemp_bracelet",
+        "name": "麻繩手環",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 18,
+        "sell": 5,
+        "stats": {
+          "hp": 5.0
+        },
+        "desc": "簡樸的麻繩手環，冒險者間流行的護身小物。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "bronze_bell_earring",
+        "name": "銅鈴耳墜",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 32,
+        "sell": 10,
+        "stats": {
+          "mp": 3.0,
+          "dodge": 1.0
+        },
+        "desc": "叮噹作響的銅鈴耳墜，據說能分散敵人注意力。",
+        "attr": "",
+        "rarity": "common"
+      },
+      {
+        "id": "hawkeye_badge",
+        "name": "鷹眼徽章",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 60,
+        "sell": 18,
+        "stats": {
+          "crit": 3.0
+        },
+        "desc": "刻有鷹眼圖騰的徽章，讓人下手更準。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "gale_earring",
+        "name": "疾風耳環",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 65,
+        "sell": 20,
+        "stats": {
+          "dodge": 3.0
+        },
+        "desc": "風系法師贈與的耳環，行動間帶著一絲疾風。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "steady_pendant",
+        "name": "沉穩護腕墜",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 85,
+        "sell": 26,
+        "stats": {
+          "pdef": 2.0,
+          "mdef": 2.0
+        },
+        "desc": "沉甸甸的墜飾，攻防都穩了幾分。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "scholar_spectacles",
+        "name": "學者眼鏡",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 80,
+        "sell": 24,
+        "stats": {
+          "matk": 3.0
+        },
+        "desc": "學者用的老花眼鏡，意外對魔力集中有幫助。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "lifestone_necklace",
+        "name": "生命石項鍊",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 75,
+        "sell": 22,
+        "stats": {
+          "hp": 15.0
+        },
+        "desc": "鑲著暗紅色石頭的項鍊，能感受到微弱的生命波動。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "manacrystal_ring",
+        "name": "法力晶環",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 78,
+        "sell": 23,
+        "stats": {
+          "mp": 15.0
+        },
+        "desc": "鑲嵌小水晶的戒指，能小幅蓄積法力。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "warrior_armlet",
+        "name": "戰士臂環",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 82,
+        "sell": 25,
+        "stats": {
+          "patk": 3.0
+        },
+        "desc": "老兵留下的臂環，戴上後揮擊更有力。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "lucky_bunny_clip",
+        "name": "幸運兔耳夾",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 95,
+        "sell": 28,
+        "stats": {
+          "crit": 2.0,
+          "dodge": 2.0
+        },
+        "desc": "造型可愛的兔耳髮夾，據說幸運女神特別眷顧。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "guardian_emblem",
+        "name": "守護胸章",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 70,
+        "sell": 21,
+        "stats": {
+          "pdef": 3.0
+        },
+        "desc": "刻著守護紋樣的胸章，防禦更紮實。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "rune_gloves",
+        "name": "魔紋手套",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 100,
+        "sell": 30,
+        "stats": {
+          "matk": 2.0,
+          "mp": 8.0
+        },
+        "desc": "繡有魔紋的手套，施法時更加得心應手。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "dragonbreath_charm",
+        "name": "龍息護符",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 220,
+        "sell": 66,
+        "stats": {
+          "patk": 5.0,
+          "crit": 3.0
+        },
+        "desc": "封存一絲龍息餘威的護符，攻擊更具威力。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "deepsea_pearl_necklace",
+        "name": "深海珍珠項鍊",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 210,
+        "sell": 63,
+        "stats": {
+          "mdef": 5.0,
+          "mp": 10.0
+        },
+        "desc": "來自深海的珍珠，能抵禦魔法侵擾。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "forest_spirit_ring",
+        "name": "森林精靈之戒",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 230,
+        "sell": 69,
+        "stats": {
+          "hp": 25.0,
+          "mp": 10.0
+        },
+        "desc": "森林精靈贈與的戒指，蘊含生生不息的力量。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "swiftshadow_band",
+        "name": "疾影之環",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 240,
+        "sell": 72,
+        "stats": {
+          "dodge": 6.0,
+          "crit": 3.0
+        },
+        "desc": "刻著奔跑紋樣的指環，身法飄忽如影。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "ironwill_medal",
+        "name": "鋼鐵意志徽",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 250,
+        "sell": 75,
+        "stats": {
+          "pdef": 5.0,
+          "hp": 15.0
+        },
+        "desc": "象徵不屈意志的勳章，扛得住也撐得久。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "starlight_pendant",
+        "name": "星辰墜飾",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 245,
+        "sell": 74,
+        "stats": {
+          "matk": 5.0,
+          "mdef": 3.0
+        },
+        "desc": "封存星光的墜飾，魔力與防護兼備。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "sage_ring",
+        "name": "賢者之戒",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 260,
+        "sell": 78,
+        "stats": {
+          "matk": 4.0,
+          "mp": 20.0
+        },
+        "desc": "賢者議會的認證信物，法力供給源源不絕。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "battlefield_medal",
+        "name": "戰場勳章",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 235,
+        "sell": 70,
+        "stats": {
+          "patk": 4.0,
+          "pdef": 3.0
+        },
+        "desc": "沙場老兵的勳章，攻守俱佳。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "lucky_gold_coin",
+        "name": "幸運金幣",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 225,
+        "sell": 68,
+        "stats": {
+          "crit": 4.0,
+          "dodge": 4.0
+        },
+        "desc": "傳說中從未失手的幸運金幣，帶著它總能逢凶化吉。",
+        "attr": "",
+        "rarity": "rare"
+      },
+      {
+        "id": "goddess_grace_ring",
+        "name": "女神垂憐之戒",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 480,
+        "sell": 144,
+        "stats": {
+          "hp": 30.0,
+          "mp": 20.0,
+          "mdef": 3.0
+        },
+        "desc": "傳說受女神垂憐者才能得到的戒指，全面守護配戴者。",
+        "attr": "",
+        "rarity": "epic"
+      },
+      {
+        "id": "heart_of_chaos",
+        "name": "混沌之心",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 560,
+        "sell": 168,
+        "stats": {
+          "patk": 6.0,
+          "matk": 6.0,
+          "crit": 4.0
+        },
+        "desc": "來歷成謎的黑色寶石，蘊含難以言喻的強大力量。",
+        "attr": "",
+        "rarity": "epic"
+      },
+      {
+        "id": "undying_will_pendant",
+        "name": "不滅意志之心",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 520,
+        "sell": 156,
+        "stats": {
+          "hp": 40.0,
+          "pdef": 5.0,
+          "mdef": 5.0
+        },
+        "desc": "傳說永不熄滅的意志結晶，守護配戴者直到最後一刻。",
+        "attr": "",
+        "rarity": "epic"
+      },
+      {
+        "id": "windgod_feather",
+        "name": "疾風之神羽",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 500,
+        "sell": 150,
+        "stats": {
+          "dodge": 10.0,
+          "crit": 6.0
+        },
+        "desc": "風神落下的羽毛，賦予配戴者難以捉摸的身法。",
+        "attr": "",
+        "rarity": "epic"
+      },
+      {
+        "id": "dragonking_scale",
+        "name": "龍王之鱗",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 540,
+        "sell": 162,
+        "stats": {
+          "pdef": 8.0,
+          "mdef": 8.0
+        },
+        "desc": "傳說中龍王親賜的鱗片，防禦近乎無懈可擊。",
+        "attr": "",
+        "rarity": "epic"
+      },
+      {
+        "id": "starlit_relic",
+        "name": "星空秘寶",
+        "slot": "acc",
+        "tier": 2,
+        "buy": 600,
+        "sell": 180,
+        "stats": {
+          "matk": 8.0,
+          "mp": 25.0,
+          "crit": 3.0
+        },
+        "desc": "遠古秘寶，據說封存著整片星空的魔力。",
+        "attr": "",
+        "rarity": "epic"
+      },
+      {
+        "id": "hank_blade",
+        "name": "漢克的舊劍",
+        "slot": "weapon",
+        "tier": 1,
+        "buy": 0,
+        "sell": 40,
+        "stats": {
+          "crit": 1.0,
+          "dodge": 1.0,
+          "patk": 8.0
+        },
+        "desc": "漢克年輕闖蕩時的佩劍，鈍了些卻扎實。他嘴上冷淡，還是把它塞給了路德。",
+        "attr": "str",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "martha_ring",
+        "name": "瑪莎的護身戒",
+        "slot": "acc",
+        "tier": 1,
+        "buy": 0,
+        "sell": 30,
+        "stats": {
+          "crit": 1.0,
+          "dodge": 1.0,
+          "hp": 15.0
+        },
+        "desc": "瑪莎年輕冒險時一直戴著的戒指，據說能保平安。",
+        "attr": "",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "adventurer_boots",
+        "name": "冒險者靴",
+        "slot": "boots",
+        "tier": 1,
+        "buy": 0,
+        "sell": 20,
+        "stats": {
+          "dodge": 3.0,
+          "hp": 5.0
+        },
+        "desc": "冒險者公會發給新登錄者的標準皮靴，輕便耐走。",
+        "attr": "agi",
+        "rarity": "uncommon"
+      }
+    ],
+    "items": [
+      {
+        "id": "potion",
+        "name": "藥水",
+        "cat": "consumable",
+        "buy": 30,
+        "sell": 9,
+        "start": 4,
+        "effect": "單體回復 60 HP。",
+        "rarity": "common",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "hi_potion",
+        "name": "上級藥水",
+        "cat": "consumable",
+        "buy": 90,
+        "sell": 27,
+        "start": null,
+        "effect": "單體回復 150 HP。",
+        "rarity": "uncommon",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "mana_herb",
+        "name": "魔力草",
+        "cat": "consumable",
+        "buy": 40,
+        "sell": 12,
+        "start": null,
+        "effect": "單體回復 30 MP。",
+        "rarity": "uncommon",
+        "baseDrop": 0.12
+      },
+      {
+        "id": "antidote",
+        "name": "解毒草",
+        "cat": "consumable",
+        "buy": 15,
+        "sell": 4,
+        "start": null,
+        "effect": "解除單體的中毒狀態（狀態異常系統上線後生效）。",
+        "rarity": "common",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "revive_feather",
+        "name": "復活羽毛",
+        "cat": "consumable",
+        "buy": 100,
+        "sell": 30,
+        "start": null,
+        "effect": "復活一名戰鬥不能的同伴，並回復其 50% HP。",
+        "rarity": "rare",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "tent",
+        "name": "帳篷",
+        "cat": "consumable",
+        "buy": 120,
+        "sell": 36,
+        "start": null,
+        "effect": "於野外休息點使用，全隊回復全部 HP／MP。",
+        "rarity": "uncommon",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "soft_feather",
+        "name": "柔軟羽毛",
+        "cat": "material",
+        "buy": 6,
+        "sell": 2,
+        "start": null,
+        "effect": "掠翅鳥的輕盈羽毛，煉金與販售的常見素材。",
+        "rarity": "common",
+        "baseDrop": 0.2
+      },
+      {
+        "id": "slime_gel",
+        "name": "史萊姆凝膠",
+        "cat": "material",
+        "buy": 6,
+        "sell": 2,
+        "start": null,
+        "effect": "綠黏史萊姆的黏液，煉金基礎素材。",
+        "rarity": "common",
+        "baseDrop": 0.2
+      },
+      {
+        "id": "worm_carapace",
+        "name": "蟲甲",
+        "cat": "material",
+        "buy": 10,
+        "sell": 3,
+        "start": null,
+        "effect": "巨牙蟲的堅硬外殼，可磨成護具塗層。",
+        "rarity": "common",
+        "baseDrop": 0.2
+      },
+      {
+        "id": "goblin_fang",
+        "name": "哥布林牙",
+        "cat": "material",
+        "buy": 12,
+        "sell": 4,
+        "start": null,
+        "effect": "哥布林的獠牙，冒險者最常變賣的素材。",
+        "rarity": "common",
+        "baseDrop": 0.2
+      },
+      {
+        "id": "bone_shard",
+        "name": "白骨碎片",
+        "cat": "material",
+        "buy": 15,
+        "sell": 5,
+        "start": null,
+        "effect": "骷髏礦工遺留的骨片，帶著礦坑的塵味。",
+        "rarity": "common",
+        "baseDrop": 0.2
+      },
+      {
+        "id": "wolf_hide",
+        "name": "狼皮",
+        "cat": "material",
+        "buy": 22,
+        "sell": 7,
+        "start": null,
+        "effect": "野狼的毛皮，可製輕甲（第二章素材）。",
+        "rarity": "uncommon",
+        "baseDrop": 0.12
+      },
+      {
+        "id": "iron_ore",
+        "name": "鐵礦石",
+        "cat": "material",
+        "buy": 25,
+        "sell": 8,
+        "start": null,
+        "effect": "未精煉的鐵礦，鐵匠鋪收購，可鍛造武具。",
+        "rarity": "uncommon",
+        "baseDrop": 0.12
+      },
+      {
+        "id": "beast_hide",
+        "name": "獸皮",
+        "cat": "material",
+        "buy": 30,
+        "sell": 10,
+        "start": null,
+        "effect": "洞熊的厚實毛皮，是製甲的好材料。",
+        "rarity": "uncommon",
+        "baseDrop": 0.12
+      },
+      {
+        "id": "crystal_shard",
+        "name": "水晶碎片",
+        "cat": "material",
+        "buy": 60,
+        "sell": 20,
+        "start": null,
+        "effect": "蘊含魔力的水晶碎片，稀有；似乎與礦山異變有關。",
+        "rarity": "rare",
+        "baseDrop": 0.05
+      },
+      {
+        "id": "guild_card",
+        "name": "公會登錄證",
+        "cat": "key",
+        "buy": null,
+        "sell": null,
+        "start": null,
+        "effect": "冒險者公會核發的身分證明（F 級）。序章於緹娜處登錄後取得。",
+        "rarity": "key",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "miner_helmet",
+        "name": "失蹤礦工的頭盔",
+        "cat": "key",
+        "buy": null,
+        "sell": null,
+        "start": null,
+        "effect": "「礦工的遺物」委託道具，需交還委託人（老葛雷）。",
+        "rarity": "key",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "goddess_mark",
+        "name": "女神的記號",
+        "cat": "key",
+        "buy": null,
+        "sell": null,
+        "start": null,
+        "effect": "蓋婭女神在路德身上留下的記號（劇情物品，不可販售）。",
+        "rarity": "key",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "fire_honey",
+        "name": "烈火蜂蜜",
+        "cat": "key",
+        "buy": null,
+        "sell": null,
+        "start": null,
+        "effect": "東之森老樹蜂巢裡的蜂蜜，入口像吞了一團火。吉德調酒的關鍵材料。（第一章小節5）",
+        "rarity": "key",
+        "baseDrop": 0.0
+      },
+      {
+        "id": "honey_mead",
+        "name": "蜂蜜酒",
+        "cat": "key",
+        "buy": null,
+        "sell": null,
+        "start": null,
+        "effect": "吉德用烈火蜂蜜調出的烈酒，一口下肚，站崗的看守就忘了自己在站崗。（第一章小節5）",
+        "rarity": "key",
+        "baseDrop": 0.0
+      }
+    ],
+    "enemies": [
+      {
+        "id": "bird",
+        "name": "掠翅鳥",
+        "spr": "bird",
+        "hp": 28.0,
+        "atk": 7.0,
+        "def": 2.0,
+        "spd": 14.0,
+        "exp": 5,
+        "gold": 3,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "soft_feather",
+            1.2
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "gslime",
+        "name": "綠黏史萊姆",
+        "spr": "gslime",
+        "hp": 44.0,
+        "atk": 6.0,
+        "def": 4.0,
+        "spd": 4.0,
+        "exp": 6,
+        "gold": 4,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "slime_gel",
+            1.25
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "worm",
+        "name": "巨牙蟲",
+        "spr": "worm",
+        "hp": 34.0,
+        "atk": 11.0,
+        "def": 3.0,
+        "spd": 7.0,
+        "exp": 8,
+        "gold": 5,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "worm_carapace",
+            1.2
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "goblin",
+        "name": "哥布林拾荒者",
+        "spr": "goblin",
+        "hp": 38.0,
+        "atk": 9.0,
+        "def": 4.0,
+        "spd": 8.0,
+        "exp": 8,
+        "gold": 7,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "goblin_fang",
+            1.1
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "goblin_chief",
+        "name": "哥布林頭目",
+        "spr": "maskedorc",
+        "hp": 780.0,
+        "atk": 26.0,
+        "def": 13.0,
+        "spd": 10.0,
+        "exp": 140,
+        "gold": 150,
+        "big": true,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "goblin_fang",
+            5.0
+          ],
+          [
+            "crystal_shard",
+            5.0
+          ]
+        ],
+        "foeSkills": [
+          {
+            "mult": 1.9,
+            "name": "猛力連擊",
+            "target": "one"
+          },
+          {
+            "mult": 1.15,
+            "name": "亂舞橫掃",
+            "target": "all"
+          }
+        ]
+      },
+      {
+        "id": "bear",
+        "name": "洞熊",
+        "spr": "bear",
+        "hp": 120.0,
+        "atk": 16.0,
+        "def": 9.0,
+        "spd": 5.0,
+        "exp": 28,
+        "gold": 18,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "beast_hide",
+            2.5
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "bear_dire",
+        "name": "狂暴洞熊",
+        "spr": "bear",
+        "hp": 1200.0,
+        "atk": 36.0,
+        "def": 16.0,
+        "spd": 8.0,
+        "exp": 180,
+        "gold": 100,
+        "big": true,
+        "allAttack": true,
+        "healer": false,
+        "drops": [
+          [
+            "beast_hide",
+            8.0
+          ],
+          [
+            "crystal_shard",
+            6.0
+          ]
+        ],
+        "foeSkills": [
+          {
+            "mult": 2.1,
+            "name": "狂亂撕咬",
+            "target": "one"
+          },
+          {
+            "mult": 1.25,
+            "name": "震地怒吼",
+            "target": "all"
+          }
+        ]
+      },
+      {
+        "id": "wolf",
+        "name": "野狼",
+        "spr": "wolf",
+        "hp": 68.0,
+        "atk": 13.0,
+        "def": 6.0,
+        "spd": 12.0,
+        "exp": 16,
+        "gold": 11,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "wolf_hide",
+            2.0
+          ],
+          [
+            "beast_hide",
+            0.75
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "wogol",
+        "name": "礦坑飛魔",
+        "spr": "wogol",
+        "hp": 40.0,
+        "atk": 11.0,
+        "def": 4.0,
+        "spd": 15.0,
+        "exp": 11,
+        "gold": 8,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "crystal_shard",
+            1.0
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "skeleton",
+        "name": "骷髏礦工",
+        "spr": "skeleton",
+        "hp": 58.0,
+        "atk": 12.0,
+        "def": 7.0,
+        "spd": 7.0,
+        "exp": 12,
+        "gold": 10,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "bone_shard",
+            1.2
+          ],
+          [
+            "iron_ore",
+            0.8
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "orc",
+        "name": "獸人挖掘者",
+        "spr": "orc",
+        "hp": 82.0,
+        "atk": 14.0,
+        "def": 9.0,
+        "spd": 6.0,
+        "exp": 18,
+        "gold": 14,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "iron_ore",
+            1.5
+          ],
+          [
+            "bone_shard",
+            0.5
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "chort",
+        "name": "暗影小魔",
+        "spr": "chort",
+        "hp": 50.0,
+        "atk": 14.0,
+        "def": 5.0,
+        "spd": 13.0,
+        "exp": 16,
+        "gold": 12,
+        "big": false,
+        "allAttack": false,
+        "healer": false,
+        "drops": [
+          [
+            "crystal_shard",
+            1.2
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "necro",
+        "name": "死靈術士",
+        "spr": "necro",
+        "hp": 100.0,
+        "atk": 13.0,
+        "def": 6.0,
+        "spd": 9.0,
+        "exp": 40,
+        "gold": 35,
+        "big": false,
+        "allAttack": false,
+        "healer": true,
+        "drops": [
+          [
+            "crystal_shard",
+            3.0
+          ],
+          [
+            "mana_herb",
+            1.5
+          ]
+        ],
+        "foeSkills": null
+      },
+      {
+        "id": "ogre",
+        "name": "洞窟食人魔",
+        "spr": "ogre",
+        "hp": 1600.0,
+        "atk": 38.0,
+        "def": 18.0,
+        "spd": 6.0,
+        "exp": 400,
+        "gold": 350,
+        "big": true,
+        "allAttack": true,
+        "healer": false,
+        "drops": [
+          [
+            "crystal_shard",
+            16.0
+          ],
+          [
+            "beast_hide",
+            2.5
+          ]
+        ],
+        "foeSkills": [
+          {
+            "mult": 2.0,
+            "name": "巨槌重砸",
+            "target": "one"
+          },
+          {
+            "mult": 1.35,
+            "name": "崩山地裂",
+            "target": "all"
+          }
+        ]
+      },
+      {
+        "id": "shadow_demon",
+        "name": "異變的魔影",
+        "spr": "demon",
+        "hp": 9999.0,
+        "atk": 22.0,
+        "def": 25.0,
+        "spd": 12.0,
+        "exp": 0,
+        "gold": 0,
+        "big": true,
+        "allAttack": false,
+        "healer": false,
+        "drops": [],
+        "foeSkills": null
+      }
+    ],
+    "encounters": {
+      "forest": [
+        {
+          "weight": 3.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "gslime",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "bird",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "bird",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "worm",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "worm",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "gslime",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        }
+      ],
+      "forest2": [
+        {
+          "weight": 3.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "gslime",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "worm",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "wolf",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "bird",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "wolf",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        }
+      ],
+      "mine": [
+        {
+          "weight": 3.0,
+          "members": [
+            {
+              "id": "skeleton",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "wogol",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "orc",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "wogol",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "skeleton",
+              "min": 2,
+              "max": 2
+            },
+            {
+              "id": "wolf",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "wogol",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "bear",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "skeleton",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        }
+      ],
+      "cave": [
+        {
+          "weight": 3.0,
+          "members": [
+            {
+              "id": "chort",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "chort",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "wogol",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "skeleton",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "chort",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "necro",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "chort",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "skeleton",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        }
+      ],
+      "tutorial": [
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "gslime",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "bird",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "gslime",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        }
+      ],
+      "prologue_demon": [
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "shadow_demon",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        }
+      ],
+      "ch1_boss": [
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "goblin_chief",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "wolf",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        }
+      ],
+      "ch2_bear": [
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "bear_dire",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        }
+      ],
+      "eforest1": [
+        {
+          "weight": 3.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "bird",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "gslime",
+              "min": 1,
+              "max": 2
+            },
+            {
+              "id": "bird",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "bird",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "gslime",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "goblin",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        }
+      ],
+      "eforest2": [
+        {
+          "weight": 3.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "worm",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "goblin",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "bird",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "worm",
+              "min": 2,
+              "max": 3
+            }
+          ]
+        }
+      ],
+      "eforest3": [
+        {
+          "weight": 3.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "wolf",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "wolf",
+              "min": 2,
+              "max": 2
+            },
+            {
+              "id": "goblin",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        },
+        {
+          "weight": 2.0,
+          "members": [
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 4
+            }
+          ]
+        },
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "wolf",
+              "min": 2,
+              "max": 2
+            },
+            {
+              "id": "worm",
+              "min": 1,
+              "max": 2
+            }
+          ]
+        }
+      ],
+      "eforest3_boss": [
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "goblin_chief",
+              "min": 1,
+              "max": 1
+            },
+            {
+              "id": "goblin",
+              "min": 2,
+              "max": 3
+            },
+            {
+              "id": "worm",
+              "min": 0,
+              "max": 1
+            }
+          ]
+        }
+      ]
+    },
+    "shops": [
+      {
+        "id": "gid",
+        "name": "吉德的道具店",
+        "greet": "要看看我店裡的商品嗎？",
+        "sells": [
+          "potion",
+          "hi_potion",
+          "mana_herb",
+          "antidote",
+          "revive_feather",
+          "tent",
+          "lucky_coin",
+          "agate_charm",
+          "vital_ring",
+          "focus_earring",
+          "copper_ring",
+          "wooden_bead_bracelet",
+          "rabbit_foot_charm",
+          "worn_pocketwatch",
+          "shell_necklace",
+          "leather_cord_charm",
+          "silver_rim_brooch",
+          "polished_stone_ring",
+          "hemp_bracelet",
+          "bronze_bell_earring",
+          "hawkeye_badge",
+          "gale_earring",
+          "steady_pendant",
+          "scholar_spectacles",
+          "lifestone_necklace",
+          "manacrystal_ring",
+          "warrior_armlet",
+          "lucky_bunny_clip",
+          "guardian_emblem",
+          "rune_gloves",
+          "dragonbreath_charm",
+          "deepsea_pearl_necklace",
+          "forest_spirit_ring",
+          "swiftshadow_band",
+          "ironwill_medal",
+          "starlight_pendant",
+          "sage_ring",
+          "battlefield_medal",
+          "lucky_gold_coin",
+          "goddess_grace_ring",
+          "heart_of_chaos",
+          "undying_will_pendant",
+          "windgod_feather",
+          "dragonking_scale",
+          "starlit_relic"
+        ]
+      },
+      {
+        "id": "don",
+        "name": "唐恩的鐵匠鋪",
+        "greet": "我這手藝……堪用啦。要看看嗎？",
+        "sells": [
+          "short_sword",
+          "hunting_knife",
+          "iron_sword",
+          "traveler_garb",
+          "leather_vest",
+          "leather_boots",
+          "swift_boots",
+          "cloth_wraps",
+          "hunter_bracer",
+          "iron_bracer",
+          "bronze_sword",
+          "refined_steel_sword",
+          "mithril_sword",
+          "dragonfang_sword",
+          "sacred_greatsword",
+          "honed_knife",
+          "shadow_claw",
+          "twin_crescent",
+          "shade_shortblade",
+          "windfang_dagger",
+          "nightfall_edge",
+          "apprentice_wand",
+          "oak_wand",
+          "rune_staff",
+          "crystal_focus",
+          "sage_staff",
+          "starlight_staff",
+          "abyssal_scepter",
+          "goddess_whisper_staff",
+          "hardened_vest",
+          "riveted_cuirass",
+          "plate_cuirass",
+          "dragonscale_mail",
+          "paladin_plate",
+          "light_tunic",
+          "leather_bodysuit",
+          "ranger_coat",
+          "nightwalker_garb",
+          "gale_wrap",
+          "phantom_cloak_armor",
+          "shadowdance_armor",
+          "windspirit_garb",
+          "apprentice_robe",
+          "warded_robe",
+          "starweave_robe",
+          "arcane_robe",
+          "sage_robe",
+          "starlight_robe",
+          "profound_arcane_robe",
+          "studded_boots",
+          "traveler_greaves",
+          "iron_ringed_boots",
+          "steel_greaves",
+          "bedrock_boots",
+          "dragonscale_boots",
+          "titan_greaves",
+          "soft_leather_shoes",
+          "lightstep_boots",
+          "hunter_shortboots",
+          "swiftwind_boots",
+          "phantom_dash_boots",
+          "windgod_boots",
+          "cloth_soft_shoes",
+          "warded_soft_boots",
+          "arcane_slippers",
+          "starweave_boots",
+          "sage_soft_boots",
+          "moonlight_boots",
+          "starlight_boots",
+          "profound_arcane_boots"
+        ]
+      }
+    ],
+    "chests": [
+      {
+        "id": "fo_c1",
+        "map": "forest",
+        "tx": 36,
+        "ty": 21,
+        "tier": "common",
+        "loot": [
+          {
+            "count": 1.0,
+            "id": "potion",
+            "type": "item"
+          }
+        ]
+      },
+      {
+        "id": "fo_c2",
+        "map": "forest",
+        "tx": 50,
+        "ty": 5,
+        "tier": "hidden",
+        "loot": [
+          {
+            "id": "hunter_bracer",
+            "type": "eq"
+          }
+        ]
+      },
+      {
+        "id": "fo_c3",
+        "map": "forest",
+        "tx": 17,
+        "ty": 12,
+        "tier": "rare",
+        "loot": [
+          {
+            "id": "vital_ring",
+            "type": "eq"
+          }
+        ]
+      },
+      {
+        "id": "f2_c1",
+        "map": "forest2",
+        "tx": 35,
+        "ty": 14,
+        "tier": "common",
+        "loot": [
+          {
+            "amount": 30.0,
+            "type": "gold"
+          }
+        ]
+      },
+      {
+        "id": "f2_c2",
+        "map": "forest2",
+        "tx": 11,
+        "ty": 23,
+        "tier": "hidden",
+        "loot": [
+          {
+            "count": 3.0,
+            "id": "potion",
+            "type": "item"
+          }
+        ]
+      },
+      {
+        "id": "f2_c3",
+        "map": "forest2",
+        "tx": 44,
+        "ty": 24,
+        "tier": "rare",
+        "loot": [
+          {
+            "amount": 100.0,
+            "type": "gold"
+          },
+          {
+            "count": 1.0,
+            "id": "crystal_shard",
+            "type": "item"
+          }
+        ]
+      },
+      {
+        "id": "mi_c1",
+        "map": "mine",
+        "tx": 23,
+        "ty": 15,
+        "tier": "common",
+        "loot": [
+          {
+            "amount": 40.0,
+            "type": "gold"
+          }
+        ]
+      },
+      {
+        "id": "mi_c2",
+        "map": "mine",
+        "tx": 45,
+        "ty": 33,
+        "tier": "hidden",
+        "loot": [
+          {
+            "id": "silver_boots",
+            "type": "eq"
+          }
+        ]
+      },
+      {
+        "id": "mi_c3",
+        "map": "mine",
+        "tx": 47,
+        "ty": 2,
+        "tier": "rare",
+        "loot": [
+          {
+            "id": "guardian_pendant",
+            "type": "eq"
+          }
+        ]
+      },
+      {
+        "id": "ca_c1",
+        "map": "cave",
+        "tx": 18,
+        "ty": 30,
+        "tier": "common",
+        "loot": [
+          {
+            "count": 2.0,
+            "id": "potion",
+            "type": "item"
+          }
+        ]
+      },
+      {
+        "id": "ca_c2",
+        "map": "cave",
+        "tx": 45,
+        "ty": 19,
+        "tier": "hidden",
+        "loot": [
+          {
+            "count": 2.0,
+            "id": "hi_potion",
+            "type": "item"
+          }
+        ]
+      },
+      {
+        "id": "ca_c3",
+        "map": "cave",
+        "tx": 33,
+        "ty": 7,
+        "tier": "rare",
+        "loot": [
+          {
+            "amount": 150.0,
+            "type": "gold"
+          },
+          {
+            "count": 2.0,
+            "id": "crystal_shard",
+            "type": "item"
+          }
+        ]
+      }
+    ]
+  },
+  "dialogue": {
+    "dlg": {
+      "tina": [
+        {
+          "when": "ch1==2",
+          "speaker": "緹娜",
+          "lines": [
+            "委託完成確認——哥布林頭目討伐！",
+            "報酬 200 金幣已支付。你們是本鎮的驕傲！",
+            "（第一章完──「重返礦山」即將開放）"
+          ],
+          "action": "ch1_reward",
+          "cmd": "quest",
+          "label": "委託",
+          "done": null
+        },
+        {
+          "when": "ch1==1",
+          "speaker": "緹娜",
+          "lines": [
+            "委託進行中：討伐東之森深處的哥布林頭目。",
+            "牠就在森林最東邊的空地，小心點！"
+          ],
+          "action": null,
+          "cmd": "quest",
+          "label": "委託",
+          "done": null
+        },
+        {
+          "when": "reg==1",
+          "speaker": "緹娜",
+          "lines": [
+            "有新委託喔——農家回報東之森的哥布林越來越囂張，",
+            "牠們的頭目就盤踞在森林深處。",
+            "【委託】討伐哥布林頭目（報酬 200G）。接受嗎？就當你接受了！",
+            "頭目比雜魚強得多——建議練到 Lv5、跟漢克拿把好劍再去。"
+          ],
+          "action": "ch1_take",
+          "cmd": "quest",
+          "label": "委託",
+          "done": null
+        },
+        {
+          "when": "step>=3",
+          "speaker": "緹娜",
+          "lines": [
+            "歡迎來到冒險者公會！要登錄成為冒險者嗎？",
+            "……路德和瑪琳，兩位都登錄完成！",
+            "從今天起你們就是 F 級冒險者了。委託隨時來找我。"
+          ],
+          "action": "register",
+          "cmd": "quest",
+          "label": "委託",
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "緹娜",
+          "lines": [
+            "目前沒有適合你們的新委託。",
+            "升上一階、或到週邊多探探，說不定就有新工作囉。"
+          ],
+          "action": null,
+          "cmd": "quest",
+          "label": "委託",
+          "done": null
+        },
+        {
+          "when": "step==0",
+          "speaker": "緹娜",
+          "lines": [
+            "這不是路德嗎？要去礦山見習？",
+            "等你正式登錄的那天，公會隨時歡迎你。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch1==3",
+          "speaker": "緹娜",
+          "lines": [
+            "哥布林頭目的委託已經結案囉，辛苦了！",
+            "接下來想找活兒的話，水井旁的老葛雷正在找人幫忙。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch2>=1",
+          "speaker": "緹娜",
+          "lines": [
+            "礦坑的委託，是老葛雷私下拜託你們的吧？",
+            "那些失蹤的礦工……公會這邊也一直很掛心。",
+            "小心點，別逞強——活著回來才是好冒險者。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "緹娜",
+          "lines": [
+            "委託都貼在牆上的告示板，慢慢看。",
+            "有什麼想問的，儘管來櫃檯找我。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ],
+      "dora": [
+        {
+          "when": "always",
+          "speaker": "朵拉",
+          "lines": [
+            "累了吧？床鋪都幫你們鋪好了。",
+            "（隊伍完全恢復了！）"
+          ],
+          "action": "heal",
+          "cmd": "rest",
+          "label": "住宿",
+          "done": null
+        },
+        {
+          "when": "step==0",
+          "speaker": "朵拉",
+          "lines": [
+            "要跟亞倫先生出門？路上小心。",
+            "回來我煮好吃的等你們。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "朵拉",
+          "lines": [
+            "瑪琳那孩子，就拜託你多照應了。",
+            "想歇歇隨時說一聲，自己家不收錢的。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ],
+      "shea": [
+        {
+          "when": "ch2>=2",
+          "speaker": "希雅修女",
+          "lines": [
+            "你們從礦山帶回來的……不只是疲憊。",
+            "那是亡者未能安息的哀嘆。願蓋婭女神接引他們。",
+            "（隊伍完全恢復了！）",
+            "……路德，女神在你身上的記號，又亮了一分。"
+          ],
+          "action": "heal",
+          "cmd": "pray",
+          "label": "祈禱",
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "希雅修女",
+          "lines": [
+            "願蓋婭女神看顧你們的旅途。",
+            "（在女神像前禱告，隊伍完全恢復了！）"
+          ],
+          "action": "heal",
+          "cmd": "pray",
+          "label": "祈禱",
+          "done": null
+        },
+        {
+          "when": "step==0",
+          "speaker": "希雅修女",
+          "lines": [
+            "蓋婭女神看顧著每一位旅人。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "希雅修女",
+          "lines": [
+            "……女神在你身上留了記號呢。願風平息。",
+            "累了就來祈禱，女神的恩澤不分你我。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ],
+      "barton": [
+        {
+          "when": "ch2>=3",
+          "speaker": "巴頓鎮長",
+          "lines": [
+            "礦工失蹤的事……我早該多過問一句的。",
+            "孩子，你們比這鎮上所有大人都勇敢。",
+            "把礦山看到的一切，原原本本告訴大城的人吧。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch1==3",
+          "speaker": "巴頓鎮長",
+          "lines": [
+            "哥布林的事多虧你們了。",
+            "但礦山的異變……我總覺得沒那麼簡單。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "step==0",
+          "speaker": "巴頓鎮長",
+          "lines": [
+            "聽說亞倫先生要帶你去礦山見習？",
+            "好好跟著學，別亂跑。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "巴頓鎮長",
+          "lines": [
+            "礦山最近不太平靜，連老獵人都不敢靠近。",
+            "亞倫先生的事……我很遺憾。孩子，別勉強自己。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ],
+      "hank": [
+        {
+          "when": "ch1>=1",
+          "speaker": "漢克",
+          "lines": [
+            "……路德，你也要出去闖了啊。",
+            "拿去，我打的劍。別死在外面。",
+            "（獲得『鐵劍』！開啟 選單→裝備 分頁換上它）"
+          ],
+          "action": "give_sword",
+          "cmd": "hank_gift",
+          "label": "臨別贈言",
+          "done": "gotSword"
+        },
+        {
+          "when": "step==0",
+          "speaker": "漢克",
+          "lines": [
+            "哼，礦山？",
+            "……跟緊亞倫先生，別給他添麻煩。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "漢克",
+          "lines": [
+            "冒險者？哼，那不是鬧著玩的。",
+            "你亞倫大哥那麼強的人都……算了。要去就去吧。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ],
+      "martha": [
+        {
+          "when": "always",
+          "speaker": "瑪莎",
+          "lines": [
+            "你這孩子，越來越像年輕時的你爸了。",
+            "這枚戒指你戴著——是我年輕時你爸打的，保平安。",
+            "（獲得『活力戒指』！開啟 選單→裝備 可以裝上）"
+          ],
+          "action": "give_ring",
+          "cmd": "martha_gift",
+          "label": "母親的心意",
+          "done": "gotRing"
+        },
+        {
+          "when": "always",
+          "speaker": "瑪莎",
+          "lines": [
+            "你這孩子，越來越像年輕時的你爸了。",
+            "路上一定要吃飽穿暖，聽到沒？"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ],
+      "gid": [
+        {
+          "when": "always",
+          "speaker": "吉德",
+          "lines": [
+            "第一次上門吧？來，先送你 2 瓶藥水，別客氣。",
+            "補給要趁早，這是老冒險者的鐵則！",
+            "（獲得『藥水』×2！）"
+          ],
+          "action": "give_potion",
+          "cmd": "gid_gift",
+          "label": "新客招待",
+          "done": "gotPotion"
+        },
+        {
+          "when": "always",
+          "speaker": "吉德",
+          "lines": [
+            "歡迎光臨！要看看我店裡的商品嗎？"
+          ],
+          "action": "shop_gid",
+          "cmd": "trade",
+          "label": "交易",
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "吉德",
+          "lines": [
+            "藥水備齊再出門，這是老冒險者的鐵則！",
+            "缺什麼儘管開口，我這什麼都有。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ],
+      "gray": [
+        {
+          "when": "relic==1",
+          "speaker": "老葛雷",
+          "lines": [
+            "這頂頭盔……是阿吉的！你們在裡頭找到的？",
+            "（老葛雷的手抖個不停）……謝謝你們，把他的東西帶了回來。",
+            "這是我僅有的一點謝禮，別嫌少。",
+            "（獲得 100 金幣）"
+          ],
+          "action": "relic_turnin",
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch2==3",
+          "speaker": "老葛雷",
+          "lines": [
+            "那些孩子……總算能入土為安了。",
+            "你們替這座礦山、也替我這老頭子，了了一樁心事。",
+            "剩下的——深處那股邪氣的源頭，就拜託你們了。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch2==2",
+          "speaker": "老葛雷",
+          "lines": [
+            "你們臉色不對……在裡頭看到什麼了？",
+            "……戴著礦工帽、掄著鎬子的骷髏？那就是我那些老夥計沒錯了。",
+            "（老葛雷沉默了好久）謝謝你們告訴我真相。這點心意收下。",
+            "聽說深處的落石被你們清開了？那底下的東西，才是禍首。快去回報鎮長吧。"
+          ],
+          "action": "ch2_report",
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch2==1",
+          "speaker": "老葛雷",
+          "lines": [
+            "礦坑外圍就從鎮北的舊軌道進去。",
+            "失蹤的老夥計要是還在……不，你們親眼去看看吧。",
+            "（記得先把裝備和藥水在鎮上備齊）"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch1==3",
+          "speaker": "老葛雷",
+          "lines": [
+            "解決了哥布林？好身手。",
+            "那……礦坑的事，能拜託你們嗎？我的老夥計們一個接一個失蹤，",
+            "官府當是逃工不管，可我知道——他們絕不會丟下家人跑掉。",
+            "【委託】重返北方礦山外圍，查明礦工失蹤的真相。接下嗎？就當你們答應了。"
+          ],
+          "action": "ch2_take",
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "step==0",
+          "speaker": "老葛雷",
+          "lines": [
+            "那礦坑二十年前就封了……最近夜裡卻有聲音。",
+            "要進去？……跟緊亞倫先生。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "老葛雷",
+          "lines": [
+            "那礦坑二十年前就封了……最近夜裡卻有聲音。",
+            "你們就是在裡面出事的吧。唉，可憐的亞倫先生。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        }
+      ],
+      "mira": [
+        {
+          "when": "mira2==2",
+          "speaker": "米拉",
+          "lines": [
+            "那些鏡草夠我熬好一陣子的藥了，真是幫了大忙！",
+            "路上也別忘了照顧自己的傷。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "herb==3",
+          "speaker": "米拉",
+          "lines": [
+            "三株鏡草都採齊了？太好了！",
+            "來，這些藥水你們拿去——採藥的謝禮。",
+            "（獲得『藥水』×3！）"
+          ],
+          "action": "mira_reward",
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "mira2==1",
+          "speaker": "米拉",
+          "lines": [
+            "東之森裡三株會發光的『鏡草』，就麻煩你們了。",
+            "它們喜歡長在水邊和大石頭旁。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "gotEar==0",
+          "speaker": "米拉",
+          "lines": [
+            "東之森的藥草最近都採不到了……草叢裡老是冒出怪物。",
+            "你們要進森林嗎？能不能順手幫我採三株『鏡草』回來？",
+            "對了，這耳環是我在森林邊撿到的，先送你們——就當訂金。",
+            "（獲得『凝神耳環』！）",
+            "（【支線】到東之森採集鏡草×3）"
+          ],
+          "action": "mira_start",
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "米拉",
+          "lines": [
+            "鏡草要三株才夠熬一鍋藥。",
+            "東之森的水邊和大石頭旁比較好找。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        }
+      ],
+      "rossel": [
+        {
+          "when": "ch1==3",
+          "speaker": "羅素隊長",
+          "lines": [
+            "南方大道還在封鎖中。",
+            "等王都的指示一到就放行——你們的事蹟我會寫進報告。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "羅素隊長",
+          "lines": [
+            "前方道路因魔物騷動封閉中，王都的援軍還沒到。",
+            "想去大城的話，再等等吧。"
+          ],
+          "action": null,
+          "cmd": null,
+          "label": null,
+          "done": null
+        }
+      ],
+      "don": [
+        {
+          "when": "always",
+          "speaker": "唐恩",
+          "lines": [
+            "我這手藝……堪用啦。要看看嗎？"
+          ],
+          "action": "shop_don",
+          "cmd": "trade",
+          "label": "交易",
+          "done": null
+        },
+        {
+          "when": "step==0",
+          "speaker": "唐恩",
+          "lines": [
+            "喔？新面孔。要打鐵、修東西，找我唐恩就對了……",
+            "雖然賣相差了點，耐操是真的。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "always",
+          "speaker": "唐恩",
+          "lines": [
+            "這把年紀，手藝就這樣嘍。",
+            "……欸，別嫌鈍，那叫『有個性』。",
+            "真要好傢伙，得往大城找嘍。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        }
+      ]
+    },
+    "cuts": {
+      "prologue_town": {
+        "once": "c_pro_town",
+        "lines": [
+          {
+            "speaker": "瑪琳",
+            "text": "路德！聽說你要跟亞倫先生去礦山見習？"
+          },
+          {
+            "speaker": "路德",
+            "text": "嗯！我很快就回來——等著聽我的冒險故事吧！"
+          },
+          {
+            "speaker": "亞倫",
+            "text": "（在鎮北等著）……準備好了就從北邊出口出發。想先逛逛鎮子也行。"
+          },
+          {
+            "speaker": "",
+            "text": "（可以先和鎮民聊聊。準備好了就走北邊出口前往礦山）"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": null,
+        "party": null
+      },
+      "mine_intro": {
+        "once": "c_mine_intro",
+        "lines": [
+          {
+            "speaker": "亞倫",
+            "text": "跟緊我，路德。礦山不是給小孩玩的地方。"
+          },
+          {
+            "speaker": "路德",
+            "text": "我、我才不是小孩！我十五歲了！"
+          },
+          {
+            "speaker": "亞倫",
+            "text": "……哼。前面的碎石地會竄出魔物，正好給你練練手。"
+          },
+          {
+            "speaker": "",
+            "text": "（教學：走進碎石地會遭遇戰鬥。方向鍵移動，往北邊的礦坑口前進）"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": null,
+        "party": null
+      },
+      "cave_intro": {
+        "once": "c_cave_intro",
+        "lines": [
+          {
+            "speaker": "亞倫",
+            "text": "……深處的氣息不對勁。跟在我身後，別亂跑。"
+          },
+          {
+            "speaker": "路德",
+            "text": "（好冷……這裡真的只是廢棄礦坑嗎？）"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": null,
+        "party": null
+      },
+      "demon_pre": {
+        "once": "c_demon",
+        "lines": [
+          {
+            "speaker": "？？？",
+            "text": "（低沉的咆哮迴盪在洞穴深處──）"
+          },
+          {
+            "speaker": "亞倫",
+            "text": "趴下！路德──這傢伙不是這裡該有的東西！"
+          },
+          {
+            "speaker": "",
+            "text": "（撐過 3 回合！）"
+          }
+        ],
+        "battle": "prologue_demon",
+        "transfer": null,
+        "setstep": null,
+        "party": null
+      },
+      "demon_post": {
+        "once": null,
+        "lines": [
+          {
+            "speaker": "亞倫",
+            "text": "（擋在路德身前）……快跑！把這裡的事告訴鎮上的人！"
+          },
+          {
+            "speaker": "路德",
+            "text": "亞倫大哥──！！"
+          },
+          {
+            "speaker": "",
+            "text": "──三天後，芳蕾鎮。"
+          }
+        ],
+        "battle": null,
+        "transfer": [
+          "Town",
+          "home"
+        ],
+        "setstep": 3,
+        "party": null
+      },
+      "town_start": {
+        "once": "c_town",
+        "lines": [
+          {
+            "speaker": "瑪琳",
+            "text": "路德！你總算肯出房門了。"
+          },
+          {
+            "speaker": "瑪琳",
+            "text": "……亞倫先生的事，不是你的錯。"
+          },
+          {
+            "speaker": "路德",
+            "text": "瑪琳。我決定了——我要成為真正的冒險者，查出那天的真相。"
+          },
+          {
+            "speaker": "瑪琳",
+            "text": "一個人？想得美。要去，就一起去。"
+          },
+          {
+            "speaker": "",
+            "text": "（瑪琳加入了隊伍！先去公會找緹娜登錄吧）"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": 4,
+        "party": [
+          "ludo",
+          "marin"
+        ]
+      },
+      "mine_truth": {
+        "once": "c_mine_truth",
+        "lines": [
+          {
+            "speaker": "路德",
+            "text": "（這裡的空氣……比序章那次更冷了。）"
+          },
+          {
+            "speaker": "瑪琳",
+            "text": "路德，那邊有東西在動——是礦工？他們還活著？！"
+          },
+          {
+            "speaker": "路德",
+            "text": "不對……瑪琳，退後！牠的臉……牠根本沒有臉！"
+          },
+          {
+            "speaker": "瑪琳",
+            "text": "拿著鎬子、戴著礦工帽的骷髏……老葛雷說的失蹤礦工，難道就是……"
+          },
+          {
+            "speaker": "路德",
+            "text": "（他們早就死了。是有人……把他們變成了這個樣子。）"
+          },
+          {
+            "speaker": "",
+            "text": "（深處的舊礦道被落石半掩，一頭巨影在崩石後低吼——先解決擋路的東西）"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": null,
+        "party": null
+      },
+      "mine_after": {
+        "once": "c_mine_after",
+        "lines": [
+          {
+            "speaker": "",
+            "text": "（洞熊倒下，崩石隨著牠的重量嘩啦鬆開，露出一道向下的黑暗礦道）"
+          },
+          {
+            "speaker": "瑪琳",
+            "text": "這股味道……和那天，我們遇上那東西的時候一模一樣。"
+          },
+          {
+            "speaker": "路德",
+            "text": "下面有東西。骷髏、洞熊……都是被它從這裡……"
+          },
+          {
+            "speaker": "路德",
+            "text": "（亞倫大哥……當年擋在我面前的，是不是也和這底下的東西有關？）"
+          },
+          {
+            "speaker": "",
+            "text": "（深處的路開了。先回鎮上把所見告訴老葛雷與鎮長吧）"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": null,
+        "party": null
+      },
+      "necro_intro": {
+        "once": "c_necro_intro",
+        "lines": [
+          {
+            "speaker": "",
+            "text": "（礦道深處，骷髏礦工的殘骸環繞著一塊搏動的黑水晶。一個黑袍身影背對著眾人低語。）"
+          },
+          {
+            "speaker": "死靈術士",
+            "text": "……別過來。這裡不是你們該踏進的地方。"
+          },
+          {
+            "speaker": "路德",
+            "text": "這些礦工……是你把他們變成這樣的嗎！"
+          },
+          {
+            "speaker": "死靈術士",
+            "text": "我只是需要這水晶的力量。為了……不，跟你們說也沒用。"
+          },
+          {
+            "speaker": "死靈術士",
+            "text": "擋路的話——就別怪我手下無情了。"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": null,
+        "party": null
+      }
+    }
+  }
+}

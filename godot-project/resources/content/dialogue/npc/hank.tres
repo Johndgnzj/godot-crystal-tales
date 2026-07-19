@@ -13,23 +13,6 @@ cmd = "hank_gift"
 label = "臨別贈言"
 done = "gotSword"
 
-[sub_resource type="Resource" id="Resource_a4fj6"]
-script = ExtResource("1_x51ct")
-when = "reg==1"
-speaker = "漢克"
-lines = PackedStringArray("冒險者？裝備可不能馬虎。來，看看我的貨。")
-action = "shop_hank"
-cmd = "trade"
-label = "交易"
-
-[sub_resource type="Resource" id="Resource_yxvwg"]
-script = ExtResource("1_x51ct")
-speaker = "漢克"
-lines = PackedStringArray("要補貨就直說，鐵匠鋪隨時開著。")
-action = "shop_hank"
-cmd = "trade"
-label = "交易"
-
 [sub_resource type="Resource" id="Resource_ercdf"]
 script = ExtResource("1_x51ct")
 when = "step==0"
@@ -46,4 +29,4 @@ cmd = "talk"
 [resource]
 script = ExtResource("2_ly16l")
 id = "hank"
-entries = Array[ExtResource("1_x51ct")]([SubResource("Resource_ba35n"), SubResource("Resource_a4fj6"), SubResource("Resource_yxvwg"), SubResource("Resource_ercdf"), SubResource("Resource_fflx4")])
+entries = Array[ExtResource("1_x51ct")]([SubResource("Resource_ba35n"), SubResource("Resource_ercdf"), SubResource("Resource_fflx4")])

@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_ck4w3")
 map_id = "eforest3"
-formations = [["goblin"], ["wolf", "goblin"], ["goblin", "wolf"], ["goblin", "wolf", "worm"]]
+formations = [{"weight": 3.0, "members": [{"id": "goblin", "min": 2, "max": 3}, {"id": "wolf", "min": 0, "max": 1}]}, {"weight": 2.0, "members": [{"id": "wolf", "min": 2, "max": 2}, {"id": "goblin", "min": 1, "max": 2}]}, {"weight": 2.0, "members": [{"id": "goblin", "min": 2, "max": 4}]}, {"weight": 1.0, "members": [{"id": "wolf", "min": 2, "max": 2}, {"id": "worm", "min": 1, "max": 2}]}]

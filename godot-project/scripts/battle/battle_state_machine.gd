@@ -134,7 +134,7 @@ func _init_battle() -> void:
 		encounter_def = ContentDB.get_encounter("forest")
 	var group: Array = []
 	if encounter_def != null and not encounter_def.formations.is_empty():
-		group = encounter_def.formations[randi() % encounter_def.formations.size()]
+		group = encounter_def.roll()   # 加權抽組＋數量展開＋上限截斷，see EncounterDef / F-11
 
 	scripted = (enc == "prologue_demon")
 	survive_acts = 3
@@ -155,7 +155,7 @@ func _init_battle() -> void:
 		heroes.append(m)
 
 	foes.clear()
-	for i in range(mini(group.size(), 4)):
+	for i in range(mini(group.size(), FOE_SLOTS.size())):
 		var eid := String(group[i])
 		var ed: EnemyDef = ContentDB.get_enemy(eid)
 		if ed == null:
@@ -873,7 +873,7 @@ func _process_end() -> void:
 # =========================================================================
 
 const HERO_SLOTS := [Vector2(1074, 500), Vector2(1180, 464), Vector2(1044, 410), Vector2(1160, 372)]
-const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vector2(168, 372)]
+const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vector2(168, 372), Vector2(300, 336)]   # 第 5 槽為敵人數上限 5 新增（座標為估值，待實機微調）
 const HERO_H := 104.0   # 原 156 縮成 2/3（John 要求）
 const FOE_H := 82.0     # 原 122 縮成 2/3
 const BOSS_H := 140.0   # 原 210 縮成 2/3
@@ -992,12 +992,14 @@ func _build_view() -> void:
 func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	var wrap := Control.new()
 	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wrap.position = (HERO_SLOTS if is_hero else FOE_SLOTS)[int(u.get("slot", 0)) % 4]
+	var slots: Array = HERO_SLOTS if is_hero else FOE_SLOTS
+	wrap.position = slots[int(u.get("slot", 0)) % slots.size()]
 	_root.add_child(wrap)
 
 	var frames := _load_frames(u, is_hero)
 	var anim_frames: Dictionary = _load_anim_frames(u) if is_hero else {}
-	var h: float = HERO_H if is_hero else (BOSS_H if bool(u.get("big", false)) else FOE_H)
+	var default_foe_h: float = BOSS_H if bool(u.get("big", false)) else FOE_H
+	var h: float = HERO_H if is_hero else float(u.get("battle_height", default_foe_h))
 	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
 	var w := h * ratio
 

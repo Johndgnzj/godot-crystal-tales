@@ -99,7 +99,7 @@ python3 .Codex/skills/gen-art/stylize_map.py --in-image /tmp/stitch.png --prompt
 
 ## 敵人策略（hybrid，優先現有）
 
-`enemies: "auto"` → 依 `level_band` 從現有敵人（`ContentDB.get_all_enemies()`）挑 exp 落在該帶的怪、組 3–4 個 formation。**敵人資料無 level 欄位**，等級帶用 exp 粗估（錨點對齊現有 encounter 表分佈；`_exp_cap` 收緊上限避免低帶混入中階怪）。也可 `enemies: [...]` **明列**（森林建議林地怪 bird/gslime/goblin/worm/wolf，避開礦坑怪）。該帶無合適怪時回退最接近的並印警告——需符合難度的新怪時另補 `EnemyDef`（戰鬥圖是像素素材，Gemini 生不了，要另補 sprite）。
+`enemies: "auto"` → 依 `level_band` 從現有敵人（`ContentDB.get_all_enemies()`）挑 exp 落在該帶的怪、組 3–4 個 formation（v2 結構：每組帶 `weight` 與 `members` 數量範圍，見 `specs/BATTLE_FORMULAS.md` F-11）。**敵人資料無 level 欄位**，等級帶用 exp 粗估（錨點對齊現有 encounter 表分佈；`_exp_cap` 收緊上限避免低帶混入中階怪）。也可 `enemies: [...]` **明列**（森林建議林地怪 bird/gslime/goblin/worm/wolf，避開礦坑怪）。該帶無合適怪時回退最接近的並印警告——需符合難度的新怪時另補 `EnemyDef`（戰鬥圖是像素素材，Gemini 生不了，要另補 sprite）。
 
 ## 主題可換（未來上 16px 包）
 
