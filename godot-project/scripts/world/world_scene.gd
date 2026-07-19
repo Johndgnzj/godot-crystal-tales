@@ -480,8 +480,10 @@ func _apply_entry_state() -> void:
 		if spn != "" and spawns.has(spn):
 			_player.global_position = spawns[spn]
 	# 戰後劇情推進（對應 build_cq2.py L1435-1439；once 閘門由 play_cutscene 內建檢查）
-	if res == "story" and scene_id == "Cave":
-		DialogueSystem.play_cutscene("demon_post")
+	if res == "story":
+		var fought: EncounterDef = ContentDB.get_encounter(GameState.encounter)
+		if fought != null and fought.story_cut != "":
+			DialogueSystem.play_cutscene(fought.story_cut)
 	if res == "win" and scene_id == "Mine" \
 			and GameState.flag_get("ch2") == 2 and GameState.flag_get("c_mine_after") == 0:
 		DialogueSystem.play_cutscene("mine_after")
@@ -499,7 +501,7 @@ func _play_enter_cutscenes() -> void:
 	for c in cut_on_enter:
 		if typeof(c) != TYPE_DICTIONARY:
 			continue
-		var ok_step: bool = (not c.has("step")) or GameState.flag_get("step") == int(c["step"])
+		var ok_step: bool = (not c.has("step")) or GameState.flag_get("ch1_step") == int(c["step"])
 		if ok_step:
 			DialogueSystem.play_cutscene(str(c["cut"]))
 
@@ -535,7 +537,7 @@ func _setup_encounter_tracker() -> void:
 ## 對應 build_cq2.py L2341 `CFG.encGroup==="mine_step0"?(f.step===0?"tutorial":"mine"):CFG.encGroup`。
 func _resolve_encounter_group() -> String:
 	if enc_group == "mine_step0":
-		return "tutorial" if GameState.flag_get("step") == 0 else "mine"
+		return "tutorial" if GameState.flag_get("ch1_step") == 0 else "mine"
 	return enc_group
 
 

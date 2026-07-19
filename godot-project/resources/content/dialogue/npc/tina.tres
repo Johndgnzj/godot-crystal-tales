@@ -31,7 +31,7 @@ label = "委託"
 
 [sub_resource type="Resource" id="Resource_3jokc"]
 script = ExtResource("1_xbcy2")
-when = "step>=3"
+when = "ch1_step>=3"
 speaker = "緹娜"
 lines = PackedStringArray("歡迎來到冒險者公會！要登錄成為冒險者嗎？", "……路德和瑪琳，兩位都登錄完成！", "從今天起你們就是 F 級冒險者了。委託隨時來找我。")
 action = "register"
@@ -47,7 +47,7 @@ label = "委託"
 
 [sub_resource type="Resource" id="Resource_6s27o"]
 script = ExtResource("1_xbcy2")
-when = "step==0"
+when = "ch1_step==0"
 speaker = "緹娜"
 lines = PackedStringArray("這不是路德嗎？要去礦山見習？", "等你正式登錄的那天，公會隨時歡迎你。")
 cmd = "talk"

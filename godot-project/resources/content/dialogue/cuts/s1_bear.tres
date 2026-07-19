@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = ""
+text = "一擊。短劍脫手飛出，路德重重摔在濕冷的落葉上。"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "站……站起來啊，快……"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（一道人影懶洋洋踱進空地——下一瞬，寒光一閃，熊悶哼著退開了。）"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "亞倫"
+text = "喂喂，這種地方，小鬼跑進來找死啊？"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "你是……住旅店那個、成天曬太陽的亞倫大哥！"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = "亞倫"
+text = "（把路德一把拉起來）能站？行，自己走回去。我還想天黑前補個回籠覺呢。"
+
+[sub_resource type="Resource" id="L7"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（盯著那道背影，忘了痛）……好快的劍。那，才是真正的冒險者……"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s1_bear"
+once = "c_s1_bear"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
+transfer = PackedStringArray("Town", "home")
+setstep = 3
+party = PackedStringArray()

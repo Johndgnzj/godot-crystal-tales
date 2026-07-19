@@ -13,7 +13,7 @@ label = "住宿"
 
 [sub_resource type="Resource" id="Resource_8477t"]
 script = ExtResource("1_leeos")
-when = "step==0"
+when = "ch1_step==0"
 speaker = "朵拉"
 lines = PackedStringArray("要跟亞倫先生出門？路上小心。", "回來我煮好吃的等你們。")
 cmd = "talk"

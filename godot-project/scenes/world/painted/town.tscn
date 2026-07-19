@@ -22,6 +22,9 @@ size = Vector2(65, 44)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3aicu"]
 size = Vector2(22, 14)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_follow"]
+size = Vector2(250, 60)
+
 [node name="Town" type="Node2D" unique_id=2098412400]
 script = ExtResource("1_chbew")
 scene_id = "Town"
@@ -38,10 +41,10 @@ spawns = {
 }
 bgm = "bgm_town.mp3"
 cut_on_enter = [{
-"cut": "prologue_town",
+"cut": "s1_open",
 "step": 0
 }, {
-"cut": "town_start",
+"cut": "s2_home",
 "step": 3
 }]
 npc_list = [{
@@ -65,6 +68,20 @@ npc_list = [{
 "sprite": "rossel",
 "x": 19,
 "y": 11
+}, {
+"face": "Right",
+"id": "hank",
+"pos": Vector2(540, 700),
+"sprite": "hank",
+"x": 16,
+"y": 21
+}, {
+"face": "Left",
+"id": "martha",
+"pos": Vector2(716, 700),
+"sprite": "martha",
+"x": 22,
+"y": 21
 }]
 door_list = [{
 "entry_pos": Vector2(416, 512),
@@ -138,6 +155,9 @@ position = Vector2(628, 120)
 script = ExtResource("4_3dwtq")
 to_scene = "NMA"
 spawn_id = "from_Town"
+has_min_step = true
+min_step = 5
+deny_msg = "還沒有非上礦山不可的理由。"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/ExitN" unique_id=41129224]
 position = Vector2(10.5, -9)
@@ -149,8 +169,8 @@ script = ExtResource("4_3dwtq")
 to_scene = "EFA"
 spawn_id = "from_Town"
 has_min_step = true
-min_step = 3
-deny_msg = "瑪琳：先跟亞倫先生去礦山吧！（往北）"
+min_step = 1
+deny_msg = "東之森有魔物出沒……做好準備再去吧。"
 push_offset = Vector2(-24, 0)
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/ExitE" unique_id=1897602402]
@@ -173,6 +193,17 @@ msg = "西邊瀰漫著不自然的濃霧……現在進不去"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/TriggerW" unique_id=20652023]
 shape = SubResource("RectangleShape2D_qft43")
+
+[node name="TriggerFollow" type="Area2D" parent="Zones"]
+position = Vector2(628, 240)
+script = ExtResource("5_8qvey")
+cut_id = "s2_follow"
+cut_once_flag = "c_s2_follow"
+has_step = true
+step = 4
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/TriggerFollow"]
+shape = SubResource("RectangleShape2D_follow")
 
 [node name="YSort" type="Node2D" parent="." unique_id=231956104]
 y_sort_enabled = true

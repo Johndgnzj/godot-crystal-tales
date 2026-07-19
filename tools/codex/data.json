@@ -2907,6 +2907,18 @@
           ]
         }
       ],
+      "bear_forced": [
+        {
+          "weight": 1.0,
+          "members": [
+            {
+              "id": "bear_dire",
+              "min": 1,
+              "max": 1
+            }
+          ]
+        }
+      ],
       "eforest1": [
         {
           "weight": 3.0,
@@ -3448,7 +3460,7 @@
           "done": null
         },
         {
-          "when": "step>=3",
+          "when": "ch1_step>=3",
           "speaker": "緹娜",
           "lines": [
             "歡迎來到冒險者公會！要登錄成為冒險者嗎？",
@@ -3473,7 +3485,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "緹娜",
           "lines": [
             "這不是路德嗎？要去礦山見習？",
@@ -3536,7 +3548,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "朵拉",
           "lines": [
             "要跟亞倫先生出門？路上小心。",
@@ -3588,7 +3600,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "希雅修女",
           "lines": [
             "蓋婭女神看顧著每一位旅人。"
@@ -3638,7 +3650,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "巴頓鎮長",
           "lines": [
             "聽說亞倫先生要帶你去礦山見習？",
@@ -3664,24 +3676,11 @@
       ],
       "hank": [
         {
-          "when": "ch1>=1",
+          "when": "gotSword==1",
           "speaker": "漢克",
           "lines": [
-            "……路德，你也要出去闖了啊。",
-            "拿去，我打的劍。別死在外面。",
-            "（獲得『鐵劍』！開啟 選單→裝備 分頁換上它）"
-          ],
-          "action": "give_sword",
-          "cmd": "hank_gift",
-          "label": "臨別贈言",
-          "done": "gotSword"
-        },
-        {
-          "when": "step==0",
-          "speaker": "漢克",
-          "lines": [
-            "哼，礦山？",
-            "……跟緊亞倫先生，別給他添麻煩。"
+            "該跑的時候就跑，別逞強。",
+            "……那把劍陪過我不少險路，也讓它護著你。"
           ],
           "action": null,
           "cmd": "talk",
@@ -3689,11 +3688,24 @@
           "done": null
         },
         {
+          "when": "ch1_step>=3",
+          "speaker": "漢克",
+          "lines": [
+            "……路德，你也要出去闖了啊。",
+            "（取下牆上一把用舊的劍）拿去。這把陪我走過不少地方。別死在外面。",
+            "（獲得『漢克的舊劍』！開啟 選單→裝備 分頁換上它）"
+          ],
+          "action": "give_sword",
+          "cmd": "hank_gift",
+          "label": "臨別贈言",
+          "done": "gotSword"
+        },
+        {
           "when": "always",
           "speaker": "漢克",
           "lines": [
-            "冒險者？哼，那不是鬧著玩的。",
-            "你亞倫大哥那麼強的人都……算了。要去就去吧。"
+            "冒險者？哼，那可不是鬧著玩的。",
+            "……你亞倫大哥那麼強的人都能出事。別走我們的老路。"
           ],
           "action": null,
           "cmd": "talk",
@@ -3703,12 +3715,24 @@
       ],
       "martha": [
         {
-          "when": "always",
+          "when": "gotRing==1",
+          "speaker": "瑪莎",
+          "lines": [
+            "路上一定要吃飽穿暖，聽到沒？",
+            "……平安回來，比什麼都重要。"
+          ],
+          "action": null,
+          "cmd": "talk",
+          "label": null,
+          "done": null
+        },
+        {
+          "when": "ch1_step>=3",
           "speaker": "瑪莎",
           "lines": [
             "你這孩子，越來越像年輕時的你爸了。",
-            "這枚戒指你戴著——是我年輕時你爸打的，保平安。",
-            "（獲得『活力戒指』！開啟 選單→裝備 可以裝上）"
+            "這個戒指你收著——是我年輕出門那些年一直戴著的，保平安。收好。",
+            "（獲得『瑪莎的護身戒』！開啟 選單→裝備 可以裝上）"
           ],
           "action": "give_ring",
           "cmd": "martha_gift",
@@ -3719,8 +3743,7 @@
           "when": "always",
           "speaker": "瑪莎",
           "lines": [
-            "你這孩子，越來越像年輕時的你爸了。",
-            "路上一定要吃飽穿暖，聽到沒？"
+            "你這孩子……別讓你哥擔心了。"
           ],
           "action": null,
           "cmd": "talk",
@@ -3836,7 +3859,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "老葛雷",
           "lines": [
             "那礦坑二十年前就封了……最近夜裡卻有聲音。",
@@ -3965,7 +3988,7 @@
           "done": null
         },
         {
-          "when": "step==0",
+          "when": "ch1_step==0",
           "speaker": "唐恩",
           "lines": [
             "喔？新面孔。要打鐵、修東西，找我唐恩就對了……",
@@ -4225,6 +4248,158 @@
         "battle": null,
         "transfer": null,
         "setstep": null,
+        "party": null
+      },
+      "s1_open": {
+        "once": "c_s1_open",
+        "lines": [
+          {
+            "speaker": "路德",
+            "text": "看好了——這一劍，就是打倒魔王的一劍！"
+          },
+          {
+            "speaker": "瑪琳",
+            "text": "……你昨天也這麼說。前天也是。"
+          },
+          {
+            "speaker": "路德",
+            "text": "這次不一樣！公會貼了告示，東之森最近冒出魔物。我先去清掉牠們，緹娜姐一定馬上讓我登錄！"
+          },
+          {
+            "speaker": "瑪琳",
+            "text": "哥，亞倫大哥也說森林深處不能亂闖——喂，路德！"
+          },
+          {
+            "speaker": "",
+            "text": "（話還沒說完，路德已經抓起劍衝了出去。）"
+          },
+          {
+            "speaker": "",
+            "text": "勇者的日常，第一天。——才怪。"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": 1,
+        "party": null
+      },
+      "s1_bear_pre": {
+        "once": "c_s1_bear_pre",
+        "lines": [
+          {
+            "speaker": "",
+            "text": "（低沉的咆哮——一頭遠比路德高大的凶暴的熊撞開了樹叢！）"
+          },
+          {
+            "speaker": "路德",
+            "text": "這、這麼大隻……沒、沒關係！我可是要當勇者的人！"
+          },
+          {
+            "speaker": "",
+            "text": "（強敵當前——先撐過牠的攻勢！）"
+          }
+        ],
+        "battle": "bear_forced",
+        "transfer": null,
+        "setstep": 2,
+        "party": null
+      },
+      "s1_bear": {
+        "once": "c_s1_bear",
+        "lines": [
+          {
+            "speaker": "",
+            "text": "一擊。短劍脫手飛出，路德重重摔在濕冷的落葉上。"
+          },
+          {
+            "speaker": "路德",
+            "text": "站……站起來啊，快……"
+          },
+          {
+            "speaker": "",
+            "text": "（一道人影懶洋洋踱進空地——下一瞬，寒光一閃，熊悶哼著退開了。）"
+          },
+          {
+            "speaker": "亞倫",
+            "text": "喂喂，這種地方，小鬼跑進來找死啊？"
+          },
+          {
+            "speaker": "路德",
+            "text": "你是……住旅店那個、成天曬太陽的亞倫大哥！"
+          },
+          {
+            "speaker": "亞倫",
+            "text": "（把路德一把拉起來）能站？行，自己走回去。我還想天黑前補個回籠覺呢。"
+          },
+          {
+            "speaker": "路德",
+            "text": "（盯著那道背影，忘了痛）……好快的劍。那，才是真正的冒險者……"
+          }
+        ],
+        "battle": null,
+        "transfer": [
+          "Town",
+          "home"
+        ],
+        "setstep": 3,
+        "party": null
+      },
+      "s2_home": {
+        "once": "c_s2_home",
+        "lines": [
+          {
+            "speaker": "瑪琳",
+            "text": "（叉腰）虧我還追出去！要不是亞倫大哥剛好路過——"
+          },
+          {
+            "speaker": "路德",
+            "text": "我知道啦……我只是想證明我可以。"
+          },
+          {
+            "speaker": "瑪莎",
+            "text": "（替他敷上藥草）你這孩子……越來越像你爸年輕的時候了。"
+          },
+          {
+            "speaker": "漢克",
+            "text": "（抱著手臂靠在門邊）當冒險者？哼，那可不是鬧著玩的。"
+          },
+          {
+            "speaker": "路德",
+            "text": "可你們當年不也——"
+          },
+          {
+            "speaker": "漢克",
+            "text": "……我和你媽在外面闖了那麼多年，到頭來什麼名堂也沒闖出來，才回這座鎮上。別走我們的老路。"
+          },
+          {
+            "speaker": "",
+            "text": "（去和家人、鎮上的人說說話吧——他們嘴上唸著，手上卻一個個幫你打點行裝。）"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": 4,
+        "party": null
+      },
+      "s2_follow": {
+        "once": "c_s2_follow",
+        "lines": [
+          {
+            "speaker": "",
+            "text": "（路德看見亞倫揹著行囊，正往鎮北走去。）"
+          },
+          {
+            "speaker": "",
+            "text": "公會給了亞倫一紙委託——調查北方礦山近來的異狀。"
+          },
+          {
+            "speaker": "路德",
+            "text": "（握緊手裡的舊劍）……跟上去。這次，我不會扯後腿。"
+          }
+        ],
+        "battle": null,
+        "transfer": null,
+        "setstep": 5,
         "party": null
       }
     }

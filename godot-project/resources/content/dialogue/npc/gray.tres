@@ -38,7 +38,7 @@ action = "ch2_take"
 
 [sub_resource type="Resource" id="Resource_g6s6g"]
 script = ExtResource("1_giiuj")
-when = "step==0"
+when = "ch1_step==0"
 speaker = "老葛雷"
 lines = PackedStringArray("那礦坑二十年前就封了……最近夜裡卻有聲音。", "要進去？……跟緊亞倫先生。")
 

@@ -87,7 +87,7 @@ func _run() -> void:
 			_expect(int(m["sk"][sid]) == lv0 + 1, "技能升級生效（%s）" % sid)
 
 	# 稱號佩戴：使 t_rookie（req step>=3）為已取得後佩戴，驗寫入 eqTitle。
-	gs.flag_set("step", 3)
+	gs.flag_set("ch1_step", 3)
 	var tp: Node = menu._pages[3]
 	tp._equip(0)
 	_expect(String(gs.flags.get("eqTitle", "")) == "t_rookie", "稱號佩戴寫入 eqTitle")

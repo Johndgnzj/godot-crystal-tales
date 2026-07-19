@@ -3,22 +3,30 @@
 [ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_b7qdl"]
 [ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_ybrlc"]
 
-[sub_resource type="Resource" id="Resource_r5yxm"]
+[sub_resource type="Resource" id="Resource_post"]
 script = ExtResource("1_b7qdl")
+when = "gotRing==1"
 speaker = "瑪莎"
-lines = PackedStringArray("你這孩子，越來越像年輕時的你爸了。", "這枚戒指你戴著——是我年輕時你爸打的，保平安。", "（獲得『活力戒指』！開啟 選單→裝備 可以裝上）")
+lines = PackedStringArray("路上一定要吃飽穿暖，聽到沒？", "……平安回來，比什麼都重要。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="Resource_gift"]
+script = ExtResource("1_b7qdl")
+when = "ch1_step>=3"
+speaker = "瑪莎"
+lines = PackedStringArray("你這孩子，越來越像年輕時的你爸了。", "這個戒指你收著——是我年輕出門那些年一直戴著的，保平安。收好。", "（獲得『瑪莎的護身戒』！開啟 選單→裝備 可以裝上）")
 action = "give_ring"
 cmd = "martha_gift"
 label = "母親的心意"
 done = "gotRing"
 
-[sub_resource type="Resource" id="Resource_hvfht"]
+[sub_resource type="Resource" id="Resource_talk"]
 script = ExtResource("1_b7qdl")
 speaker = "瑪莎"
-lines = PackedStringArray("你這孩子，越來越像年輕時的你爸了。", "路上一定要吃飽穿暖，聽到沒？")
+lines = PackedStringArray("你這孩子……別讓你哥擔心了。")
 cmd = "talk"
 
 [resource]
 script = ExtResource("2_ybrlc")
 id = "martha"
-entries = Array[ExtResource("1_b7qdl")]([SubResource("Resource_r5yxm"), SubResource("Resource_hvfht")])
+entries = Array[ExtResource("1_b7qdl")]([SubResource("Resource_post"), SubResource("Resource_gift"), SubResource("Resource_talk")])

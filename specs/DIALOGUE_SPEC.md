@@ -1,11 +1,16 @@
 # 規格：對話／過場／觸發／撿取資料格式
 
-- Spec 版本: v3.0
+- Spec 版本: v3.1
 - 對應 GDevelop 原始碼快照: `reference/gdevelop/build_cq2.py`（2026-07 快照）L941-1015（DLG）、
   L1016-1036（CUTS）、L1302-1306（matchWhen）、L1564-1566（openOwnerCmd）、L1575-1582（buildIntCmds）、
   L1859-1864（室外 NPC 對話）；其餘段落（劇情佇列/出口/觸發區/pickups）行號仍對應 v1.1 舊快照，待全面校對
 - 狀態: 定案
 - 用途: MOD-A（對話/劇情）、MOD-B（撿取/觸發）實作依據
+- v3.1 變更記錄（2026-07-20，第一章 Phase 3 地基）：Godot 端線性主線旗標由 `step` 更名為 `ch1_step`
+  （John Phase 0 的 D1 定案）。**本檔凡述 GDevelop `flags.step` 之處**（CUTS `setstep` 寫入、trigger `step`/
+  `minStep`、exit `minStep` 的比較對象），**Godot 實作一律對應 `flags.ch1_step`**；`CutsceneEntry.setstep`
+  經 `dialogue_system` 寫入 `ch1_step`。GDevelop 原始碼與本檔既有行號描述保留 `step`（凍結不動）。改名為
+  行為保持（目前流程仍 0→3→4）；各小節門檻重映射隨 Phase 3 逐節施作。
 - v3.0 變更記錄（2026-07-18，對話資料 .tres 化，John 拍板）：
   1. 對話資料真相源從「run-time parse dialogue.json」改為原生 .tres（比照 content_db.tres 慣例，見
      CLAUDE.md「權威來源與資料流向」）：個別檔 `resources/content/dialogue/npc/<id>.tres`（NpcDialogue，
@@ -101,7 +106,7 @@ CUTS = {
     ],
     "battle": "<可選，播完立即觸發的 encounter id，見 CONTENT.json encounters>",
     "transfer": ["<目標場景>", "<目標場景的出生點 id>"],  // 可選，播完立即切換場景
-    "setstep": <可選，整數，播完寫入 flags.step>,
+    "setstep": <可選，整數，播完寫入 flags.ch1_step（Godot；GDevelop 原為 flags.step，見 v3.1）>,
     "party": ["<member id>", ...]  // 可選，播完套用的隊伍組成（已在隊上的成員保留原資料，新成員用樣板建立）
   }
 }
@@ -116,7 +121,7 @@ CUTS = {
 - 播放機制：觸發時 `st.queue.push(cut_id)`，世界場景每幀從 `queue` 頭部取出播放（`st.cut`/`st.cutIdx`
   維護目前播放到第幾句）。播放完畢後（L1685-1706）依序處理：
   1. 若有 `once`：寫 `flags[once]=1`。
-  2. 若有 `setstep`：寫 `flags.step = setstep`。
+  2. 若有 `setstep`：寫 `flags.ch1_step = setstep`（Godot；GDevelop 原為 `flags.step`，見 v3.1）。
   3. 若有 `party`：依陣列 id 順序重建隊伍——原本在隊上的成員保留其存檔資料（等級/裝備/hp...），新成員
      呼叫 `mkMember(id)`（即 GDevelop 端的樣板建立＋`derive()`）建立。
   4. 若有 `battle`：寫 `g_returnScene/g_returnX/g_returnY`（記錄過場觸發當下的場景與玩家座標，供戰敗/

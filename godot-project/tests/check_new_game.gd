@@ -22,11 +22,11 @@ func _run() -> void:
 		print("=== NEW_GAME FAIL ==="); quit(1); return
 	gf.new_game()
 
-	_expect(gs.party.size() == 2, "隊伍 2 人（得到 %d）" % gs.party.size())
+	_expect(gs.party.size() == 1, "隊伍 1 人（開場只有路德，得到 %d）" % gs.party.size())
 	_expect(gs.gold == 30, "金錢 30（得到 %d）" % gs.gold)
 	_expect(int(gs.inv_get("potion")) == 4, "藥水 4（得到 %d）" % gs.inv_get("potion"))
 	_expect(gs.eq_inv.has("swift_boots"), "裝備袋含 swift_boots")
-	_expect(gs.flag_get("ch1") == 0 and gs.flags.has("step"), "起始 flags 設好")
+	_expect(gs.flag_get("ch1") == 0 and gs.flags.has("ch1_step"), "起始 flags 設好")
 	_expect(gs.spawn == "home", "spawn=home")
 
 	if gs.party.size() > 0:
