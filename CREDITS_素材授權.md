@@ -73,16 +73,23 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   另 `menuart_<id>`（三主角全身，選單「故事」頁 MenuArt）同法產生（裁邊去浮水印→去背→正規化畫布）。
   ※ 2026-07-18：**路德 ludo** 的 face／portrait／menuart 三張改「日系動漫精緻」風重生＋乾淨去背——一張螢光綠底全身圖經
   `tools/role_slicer/`（瀏覽器 chroma-key 去螢光底＋框選）切出 a `face_ludo`(144²)／b `portrait_ludo`(768×1024)／c `menuart_ludo`(768×1024)；
-  portrait 由舊 16:9 改為 **3:4 直幅**（依 ROLE_ART_SPEC v1.1）。原圖保留於 `assets-source/role/main/ludo/`。AI 生成、提示詞作者 John。
+  portrait 由舊 16:9 改為 **3:4 直幅**（依 角色立繪產圖規格 v1.1）。原圖保留於 `assets-source/role/main/ludo/`。AI 生成、提示詞作者 John。
   ※ 2026-07-18（全角色立繪換裝，15 位）：全部角色改「日系動漫精緻」風、`tools/role_slicer/` 螢光底去背，皆備 a `face_<id>`／b `portrait_<id>`(3:4)／c `menuart_<id>`(3:4)；含改名 `aaron→alan`／`sister→shea`／`guard→rossel`，新增鐵匠 `don`、反派 `necro`。原圖保留於 `assets-source/role/{main,npc,enemies}/<id>/`（2026-07-19 依角色分類歸位）。AI 生成（外部產圖工具）、提示詞作者 John。取代先前「13 位／menuart 僅三主角」狀態；同批 `assets/char` 走路圖（`aaron→alan`／`guard→rossel`／`sister→shea`）與 `assets/battle/hero_aaron_*→hero_alan_*` 一併改名。
 - `assets/battle/hero_*.png`：由 LPC 合成角色幀放大裁切（沿用 LPC CC-BY-SA/GPL 授權），
   武器圖層取自 LPC weapon walk（longsword/dagger/saber，CC-BY-SA/GPL）。
-- `assets/ui/battlebg_*.png`：程序化生成（自製）。2026-07-15：`battlebg_forest.png` 換成 John 提供的「東之森戰鬥背景」圖（取代原程序化版）。
+- `assets/ui/battlebg_*.png`：程序化生成（自製）。2026-07-15：`battlebg_forest.png` 換成 John 提供的「東之森戰鬥背景」圖（取代原程序化版）。2026-07-20：`battlebg_mine.png` 換成 OpenAI 內建 imagegen 生成、經 John 驗收的手繪礦山戰鬥背景；`battlebg_forest_depths.png` 為同日經 John 驗收的深林遺跡戰鬥背景，供 `eforest1`～`eforest3`（含 boss）使用。原圖分別保留於 `assets-source/battle/battlebg_mine_2026-07-20.png` 與 `assets-source/battle/battlebg_forest_depths_2026-07-20.png`（提示詞作者 John／協作 Agent）。
 - `assets/map/north_mine/nm_{a,b,c,d,e,f}.png`（原圖保留於 `assets-source/map/M2-north-mine/`）：
   AI 生成素材（ChatGPT 內建圖片生成功能，提示詞作者 John/協作 Agent，2026-07-16）；北方礦山 a～f 手繪畫面地圖，f 為 boss 房。
   2026-07-17 依地圖連線調整 a、b、c、e 出入口構圖與路徑。
+- `assets/map/floret/floret_town.png`（正確原圖備份於 `assets-source/map/M1/floret_town.png`）：
+  AI 生成素材；M1 芳蕾鎮手繪畫面地圖。2026-07-20 已由 Godot runtime 的無箭頭版本回存為原圖；舊的 `assets-source/map/M1-floret-town/floret-town.png` 為含箭頭的錯誤版本，不作為來源圖使用。
+- `assets/map/east_forest/ef_a.png`（原圖保留於 `assets-source/map/M3-east-forest/east-forest-a.png`；清理前版本保留為 `east-forest-a-before-cleanup-2026-07-20.png`）：
+  AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 a 畫面。已依地圖產圖規格移除箭頭、寶箱、告示牌、木箱與木桶等互動物件，保留原有地形與出入口。
+- `assets/map/east_forest/ef_{b,c,d}.png`（原圖分別保留於 `assets-source/map/M3-east-forest/east-forest-{b,c,d-boss-room}.png`；清理前版本附 `-before-cleanup-2026-07-20` 後綴）：
+  AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 b、c、d 畫面。已依地圖產圖規格移除箭頭與烘入的互動物件；d 的中央狼型敵人亦已移除，保留原有地形與出入口。
 - `assets/map/east_forest_depths/efd_{a,b,c,d,e,f}.png`（原圖保留於 `assets-source/map/M4-east-forest-depths/east-forest-depths-{a,b,c,d,e,f}.png`）：
   AI 生成素材（OpenAI Imagen，提示詞作者 John/協作 Agent，2026-07-17）；東之森深處 M4-a～f 手繪畫面地圖。a 以 M3 `east-forest-g.png` 作視覺延續參考，b～f 再以 a 鎖定同區域的森林低霧、像素尺度與視覺語彙；全部正規化為 1280×1280。
+  `assets-source/map/M4-east-forest-depths/east-forest-depths-map.png` 為依 `map-def.xlsx` 格位拼合的 M4 總覽衍生圖，僅納入已完成的 a～f；未完成的 g～n 格位保留深灰留白。
 - `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。
 - `assets/props/ext_*.png`（六棟建築外觀，洋紅底原圖）：AI 生成素材（Gemini gemini-2.5-flash-image，
   提示詞作者 John/協作 Agent，由 /gen-art skill 的 building type 生成）。2026-07-15 重生成為**正面平視、門在正面下緣**的日系像素風（取代原 2026-07-12 的 45° isometric 版，便於在正交地圖擺進入點）。
