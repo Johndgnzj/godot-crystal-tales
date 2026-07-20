@@ -1,6 +1,6 @@
 # 設定集 codex 產生器
 
-《水晶戰記》HTML 設定集（game-codex）的產生器：把遊戲資料組成一份可搜尋的單頁 HTML，發佈成 claude.ai Artifact（John 私人用）。
+《水晶傳說》HTML 設定集（game-codex）的產生器：把遊戲資料組成一份可搜尋的單頁 HTML，發佈成 claude.ai Artifact（John 私人用）。
 
 > 之前放在 session scratchpad、每次 session 消失；2026-07-18 收進 repo 並改成自給自足。
 

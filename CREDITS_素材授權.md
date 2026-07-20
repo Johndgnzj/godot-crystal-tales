@@ -5,7 +5,7 @@
 > 文中提及的 `tools/`、`design/`、`art_v*.py`、`build_cq2.py` 等路徑為 GDevelop 端工作區路徑，
 > 生成腳本依 TASKS/09 決議留在 GDevelop 端，Godot 專案只消費產出的 PNG/音檔。
 
-# 素材授權標註（水晶戰記）
+# 素材授權標註（水晶傳說）
 
 ## 角色
 LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld-demo/CREDITS_素材授權.md；戰鬥怪物與道具為 GDevelop 商店 CC0（16x16 dungeon tileset、grafxkid、western fps 2d 等包）。
@@ -131,4 +131,5 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   2026-07-17，依 /gen-art 的 title 構圖規格生成）。背景、水晶徽記、中英文標題與男女主角剪影皆為
   獨立 PNG；標題文字為「水晶傳說／TALE of CRYSTAL」，透明圖層由洋紅色鍵去背。
   標題選單描邊字 `t_start/t_cont/t_restart.png` 亦為 PIL 系統字體烘製（自製）。
-  ※ 遊戲更名：水晶戰記 → 水晶奇譚（Crystal Tale）；專案資料夾 crystal-quest 維持為代號。
+  ※ 遊戲定名：水晶傳說：路德篇 Tale of Crystal: The Legend of Ludo（主標 水晶傳說／Tale of Crystal ＋ 副標 路德篇／The Legend of Ludo）；曾誤植「水晶奇譚」「水晶戰記」，已更正。
+  ⚠ 上述 title_zh/title_en 圖層主標「水晶傳說」正確，惟英文仍為舊排「TALE of CRYSTAL」且尚無副標——John 重產中，目標＝Tale of Crystal: The Legend of Ludo（中文加「路德篇」）。專案資料夾 crystal-quest 維持為代號。

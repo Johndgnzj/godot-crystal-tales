@@ -1,5 +1,5 @@
 #!/bin/sh
-# 水晶戰記 codex 資料同步 hook
+# 水晶傳說 codex 資料同步 hook
 # 當本次 commit 動到遊戲資料（godot-project/resources/content/**）時，自動重跑
 # build_codex.py 重新產生 tools/codex/data.json（.tres 資料的可 diff 快照）並加入本次
 # commit，確保版控上的設定快照永遠跟 .tres 真相源一致，不會脫勾。

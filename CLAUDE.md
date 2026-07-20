@@ -1,6 +1,6 @@
-# 水晶戰記 Godot 遷移工作區
+# 水晶傳說 Godot 遷移工作區
 
-本目錄是《水晶戰記》**Godot 版主專案**（自 GDevelop 遷移而來，POC 已可玩）。原 GDevelop 專案已凍結，
+本目錄是《水晶傳說》**Godot 版主專案**（自 GDevelop 遷移而來，POC 已可玩）。原 GDevelop 專案已凍結，
 所有仍被引用的檔案（`build_cq2.py`／`CONTENT.json`／`DEV_開發指南.md`）已收進本 repo 的
 **`reference/gdevelop/`** 唯讀快照（2026-07-16），**開發不再依賴 `../GDevelop` 目錄**，該目錄可整個封存。
 

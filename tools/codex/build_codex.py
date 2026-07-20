@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""組建水晶戰記設定集：解析 content_db.tres → GAME JSON、解析對話 .tres 真相源
+"""組建水晶傳說設定集：解析 content_db.tres → GAME JSON、解析對話 .tres 真相源
 （dialogue_db.tres 聚合）→ DLG/CUTS、注入 base64 圖片 → crystal_codex.html。
 資料變更後重跑本腳本＋重新發佈 Artifact 即可同步。"""
 import base64

@@ -1,6 +1,6 @@
-# 水晶戰記 — Godot 版
+# 水晶傳說 — Godot 版
 
-《水晶戰記 Crystal Tale》從 GDevelop 遷移到 **Godot 4.7** 的專案。原 GDevelop 版（規則/資料的原始出處）
+《水晶傳說：路德篇 Tale of Crystal: The Legend of Ludo》從 GDevelop 遷移到 **Godot 4.7** 的專案。原 GDevelop 版（規則/資料的原始出處）
 已凍結；仍被引用的檔案（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`）已收進本 repo 的
 `reference/gdevelop/`，**開發不再依賴 `../GDevelop` 目錄**。
 
