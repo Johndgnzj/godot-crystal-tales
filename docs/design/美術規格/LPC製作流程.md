@@ -3,7 +3,7 @@
 - 最後更新: 2026-07-18
 - 狀態: 定案（路德 `ludo` ＝首個完整案例，可當範本）
 - 適用: 主角／隊友的 **overworld 走路圖** ＋ **戰鬥身體圖**（idle／揮劍／突刺／詠唱）。
-  角色**立繪**（a 頭像／b 半身／c 全身）是另一條線，見 [ROLE_ART_SPEC.md](ROLE_ART_SPEC.md)。
+  角色**立繪**（a 頭像／b 半身／c 全身）是另一條線，見 [角色立繪產圖規格.md](角色立繪產圖規格.md)。
 - 工具: **Universal LPC Spritesheet Generator**（`sanderfrenken.github.io/Universal-LPC-Spritesheet-Character-Generator`）
   ——它是**圖層組裝器，不是把立繪轉成像素的轉換器**：只能挑現成 LPC 圖層拼出「接近」角色（LPC 像素風、非立繪還原）。
   這正是走路圖該用的工具（穩、四方向一致、能動）；AI 目前產不出穩定的四方向 walk cycle。

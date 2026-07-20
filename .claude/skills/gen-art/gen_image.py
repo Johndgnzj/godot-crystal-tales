@@ -9,8 +9,7 @@
   python3 .claude/skills/gen-art/gen_image.py --type raw      --prompt "..." --ar 1:1 --out /tmp/test.png
 
 金鑰：讀環境變數 GEMINI_API_KEY，否則往上層目錄找 .env（KEY=VALUE 格式）。
-      建議放專案根 godot-crystal-tales/.env（根 .gitignore 已排除 .env，不會進 git）；
-      若根目錄沒有，會繼續往上找（例如舊的 GameCreator/GDevelop/.env，沿用同一把金鑰）。
+      建議放專案根 godot-crystal-tales/.env（根 .gitignore 已排除 .env，不會進 git）。
       詳見 SKILL.md「金鑰」段。
 模型：gemini-2.5-flash-image（失敗時退 gemini-2.0-flash-preview-image-generation）。
 """
@@ -22,8 +21,8 @@ MODELS = ["gemini-2.5-flash-image", "gemini-2.0-flash-preview-image-generation"]
 STYLES = {
     # 立繪基底風格（2026-07-13 依 design/ref/role-design-* 定調：細線稿＋水彩手繪感）。
     # 構圖：人物置中、與角色配色對比的單色深底。配色由角色描述帶入。
-    # Godot 端：半身圖(frame=bust)直接存 assets/ui/face_<id>.png；不需要 GDevelop 的
-    #   art_v7_faces.py 自動裁 144px 頭像那套流程（Godot 直接用整張圖或在編輯器裁 region）。
+    # Godot 端：半身圖(frame=bust)直接存 assets/ui/face_<id>.png；需 144px 頭像時
+    #   直接用整張圖或在 Godot 編輯器裁 region。
     "face": ("Hand-drawn anime JRPG character illustration in a soft watercolor, painterly style: "
              "fine and delicate line art with subtle line-weight variation (NOT thick heavy black "
              "outlines), gentle watercolor-like shading with soft gradients, translucent washes and "
@@ -65,8 +64,7 @@ STYLES = {
                  "#ff00ff background for easy cutout, no ground plane, no drop shadow, no text, no "
                  "letters, no numbers, no people. Building: "),
     # 室內背景大圖（水彩手繪，滿版場景，與立繪同一套風格 DNA；作立繪＋選單式室內背景）。
-    # Godot 端：存 assets/props/int_<key>.png，由編輯器 import；GDevelop build 的 _clean_ext
-    #   去背產 intc_<key>.png 那套後處理在 Godot 沒有對應（整合方式待設計，見 SKILL.md）。
+    # Godot 端：存 assets/props/int_<key>.png，由編輯器 import；需去背版另行處理（見 SKILL.md）。
     "interior": ("Hand-drawn watercolor, painterly JRPG interior background scene: fine and delicate "
                  "line work, soft watercolor shading with gentle gradients (NOT flat cel blocks, NOT "
                  "pixel art, NOT 3D). Color palette and lighting chosen to suit the room's own mood "

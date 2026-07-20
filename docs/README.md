@@ -22,10 +22,6 @@
 |---|---|
 | [素材管理規範.md](素材管理規範.md) | 素材放哪、進 Godot 後怎麼處理、授權標註規則、檢查清單 |
 | [`../CREDITS_素材授權.md`](../CREDITS_素材授權.md) | 授權帳本（每個進遊戲的素材一條）|
-| [`../assets-source/map/MAP_ART_SPEC.md`](../assets-source/map/MAP_ART_SPEC.md) | 手繪畫面地圖產圖規格（`gen-map-prompt` skill 的權威來源）|
-| [`../assets-source/role/ROLE_ART_SPEC.md`](../assets-source/role/ROLE_ART_SPEC.md) | 角色立繪產圖規格：a 戰鬥頭像／b 對話半身／c 全身＋去背螢光底規則（`gen-role-prompt` skill 的權威來源）|
-| [`../assets-source/role/LPC_WORKFLOW.md`](../assets-source/role/LPC_WORKFLOW.md) | LPC 角色走路圖／戰鬥圖製作流程（可復用四步：配方→匯出→接線驗證→更新文件；ludo 範本）|
-| [`../assets-source/role/CHARACTER_SPRITE_SPEC.md`](../assets-source/role/CHARACTER_SPRITE_SPEC.md) | 角色 sprite（走路/戰鬥）「遊戲可直接用」規格：動畫集/排版/尺寸/一致性/交付；產出者無關（LPC 或 AI 的驗收門檻）|
 
 ## 三、設計層（給不寫程式的設計員）— `docs/design/`
 
@@ -36,6 +32,10 @@
 | [design/屬性戰鬥設計.md](design/屬性戰鬥設計.md) | 四主屬性(str/agi/int/**luck**)→衍生戰鬥數值→三段式攻擊的設計與係數表（對應 BATTLE_FORMULAS v4.0）|
 | [design/魔物立繪素材設計.md](design/魔物立繪素材設計.md) | 戰鬥魔物立繪的來源位置、朝向、兩幀呼吸動畫與驗收規格 |
 | [design/魔物圖鑑.md](design/魔物圖鑑.md) | 全魔物**總覽**：數值/特性/掉落/出沒地/圖鑑描述＋各地圖遭遇表對照（彙整自 `enemies/*.tres`＋`encounters/*.tres`；機制見 BATTLE_FORMULAS F-11）|
+| [design/美術規格/地圖產圖規格.md](design/美術規格/地圖產圖規格.md) | 手繪畫面地圖產圖規格（`gen-map-prompt` skill 的權威來源）|
+| [design/美術規格/角色立繪產圖規格.md](design/美術規格/角色立繪產圖規格.md) | 角色立繪產圖規格：a 戰鬥頭像／b 對話半身／c 全身＋去背螢光底規則（`gen-role-prompt` skill 的權威來源）|
+| [design/美術規格/角色Sprite規格.md](design/美術規格/角色Sprite規格.md) | 角色 sprite（走路/戰鬥）「遊戲可直接用」規格：動畫集/排版/尺寸/一致性/交付；產出者無關（LPC 或 AI 的驗收門檻）|
+| [design/美術規格/LPC製作流程.md](design/美術規格/LPC製作流程.md) | LPC 角色走路圖／戰鬥圖製作流程（可復用四步：配方→匯出→接線驗證→更新文件；ludo 範本）|
 | [design/prompt/roles.md](design/prompt/roles.md) | 角色立繪 prompt 集（全 15 位的全身 c prompt，`gen-role-prompt` 產；路德＝風格基準）|
 | [design/prompt/emenies.md](design/prompt/emenies.md) | 魔物設定集立繪／公會懸賞黑墨圖的可重出 prompt 集；以角色立繪風格為共同基線 |
 
@@ -63,7 +63,13 @@ docs/
 ├── design/              # 設計層（給不寫程式的設計員）
 │   ├── 設計員指南.md
 │   ├── 道具武器設計.md
-│   └── 屬性戰鬥設計.md
+│   ├── 屬性戰鬥設計.md
+│   ├── 美術規格/          # 產圖／sprite 規格（gen-* skill 權威來源）
+│   │   ├── 地圖產圖規格.md
+│   │   ├── 角色立繪產圖規格.md
+│   │   ├── 角色Sprite規格.md
+│   │   └── LPC製作流程.md
+│   └── prompt/           # 依規格產出的 prompt 集
 ├── 劇本寫作心法.md        # 寫作教材
 └── 素材管理規範.md        # 素材治理 SOP
 ```

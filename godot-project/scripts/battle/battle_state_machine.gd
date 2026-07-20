@@ -1191,6 +1191,8 @@ func _battle_bg_texture() -> Texture2D:
 		name_ = "cave"
 	elif "mine" in area:
 		name_ = "mine"
+	elif area.begins_with("eforest"):
+		name_ = "forest_depths"
 	for p in ["res://assets/ui/battlebg_%s.png" % name_, "res://assets/ui/battlebg.png"]:
 		if ResourceLoader.exists(p):
 			return load(p)
