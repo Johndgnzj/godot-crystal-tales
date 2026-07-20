@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（老樹上掛著蜂巢。路德伸手去採——樹叢劇烈搖晃，一頭熟悉的巨影撞了出來：先前那頭凶暴的熊，帶著舊傷回來了。）"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "是上次那頭熊！"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（這次不一樣了）……瑪琳，這次換我們。上！"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s5_bear_pre"
+once = "c_s5_bear"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3")])
+battle = "bear_rematch"
+transfer = PackedStringArray()
+party = PackedStringArray()

@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（空氣驟冷。黑暗中，一頭「不該存在的東西」睜開了眼——異變的魔影。）"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "亞倫"
+text = "（笑容瞬間消失，擋到路德身前）……路德，退後。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "那、那是什麼——"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "亞倫"
+text = "別問。撐住牠的攻勢！"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s3_demon_pre"
+once = "c_s3_demon"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4")])
+battle = "prologue_demon"
+transfer = PackedStringArray()
+party = PackedStringArray()

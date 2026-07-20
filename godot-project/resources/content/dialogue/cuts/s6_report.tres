@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（路德揹著昏迷的瑪琳回到芳蕾鎮。希雅修女為她祈禱，暫時穩住了咒印。）"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "希雅修女"
+text = "（端詳瑪琳手腕的咒印）……這不是普通的傷。女神的力量只能暫時壓住它，若不找出源頭，遲早會蔓延。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "希雅修女"
+text = "（頓）路德，你身上女神的記號，比上次又亮了一分。"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "緹娜姐，礦山深處……我們找到了失蹤礦工的下落。還有會發黑光的水晶，和一個操縱它們的人。"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = "緹娜"
+text = "（神色凝重）……黑光的水晶。這件事已經超出我們分處能處理的範圍。我會如實寫進呈給大城的報告。"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = ""
+text = "亞倫的下落、瑪琳手腕的咒印、黑水晶的真相、還有那個「不想傷人卻走上邪道」的男人——一切都指向礦山深處那條向下的路。"
+
+[sub_resource type="Resource" id="L7"]
+script = ExtResource("1_line")
+speaker = ""
+text = "——第一章 完。"
+
+[resource]
+script = ExtResource("2_entry")
+id = "s6_report"
+once = "c_s6_report"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
+transfer = PackedStringArray()
+setstep = -1
+party = PackedStringArray()

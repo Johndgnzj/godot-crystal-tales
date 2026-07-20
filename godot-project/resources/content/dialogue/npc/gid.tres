@@ -3,6 +3,21 @@
 [ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_dgtl8"]
 [ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_sd1di"]
 
+[sub_resource type="Resource" id="brew"]
+script = ExtResource("1_dgtl8")
+when = "got_honey==1"
+speaker = "吉德"
+lines = PackedStringArray("（接過蜂蜜）好貨！看我的——", "（一陣調製）來，『烈火蜂蜜酒』，拿去。那守衛保證忘記自己在站崗。", "（獲得『蜂蜜酒』！拿去礦山守衛那兒。）")
+action = "gid_brew"
+cmd = "talk"
+
+[sub_resource type="Resource" id="want_honey"]
+script = ExtResource("1_dgtl8")
+when = "ch1_step>=10"
+speaker = "吉德"
+lines = PackedStringArray("好酒？我這兒是有一壺，可味道普普，換不到什麼好差事。", "不過——東之森裡有種蜂會釀『烈火蜂蜜』，加進酒裡最對味，就掛在森林東邊 f 區一棵老樹上。", "你們不是要當冒險者嗎？順手幫我採一罐回來吧。")
+cmd = "talk"
+
 [sub_resource type="Resource" id="Resource_r27mq"]
 script = ExtResource("1_dgtl8")
 speaker = "吉德"
@@ -29,4 +44,4 @@ cmd = "talk"
 [resource]
 script = ExtResource("2_sd1di")
 id = "gid"
-entries = Array[ExtResource("1_dgtl8")]([SubResource("Resource_r27mq"), SubResource("Resource_rwc45"), SubResource("Resource_akxfe")])
+entries = Array[ExtResource("1_dgtl8")]([SubResource("brew"), SubResource("want_honey"), SubResource("Resource_r27mq"), SubResource("Resource_rwc45"), SubResource("Resource_akxfe")])

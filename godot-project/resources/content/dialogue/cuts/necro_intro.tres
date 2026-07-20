@@ -32,6 +32,6 @@ script = ExtResource("2_nec_e")
 id = "necro_intro"
 once = "c_necro_intro"
 lines = Array[ExtResource("1_nec_l")]([SubResource("Resource_nec1"), SubResource("Resource_nec2"), SubResource("Resource_nec3"), SubResource("Resource_nec4"), SubResource("Resource_nec5")])
-battle = ""
+battle = "necro"
 transfer = PackedStringArray()
 party = PackedStringArray()

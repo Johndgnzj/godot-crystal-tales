@@ -480,14 +480,14 @@ func _apply_entry_state() -> void:
 		if spn != "" and spawns.has(spn):
 			_player.global_position = spawns[spn]
 	# 戰後劇情推進（對應 build_cq2.py L1435-1439；once 閘門由 play_cutscene 內建檢查）
+	var fought: EncounterDef = ContentDB.get_encounter(GameState.encounter)
 	if res == "story":
-		var fought: EncounterDef = ContentDB.get_encounter(GameState.encounter)
 		if fought != null and fought.story_cut != "":
 			DialogueSystem.play_cutscene(fought.story_cut)
-	if res == "win" and scene_id == "Mine" \
-			and GameState.flag_get("ch2") == 2 and GameState.flag_get("c_mine_after") == 0:
-		DialogueSystem.play_cutscene("mine_after")
-	if res == "lose":
+	elif res == "win":
+		if fought != null and fought.win_cut != "":
+			DialogueSystem.play_cutscene(fought.win_cut)
+	elif res == "lose":
 		_heal_all_party()
 		DialogueSystem.play_defeat_narration()
 	# 約定第 2 點：讀取完成後清空暫態欄位

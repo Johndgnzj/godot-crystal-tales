@@ -25,6 +25,9 @@ size = Vector2(22, 14)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_follow"]
 size = Vector2(250, 60)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_join"]
+size = Vector2(600, 120)
+
 [node name="Town" type="Node2D" unique_id=2098412400]
 script = ExtResource("1_chbew")
 scene_id = "Town"
@@ -46,6 +49,15 @@ cut_on_enter = [{
 }, {
 "cut": "s2_home",
 "step": 3
+}, {
+"cut": "s3_report",
+"step": 7
+}, {
+"cut": "s4_join",
+"step": 8
+}, {
+"cut": "s6_report",
+"step": 13
 }]
 npc_list = [{
 "face": "Right",
@@ -82,6 +94,13 @@ npc_list = [{
 "sprite": "martha",
 "x": 22,
 "y": 21
+}, {
+"face": "Down",
+"id": "warden",
+"pos": Vector2(628, 180),
+"sprite": "villager",
+"x": 19,
+"y": 5
 }]
 door_list = [{
 "entry_pos": Vector2(416, 512),
@@ -204,6 +223,17 @@ step = 4
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/TriggerFollow"]
 shape = SubResource("RectangleShape2D_follow")
+
+[node name="TriggerJoin" type="Area2D" parent="Zones"]
+position = Vector2(628, 600)
+script = ExtResource("5_8qvey")
+cut_id = "s4_join"
+cut_once_flag = "c_s4_join"
+has_step = true
+step = 8
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/TriggerJoin"]
+shape = SubResource("RectangleShape2D_join")
 
 [node name="YSort" type="Node2D" parent="." unique_id=231956104]
 y_sort_enabled = true

@@ -880,6 +880,13 @@ func _settle_win() -> void:
 		GameState.flag_set("ch2", 2)
 		GameState.eq_inv.append("swift_boots")
 		drop_msg += "\n擊退了狂暴洞熊！獲得『疾風靴』！崩塌的礦道鬆動了……"
+	if enc == "bear_rematch":
+		GameState.inv_add("fire_honey", 1)
+		GameState.flag_set("got_honey", 1)
+		drop_msg += "\n這次，我沒有逃。老樹上的『烈火蜂蜜』到手了！"
+	if enc == "necro":
+		GameState.flag_set("marin_curse", 1)
+		drop_msg += "\n擊退了死靈術士……但瑪琳的手腕，浮現出一圈黑色咒印。"
 
 	win_msg = "獲得 " + str(exp) + " 經驗值 · " + str(gold) + " 金幣" + drop_msg
 	if not gain.is_empty():

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="NpcDialogue" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_entry.gd" id="1_ward_e"]
+[ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="2_ward_n"]
+
+[sub_resource type="Resource" id="pass"]
+script = ExtResource("1_ward_e")
+when = "honey_wine==1"
+speaker = "守衛"
+lines = PackedStringArray("喔？給我的？（灌下一口）……嗬！這酒夠勁！", "（臉紅、眼神渙散）哎呀……天氣真好，適合打個盹……", "你們啊？我什麼都沒看見。（側身讓開）")
+action = "warden_pass"
+cmd = "talk"
+
+[sub_resource type="Resource" id="block"]
+script = ExtResource("1_ward_e")
+when = "ch1_step>=10"
+speaker = "守衛"
+lines = PackedStringArray("礦山封鎖中，閒雜人等不得進入。", "（打呵欠）唉，這種苦差事，要是有壺好酒暖暖身子就好了……")
+cmd = "talk"
+
+[sub_resource type="Resource" id="generic"]
+script = ExtResource("1_ward_e")
+speaker = "守衛"
+lines = PackedStringArray("礦山封鎖中，這是上頭的命令。")
+cmd = "talk"
+
+[resource]
+script = ExtResource("2_ward_n")
+id = "warden"
+entries = Array[ExtResource("1_ward_e")]([SubResource("pass"), SubResource("block"), SubResource("generic")])
