@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_zh.png" id="6_zh"]
 [ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_en.png" id="7_en"]
 [ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_heroes.png" id="8_heroes"]
+[ext_resource type="Texture2D" path="res://assets/ui/title_layers/title_backplate.png" id="9_backplate"]
 
 [sub_resource type="SystemFont" id="SystemFont_help"]
 font_names = PackedStringArray("PingFang SC", "Heiti SC", "STHeiti", "Hiragino Sans GB", "sans-serif")
@@ -36,29 +37,32 @@ texture = ExtResource("8_heroes")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="Backplate" type="TextureRect" parent="."]
+offset_left = 260.0
+offset_top = 116.0
+offset_right = 1020.0
+offset_bottom = 370.0
+texture = ExtResource("9_backplate")
+
 [node name="Crystal" type="TextureRect" parent="."]
-offset_left = 570.0
-offset_top = 10.0
-offset_right = 710.0
-offset_bottom = 140.0
+offset_left = 522.5
+offset_top = 20.0
+offset_right = 757.5
+offset_bottom = 152.0
 texture = ExtResource("5_crystal")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="TitleZh" type="TextureRect" parent="."]
-offset_left = 300.0
-offset_top = 115.0
-offset_right = 980.0
-offset_bottom = 385.0
+offset_right = 1280.0
+offset_bottom = 720.0
 texture = ExtResource("6_zh")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="TitleEn" type="TextureRect" parent="."]
-offset_left = 390.0
-offset_top = 300.0
-offset_right = 890.0
-offset_bottom = 500.0
+offset_right = 1280.0
+offset_bottom = 720.0
 texture = ExtResource("7_en")
 expand_mode = 1
 stretch_mode = 5

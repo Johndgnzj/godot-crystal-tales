@@ -102,7 +102,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   「細線稿＋水彩手繪」風生成、色調隨房間氛圍決定）。現行室內為「立繪＋選單式」，build 去底產衍生版 `intc_<key>.png` 當手繪背景註冊進 game.json。
 - `assets/char/gray_*/rossel_*.png`（老葛雷/羅素隊長 36 幀走路圖，戶外遊走 NPC）：
   LPC 角色產生器圖層合成（`art_v10_npcwalk.py`；body＋頭＋鬍/帽/鎖甲染色），授權同主角 **CC-BY-SA 3.0 / GPL 3.0**。
-- `assets/char/ludo_*.png`（路德 36 幀走路圖，**2026-07-18 重製**）：由 **Universal LPC Spritesheet Generator**（sanderfrenken）組裝 LPC 圖層（teen body＋messy2 髮＋leather 皮甲＋紅 cape＋cuffed pants＋leather boots＋bracers），採**乾淨無拔劍**版當 overworld 走路圖。授權 **OGA-BY 3.0 / CC-BY-SA 3.0 / GPL 3.0**（shadow 層 CC0）。**逐層完整作者／授權／連結見 `assets-source/role/main/ludo/ludo_lpc_credits.txt`**；配方存 `assets-source/role/main/ludo/ludo_lpc_recipe.json`（可 Import 回產生器重出/微調）。主要貢獻者：bluecarrot16、Stephen Challener (Redshrike)、Benjamin K. Smith (BenCreating)、JaidynReiman、ElizaWy、Johannes Sjölund (wulax)、Matthew Krohn (makrohn)、Pierre Vigier (pvigier)、Evert、TheraHedwig、MuffinElZangano、Durrani、Manuel Riecke (MrBeast)、Nila122、drjamgo 等 LPC 貢獻者。**戰鬥圖亦同源**（2026-07-18）：`assets/battle/hero_ludo_f0-3`（idle＝combat 就緒姿）＋`hero_ludo_{slash,thrust,spellcast}_*`（揮劍/突刺/詠唱；slash＝oversized `custom/slash_128`、thrust/spellcast＝standard）皆取自同一 LPC **有劍版**（`ludo_lpc/without_sword`，含紅 cape＋Arming Sword），授權/作者同上。
+- `assets/char/ludo_*.png`（路德 36 幀走路圖，**2026-07-18 重製**）：由 **Universal LPC Spritesheet Generator**（sanderfrenken）組裝 LPC 圖層（teen body＋messy2 髮＋leather 皮甲＋紅 cape＋cuffed pants＋leather boots＋bracers），採**乾淨無拔劍**版當 overworld 走路圖。授權 **OGA-BY 3.0 / CC-BY-SA 3.0 / GPL 3.0**（shadow 層 CC0）。**逐層完整作者／授權／連結見 `assets-source/role/main/ludo/ludo_lpc_credits.txt`**；配方存 `assets-source/role/main/ludo/ludo_lpc_recipe.json`（可 Import 回產生器重出/微調）。主要貢獻者：bluecarrot16、Stephen Challener (Redshrike)、Benjamin K. Smith (BenCreating)、JaidynReiman、ElizaWy、Johannes Sjölund (wulax)、Matthew Krohn (makrohn)、Pierre Vigier (pvigier)、Evert、TheraHedwig、MuffinElZangano、Durrani、Manuel Riecke (MrBeast)、Nila122、drjamgo 等 LPC 貢獻者。**戰鬥攻擊圖** `assets/battle/hero_ludo_{slash,thrust,spellcast}_*`（揮劍／突刺／詠唱；slash＝oversized `custom/slash_128`、thrust/spellcast＝standard）取自同一 LPC **有劍版**（`ludo_lpc/without_sword`，含紅 cape＋Arming Sword），授權／作者同上。**戰鬥 idle 圖** `assets/battle/hero_ludo_f0-3` 於 2026-07-20 改為 OpenAI 內建 imagegen 生成、經 John 驗收的兩格待機動作（f0/f2、f1/f3 各對應一格），以螢光綠鍵去背後輸出透明 PNG；原始鍵圖與 alpha 版保存於 `assets-source/role/main/ludo/battle_idle/`，提示詞作者 John／協作 Agent。
 - `assets/props/chest_closed.png`／`chest_opened.png`（地圖寶箱兩態）、`herb.png`（支線鏡草）、
   `helmet.png`（支線阿吉的頭盔）：程序化像素繪製（自製，build_cq2.py 內以 PIL 繪，無授權限制；
   同 barrel/crate/lamp 等程序繪 props）。
@@ -126,10 +126,12 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - **礦山魔物設定集圖（2026-07-19）**：`wogol`、`skeleton`、`orc`、`wolf`、`bear` 各有 `portrait_<enemy_id>.png`（透明背景設定集全身立繪），均由 OpenAI 內建 imagegen 生成、經 John 驗收後存於 `assets-source/role/enemies/<enemy_id>/`（提示詞作者 John／協作 Agent）。
 - **全敵人公會懸賞黑墨圖（2026-07-19）**：`goblin_shaman`、`goblin_tamer`、`goblin`、`goblin_chief`、`wild_hare`、`horn_hare`、`thorn_boar`、`fungus_owl`、`rotwood_beetle`、`bird`、`gslime`、`worm`、`wolf`、`bear`、`bear_dire`、`wogol`、`skeleton`、`orc`、`chort`、`necro`、`ogre`、`shadow_demon` 各有 `bounty_<enemy_id>.png`（透明背景、簡易單色黑墨圖案）。均由 OpenAI 內建 imagegen 生成、經 John 批次驗收後存於 `assets-source/role/enemies/<enemy_id>/`（提示詞作者 John／協作 Agent）；羊皮紙僅為驗收預覽底，不包含在正式 `bounty_*` 圖檔；目前尚未被 Godot runtime 引用。
 - **LPC 怪物試作（尚未納入正式遭遇表）**：`foe_briar_bloom_*`（荊棘食人花）與 `foe_crystal_bee_*`（晶蜂）裁自 [**[LPC] Monsters**](https://opengameart.org/content/lpc-monsters)—— **CC-BY-SA 3.0 / GPL 3.0**，Charles Sanchez（CharlesGabriel）、bagzie、bluecarrot16；`foe_giant_rat_*`（礦坑巨鼠）裁自 [**[LPC] bears, deer, lions and more**](https://opengameart.org/content/lpc-bears-deer-lions-and-more)—— **CC-BY 4.0**，tapatilorenzo／Sevarihk。原始 spritesheet 備份於 `assets/battle/lpc_preview_source/`。
-- `assets/ui/title_layers/title_bg.png`、`title_crystal.png`、`title_zh.png`、`title_en.png`、
-  `title_heroes.png`（模組化標題畫面圖層）：AI 生成（OpenAI Imagen，提示詞作者 John/協作 Agent，
-  2026-07-17，依 /gen-art 的 title 構圖規格生成）。背景、水晶徽記、中英文標題與男女主角剪影皆為
-  獨立 PNG；標題文字為「水晶傳說／TALE of CRYSTAL」，透明圖層由洋紅色鍵去背。
+- `assets/ui/title_layers/title_bg.png`、`title_heroes.png`（模組化標題畫面既有圖層）：AI 生成（OpenAI Imagen，提示詞作者 John/協作 Agent，
+  2026-07-17，依 /gen-art 的 title 構圖規格生成）。背景與男女主角剪影皆為獨立 PNG；透明圖層由洋紅色鍵去背。
+- `assets/ui/title_layers/title_crystal.png`、`title_backplate.png`（新版水晶徽記／半透明符文背板）：OpenAI 內建 imagegen 生成，
+  經 John 於 2026-07-20 驗收；提示詞作者 John／協作 Agent，洋紅色鍵去背。`title_zh.png` 與
+  `title_en.png` 為協作 Agent 以系統字體合成的透明文字圖層，內容為「水晶傳說：路德篇」與
+  「Tale of Crystal: The Legend of Ludo」，無外部素材授權需求。
   標題選單描邊字 `t_start/t_cont/t_restart.png` 亦為 PIL 系統字體烘製（自製）。
   ※ 遊戲定名：水晶傳說：路德篇 Tale of Crystal: The Legend of Ludo（主標 水晶傳說／Tale of Crystal ＋ 副標 路德篇／The Legend of Ludo）；曾誤植「水晶奇譚」「水晶戰記」，已更正。
-  ⚠ 上述 title_zh/title_en 圖層主標「水晶傳說」正確，惟英文仍為舊排「TALE of CRYSTAL」且尚無副標——John 重產中，目標＝Tale of Crystal: The Legend of Ludo（中文加「路德篇」）。專案資料夾 crystal-quest 維持為代號。
+  專案資料夾 crystal-quest 維持為代號。
