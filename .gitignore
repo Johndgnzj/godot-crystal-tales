@@ -22,3 +22,6 @@ tmp/
 # 真相源＝resources/content/**/*.tres，種子不進版控（2026-07-18 去重）
 godot-project/resources/content/content.json
 godot-project/resources/content/dialogue.json
+
+# 地圖維護工具（tools/map_editor）存檔前的自動備份，非真相源、不進版控
+*.json.bak

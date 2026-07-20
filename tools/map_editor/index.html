@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>地圖連通維護工具</title>
+<style>
+:root{
+  --bg:#1b1e26; --panel:#232733; --panel2:#2b3040; --line:#3a4152;
+  --text:#dfe3ee; --muted:#8b93a7; --accent:#5dcaa5; --accent-d:#0f6e56;
+  --danger:#e2664a; --warn:#e0a72e; --link:#85b7eb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--panel2);
+  color:var(--text);border-radius:6px;padding:5px 11px;font-size:13px;
+  transition:filter .12s ease,border-color .12s ease,background .12s ease}
+button:hover{border-color:var(--muted);filter:brightness(1.22)}
+button.primary:hover,button.on:hover{border-color:var(--accent)}
+button:active{filter:brightness(.95)}
+button.primary{background:var(--accent-d);border-color:var(--accent)}
+button.on{background:var(--accent-d);border-color:var(--accent);color:#fff}
+input,select,textarea{font-family:inherit;background:var(--bg);color:var(--text);
+  border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:13px}
+textarea{width:100%;resize:vertical;line-height:1.5;min-height:40px}
+header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);
+  border-bottom:1px solid var(--line);flex-wrap:wrap}
+header .title{font-weight:500;margin-right:6px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.tab{padding:4px 10px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);
+  font-size:13px;color:var(--muted);cursor:pointer;
+  transition:filter .12s ease,border-color .12s ease,color .12s ease}
+.tab:hover{color:var(--text);border-color:var(--muted);filter:brightness(1.15)}
+.tab.active{color:var(--text);border-color:var(--accent);background:var(--accent-d)}
+.tab.active:hover{border-color:var(--accent)}
+.tab .cnt{opacity:.6;font-size:11px;margin-left:3px}
+.add{border-style:dashed;color:var(--muted)}
+.spacer{flex:1}
+#main{flex:1;display:flex;min-height:0}
+#canvas-wrap{flex:1;overflow:auto;position:relative;background:
+  radial-gradient(circle at 1px 1px,#2a2f3d 1px,transparent 0) 0 0/26px 26px}
+#canvas-wrap.panning{cursor:grabbing}
+#canvas{display:block}
+aside{width:330px;background:var(--panel);border-left:1px solid var(--line);
+  overflow-y:auto;padding:12px;font-size:13px}
+aside h3{margin:2px 0 8px;font-size:14px;font-weight:500}
+aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
+#preview{width:100%;aspect-ratio:1/1;background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+#preview img{width:100%;height:100%;object-fit:contain}
+#preview .none{color:var(--muted);font-size:12px}
+.field{display:flex;align-items:center;gap:8px;margin:6px 0}
+.field label{width:74px;color:var(--muted);flex:none}
+.field input[type=text],.field select{flex:1;min-width:0}
+.field input[type=number]{width:64px}
+.exits{margin-top:6px}
+.exit{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:8px;margin:7px 0}
+.exit .row{display:flex;gap:6px;align-items:center;margin:4px 0}
+.exit .row label{width:44px;color:var(--muted);font-size:12px;flex:none}
+.exit .id{font-weight:500}
+.exit .row select,.exit .row input[type=text]{flex:1;min-width:0}
+.exit .del{margin-left:auto;color:var(--danger);border-color:transparent;background:transparent;padding:2px 6px}
+.floorbar{display:flex;gap:4px;padding:6px 12px;background:var(--panel);border-bottom:1px solid var(--line)}
+#status{padding:6px 12px;background:var(--panel);border-top:1px solid var(--line);
+  font-size:12px;max-height:120px;overflow-y:auto}
+#status .ok{color:var(--accent)} #status .row{margin:2px 0;color:var(--muted)}
+#status .err{color:var(--danger)} #status .wn{color:var(--warn)}
+.badge{font-size:11px;padding:1px 6px;border-radius:9px;background:var(--panel2);color:var(--muted)}
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:var(--accent-d);
+  border:1px solid var(--accent);padding:8px 16px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.node{cursor:pointer} .node rect.bg{stroke:var(--line);stroke-width:2}
+.node.sel rect.bg{stroke:var(--accent);stroke-width:3}
+.node text{text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.node .key{fill:#fff;font-size:15px;font-weight:500;paint-order:stroke;stroke:rgba(12,14,19,.92);stroke-width:3px;stroke-linejoin:round}
+.node .sub{font-size:10px;fill:#e9edf5;stroke-width:2.5px}
+.rnode rect{fill:#2b3040;stroke:var(--link);stroke-width:2;stroke-dasharray:5 4}
+.rnode text{text-anchor:middle;dominant-baseline:middle;pointer-events:none;fill:var(--link)}
+.rnode .rk{font-size:14px;font-weight:500} .rnode .rn{font-size:10px;opacity:.85}
+.rnode{cursor:pointer}
+.edge{stroke:var(--muted);stroke-width:2;fill:none}
+.edge.bad{stroke:var(--danger);stroke-dasharray:5 4}
+.xedge{stroke:var(--link);stroke-width:2;stroke-dasharray:4 4;fill:none}
+.star{fill:var(--warn);font-size:15px;text-anchor:middle}
+.node.dragging{opacity:.85;cursor:grabbing}
+.node.dragging rect.bg{stroke:var(--accent);stroke-width:3}
+#gridlayer line{stroke:var(--accent);stroke-width:1;opacity:.22;pointer-events:none}
+.sidebtn{cursor:pointer}
+.sidebtn circle{fill:rgba(15,17,22,.82);stroke:var(--accent);stroke-width:1.5;transition:filter .1s ease}
+.sidebtn text{fill:#fff;font-size:12px;font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.sidebtn:hover circle{filter:brightness(1.6)}
+.sidebtn.on circle{fill:var(--accent);stroke:#fff;stroke-width:2}
+.sidebtn.on text{fill:#0b1a14}
+.linkhint{position:absolute;top:8px;left:8px;background:var(--accent-d);border:1px solid var(--accent);
+  padding:4px 10px;border-radius:6px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <span class="title">🗺️ 地圖連通維護</span>
+  <div class="tabs" id="regionTabs"></div>
+  <span class="spacer"></span>
+  <button id="btnLink">🔗 連線模式</button>
+  <button id="btnBi">⇄ 雙向</button>
+  <button id="btnThumb" class="on">🖼️ 縮圖</button>
+  <button id="zOut">🔍−</button><span id="zLbl" class="badge">100%</span><button id="zIn">🔍＋</button><button id="zFit">⤢ 全覽</button>
+  <button id="btnJson">{ } JSON</button>
+  <button id="btnReload">↻ 重載</button>
+  <button id="btnSave" class="primary">💾 存檔</button>
+</header>
+<div class="floorbar" id="floorBar" style="display:none"></div>
+<div id="main">
+  <div id="canvas-wrap">
+    <div class="linkhint" id="linkHint" style="display:none">連線模式：點起點的 side 圓鈕定出口方向 → 點終點（可再點終點 side 鈕定回程）；也可直接點兩格自動判方位。</div>
+    <svg id="canvas"></svg>
+  </div>
+  <aside id="inspector"><p class="hint">載入中…</p></aside>
+</div>
+<div id="status"></div>
+<div id="jsonModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;padding:36px">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:10px;max-width:820px;margin:0 auto;height:100%;display:flex;flex-direction:column">
+    <div style="padding:10px 12px;display:flex;align-items:center;border-bottom:1px solid var(--line)"><b>map-def.json（唯讀）</b><span class="spacer"></span><button id="jsonClose">關閉</button></div>
+    <pre id="jsonBody" style="flex:1;overflow:auto;margin:0;padding:12px;font-size:12px;line-height:1.5;color:var(--text)"></pre>
+  </div>
+</div>
+<div id="askModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:60;align-items:center;justify-content:center">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:10px;width:340px;padding:16px">
+    <h3 id="askTitle" style="margin:0 0 10px"></h3>
+    <div id="askFields"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button id="askCancel">取消</button><button id="askOk" class="primary">建立</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const CELL=104, GAP=52, PAD=90;                 // 正方節點
+const KIND_COLORS={town:"#5f6b7a",mine:"#a5732b",forest:"#3f8f5a",cave:"#556289",
+  tower:"#8a5aa0",grassland:"#6d9a3a",other:"#4a5165"};
+const KINDS=["town","mine","forest","cave","tower","grassland","other"];
+const SIDES=["east","west","north","south","up","down","interior"];
+const OPP={east:"west",west:"east",north:"south",south:"north",up:"down",down:"up",interior:"interior"};
+const DIR={east:[1,0],west:[-1,0],north:[0,-1],south:[0,1],up:[.7,-.7],down:[.7,.7],interior:[0,1]};
+
+const S={data:null, region:null, floor:null, sel:null, link:false, bidir:false, linkFrom:null, linkSide:null, thumbs:true, zoom:1, baseW:0, baseH:0};
+const $=s=>document.querySelector(s);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1600);}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+async function load(){
+  try{
+    const r=await fetch("/api/map-def"); if(!r.ok) throw new Error("HTTP "+r.status);
+    S.data=await r.json();
+  }catch(e){ $("#inspector").innerHTML='<p class="hint" style="color:var(--danger)">讀取失敗：'+esc(e.message)+'</p>'; return; }
+  if(!S.region||!S.data.regions[S.region]) S.region=Object.keys(S.data.regions||{})[0]||null;
+  S.floor=null; S.sel=null; renderAll();
+}
+async function save(){
+  try{
+    const r=await fetch("/api/map-def",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(S.data,null,2)});
+    const j=await r.json(); if(!r.ok||!j.ok) throw new Error(j.error||("HTTP "+r.status));
+    toast("已存回 map-def.json");
+  }catch(e){ toast("存檔失敗："+e.message); }
+}
+
+// 目標字串：同區用 key；跨區 "Mx:key"；待接整區 "Mx"
+function parseTo(to){
+  if(!to) return {cross:false,map:null};
+  if(to.includes(":")){const [r,k]=to.split(":");return {cross:true,region:r,map:k};}
+  if(/^M\d+$/.test(to)) return {cross:true,region:to,map:null,pending:true};
+  return {cross:false,map:to};
+}
+function curRegion(){return S.data.regions[S.region];}
+function pngSrc(reg,key,m){
+  if(m&&m.image) return "/assets/map/"+m.image;
+  if(reg.dir&&reg.file_prefix) return "/assets/map/"+reg.dir+"/"+reg.file_prefix+"_"+key+".png";
+  return null;
+}
+function mapsOnFloor(reg,floor){const o={};for(const k in reg.maps)if((reg.maps[k].floor||0)===floor)o[k]=reg.maps[k];return o;}
+function regionFloors(reg){const s=new Set();for(const k in reg.maps)s.add(reg.maps[k].floor||0);return [...s].sort((a,b)=>a-b);}
+function cellXY(c,r){return {x:c*(CELL+GAP), y:r*(CELL+GAP)};}          // 未加 PAD 的原始座標
+function centerOf(m){const p=cellXY(m.cell[0],m.cell[1]);return {x:p.x+CELL/2,y:p.y+CELL/2};}
+function freeCell(reg,floor){
+  const used=new Set(); let has=false,maxc=0,minr=0;
+  for(const k in reg.maps) if((reg.maps[k].floor||0)===floor){
+    const c=reg.maps[k].cell[0], r=reg.maps[k].cell[1];
+    if(!has){maxc=c;minr=r;has=true;}else{maxc=Math.max(maxc,c);minr=Math.min(minr,r);}
+    used.add(c+","+r);
+  }
+  if(!has) return [0,0];                              // 該層還沒有圖 → 預設 (0,0)
+  for(let c=maxc+1;c<maxc+200;c++)                    // 接現有群右邊：最右欄右側往下找第一個空
+    for(let r=minr;r<minr+200;r++) if(!used.has(c+","+r)) return [c,r];
+  return [maxc+1,minr];
+}
+function commonKind(reg){const c={};let best="other",n=0;for(const k in reg.maps){const t=reg.maps[k].kind||"other";c[t]=(c[t]||0)+1;if(c[t]>n){n=c[t];best=t;}}return best;}
+
+function renderAll(){ renderTabs(); renderFloors(); renderCanvas(); renderInspector(); validate(); }
+
+function renderTabs(){
+  const t=$("#regionTabs"); t.innerHTML="";
+  for(const rid in S.data.regions){
+    const reg=S.data.regions[rid], n=Object.keys(reg.maps).length;
+    const el=document.createElement("div");
+    el.className="tab"+(rid===S.region?" active":"");
+    el.innerHTML=esc(rid)+" "+esc(reg.name)+'<span class="cnt">'+n+'</span>';
+    el.onclick=()=>{S.region=rid;S.floor=null;S.sel=null;renderAll();};
+    t.appendChild(el);
+  }
+  const add=document.createElement("div");
+  add.className="tab add"; add.textContent="＋ 地區"; add.onclick=addRegion;
+  t.appendChild(add);
+}
+function floorLabel(f){return f>0?f+"F":(f<0?"B"+(-f):"地面");}
+function renderFloors(){
+  const bar=$("#floorBar"), reg=curRegion(), floors=reg?regionFloors(reg):[];
+  if(!reg||floors.length<=1){bar.style.display="none";S.floor=floors[0]??0;return;}
+  if(S.floor===null||!floors.includes(S.floor)) S.floor=floors[0];
+  bar.style.display="flex"; bar.innerHTML="";
+  floors.forEach(f=>{const el=document.createElement("div");
+    el.className="tab"+(f===S.floor?" active":"");
+    el.textContent=floorLabel(f);
+    el.onclick=()=>{S.floor=f;S.sel=null;renderAll();};bar.appendChild(el);});
+}
+
+function renderCanvas(){
+  const svg=$("#canvas"), reg=curRegion(); if(!reg){svg.innerHTML="";return;}
+  const floor=S.floor??0, maps=mapsOnFloor(reg,floor);
+  let edges="",xedges="",nodes="",rnodes="";
+  const drawn=new Set(), xtargets={};                 // 跨區目標去重 → 一個地區節點
+  for(const k in maps){
+    const m=maps[k], a=centerOf(m);
+    for(const eid in (m.exits||{})){
+      const ex=m.exits[eid], info=parseTo(ex.to);
+      if(!info.cross && maps[info.map]){                // 同層同區連線
+        const pair=[k,info.map].sort().join("|");
+        if(!drawn.has(pair)){
+          drawn.add(pair);
+          const back=maps[info.map].exits||{};
+          const hasBack=Object.values(back).some(e=>{const bi=parseTo(e.to);return !bi.cross&&bi.map===k;});
+          const b=centerOf(maps[info.map]);
+          edges+='<line class="edge'+(!hasBack&&!ex.one_way?" bad":"")+'" x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'"/>';
+        }
+      }else if(info.cross || !maps[info.map]){          // 跨區/待接 → 地區節點（同級方塊）
+        if(!xtargets[ex.to]){
+          const d=DIR[ex.side]||DIR.east;
+          xtargets[ex.to]={x:a.x+d[0]*(CELL+GAP),y:a.y+d[1]*(CELL+GAP),info:info,to:ex.to};
+        }
+        const tp=xtargets[ex.to];
+        xedges+='<line class="xedge" x1="'+a.x+'" y1="'+a.y+'" x2="'+tp.x+'" y2="'+tp.y+'"/>';
+      }
+    }
+  }
+  // 地圖節點
+  for(const k in maps){
+    const m=maps[k], p=cellXY(m.cell[0],m.cell[1]);
+    const col=KIND_COLORS[m.kind]||KIND_COLORS.other;
+    const label=m.label||"";
+    let thumb="";
+    const tsrc=S.thumbs?pngSrc(reg,k,m):null;
+    if(tsrc){
+      thumb='<image href="'+tsrc+'" x="'+(p.x+3)+'" y="'+(p.y+3)+'" width="'+(CELL-6)+'" height="'+(CELL-6)+'" preserveAspectRatio="xMidYMid slice" onerror="this.remove()" style="pointer-events:none"/>';
+    }
+    nodes+='<g class="node'+(S.sel===k?" sel":"")+'" data-key="'+esc(k)+'">'+
+      '<rect class="bg" x="'+p.x+'" y="'+p.y+'" width="'+CELL+'" height="'+CELL+'" rx="9" fill="'+col+'"/>'+thumb+
+      (m.boss?'<text class="star" x="'+(p.x+CELL-14)+'" y="'+(p.y+16)+'">★</text>':"")+
+      '<text class="key" x="'+(p.x+CELL/2)+'" y="'+(p.y+CELL-12)+'">'+esc(k.toUpperCase())+(label?'  <tspan class="sub">'+esc(label)+'</tspan>':"")+'</text>'+
+      '</g>';
+  }
+  // 地區節點（跨區目標）
+  for(const key in xtargets){
+    const t=xtargets[key], rid=t.info.region, rg=S.data.regions[rid];
+    const nm=rg?rg.name:"?", sub=t.info.map?(":"+t.info.map+" ・"+nm):(nm+"（待接）");
+    rnodes+='<g class="rnode" data-region="'+esc(rid)+'" data-map="'+esc(t.info.map||"")+'">'+
+      '<rect x="'+(t.x-CELL/2)+'" y="'+(t.y-CELL/2)+'" width="'+CELL+'" height="'+CELL+'" rx="9"/>'+
+      '<text class="rk" x="'+t.x+'" y="'+(t.y-6)+'">'+esc(rid)+'</text>'+
+      '<text class="rn" x="'+t.x+'" y="'+(t.y+12)+'">'+esc(sub)+'</text></g>';
+  }
+  // viewBox（含地區節點，允許負座標）
+  let minX=0,minY=0,maxX=CELL,maxY=CELL;
+  for(const k in maps){const p=cellXY(maps[k].cell[0],maps[k].cell[1]);minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x+CELL);maxY=Math.max(maxY,p.y+CELL);}
+  for(const key in xtargets){const t=xtargets[key];minX=Math.min(minX,t.x-CELL/2);minY=Math.min(minY,t.y-CELL/2);maxX=Math.max(maxX,t.x+CELL/2);maxY=Math.max(maxY,t.y+CELL/2);}
+  const vbX=minX-PAD, vbY=minY-PAD, W=(maxX-minX)+PAD*2, H=(maxY-minY)+PAD*2;
+  svg.setAttribute("viewBox",vbX+" "+vbY+" "+W+" "+H);
+  S.baseW=W; S.baseH=H;
+  svg.setAttribute("width",W*S.zoom); svg.setAttribute("height",H*S.zoom);
+  let sidebtns="";
+  if(S.link) for(const k in maps) sidebtns+=sideBtnsSvg(k,cellXY(maps[k].cell[0],maps[k].cell[1]));
+  svg.innerHTML=edges+xedges+nodes+rnodes+sidebtns;
+  svg.querySelectorAll(".node").forEach(g=>g.addEventListener("mousedown",e=>startNodeDrag(e,g)));
+  svg.querySelectorAll(".sidebtn").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();onSidePick(b.dataset.key,b.dataset.side);}));
+  svg.querySelectorAll(".rnode").forEach(g=>g.onclick=()=>{S.region=g.dataset.region;S.floor=null;S.sel=g.dataset.map||null;renderAll();});
+}
+
+function onNodeClick(k){
+  if(S.link){
+    if(!S.linkFrom){S.linkFrom=k;S.linkSide=null;renderCanvas();toast("起點："+k.toUpperCase()+" → 點終點");}
+    else if(S.linkFrom===k){S.linkFrom=null;S.linkSide=null;renderCanvas();toast("已取消");}
+    else{ makeLink(S.linkFrom,k,S.linkSide,null); S.linkFrom=null;S.linkSide=null; }
+    return;
+  }
+  S.sel=k; renderCanvas(); renderInspector();
+}
+function sideBetween(A,B){const dx=B.cell[0]-A.cell[0],dy=B.cell[1]-A.cell[1];
+  return Math.abs(dx)>=Math.abs(dy)?(dx>0?"east":"west"):(dy>0?"south":"north");}
+function addExitTo(A,side,toKey){A.exits=A.exits||{};let id=side,n=2;while(A.exits[id])id=side+"_"+(n++);A.exits[id]={side:side,to:toKey};return id;}
+function makeLink(from,to,fromSide,backSide){
+  const reg=curRegion(), A=reg.maps[from], B=reg.maps[to];
+  const side=fromSide||sideBetween(A,B);
+  addExitTo(A,side,to);
+  if(S.bidir) addExitTo(B,backSide||OPP[side],from);
+  S.sel=from; renderCanvas(); renderInspector(); validate();
+  toast(from.toUpperCase()+(S.bidir?" ⇄ ":" → ")+to.toUpperCase()+"（"+side+"）");
+}
+
+// —— 連線模式：節點四邊＋中央的 side 圓鈕（點來源定出口方向、再點終點；點終點 side 定回程）——
+const SIDE_LETTER={east:"E",west:"W",north:"N",south:"S",up:"U",down:"D",interior:"I"};
+function sideBtnsSvg(key,p){
+  const cx=p.x+CELL/2, cy=p.y+CELL/2;
+  const pos={north:[cx,p.y],south:[cx,p.y+CELL],east:[p.x+CELL,cy],west:[p.x,cy],
+    up:[cx-26,cy],down:[cx,cy],interior:[cx+26,cy]};
+  let s="";
+  for(const side of SIDES){const q=pos[side], mid=(side==="up"||side==="down"||side==="interior");
+    const on=(S.linkFrom===key&&S.linkSide===side);
+    s+='<g class="sidebtn'+(on?" on":"")+'" data-key="'+esc(key)+'" data-side="'+side+'">'+
+       '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="'+(mid?10:12)+'"/>'+
+       '<text x="'+q[0]+'" y="'+q[1]+'">'+SIDE_LETTER[side]+'</text></g>';}
+  return s;
+}
+function onSidePick(key,side){
+  if(!S.link) return;
+  if(!S.linkFrom){S.linkFrom=key;S.linkSide=side;renderCanvas();
+    toast(key.toUpperCase()+" 的 "+side+" → 點終點（或終點 side 定回程）");return;}
+  if(S.linkFrom===key){S.linkFrom=null;S.linkSide=null;renderCanvas();toast("已取消");return;}
+  makeLink(S.linkFrom,key,S.linkSide,side); S.linkFrom=null;S.linkSide=null;
+}
+
+// —— 拖曳節點改 cell（放到空格＝移動、放到有節點的格＝交換 cell）——
+function clientToSvg(svg,cx,cy){const pt=svg.createSVGPoint();pt.x=cx;pt.y=cy;return pt.matrixTransform(svg.getScreenCTM().inverse());}
+function showGrid(on){
+  const svg=$("#canvas"), old=svg.querySelector("#gridlayer"); if(old)old.remove();
+  if(!on) return;
+  const vb=svg.getAttribute("viewBox").split(" ").map(Number), step=CELL+GAP;
+  const x0=Math.floor(vb[0]/step)*step, y0=Math.floor(vb[1]/step)*step, x1=vb[0]+vb[2], y1=vb[1]+vb[3];
+  let l="";
+  for(let x=x0;x<=x1;x+=step) l+='<line x1="'+x+'" y1="'+vb[1]+'" x2="'+x+'" y2="'+y1+'"/>';
+  for(let y=y0;y<=y1;y+=step) l+='<line x1="'+vb[0]+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'"/>';
+  const g=document.createElementNS("http://www.w3.org/2000/svg","g"); g.id="gridlayer"; g.innerHTML=l;
+  svg.insertBefore(g,svg.firstChild);
+}
+function dropAt(key,c,r){
+  const reg=curRegion(), m=reg.maps[key], floor=m.floor||0;
+  if(m.cell[0]===c&&m.cell[1]===r){renderCanvas();return;}          // 沒換格→復位
+  let occ=null;
+  for(const k in reg.maps){if(k===key)continue;const mm=reg.maps[k];
+    if((mm.floor||0)===floor&&mm.cell[0]===c&&mm.cell[1]===r){occ=k;break;}}
+  if(occ){const a=m.cell; m.cell=reg.maps[occ].cell; reg.maps[occ].cell=a;  // 交換
+    toast(key.toUpperCase()+" ⇄ "+occ.toUpperCase());}
+  else{ m.cell=[c,r]; toast(key.toUpperCase()+" → ["+c+","+r+"]"); }
+  renderCanvas(); validate();
+}
+function startNodeDrag(e,g){
+  if(e.button!==0) return;
+  const svg=$("#canvas"), key=g.dataset.key, reg=curRegion(), m=reg&&reg.maps[key];
+  if(!m) return;
+  e.preventDefault();
+  const start=clientToSvg(svg,e.clientX,e.clientY), p0=cellXY(m.cell[0],m.cell[1]);
+  const off={x:start.x-p0.x,y:start.y-p0.y}, linkMode=S.link; let moved=false;
+  const mv=ev=>{const cur=clientToSvg(svg,ev.clientX,ev.clientY);
+    if(!moved&&Math.hypot(cur.x-start.x,cur.y-start.y)<5) return;
+    if(linkMode) return;                                             // 連線模式不拖曳，交給 onNodeClick
+    if(!moved){moved=true;showGrid(true);g.classList.add("dragging");}
+    g.setAttribute("transform","translate("+((cur.x-off.x)-p0.x)+","+((cur.y-off.y)-p0.y)+")");};
+  const up=ev=>{document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);
+    if(!moved){onNodeClick(key);return;}                             // 沒拖動＝點擊
+    g.classList.remove("dragging");showGrid(false);
+    const cur=clientToSvg(svg,ev.clientX,ev.clientY);
+    dropAt(key,Math.round((cur.x-off.x)/(CELL+GAP)),Math.round((cur.y-off.y)/(CELL+GAP)));};
+  document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up);
+}
+
+function openAsk(title,fields,onOk){
+  $("#askTitle").textContent=title;
+  const box=$("#askFields");
+  box.innerHTML=fields.map(f=>'<div class="field"><label>'+esc(f.label)+'</label><input type="text" data-k="'+f.k+'" placeholder="'+esc(f.ph||"")+'"></div>').join("");
+  $("#askModal").style.display="flex";
+  const first=box.querySelector("input"); if(first)first.focus();
+  const close=()=>{$("#askModal").style.display="none";};
+  $("#askOk").onclick=()=>{const v={};box.querySelectorAll("[data-k]").forEach(i=>v[i.dataset.k]=i.value.trim());close();onOk(v);};
+  $("#askCancel").onclick=close;
+}
+function addRegion(){
+  openAsk("新增地區",[{k:"code",label:"代碼",ph:"如 M8"},{k:"name",label:"名稱",ph:"地區名稱"}],v=>{
+    const rid=v.code; if(!rid) return;
+    if(S.data.regions[rid]){toast("代號已存在");return;}
+    S.data.regions[rid]={name:v.name||"",dir:"",file_prefix:"",scene_prefix:"",grid_size:32,maps:{}};
+    S.region=rid;S.floor=null;S.sel=null;renderAll();
+  });
+}
+function addMap(){
+  const reg=curRegion(); if(!reg) return;
+  openAsk("新增地圖",[{k:"key",label:"代碼",ph:"如 a、b1"}],v=>{
+    const key=(v.key||"").toLowerCase();
+    if(!key) return;
+    if(!/^[a-z0-9_]+$/.test(key)){toast("只能用小寫英數與底線");return;}
+    if(reg.maps[key]){toast("代號已存在");return;}
+    const floor=S.floor??0;
+    reg.maps[key]={kind:commonKind(reg),floor:floor,cell:freeCell(reg,floor),exits:{}};
+    S.sel=key; renderAll();
+  });
+}
+
+function renderInspector(){
+  const box=$("#inspector"), reg=curRegion(); if(!reg){box.innerHTML="";return;}
+  if(!S.sel||!reg.maps[S.sel]){
+    box.innerHTML='<h3>地區 <span class="badge">'+esc(S.region)+'</span><span class="badge" style="margin-left:4px">代碼不可改</span> <span class="badge" style="margin-left:4px">'+Object.keys(reg.maps).length+' 圖</span></h3>'+
+      field("地區名稱",'<input type="text" id="r_name" value="'+esc(reg.name||"")+'">')+
+      field("圖檔資料夾",'<input type="text" id="r_dir" value="'+esc(reg.dir||"")+'">')+
+      field("檔名前綴",'<input type="text" id="r_fp" value="'+esc(reg.file_prefix||"")+'">')+
+      field("場景前綴",'<input type="text" id="r_sp" value="'+esc(reg.scene_prefix||"")+'">')+
+      field("格子 grid",'<input type="number" id="r_gs" value="'+(reg.grid_size||32)+'">')+
+      '<p class="hint" style="margin:2px 0 10px">圖片路徑＝ /assets/map/<b>'+esc(reg.dir||"?")+'</b>/<b>'+esc(reg.file_prefix||"?")+'</b>_&lt;代碼&gt;.png</p>'+
+      '<button id="addMap" class="primary">＋ 新增地圖</button> <button id="delRegion" style="color:var(--danger)">刪除此地區</button>'+
+      '<p class="hint" style="margin-top:12px">點格子編 metadata 與出入口；空白處點一下回本頁。「連線模式」點兩格建通道（開「雙向」建來回）。中鍵拖曳、滾輪縮放。</p>';
+    $("#r_name").oninput=e=>{reg.name=e.target.value;renderTabs();};
+    $("#r_dir").oninput=e=>{reg.dir=e.target.value;renderCanvas();};
+    $("#r_fp").oninput=e=>{reg.file_prefix=e.target.value;renderCanvas();};
+    $("#r_sp").oninput=e=>{reg.scene_prefix=e.target.value;};
+    $("#r_gs").onchange=e=>{reg.grid_size=parseInt(e.target.value)||32;};
+    $("#addMap").onclick=addMap;
+    $("#delRegion").onclick=e=>{if(e.target.dataset.arm){delete S.data.regions[S.region];S.region=Object.keys(S.data.regions)[0]||null;S.floor=null;S.sel=null;renderAll();}
+      else{e.target.dataset.arm="1";e.target.textContent="⚠ 再點一次確認刪除（含 "+Object.keys(reg.maps).length+" 張圖）";}};
+    return;
+  }
+  const m=reg.maps[S.sel], sceneId=(reg.scene_prefix||"")+S.sel.toUpperCase();
+  const psrc=pngSrc(reg,S.sel,m);
+  let prev='<div class="none">（無縮圖）</div>';
+  if(psrc) prev='<img src="'+psrc+'" onerror="this.parentNode.innerHTML=\'<div class=&quot;none&quot;>（無縮圖）</div>\'">';
+  let h='<h3>'+esc(S.sel.toUpperCase())+'<span class="badge" style="margin-left:6px">代碼不可改</span> <span class="badge">'+esc(m.scene||sceneId)+'</span></h3>';
+  h+='<div id="preview">'+prev+'</div>';
+  h+=field("圖片 image",'<input type="text" id="f_image" value="'+esc(m.image||"")+'" placeholder="留空＝地區推導">');
+  h+='<p class="hint" style="margin:-2px 0 8px">→ '+esc(psrc||"（無圖）")+'</p>';
+  h+=field("顯示名 label",'<input type="text" id="f_label" value="'+esc(m.label||"")+'">');
+  h+=field("類型 kind",selHtml("f_kind",KINDS,m.kind||"other"));
+  h+=field("樓層 floor",'<input type="number" id="f_floor" value="'+(m.floor||0)+'" style="width:64px" title="地上正、地下負；例：1=1F、-1=B1、0=地面"> <span id="f_floorlbl" class="badge">= '+floorLabel(m.floor||0)+'</span>');
+  const lb=m.level_band||[];
+  h+=field("等級帶",'<input type="number" id="f_lb0" value="'+(lb[0]??"")+'" placeholder="低"> ~ <input type="number" id="f_lb1" value="'+(lb[1]??"")+'" placeholder="高">');
+  h+=field("boss",'<input type="checkbox" id="f_boss" '+(m.boss?"checked":"")+'>');
+  h+='<div style="margin:6px 0"><div style="color:var(--muted);font-size:12px;margin-bottom:3px">設計備註 note<span class="badge" style="margin-left:6px">給 agent 讀・非機器判定</span></div><textarea id="f_note" rows="2" placeholder="地圖設計意圖／任務條件，例：boss 後開放的獎勵捷徑">'+esc(m.note||"")+'</textarea></div>';
+  h+='<h3 style="margin-top:14px">出入口 <span class="badge">'+Object.keys(m.exits||{}).length+'</span></h3><div class="exits">';
+  for(const eid in (m.exits||{})){
+    const ex=m.exits[eid], tp=toParts(ex.to);
+    h+='<div class="exit"><div class="row"><span class="id">'+esc(eid)+'</span><button class="del" data-del="'+esc(eid)+'">刪除</button></div>'+
+      '<div class="row"><label>side</label>'+selHtml("side_"+eid,SIDES,ex.side||"east")+'</div>'+
+      '<div class="row"><label>to</label><select data-treg="'+esc(eid)+'">'+regionOptions(tp.reg)+'</select>'+
+        '<select data-tmap="'+esc(eid)+'">'+mapOptions(tp.reg,tp.map)+'</select></div>'+
+      '<div class="row"><label>require</label><input type="text" value="'+esc(ex.require||"")+'" data-req="'+esc(eid)+'" placeholder="如 level&gt;=30"></div>'+
+      '<div class="row"><label>note</label><input type="text" value="'+esc(ex.note||"")+'" data-note="'+esc(eid)+'" placeholder="設計意圖，如：boss 後才走這條"></div>'+
+      '<div class="row"><label>單向</label><input type="checkbox" data-ow="'+esc(eid)+'" '+(ex.one_way?"checked":"")+'></div></div>';
+  }
+  h+='</div><button id="addExit">＋ 新增出入口</button>';
+  h+='<div style="margin-top:16px;border-top:1px solid var(--line);padding-top:10px"><button id="delMap" style="color:var(--danger)">刪除此地圖</button></div>';
+  box.innerHTML=h;
+  bindInspector(m);
+}
+function field(l,inner){return '<div class="field"><label>'+l+'</label>'+inner+'</div>';}
+function selHtml(id,opts,val){return '<select id="'+id+'">'+opts.map(o=>'<option'+(o===val?" selected":"")+'>'+o+'</option>').join("")+'</select>';}
+function toParts(to){const i=parseTo(to);if(!to)return{reg:"__same",map:""};if(!i.cross)return{reg:"__same",map:i.map};return{reg:i.region,map:i.map||""};}
+function composeTo(reg,map){if(reg==="__same")return map||"";return map?reg+":"+map:reg;}
+function regionOptions(sel){
+  let h='<option value="__same"'+(sel==="__same"?" selected":"")+'>（本區）</option>';
+  for(const rid in S.data.regions){if(rid===S.region)continue;
+    h+='<option value="'+esc(rid)+'"'+(sel===rid?" selected":"")+'>'+esc(rid+" "+S.data.regions[rid].name)+'</option>';}
+  return h;
+}
+function mapOptions(regId,sel){
+  const rg=regId==="__same"?curRegion():S.data.regions[regId];
+  let h='<option value=""'+(!sel?" selected":"")+'>（整區待接）</option>';
+  if(rg) for(const k in rg.maps){ if(regId==="__same"&&k===S.sel)continue;
+    const lb=rg.maps[k].label;
+    h+='<option value="'+esc(k)+'"'+(sel===k?" selected":"")+'>'+esc(k.toUpperCase()+(lb?"｜"+lb:""))+'</option>';}
+  return h;
+}
+function bindInspector(m){
+  const reg=curRegion();
+  const upd=()=>{validate();renderCanvas();};
+  $("#f_label").oninput=e=>{m.label=e.target.value;};
+  $("#f_image").onchange=e=>{if(e.target.value)m.image=e.target.value;else delete m.image;renderInspector();renderCanvas();};
+  $("#f_kind").onchange=e=>{m.kind=e.target.value;upd();};
+  $("#f_floor").oninput=e=>{$("#f_floorlbl").textContent="= "+floorLabel(parseInt(e.target.value)||0);};
+  $("#f_floor").onchange=e=>{m.floor=parseInt(e.target.value)||0;S.floor=m.floor;renderAll();};
+  $("#f_boss").onchange=e=>{if(e.target.checked)m.boss=true;else delete m.boss;upd();};
+  {const fn=$("#f_note"); if(fn)fn.oninput=e=>{if(e.target.value.trim())m.note=e.target.value;else delete m.note;};}
+  const lb0=$("#f_lb0"),lb1=$("#f_lb1"),setLb=()=>{const a=lb0.value,b=lb1.value;
+    if(a===""&&b==="")delete m.level_band;else m.level_band=[parseInt(a)||0,parseInt(b)||0];};
+  lb0.onchange=setLb;lb1.onchange=setLb;
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{delete m.exits[b.dataset.del];renderInspector();renderCanvas();validate();});
+  document.querySelectorAll("[data-req]").forEach(i=>i.onchange=()=>{const e=m.exits[i.dataset.req];if(i.value)e.require=i.value;else delete e.require;});
+  document.querySelectorAll("[data-note]").forEach(i=>i.onchange=()=>{const e=m.exits[i.dataset.note];if(i.value.trim())e.note=i.value;else delete e.note;});
+  document.querySelectorAll("[data-ow]").forEach(i=>i.onchange=()=>{const e=m.exits[i.dataset.ow];if(i.checked)e.one_way=true;else delete e.one_way;upd();});
+  for(const eid in (m.exits||{})){
+    const s=document.getElementById("side_"+eid);
+    if(s)s.onchange=()=>{m.exits[eid].side=s.value;renderCanvas();};
+  }
+  document.querySelectorAll("[data-treg]").forEach(s=>s.onchange=()=>{
+    const eid=s.dataset.treg, tmap=document.querySelector('[data-tmap="'+eid+'"]');
+    tmap.innerHTML=mapOptions(s.value,""); m.exits[eid].to=composeTo(s.value,""); upd();});
+  document.querySelectorAll("[data-tmap]").forEach(s=>s.onchange=()=>{
+    const eid=s.dataset.tmap, treg=document.querySelector('[data-treg="'+eid+'"]');
+    m.exits[eid].to=composeTo(treg.value,s.value); upd();});
+  $("#addExit").onclick=()=>{m.exits=m.exits||{};let id="new",n=2;while(m.exits[id])id="new_"+(n++);
+    m.exits[id]={side:"east",to:""};renderInspector();};
+  $("#delMap").onclick=e=>{if(e.target.dataset.arm){delete reg.maps[S.sel];S.sel=null;renderAll();}
+    else{e.target.dataset.arm="1";e.target.textContent="⚠ 再點一次確認刪除";}};
+}
+
+function validate(){
+  const st=$("#status"), out=[], D=S.data;
+  for(const rid in D.regions){const rg=D.regions[rid];
+    for(const k in rg.maps){const m=rg.maps[k];
+      for(const eid in (m.exits||{})){const to=m.exits[eid].to, info=parseTo(to);
+        if(!to){out.push(["err",rid+":"+k+" 的 "+eid+" 未設定目標"]);continue;}
+        if(info.cross&&!info.pending){const tr=D.regions[info.region];
+          if(!tr||!tr.maps[info.map])out.push(["err",rid+":"+k+"→"+to+" 指向不存在的地圖"]);}
+        else if(info.pending)out.push(["wn",rid+":"+k+"→"+info.region+"（整區待接）"]);
+        else if(!info.cross&&!rg.maps[info.map])out.push(["err",rid+":"+k+"→"+info.map+" 同區無此圖"]);}}}
+  if(D.start){
+    const start=D.start.region+"/"+D.start.map, seen=new Set([start]), q=[start];
+    while(q.length){const [rr,kk]=q.shift().split("/"), mm=D.regions[rr]&&D.regions[rr].maps[kk];
+      if(!mm)continue;
+      for(const eid in (mm.exits||{})){const info=parseTo(mm.exits[eid].to);let nid=null;
+        if(info.cross&&!info.pending&&D.regions[info.region]&&D.regions[info.region].maps[info.map])nid=info.region+"/"+info.map;
+        else if(!info.cross&&D.regions[rr].maps[info.map])nid=rr+"/"+info.map;
+        if(nid&&!seen.has(nid)){seen.add(nid);q.push(nid);}}}
+    const un=[];for(const rid in D.regions)for(const k in D.regions[rid].maps)if(!seen.has(rid+"/"+k))un.push(rid+":"+k);
+    if(un.length)out.push(["wn","從起點走不到："+un.join("、")]);}
+  const errs=out.filter(o=>o[0]==="err").length, wns=out.filter(o=>o[0]==="wn").length;
+  st.innerHTML=(errs||wns?'<span class="'+(errs?"err":"wn")+'">驗證：'+errs+" 錯誤 / "+wns+" 提醒</span>":'<span class="ok">✓ 連通驗證通過</span>')
+    +out.map(o=>'<div class="row '+o[0]+'">'+(o[0]==="err"?"✗ ":"⚠ ")+esc(o[1])+'</div>').join("");
+}
+
+// 工具列
+$("#btnSave").onclick=save;
+$("#btnReload").onclick=()=>{if(confirm("重載會丟棄未存變更，確定？"))load();};
+$("#btnLink").onclick=()=>{S.link=!S.link;S.linkFrom=null;S.linkSide=null;$("#btnLink").classList.toggle("on",S.link);$("#linkHint").style.display=S.link?"block":"none";renderCanvas();};
+$("#btnBi").onclick=()=>{S.bidir=!S.bidir;$("#btnBi").classList.toggle("on",S.bidir);};
+$("#btnThumb").onclick=()=>{S.thumbs=!S.thumbs;$("#btnThumb").classList.toggle("on",S.thumbs);renderCanvas();};
+$("#btnJson").onclick=()=>{$("#jsonBody").textContent=JSON.stringify(S.data,null,2);$("#jsonModal").style.display="block";};
+$("#jsonClose").onclick=()=>{$("#jsonModal").style.display="none";};
+
+function setZoom(z,vpx,vpy){
+  const wrap=$("#canvas-wrap"),svg=$("#canvas");
+  z=Math.max(.2,Math.min(3,z)); const old=S.zoom||1;
+  if(vpx==null){vpx=wrap.clientWidth/2;vpy=wrap.clientHeight/2;}
+  const cx=(wrap.scrollLeft+vpx)/old, cy=(wrap.scrollTop+vpy)/old;   // 游標下的 content 座標，縮放後保持不動
+  S.zoom=z; svg.setAttribute("width",S.baseW*z); svg.setAttribute("height",S.baseH*z);
+  wrap.scrollLeft=cx*z-vpx; wrap.scrollTop=cy*z-vpy;
+  $("#zLbl").textContent=Math.round(z*100)+"%";
+}
+function fitZoom(){const wrap=$("#canvas-wrap"); if(!S.baseW)return;
+  const z=Math.min((wrap.clientWidth-24)/S.baseW,(wrap.clientHeight-24)/S.baseH);
+  setZoom(z,0,0); wrap.scrollLeft=0; wrap.scrollTop=0;}
+$("#zIn").onclick=()=>setZoom((S.zoom||1)*1.2);
+$("#zOut").onclick=()=>setZoom((S.zoom||1)/1.2);
+$("#zFit").onclick=fitZoom;
+$("#canvas-wrap").addEventListener("wheel",e=>{e.preventDefault();
+  const r=$("#canvas-wrap").getBoundingClientRect();
+  setZoom((S.zoom||1)*(e.deltaY<0?1.1:1/1.1),e.clientX-r.left,e.clientY-r.top);
+},{passive:false});
+
+// 空白處點擊 → 取消選取
+$("#canvas").addEventListener("click",e=>{if(e.target.id==="canvas"){S.sel=null;renderInspector();renderCanvas();}});
+
+// 中鍵拖曳平移
+(function(){const wrap=$("#canvas-wrap");
+  wrap.addEventListener("mousedown",e=>{
+    if(e.button!==1)return; e.preventDefault();
+    const sx=e.clientX,sy=e.clientY,sl=wrap.scrollLeft,stp=wrap.scrollTop;
+    wrap.classList.add("panning");
+    const mv=ev=>{wrap.scrollLeft=sl-(ev.clientX-sx);wrap.scrollTop=stp-(ev.clientY-sy);};
+    const up=()=>{wrap.classList.remove("panning");document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);};
+    document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up);
+  });
+  wrap.addEventListener("auxclick",e=>{if(e.button===1)e.preventDefault();});
+})();
+
+load();
+</script>
+</body>
+</html>

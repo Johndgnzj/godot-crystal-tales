@@ -28,6 +28,7 @@
 | 文件 | 內容 |
 |---|---|
 | [design/設計員指南.md](design/設計員指南.md) | 怎麼在 Godot 編輯器改角色/道具/武器/數值/美術/地圖 |
+| [design/地圖區域設計.md](design/地圖區域設計.md) | 手繪地圖區域的連通/樓層/出入口設計＋`map-def.json` schema＋網頁維護工具（塊 A/B/C 流程）|
 | [design/道具武器設計.md](design/道具武器設計.md) | 道具與武器的**設計原則**（稀有度/圖示/8 階曲線；equipment_def.gd / validate_content.py 以此為 schema spec）。**數值不在此**——以 `equipment/*.tres`＋codex 設定檢視為準（v2.2 去重）|
 | [design/屬性戰鬥設計.md](design/屬性戰鬥設計.md) | 四主屬性(str/agi/int/**luck**)→衍生戰鬥數值→三段式攻擊的設計與係數表（對應 BATTLE_FORMULAS v4.0）|
 | [design/魔物立繪素材設計.md](design/魔物立繪素材設計.md) | 戰鬥魔物立繪的來源位置、朝向、兩幀呼吸動畫與驗收規格 |
@@ -62,6 +63,7 @@ docs/
 │   └── 角色設定.md
 ├── design/              # 設計層（給不寫程式的設計員）
 │   ├── 設計員指南.md
+│   ├── 地圖區域設計.md
 │   ├── 道具武器設計.md
 │   ├── 屬性戰鬥設計.md
 │   ├── 美術規格/          # 產圖／sprite 規格（gen-* skill 權威來源）

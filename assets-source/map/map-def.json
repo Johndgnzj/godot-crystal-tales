@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "start": {
+    "region": "M1",
+    "map": "town",
+    "spawn": "home"
+  },
+  "regions": {
+    "M1": {
+      "name": "芳蕾鎮",
+      "dir": "floret",
+      "file_prefix": "floret",
+      "scene_prefix": "",
+      "grid_size": 32,
+      "maps": {
+        "town": {
+          "scene": "Town",
+          "kind": "town",
+          "floor": 0,
+          "cell": [
+            0,
+            0
+          ],
+          "label": "芳蕾鎮",
+          "exits": {
+            "to_mine": {
+              "side": "north",
+              "to": "M2:a"
+            },
+            "to_forest": {
+              "side": "east",
+              "to": "M3:a"
+            }
+          }
+        }
+      }
+    },
+    "M2": {
+      "name": "北方礦山",
+      "dir": "north_mine",
+      "file_prefix": "nm",
+      "scene_prefix": "NM",
+      "grid_size": 32,
+      "maps": {
+        "a": {
+          "kind": "mine",
+          "floor": 0,
+          "cell": [
+            0,
+            1
+          ],
+          "exits": {
+            "east": {
+              "side": "east",
+              "to": "b"
+            },
+            "north": {
+              "side": "north",
+              "to": "M6"
+            },
+            "south": {
+              "side": "south",
+              "to": "M1:town"
+            }
+          }
+        },
+        "b": {
+          "kind": "mine",
+          "floor": 0,
+          "cell": [
+            1,
+            1
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "a"
+            },
+            "east": {
+              "side": "east",
+              "to": "c"
+            },
+            "north": {
+              "side": "north",
+              "to": "d"
+            }
+          }
+        },
+        "c": {
+          "kind": "mine",
+          "floor": 0,
+          "cell": [
+            2,
+            1
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "b"
+            },
+            "north": {
+              "side": "north",
+              "to": "e"
+            }
+          }
+        },
+        "d": {
+          "kind": "mine",
+          "floor": 0,
+          "cell": [
+            1,
+            0
+          ],
+          "exits": {
+            "east": {
+              "side": "east",
+              "to": "e"
+            },
+            "south": {
+              "side": "south",
+              "to": "b"
+            }
+          }
+        },
+        "e": {
+          "kind": "mine",
+          "floor": 0,
+          "cell": [
+            2,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "d"
+            },
+            "east": {
+              "side": "east",
+              "to": "f"
+            },
+            "south": {
+              "side": "south",
+              "to": "c"
+            }
+          }
+        },
+        "f": {
+          "kind": "mine",
+          "floor": 0,
+          "cell": [
+            3,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "e"
+            }
+          },
+          "boss": true
+        }
+      }
+    },
+    "M3": {
+      "name": "東之森林",
+      "dir": "east_forest",
+      "file_prefix": "ef",
+      "scene_prefix": "EF",
+      "grid_size": 32,
+      "maps": {
+        "a": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            1,
+            2
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "M1:town"
+            },
+            "east": {
+              "side": "east",
+              "to": "b"
+            }
+          }
+        },
+        "e": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            2
+          ],
+          "exits": {
+            "east": {
+              "side": "north",
+              "to": "h"
+            },
+            "east_2": {
+              "side": "east",
+              "to": "g"
+            },
+            "south": {
+              "side": "south",
+              "to": "f"
+            },
+            "west": {
+              "side": "west",
+              "to": "b"
+            }
+          }
+        },
+        "b": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            2,
+            2
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "a"
+            },
+            "east": {
+              "side": "east",
+              "to": "e"
+            },
+            "south": {
+              "side": "south",
+              "to": "c"
+            }
+          }
+        },
+        "g": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            4,
+            2
+          ],
+          "exits": {
+            "east": {
+              "side": "east",
+              "to": "M4:a"
+            },
+            "west": {
+              "side": "west",
+              "to": "e"
+            }
+          }
+        },
+        "h": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            1
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "i"
+            },
+            "west": {
+              "side": "south",
+              "to": "e"
+            }
+          }
+        },
+        "i": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            0
+          ],
+          "exits": {
+            "south": {
+              "side": "south",
+              "to": "h"
+            }
+          }
+        },
+        "f": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            3
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "e"
+            }
+          }
+        },
+        "c": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            2,
+            3
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "b"
+            },
+            "south": {
+              "side": "south",
+              "to": "d"
+            }
+          }
+        },
+        "d": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            2,
+            4
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "c"
+            }
+          },
+          "boss": true,
+          "note": "路德"
+        }
+      }
+    },
+    "M4": {
+      "name": "東之森深處",
+      "dir": "east_forest_depths",
+      "file_prefix": "efd",
+      "scene_prefix": "EFD",
+      "grid_size": 32,
+      "maps": {
+        "a": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            1,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "M3:g"
+            },
+            "east": {
+              "side": "east",
+              "to": "b"
+            }
+          },
+          "label": "東之森林深處"
+        },
+        "b": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            2,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "a"
+            },
+            "east": {
+              "side": "east",
+              "to": "c"
+            },
+            "south": {
+              "side": "south",
+              "to": "d"
+            }
+          },
+          "label": "東之森林深處"
+        },
+        "c": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "b"
+            },
+            "east": {
+              "side": "east",
+              "to": "f"
+            },
+            "south": {
+              "side": "south",
+              "to": "e"
+            }
+          },
+          "label": "東之森林深處"
+        },
+        "f": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            4,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "c"
+            }
+          },
+          "label": "東之森深處"
+        },
+        "d": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            2,
+            1
+          ],
+          "exits": {
+            "east": {
+              "side": "east",
+              "to": "e"
+            },
+            "north": {
+              "side": "north",
+              "to": "b"
+            }
+          }
+        },
+        "e": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            1
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "d"
+            },
+            "north": {
+              "side": "north",
+              "to": "c"
+            },
+            "south": {
+              "side": "south",
+              "to": "g"
+            }
+          }
+        },
+        "g": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            2
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "e"
+            },
+            "south": {
+              "side": "south",
+              "to": "h"
+            }
+          }
+        },
+        "h": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            3,
+            3
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "l"
+            },
+            "east": {
+              "side": "east",
+              "to": "i"
+            },
+            "north": {
+              "side": "north",
+              "to": "g"
+            }
+          }
+        },
+        "l": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            2,
+            3
+          ],
+          "exits": {
+            "east": {
+              "side": "east",
+              "to": "h"
+            }
+          }
+        },
+        "i": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            4,
+            3
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "h"
+            },
+            "east": {
+              "side": "east",
+              "to": "j"
+            },
+            "south": {
+              "side": "south",
+              "to": "k"
+            }
+          }
+        },
+        "j": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            5,
+            3
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "i"
+            },
+            "east": {
+              "side": "east",
+              "to": "m",
+              "note": "boss通關前走這條"
+            },
+            "south": {
+              "side": "south",
+              "to": "n"
+            },
+            "east_2": {
+              "side": "east",
+              "to": "m2",
+              "note": "boss通關後走這條"
+            }
+          }
+        },
+        "m": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            6,
+            3
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "j"
+            }
+          },
+          "boss": true
+        },
+        "k": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            4,
+            4
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "i"
+            }
+          }
+        },
+        "n": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            5,
+            4
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "j"
+            }
+          }
+        },
+        "m2": {
+          "kind": "forest",
+          "floor": 0,
+          "cell": [
+            6,
+            2
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "j"
+            },
+            "new": {
+              "side": "east",
+              "to": "M7",
+              "note": "boss 通關後開放"
+            }
+          },
+          "note": "boss 通關後開放，多了往 M7 的路"
+        }
+      }
+    },
+    "M5": {
+      "name": "通往大都市的路",
+      "dir": "south-test-route",
+      "file_prefix": "str",
+      "scene_prefix": "STR",
+      "grid_size": 32,
+      "maps": {}
+    },
+    "M6": {
+      "name": "新的地圖往北",
+      "dir": "south-test-town",
+      "file_prefix": "stt",
+      "scene_prefix": "STT",
+      "grid_size": 32,
+      "maps": {
+        "a": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            0,
+            0
+          ],
+          "exits": {
+            "east": {
+              "side": "east",
+              "to": "b"
+            }
+          }
+        },
+        "b": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            1,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "a"
+            },
+            "new": {
+              "side": "east",
+              "to": "1f_a"
+            }
+          }
+        },
+        "1f_a": {
+          "kind": "other",
+          "floor": -1,
+          "cell": [
+            2,
+            0
+          ],
+          "exits": {},
+          "label": "地下洞穴"
+        }
+      }
+    },
+    "M7": {
+      "name": "新的地圖往東",
+      "dir": "",
+      "file_prefix": "",
+      "scene_prefix": "",
+      "grid_size": 32,
+      "maps": {}
+    }
+  }
+}

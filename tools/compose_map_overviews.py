@@ -1,4 +1,9 @@
-"""依 assets-source/map/map-def.xlsx 的 M2、M3 連通格合成地圖總覽。"""
+"""[已過時，2026-07-20] 曾依 map-def.xlsx 合成 M2/M3 地圖總覽。
+
+assets-source/map 已統一為專案命名（如 M2-north-mine/north-mine-a.png → north_mine/nm_a.png），
+且 xlsx 已退休、改以 map-def.json 為真相。下方 folder/prefix、連字號檔名與 placement 皆為舊硬編碼，
+直接執行會找不到檔。要重產總覽請改讀 map-def.json 的 dir/file_prefix/cell，或用 map_editor 的連通總覽視圖。
+"""
 
 from pathlib import Path
 

@@ -79,18 +79,20 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   武器圖層取自 LPC weapon walk（longsword/dagger/saber，CC-BY-SA/GPL）。
   - `assets/battle/hero_marin_f0-3.png`：2026-07-20 改為 OpenAI 內建 imagegen 生成、經 John 驗收的兩格睜眼待機動作（f0/f2、f1/f3 各對應一格），以螢光綠鍵去背後輸出透明 PNG；原始鍵圖與 alpha 版保存於 `assets-source/role/main/marin/battle_idle/`，提示詞作者 John／協作 Agent。
 - `assets/ui/battlebg_*.png`：程序化生成（自製）。2026-07-15：`battlebg_forest.png` 換成 John 提供的「東之森戰鬥背景」圖（取代原程序化版）。2026-07-20：`battlebg_mine.png` 換成 OpenAI 內建 imagegen 生成、經 John 驗收的手繪礦山戰鬥背景；`battlebg_forest_depths.png` 為同日經 John 驗收的深林遺跡戰鬥背景，供 `eforest1`～`eforest3`（含 boss）使用。原圖分別保留於 `assets-source/battle/battlebg_mine_2026-07-20.png` 與 `assets-source/battle/battlebg_forest_depths_2026-07-20.png`（提示詞作者 John／協作 Agent）。
-- `assets/map/north_mine/nm_{a,b,c,d,e,f}.png`（原圖保留於 `assets-source/map/M2-north-mine/`）：
+- `assets/map/north_mine/nm_{a,b,c,d,e,f}.png`（素材源＝`assets-source/map/north_mine/nm_*.png`，2026-07-21 統一為專案命名；總覽圖移至 `north_mine/_overview/`）：
   AI 生成素材（ChatGPT 內建圖片生成功能，提示詞作者 John/協作 Agent，2026-07-16）；北方礦山 a～f 手繪畫面地圖，f 為 boss 房。
   2026-07-17 依地圖連線調整 a、b、c、e 出入口構圖與路徑。
-- `assets/map/floret/floret_town.png`（正確原圖備份於 `assets-source/map/M1/floret_town.png`）：
-  AI 生成素材；M1 芳蕾鎮手繪畫面地圖。2026-07-20 已由 Godot runtime 的無箭頭版本回存為原圖；舊的 `assets-source/map/M1-floret-town/floret-town.png` 為含箭頭的錯誤版本，不作為來源圖使用。
-- `assets/map/east_forest/ef_a.png`（原圖保留於 `assets-source/map/M3-east-forest/east-forest-a.png`；清理前版本保留為 `east-forest-a-before-cleanup-2026-07-20.png`）：
+- `assets/map/floret/floret_town.png`（素材源＝`assets-source/map/floret/floret_town.png`）：
+  AI 生成素材；M1 芳蕾鎮手繪畫面地圖。2026-07-20 已由 Godot runtime 的無箭頭版本回存為原圖；舊的含箭頭錯誤版本（1254）於 2026-07-21 統一命名時移至 `assets-source/map/floret/_backup/floret-town-1254-old.png`，不作為來源圖使用。
+- `assets/map/east_forest/ef_a.png`（素材源＝`assets-source/map/east_forest/ef_a.png`，2026-07-21 統一命名）：
   AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 a 畫面。已依地圖產圖規格移除箭頭、寶箱、告示牌、木箱與木桶等互動物件，保留原有地形與出入口。
-- `assets/map/east_forest/ef_{b,c,d}.png`（原圖分別保留於 `assets-source/map/M3-east-forest/east-forest-{b,c,d-boss-room}.png`；清理前版本附 `-before-cleanup-2026-07-20` 後綴）：
+- `assets/map/east_forest/ef_{b,c,d}.png`（素材源＝`assets-source/map/east_forest/ef_{b,c,d}.png`，2026-07-21 統一命名；清理前版本存於 `east_forest/_backup/east-forest-{b,c,d-boss-room}-before-cleanup-2026-07-20.png`）：
   AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 b、c、d 畫面。已依地圖產圖規格移除箭頭與烘入的互動物件；d 的中央狼型敵人亦已移除，保留原有地形與出入口。
-- `assets/map/east_forest_depths/efd_{a,b,c,d,e,f}.png`（原圖保留於 `assets-source/map/M4-east-forest-depths/east-forest-depths-{a,b,c,d,e,f}.png`）：
+- `assets/map/east_forest_depths/efd_{a,b,c,d,e,f}.png`（素材源＝`assets-source/map/east_forest_depths/efd_*.png`，2026-07-21 統一命名；source 端另有 g～n 全 14 張＋`efd_m_boss.png`，專案端 g～n 待整合）：
   AI 生成素材（OpenAI Imagen，提示詞作者 John/協作 Agent，2026-07-17）；東之森深處 M4-a～f 手繪畫面地圖。a 以 M3 `east-forest-g.png` 作視覺延續參考，b～f 再以 a 鎖定同區域的森林低霧、像素尺度與視覺語彙；全部正規化為 1280×1280。
-  `assets-source/map/M4-east-forest-depths/east-forest-depths-map.png` 為依 `map-def.xlsx` 格位拼合的 M4 總覽衍生圖，僅納入已完成的 a～f；未完成的 g～n 格位保留深灰留白。
+  （原 `east-forest-depths-map.png` 總覽衍生圖依已退休的 `map-def.xlsx` 拼合、現已不在素材庫；總覽改用 map_editor 的連通視圖，`compose_map_overviews.py` 已標為過時。）
+- `assets-source/map/east_forest_depths/efd_m2.png`（素材源；專案端待整合）：
+  AI 生成素材（ChatGPT 內建圖片生成，提示詞作者 John／協作 Agent，2026-07-20）；M4 東之森深處 m2 畫面——`j` 的 boss（`m`）擊破後開放的分支路線、通往 M7。
 - `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。
 - `assets/props/ext_*.png`（六棟建築外觀，洋紅底原圖）：AI 生成素材（Gemini gemini-2.5-flash-image，
   提示詞作者 John/協作 Agent，由 /gen-art skill 的 building type 生成）。2026-07-15 重生成為**正面平視、門在正面下緣**的日系像素風（取代原 2026-07-12 的 45° isometric 版，便於在正交地圖擺進入點）。
