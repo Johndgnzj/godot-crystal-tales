@@ -1,0 +1,34 @@
+{
+  "_note": "WIP LPC 配方：僅 URL＋解析，尚未從產生器正式匯出（無 layers/credits）。定稿後由 John 匯出取代為 alan_lpc_recipe.json，流程見 docs/design/美術規格/LPC製作流程.md。",
+  "status": "wip",
+  "recordedDate": "2026-07-20",
+  "character": "alan / 亞倫（26・恩師・序章 guest）",
+  "bodyType": "male",
+  "url": "https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/#sex=male&head=Human_Male_light&expression=Neutral_light&shadow=Shadow_brown&eyebrows=Thick_Eyebrows_black&body=Body_Color_light&hair=Messy2_black&legs=Cuffed_Pants_leather&shoes=Basic_Boots_leather&clothes=Cardigan_black&bracers=Bracers_bronze&cape=Solid_gray&arms=Armour_iron&armour=Legion_iron&weapon=Arming_Sword_silver",
+  "selections": {
+    "sex": "male",
+    "head": "Human_Male_light",
+    "expression": "Neutral_light",
+    "shadow": "Shadow_brown",
+    "eyebrows": "Thick_Eyebrows_black",
+    "body": "Body_Color_light",
+    "hair": "Messy2_black",
+    "clothes": "Cardigan_black",
+    "arms": "Armour_iron",
+    "armour": "Legion_iron",
+    "cape": "Solid_gray",
+    "legs": "Cuffed_Pants_leather",
+    "bracers": "Bracers_bronze",
+    "shoes": "Basic_Boots_leather",
+    "weapon": "Arming_Sword_silver"
+  },
+  "supersedes": "assets-source/role/main/alan/alan_lpc/（with_weapon＋no_weapon，2026-07-18 舊匯出，此版為修訂中）",
+  "canonCheck": {
+    "source": "docs/story/角色設定.md:52,138",
+    "matches": "深色微亂短髮(Messy2_black)、披風、佩劍、皮革旅裝皆對上",
+    "flags": [
+      "armour=Legion_iron（羅馬軍團重鎧）＋arms=Armour_iron 與新人設『輕甲/隨性/不再是嚴肅老兵』(2026-07-17 大改) 衝突——建議換輕甲/胸甲類，避免拉回老兵觀感",
+      "多層疊加（Legion＋iron arms＋cape＋cardigan＋weapon）恐有圖層不支援全部 5 動畫而掉層(見 LPC製作流程.md:33)，貼產生器驗證哪層被忽略"
+    ]
+  }
+}

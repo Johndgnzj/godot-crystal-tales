@@ -1,0 +1,33 @@
+{
+  "_note": "WIP LPC 配方：僅 URL＋解析，尚未從產生器正式匯出（無 layers/credits）。定稿後由 John 匯出取代為 marin_lpc_recipe.json，流程見 docs/design/美術規格/LPC製作流程.md。",
+  "status": "wip",
+  "recordedDate": "2026-07-20",
+  "character": "marin / 瑪琳（14・路德之妹・隊友）",
+  "bodyType": "teen",
+  "url": "https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/#sex=teen&head=Human_Female_Small_light&expression=Neutral_light&shadow=Shadow_brown&eyebrows=Thick_Eyebrows_orange&bracers=Bracers_bronze&shoes=Revised_Boots_brown&body=Body_Color_light&shoulders=Mantal_blue&dress=Kimono_white&belt=Loose_Belt_brown&weapon=Dagger_dagger&hair=Bangs_bun_orange&ponytail=Long_Topknot_orange&eyes=Eye_Color_green",
+  "selections": {
+    "sex": "teen",
+    "head": "Human_Female_Small_light",
+    "expression": "Neutral_light",
+    "shadow": "Shadow_brown",
+    "eyebrows": "Thick_Eyebrows_orange",
+    "body": "Body_Color_light",
+    "hair": "Bangs_bun_orange",
+    "ponytail": "Long_Topknot_orange",
+    "eyes": "Eye_Color_green",
+    "shoulders": "Mantal_blue",
+    "dress": "Kimono_white",
+    "belt": "Loose_Belt_brown",
+    "bracers": "Bracers_bronze",
+    "shoes": "Revised_Boots_brown",
+    "weapon": "Dagger_dagger"
+  },
+  "canonCheck": {
+    "source": "docs/story/角色設定.md:137",
+    "matches": "高馬尾+齊瀏海(Bangs_bun+Long_Topknot)、綠眼、藍披肩(Mantal_blue)、棕束帶、單手護具皆對上",
+    "flags": [
+      "dress=Kimono_white 是和服剪影，canon 為『白色襯衫洋裝』——貼產生器時比對 LPC dress 其他款是否更接近",
+      "weapon=Dagger_dagger → weapon_type=dagger（普攻用 thrust 動畫），canon 未指定武器，為設計決定，記錄之"
+    ]
+  }
+}
