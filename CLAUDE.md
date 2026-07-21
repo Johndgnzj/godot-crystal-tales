@@ -71,13 +71,13 @@ godot-crystal-tales/
 | 你改了什麼 | 必須同步更新 |
 |---|---|
 | 劇情 / 對話 / 過場（`resources/content/dialogue/**/*.tres`）| `docs/story/故事大綱.md`、`docs/story/世界觀設定.md`、`docs/story/角色設定.md`（受影響者）|
-| 數值 / 角色 / 裝備（`resources/content/*.tres`）| 對應 `docs/` 敘事或設計文件、**設定集 Artifact**（見下）|
+| 數值 / 角色 / 裝備（`resources/content/*.tres`）| 對應 `docs/` 敘事或設計文件、**設定集 codex**（CI 自動發佈，見下）|
 | 素材（`godot-project/assets/`）| `CREDITS_素材授權.md`（授權帳本）、必要時 `docs/素材管理規範.md`|
 | 新增/移除/搬動任何文件 | `README.md` 索引、`docs/README.md` 索引 |
 | 系統/規格（`specs/*`）| 版本區塊遞增（見下）、引用該 spec 的 `TASKS/` 與程式註解 |
 
-- **設定集 Artifact（game-codex）**：內容（角色/數值/劇情全文）改動後不會自動更新——需重跑 `build_codex.py` → 用 Artifact 工具帶 `url` 參數重發佈同一網址（網址與機制見 memory `game-codex-artifact`）。
-- **一句話**：改內容 → 更新 `docs/` 對應文件 → 更新 `README` 索引 → 更新設定集 Artifact →（動素材再加 `CREDITS`）。
+- **設定集 codex（game-codex）**：改動 `.tres`／模板／`assets-source/role` 素材後 **push 到 `main` 即由 GitHub Actions 自動重建並發佈 GitHub Pages**（workflow `.github/workflows/codex.yml`，網址與機制見 `tools/codex/README.md`）。**例外**：NPC/地圖文字說明、關鍵角色、敵人描述、立繪對照等手寫 `META` 在 `tools/codex/codex_template.html`，要一起手改（改完照樣 push 觸發重建）。不再用 claude.ai Artifact。
+- **一句話**：改內容 → 更新 `docs/` 對應文件 → 更新 `README` 索引 →（設定集 codex：文字說明類要改 `codex_template.html` 的 `META`，其餘 push 後 CI 自動發佈）→（動素材再加 `CREDITS`）。
 
 ## 版本規則
 

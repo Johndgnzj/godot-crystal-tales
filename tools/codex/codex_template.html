@@ -1,934 +1,913 @@
 <meta charset="utf-8">
 <title>水晶傳說 設定集</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Cinzel:wght@600&display=swap">
 <style>
 :root{
-  --bg:#EFF1F5; --card:#FFFFFF; --ink:#242B38; --mut:#5D6878; --line:#D8DDE6;
-  --acc:#544FBF; --acc-ink:#443FA8; --gold:#96712A; --bad:#AD4A4A; --hp:#35825A; --mp:#3D6FB0;
-  --code:#F3F4F8; --hero1:rgba(255,255,255,.96); --hero2:rgba(255,255,255,.35);
-}
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#13161D; --card:#1B212B; --ink:#E5E9F1; --mut:#96A0B0; --line:#2B3240;
-    --acc:#9A93F5; --acc-ink:#B0AAF8; --gold:#D4A75C; --bad:#DE8B8B; --hp:#6FBF92; --mp:#84ACDE;
-    --code:#151A22; --hero1:rgba(19,22,29,.96); --hero2:rgba(19,22,29,.42);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#13161D; --card:#1B212B; --ink:#E5E9F1; --mut:#96A0B0; --line:#2B3240;
-  --acc:#9A93F5; --acc-ink:#B0AAF8; --gold:#D4A75C; --bad:#DE8B8B; --hp:#6FBF92; --mp:#84ACDE;
-  --code:#151A22; --hero1:rgba(19,22,29,.96); --hero2:rgba(19,22,29,.42);
-}
-:root[data-theme="light"]{
-  --bg:#EFF1F5; --card:#FFFFFF; --ink:#242B38; --mut:#5D6878; --line:#D8DDE6;
-  --acc:#544FBF; --acc-ink:#443FA8; --gold:#96712A; --bad:#AD4A4A; --hp:#35825A; --mp:#3D6FB0;
-  --code:#F3F4F8; --hero1:rgba(255,255,255,.96); --hero2:rgba(255,255,255,.35);
+  color-scheme:dark;
+  --bg:#0a0e1d; --ink:#e8edfb; --mut:#96a3c6; --dim:#8ea0c9; --faint:#5f6d95;
+  --acc:#7fd8ea; --acc-hi:#aee8f4; --pur:#a79bf2; --gold:#e7c374; --gold-dim:#c9b892;
+  --bad:#f09090; --hp:#7fdea3; --mp:#86b4f4;
+  --line:#253156; --line-2:#2a3760; --line-soft:#1f2b4e; --line-dash:#2c3a63; --line-row:#1d2848;
+  --card:linear-gradient(160deg,#141c36,#101627); --key:linear-gradient(160deg,#191c3a,#12162b);
+  --code:#0e1428; --input:#0e1530;
+  --serif:"Noto Serif TC","Songti TC","PingFang TC",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --latin:"Cinzel",serif;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font:14px/1.7 -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
-  -webkit-font-smoothing:antialiased}
-.display{font-family:"Songti TC","Noto Serif TC","Noto Serif CJK TC",serif}
-.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
-a{color:var(--acc-ink);text-decoration:none}
-a:hover{text-decoration:underline}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 var(--sans);
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(1100px 500px at 85% -100px,rgba(127,216,234,.10),transparent 60%),
+    radial-gradient(900px 600px at -10% 30%,rgba(167,155,242,.08),transparent 55%);
+  background-attachment:fixed}
+a{color:var(--acc);text-decoration:none}
+a:hover{color:var(--acc-hi);text-decoration:underline}
+::selection{background:rgba(127,216,234,.28)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:4px}
+@keyframes cxIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important}}
 
-.app{display:flex;min-height:100vh}
-.side{position:fixed;inset:0 auto 0 0;width:252px;overflow-y:auto;padding:22px 18px 18px;
-  background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
-.main{margin-left:252px;flex:1;min-width:0;padding:30px clamp(20px,4vw,54px) 90px;max-width:1150px}
+/* ── header ── */
+header.top{position:sticky;top:0;z-index:60;background:rgba(9,13,26,.88);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+.hdr-in{max-width:1220px;margin:0 auto;padding:12px 24px 0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px;flex:none}
+.gem{width:26px;height:26px;position:relative;flex:none}
+.gem::before{content:"";position:absolute;inset:4px;transform:rotate(45deg);border-radius:3px;
+  background:linear-gradient(135deg,var(--acc),var(--pur) 80%);box-shadow:0 0 14px rgba(127,216,234,.5);
+  animation:gem 4.5s ease-in-out infinite}
+@keyframes gem{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
+.brand .t{font-family:var(--serif);font-weight:900;font-size:19px;letter-spacing:.06em;line-height:1.2}
+.brand .t span{color:var(--acc)}
+.brand .s{font-family:var(--latin);font-size:9.5px;letter-spacing:.3em;color:var(--dim)}
+.search{position:relative;flex:1;min-width:200px;max-width:400px}
+.search input{width:100%;padding:8px 30px 8px 12px;border:1px solid var(--line-2);border-radius:10px;
+  background:var(--input);color:var(--ink);font:13px/1.4 var(--sans);outline:none}
+.search input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(127,216,234,.12)}
+.search input::placeholder{color:var(--faint)}
+.search .clr{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;
+  color:var(--dim);font-size:15px;cursor:pointer;padding:2px 6px;display:none}
+.search.hasq .clr{display:block}
+.hdr-r{display:flex;align-items:center;gap:10px;flex:none;margin-left:auto}
+.hits{font-family:var(--mono);font-size:11.5px;color:var(--acc);display:none}
+.search.hasq~.hdr-r .hits{display:inline}
+.mode{display:flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:#111a38;color:#c3cdea;
+  font:12.5px var(--sans);padding:7px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;transition:border-color .2s,color .2s}
+.mode:hover{border-color:var(--acc);color:var(--ink)}
+nav.tabs{max-width:1220px;margin:0 auto;padding:9px 24px 11px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:none;border:1px solid #242f52;background:transparent;color:var(--mut);
+  font:500 13px var(--sans);padding:6px 14px;border-radius:9px;cursor:pointer;white-space:nowrap;transition:color .15s}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button.on{color:#0b1020;background:linear-gradient(135deg,var(--acc),var(--pur));border-color:transparent;font-weight:700}
 
-.brand{display:flex;gap:11px;align-items:center}
-.gem{width:30px;height:30px;position:relative;flex:none}
-.gem::before{content:"";position:absolute;inset:5px;transform:rotate(45deg);
-  background:linear-gradient(135deg,var(--acc) 0%,transparent 130%);border-radius:3px}
-.gem::after{content:"";position:absolute;inset:1px;transform:rotate(45deg);
-  border:1px solid var(--acc);opacity:.45;border-radius:4px}
-.brand h1{font-size:19px;margin:0;line-height:1.25;letter-spacing:.04em}
-.brand .sub{font-size:11px;color:var(--mut);letter-spacing:.14em}
+main{max-width:1220px;margin:0 auto;padding:8px 24px 100px}
 
-.searchbox{position:relative}
-.searchbox input{width:100%;padding:8px 30px 8px 11px;border:1px solid var(--line);border-radius:8px;
-  background:var(--bg);color:var(--ink);font:13px/1.4 inherit}
-.searchbox input::placeholder{color:var(--mut)}
-.searchbox button{position:absolute;right:5px;top:50%;transform:translateY(-50%);border:0;background:none;
-  color:var(--mut);font-size:15px;cursor:pointer;padding:2px 6px;border-radius:6px;display:none}
-.searchbox.hasq button{display:block}
-.hits{font-size:11.5px;color:var(--mut);min-height:16px;margin-top:-6px}
-
-.nav{display:flex;flex-direction:column;gap:1px}
-.nav a{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:7px;color:var(--mut);
-  font-size:13.5px}
-.nav a::before{content:"◇";font-size:9px;color:var(--mut);flex:none;transition:none}
-.nav a:hover{color:var(--ink);background:var(--bg);text-decoration:none}
-.nav a.on{color:var(--ink);background:var(--bg);font-weight:600}
-.nav a.on::before{content:"◆";color:var(--acc)}
-.side .foot{margin-top:auto;font-size:11px;color:var(--mut);line-height:1.8;border-top:1px solid var(--line);padding-top:12px}
-
-/* hero */
-.hero{position:relative;border:1px solid var(--line);border-radius:14px;background:var(--card);
-  overflow:hidden;padding:30px 32px;min-height:190px;display:flex;align-items:center}
-.hero .art{position:absolute;top:0;right:0;height:100%;width:52%;object-fit:cover;object-position:center 20%;
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 62%);
-  mask-image:linear-gradient(90deg,transparent 0,#000 62%);opacity:.9}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--hero1) 42%,var(--hero2) 100%)}
-.hero-in{position:relative;z-index:1;max-width:60ch}
-.kicker{font-size:11px;letter-spacing:.22em;color:var(--acc-ink);font-weight:600;margin-bottom:8px}
-.hero h1{font-size:30px;margin:0 0 10px;letter-spacing:.05em;text-wrap:balance}
-.hero p{margin:0 0 14px;color:var(--mut);max-width:52ch}
+/* ── hero ── */
+.hero{position:relative;margin-top:26px;border:1px solid #263256;border-radius:16px;overflow:hidden;
+  background:linear-gradient(160deg,#141c36,#0f1529);min-height:210px;display:flex;align-items:center;animation:cxIn .5s ease}
+.hero img{position:absolute;top:-8%;right:2%;height:125%;width:auto;object-fit:contain;opacity:.5;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 45%);mask-image:linear-gradient(90deg,transparent 0,#000 45%)}
+.hero .in{position:relative;z-index:1;padding:30px 34px;max-width:62ch}
+.hero .kick{font-family:var(--latin);font-size:11px;letter-spacing:.28em;color:var(--acc);margin-bottom:8px}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:31px;margin:0 0 10px;letter-spacing:.05em;text-wrap:balance}
+.hero p{margin:0 0 15px;color:#96a3c6;max-width:52ch;text-wrap:pretty}
 .metarow{display:flex;flex-wrap:wrap;gap:6px}
 
-/* sections */
-.sec{margin-top:52px;scroll-margin-top:24px}
-.sec>h2{font-size:21px;margin:0 0 6px;display:flex;align-items:baseline;gap:10px;letter-spacing:.05em}
-.sec>h2::before{content:"◆";color:var(--acc);font-size:12px;transform:translateY(-1px)}
-.sec>h2 .cnt{font-size:12px;color:var(--mut);font-weight:400;font-family:ui-monospace,"SF Mono",Menlo,monospace}
-.sec>.lead{color:var(--mut);font-size:13px;margin:0 0 16px;max-width:78ch}
-h3{font-size:15px;margin:26px 0 10px}
-h4{font-size:13.5px;margin:0 0 6px}
+/* ── sections ── */
+.sec{margin-top:46px;scroll-margin-top:124px;animation:cxIn .45s ease}
+.sec+.sec,.sec~.sec{margin-top:56px}
+.sec-h{display:flex;align-items:baseline;gap:11px}
+.sec-h::before{content:"◆";color:var(--acc);font-size:13px;align-self:center;line-height:1}
+.sec.pur .sec-h::before{color:var(--pur)}
+.sec.gold .sec-h::before{color:var(--gold)}
+.sec-h h2{font-family:var(--serif);font-weight:900;font-size:24px;margin:0;letter-spacing:.05em}
+.sec-h .en{font-family:var(--latin);font-size:12px;letter-spacing:.3em;color:#8b82c9}
+.sec.gold .sec-h .en{color:#b3a075}
+.sec-h .cnt{font-family:var(--mono);font-size:12px;color:var(--mut);font-weight:400}
+.lead{color:var(--mut);font-size:13px;margin:6px 0 18px;max-width:80ch}
+.lead b{color:#c3cdea}
+h3.sub{font-family:var(--serif);font-size:17px;margin:28px 0 12px}
+h4{font-family:var(--serif);font-size:16px;margin:0}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px;min-width:0}
-.card.pad0{padding:0;overflow:hidden}
-.card p{margin:6px 0}
-.card .desc{color:var(--mut);font-size:12.5px}
+.grid-npc{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(440px,100%),1fr));gap:12px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.card h4{margin-bottom:6px;color:var(--ink);font-size:14px}
+.card p{margin:0;color:var(--mut);font-size:12.5px}
 
-.chip{display:inline-block;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;line-height:1;
-  padding:4px 8px;border-radius:999px;border:1px solid var(--line);color:var(--mut);background:var(--card);
-  white-space:nowrap;vertical-align:middle}
-.chip.acc{color:var(--acc-ink);border-color:color-mix(in srgb,var(--acc) 40%,var(--line));
-  background:color-mix(in srgb,var(--acc) 8%,var(--card))}
-.chip.gold{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 42%,var(--line));
-  background:color-mix(in srgb,var(--gold) 8%,var(--card))}
-.chip.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line));
-  background:color-mix(in srgb,var(--bad) 7%,var(--card))}
-.chip.hp{color:var(--hp)} .chip.mp{color:var(--mp)}
-.chip.r-un{color:var(--hp);border-color:color-mix(in srgb,var(--hp) 40%,var(--line));
-  background:color-mix(in srgb,var(--hp) 7%,var(--card))}
-.chip.r-ra{color:var(--acc-ink);border-color:color-mix(in srgb,var(--acc) 40%,var(--line));
-  background:color-mix(in srgb,var(--acc) 8%,var(--card))}
-.chip.r-ep{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 45%,var(--line));
-  background:color-mix(in srgb,var(--gold) 9%,var(--card))}
+/* ── chips / colour utils ── */
+.chip{display:inline-flex;font-family:var(--mono);font-size:11px;line-height:1;padding:4px 9px;border-radius:999px;
+  border:1px solid var(--line-2);color:var(--mut);background:rgba(150,163,198,.06);white-space:nowrap;vertical-align:middle}
+.chip.acc{color:var(--acc);border-color:rgba(127,216,234,.35);background:rgba(127,216,234,.07)}
+.chip.pur{color:var(--pur);border-color:rgba(167,155,242,.4);background:rgba(167,155,242,.08)}
+.chip.gold{color:var(--gold);border-color:rgba(231,195,116,.4);background:rgba(231,195,116,.07)}
+.chip.bad{color:var(--bad);border-color:rgba(240,144,144,.4);background:rgba(240,144,144,.07)}
+.chip.hp{color:var(--hp);border-color:rgba(127,222,163,.4);background:rgba(127,222,163,.07)}
+.chip.mp{color:var(--mp);border-color:rgba(134,180,244,.4);background:rgba(134,180,244,.07)}
+.chip.sm{font-size:10.5px;padding:3px 8px}
+.c-mut{color:var(--mut)}.c-dim{color:var(--dim)}.c-faint{color:var(--faint)}.c-ink{color:var(--ink)}
+.c-acc{color:var(--acc)}.c-pur{color:var(--pur)}.c-gold{color:var(--gold)}.c-gdim{color:var(--gold-dim)}
+.c-bad{color:var(--bad)}.c-hp{color:var(--hp)}.c-mp{color:var(--mp)}
+.id{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.mono{font-family:var(--mono)}
 
+/* ── tables ── */
 .tw{overflow-x:auto}
 .tbl{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
-.tbl th{text-align:left;font-size:11px;letter-spacing:.08em;color:var(--mut);font-weight:600;
-  padding:7px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
-.tbl td{padding:7px 9px;border-top:1px solid var(--line);vertical-align:top}
-.tbl tr:first-child td{border-top:0}
-.tbl td.num{text-align:right;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;white-space:nowrap}
-.tbl .id{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;color:var(--mut)}
+.tbl th{text-align:left;font-size:11px;letter-spacing:.08em;color:var(--dim);font-weight:600;padding:8px 12px;
+  border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:7px 12px;border-top:1px solid var(--line-row);vertical-align:top}
+.tbl td.num{text-align:right;font-family:var(--mono);font-size:12px;white-space:nowrap}
+.tbl .surface,.surface{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 
-code,.kbd{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;background:var(--code);
-  border:1px solid var(--line);border-radius:5px;padding:1px 5px}
-pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:13px 15px;
-  overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.2px;line-height:1.75;margin:10px 0}
-pre code{background:none;border:0;padding:0}
+pre{background:var(--code);border:1px solid #223055;border-radius:12px;padding:14px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:12.2px;line-height:1.8;margin:0 0 8px;white-space:pre;color:#c3cdea}
+code{font-family:var(--mono);font-size:12px;color:var(--acc)}
 
-/* party */
-.pcard .banner{height:158px;background:var(--code);position:relative;overflow:hidden}
-.pcard .banner img{width:100%;height:100%;object-fit:cover;object-position:center 18%}
-.pcard .banner img.fit{object-fit:contain;padding:8px}
-.pcard .body{padding:15px 17px}
-.pname{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-.pname b{font-size:17px}
-.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
-.stat{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
-.stat .k{font-size:10.5px;color:var(--mut);letter-spacing:.06em}
-.stat .v{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px}
-.storylines{margin:10px 0 0;padding:10px 13px;border-left:2px solid var(--acc);background:var(--code);
-  border-radius:0 8px 8px 0;font-size:12.8px;color:var(--mut)}
-.storylines em{color:var(--ink);font-style:normal}
+/* ── expandable rows (party / key / npc / foe / story) ── */
+.rows{display:flex;flex-direction:column;gap:12px}
+.row{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .25s}
+.row.key{background:var(--key)}
+.row .head{display:flex;gap:16px;align-items:center;padding:14px 18px 14px 14px;cursor:pointer;flex-wrap:wrap}
+.row .head:hover{background:rgba(127,216,234,.04)}
+.row.key .head:hover,.row.pur .head:hover{background:rgba(167,155,242,.05)}
+.row.foe .head:hover{background:rgba(231,195,116,.05)}
+.face{width:88px;height:88px;object-fit:cover;border-radius:12px;border:1px solid var(--line-2);flex:none;background:#0e1428}
+.rbi{height:100px;overflow:hidden;flex:none;display:flex;align-items:flex-end}
+.rbi img{height:100%;width:auto;display:block}
+.rbi.none{width:76px;border:1.5px dashed var(--line-dash);border-radius:10px;display:flex;align-items:center;
+  justify-content:center;color:var(--faint);font-size:10.5px;text-align:center;line-height:1.4}
+.meta{flex:1;min-width:240px}
+.meta .nm{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.meta .nm b{font-family:var(--serif);font-weight:900;font-size:20px;letter-spacing:.04em}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 8px}
+.meta .lead2{margin:0;color:var(--mut);font-size:13px;max-width:66ch;text-wrap:pretty}
+.chev{flex:none;color:var(--acc);font-size:13px;transition:transform .25s}
+.row.pur .chev,.row.key .chev{color:var(--pur)}
+.row.foe .chev{color:var(--gold)}
+.exp{border-top:1px solid var(--line-soft);padding:22px;display:flex;gap:26px;flex-wrap:wrap;background:rgba(10,15,32,.5);animation:cxIn .3s ease}
+.exp.key{border-top-color:#23204a}
+.exp .art{flex:1 1 260px;min-width:230px;max-width:380px;display:flex;align-items:flex-start;justify-content:center;
+  background:radial-gradient(340px 300px at 50% 32%,rgba(127,216,234,.10),transparent 70%);border-radius:12px;padding:8px}
+.exp.pur .art{background:radial-gradient(340px 300px at 50% 32%,rgba(167,155,242,.12),transparent 70%)}
+.exp .art img{max-width:100%;max-height:520px;width:auto;height:auto;display:block;filter:drop-shadow(0 14px 28px rgba(0,0,0,.5))}
+.exp .info{flex:2 1 380px;min-width:280px}
+.exp h5{margin:0 0 8px;font-size:13px;color:var(--acc);letter-spacing:.12em;font-weight:700}
+.exp.pur h5{color:var(--pur)}
+.exp h5.mt{margin-top:16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:7px}
+.tile{background:var(--code);border:1px solid #223055;border-radius:10px;padding:7px 11px}
+.tile .k{font-size:10.5px;color:var(--dim);letter-spacing:.06em}
+.tile .v{font-family:var(--mono);font-size:15px}
+.eqline{display:flex;flex-wrap:wrap;gap:6px}
+.skline{display:flex;gap:9px;align-items:baseline;font-size:12.5px;flex-wrap:wrap}
+.storybox{margin:18px 0 0;padding:12px 16px;border-left:2px solid var(--pur);background:var(--code);
+  border-radius:0 10px 10px 0;font-size:12.8px;color:var(--mut);line-height:1.85}
 
-/* npc */
-.ncard{display:flex;gap:14px}
-.ncard .face{flex:none;width:86px;height:86px;border-radius:10px;background:
-  linear-gradient(160deg,color-mix(in srgb,var(--acc) 14%,var(--code)),var(--code));
-  border:1px solid var(--line);overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
-.ncard .face img{width:100%;height:100%;object-fit:cover;object-position:center top}
-.ncard .who{min-width:0}
+/* npc grid card */
+.ncard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.ncard .head{display:flex;gap:14px;padding:14px;cursor:pointer}
+.ncard .head:hover{background:rgba(127,216,234,.04)}
+.ncard .face{width:72px;height:72px;border-radius:11px}
+.ncard .nm{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.ncard .nm b{font-family:var(--serif);font-weight:900;font-size:16px}
+.ncard .role{font-size:12px;color:var(--dim);margin:1px 0 6px}
+.gift{margin-top:8px;padding:6px 11px;border-left:2px solid var(--gold);background:var(--code);
+  border-radius:0 8px 8px 0;font-size:12px;color:var(--gold)}
+.nexp{border-top:1px solid var(--line-soft);padding:16px;display:flex;justify-content:center;
+  background:radial-gradient(300px 260px at 50% 30%,rgba(167,155,242,.10),transparent 70%);animation:cxIn .3s ease}
+.nexp img{max-width:100%;max-height:460px;width:auto;height:auto;display:block;filter:drop-shadow(0 12px 24px rgba(0,0,0,.5))}
+.stub{border:1.5px dashed var(--line-dash);border-radius:16px;min-height:90px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;color:var(--faint);font-size:12.5px;padding:16px;text-align:center}
 
-/* bestiary */
-.bcard{display:flex;gap:14px}
-.bcard.boss{background:color-mix(in srgb,var(--acc) 6%,var(--card))}
-.bcard .spr{flex:none;width:104px;min-height:96px;border-radius:10px;background:var(--code);
-  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.bcard .spr img{image-rendering:pixelated}
-.srow{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0}
-.foesk{margin:7px 0 0;padding:7px 11px;background:var(--code);border-radius:8px;font-size:12.5px}
+/* ── foe ── */
+.foe .thumb{flex:none;width:64px;height:64px;border-radius:10px;border:1px solid #223055;background:#0e1428;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.foe .thumb.parch{background:#ece0bf;border-color:#c9b98b}
+.foe .thumb img{max-width:86%;max-height:86%;width:auto;height:auto}
+.foe .head{padding:11px 16px 11px 12px;align-items:center}
+.foe .meta{min-width:220px}
+.foe .fstats{display:flex;flex-wrap:wrap;gap:5px;flex:none;max-width:330px;justify-content:flex-end}
+.foe .exp{padding:22px 24px;flex-direction:column;gap:0}
+.foe .exp .bar{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line-2);padding-bottom:9px}
+.foe .exp .bar b{font-family:var(--serif);font-weight:900;font-size:21px;letter-spacing:.06em}
+.foe .exp .body{display:flex;gap:24px;flex-wrap:wrap;margin-top:16px}
+.foe .artcol{flex:1 1 240px;min-width:200px;max-width:340px;display:flex;flex-direction:column;gap:9px;align-items:center}
+.poster{background:linear-gradient(165deg,#f2e8cc,#e6d7b0);border:1px solid #c9b98b;border-radius:6px;
+  padding:14px 14px 10px;box-shadow:inset 0 0 40px rgba(122,92,34,.2),0 8px 20px rgba(0,0,0,.4);
+  width:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:6px}
+.poster img{max-width:100%;max-height:300px;width:auto;height:auto;mix-blend-mode:multiply;transform:rotate(-.6deg)}
+.poster .w{font-family:var(--latin);font-weight:600;font-size:17px;letter-spacing:.4em;color:#3b3121;text-indent:.4em}
+.foeport{display:flex;justify-content:center;width:100%;border-radius:12px;padding:8px;box-sizing:border-box;
+  background:radial-gradient(300px 260px at 50% 34%,rgba(231,195,116,.10),transparent 70%)}
+.foeport img{max-width:100%;max-height:320px;width:auto;height:auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.5))}
+.noart{width:100%;height:220px;border:1.5px dashed var(--line-dash);border-radius:12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;color:var(--faint);font-size:12px;box-sizing:border-box}
+.itoggle{display:flex;gap:6px}
+.itoggle button{flex:none;white-space:nowrap;border:1px solid var(--line-2);background:transparent;color:var(--mut);
+  font:11px var(--mono);padding:5px 12px;border-radius:999px;cursor:pointer}
+.itoggle button.on{color:#0b1020;background:linear-gradient(135deg,var(--gold),#c9a052);border-color:transparent}
+.foe .desc{margin:0 0 12px;font-size:13.5px;line-height:1.85;color:#c3cdea;text-wrap:pretty}
+.bigstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:7px}
+.bigstats .tile{border-radius:8px;padding:6px 10px}
+.bigstats .tile .v{font-weight:600;color:var(--ink)}
+.foenote{margin-top:10px;padding:8px 12px;background:var(--code);border:1px dashed var(--line-dash);border-radius:8px;font-size:12.5px;color:#c3cdea}
+.pxfig{flex:none;align-self:flex-end;display:flex;flex-direction:column;align-items:center;gap:5px}
+.pxfig img{height:84px;width:auto;image-rendering:pixelated}
+.pxfig span{font-size:10px;color:var(--dim);letter-spacing:.1em}
 
-.gift{border-left:2px solid var(--gold);padding:5px 11px;background:var(--code);border-radius:0 8px 8px 0;
-  font-size:12.5px;margin-top:8px}
+/* ── collapsible group (eq / item) ── */
+.grp{margin-bottom:14px}
+.grp .gh{display:flex;align-items:baseline;gap:10px;cursor:pointer;padding:6px 2px}
+.grp .gh:hover{color:var(--acc)}
+.grp .gh .gchev{color:var(--acc);font-size:11px;display:inline-block;transition:transform .25s}
+.grp .gh h4{font-size:17px}
+.grp .gh .cnt{font-family:var(--mono);font-size:11.5px;color:var(--mut)}
 
-/* world */
-.mapcard h4{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap;font-size:15px}
-.forms{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0}
-.form{font-size:12px;border:1px dashed var(--line);border-radius:8px;padding:3px 9px;color:var(--mut)}
-
-/* story */
-.cut{margin-bottom:14px}
-.cut .lines{margin-top:8px;display:flex;flex-direction:column;gap:6px}
-.line{display:flex;gap:10px;font-size:13px}
-.line .spk{flex:none;width:74px;text-align:right;color:var(--acc-ink);font-weight:600;font-size:12.5px}
-.line .txt{color:var(--ink)}
-.line.sysline .txt{color:var(--mut);font-size:12.5px}
-.dlgset{margin-bottom:6px}
-.dlge{border-top:1px solid var(--line);padding:10px 2px}
-.dlge:first-of-type{border-top:0}
-.dlge .cond{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
-.dlge .l{font-size:13px;margin:2px 0 2px 6px;color:var(--ink)}
-
-.flow{display:flex;flex-direction:column;gap:0;margin:14px 0}
+/* ── world / flow / formula ── */
+.flow{display:flex;flex-direction:column}
 .step{display:flex;gap:14px;position:relative;padding-bottom:18px}
-.step::before{content:"";position:absolute;left:7px;top:20px;bottom:0;width:1px;background:var(--line)}
-.step:last-child::before{display:none}
-.step .dot{flex:none;width:15px;height:15px;margin-top:4px;transform:rotate(45deg);
-  background:color-mix(in srgb,var(--acc) 16%,var(--card));border:1.5px solid var(--acc);border-radius:3px}
-.step .stxt b{font-size:14px}
-.step .stxt{font-size:13px;color:var(--mut)}
-.step .stxt .fl{margin-left:6px}
+.step .dot{flex:none;width:14px;height:14px;margin-top:5px;transform:rotate(45deg);
+  background:rgba(127,216,234,.15);border:1.5px solid var(--acc);border-radius:3px}
+.step .t{font-size:13px;color:var(--mut)}
+.step .t b{font-size:14px;color:var(--ink)}
+.mapenc{display:flex;gap:8px;font-size:12px;padding:3px 0;border-top:1px dashed var(--line-row)}
+.formula{margin-bottom:22px}
+.formula h4{font-size:16px;margin:0 0 8px}
+.formula h4 .no{font-family:var(--mono);font-size:12px;color:var(--gold);margin-right:8px}
+.formula p{margin:0;color:var(--mut);font-size:12.5px;max-width:80ch}
 
-.note{border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line));
-  background:color-mix(in srgb,var(--gold) 6%,var(--card));border-radius:10px;padding:10px 14px;
-  font-size:12.8px;color:var(--ink);margin:10px 0}
-.note b{color:var(--gold)}
+/* ── story ── */
+.scard{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.scard .sh{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;flex-wrap:wrap}
+.scard .sh:hover{background:rgba(167,155,242,.05)}
+.scard .sh .schev{color:var(--pur);font-size:11px;transition:transform .25s}
+.scard .sbody{border-top:1px solid var(--line-soft);padding:14px 18px;display:flex;flex-direction:column;gap:7px;animation:cxIn .25s ease}
+.line{display:flex;gap:12px;font-size:13px}
+.line .spk{flex:none;width:82px;text-align:right;color:var(--pur);font-weight:700;font-size:12.5px}
+.dlgbody{border-top:1px solid var(--line-soft);padding:6px 18px 14px;animation:cxIn .25s ease}
+.dlge{border-top:1px dashed var(--line-row);padding:11px 0}
+.dlge .cond{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.dlge .l{margin:2px 0 2px 8px}
 
-.e[hidden]{display:none!important}
-.sec[hidden]{display:none!important}
+footer{margin-top:72px;border-top:1px solid var(--line-soft);padding-top:16px;font-size:11.5px;color:var(--faint)}
+.empty{color:var(--faint);font-size:13px;padding:40px 0}
 
-@media (max-width:920px){
-  .app{display:block}
-  .side{position:static;width:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px}
-  .main{margin-left:0;padding:22px 16px 70px}
-  .nav{flex-direction:row;overflow-x:auto;padding-bottom:4px}
-  .nav a{white-space:nowrap}
-  .side .foot{display:none}
-  .hero .art{width:70%;opacity:.5}
-}
-@media (prefers-reduced-motion: no-preference){
-  html{scroll-behavior:smooth}
+@media (max-width:720px){
+  .hdr-in{padding:12px 16px 0}
+  nav.tabs{padding:9px 16px 11px}
+  main{padding:8px 16px 80px}
+  .row .head{flex-wrap:wrap}
+  .meta{flex:1 0 100%;order:3;min-width:0}
 }
 </style>
 
-<div class="app">
-<aside class="side">
-  <div class="brand">
-    <div class="gem" aria-hidden="true"></div>
-    <div><h1 class="display">水晶傳說</h1><div class="sub">遊戲設定集 · CODEX</div></div>
-  </div>
-  <div class="searchbox" id="sbox">
-    <input id="q" type="search" placeholder="搜尋名稱、ID、數值…（/ 聚焦）" aria-label="全域搜尋">
-    <button id="qc" title="清除搜尋" aria-label="清除搜尋">×</button>
-  </div>
-  <div class="hits" id="hits" aria-live="polite"></div>
-  <nav class="nav" id="nav" aria-label="章節導覽">
-    <a href="#overview">總覽</a>
-    <a href="#party">主角隊伍</a>
-    <a href="#npcs">NPC 圖鑑</a>
-    <a href="#bestiary">敵人圖鑑</a>
-    <a href="#skills">技能</a>
-    <a href="#equipment">裝備</a>
-    <a href="#items">道具</a>
-    <a href="#shops">商店</a>
-    <a href="#world">地圖與地區</a>
-    <a href="#formulas">戰鬥公式</a>
-    <a href="#systems">系統規格</a>
-    <a href="#story">劇情與對話</a>
-  </nav>
-  <div class="foot">資料快照 2026-07-16（14:55）<br>content_db.tres · dialogue.json<br>BATTLE_FORMULAS v2.0 · SAVE_SCHEMA v1.1<br>DIALOGUE_SPEC v1.1 · 道具武器設計 v2.1</div>
-</aside>
-
-<main class="main">
-
-<header class="hero" id="hero">
-  <img class="art" id="heroArt" alt="">
-  <div class="hero-in">
-    <div class="kicker">TALE OF CRYSTAL — GODOT 4.7 EDITION</div>
-    <h1 class="display">水晶傳說 設定集</h1>
-    <p>十五歲的路德為查明恩人亞倫失蹤的真相，與青梅竹馬瑪琳一同踏上冒險。
-       水晶碎片、封閉二十年的北方礦山、化為骷髏的失蹤礦工——黑影正在甦醒。</p>
-    <div class="metarow">
-      <span class="chip acc">2 人隊伍（上限 4）</span>
-      <span class="chip">ATB 戰鬥</span>
-      <span class="chip">單一存檔槽</span>
-      <span class="chip">1280×720 · 像素風 · nearest</span>
-      <span class="chip">GDScript</span>
+<header class="top">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="gem" aria-hidden="true"></div>
+      <div>
+        <div class="t">水晶傳說 <span>設定資料庫</span></div>
+        <div class="s">TALE OF CRYSTAL · TEAM CODEX</div>
+      </div>
+    </div>
+    <div class="search" id="sbox">
+      <input id="q" type="search" placeholder="全域搜尋：名稱、ID、台詞、數值…（/ 聚焦）" aria-label="全域搜尋">
+      <button class="clr" id="qc" title="清除搜尋" aria-label="清除搜尋">×</button>
+    </div>
+    <div class="hdr-r">
+      <span class="hits" id="hits" aria-live="polite"></span>
+      <button class="mode" id="modeBtn" title="切換版面模式"></button>
     </div>
   </div>
+  <nav class="tabs" id="tabs" aria-label="章節導覽"></nav>
 </header>
 
-<!-- ═══════════ 總覽 ═══════════ -->
-<section class="sec" id="overview">
-  <h2 class="display">總覽</h2>
-  <p class="lead">世界觀、章節主線與技術規格。旗標細節見「劇情與對話」，數值規則見「戰鬥公式」。</p>
-
-  <div class="grid e" data-static="1">
-    <div class="card"><h4>芳蕾鎮</h4><p class="desc">故事起點的邊境小鎮。設施：冒險者公會（緹娜）、旅店（朵拉）、神殿（希雅修女）、鎮長宅（巴頓）、道具店（吉德）、鐵匠鋪（漢克）、水井旁（老葛雷）、藥草舖（米拉）、南門（羅素隊長）。鎮內無遭遇戰。</p></div>
-    <div class="card"><h4>蓋婭女神與記號</h4><p class="desc">本地信仰的大地女神。序章礦山事件後，女神在路德身上留下「女神的記號」（劇情道具 <code>goddess_mark</code>），希雅修女能察覺其變化——主線暗線。</p></div>
-    <div class="card"><h4>北方礦山</h4><p class="desc">二十年前封閉的礦坑，近來夜裡有異聲。序章見習之地；第二章重返時揭露失蹤礦工已化為骷髏，深處藏著異變的源頭。</p></div>
-    <div class="card"><h4>水晶碎片</h4><p class="desc">蘊含魔力的稀有素材（<code>crystal_shard</code>），與礦山異變直接相關。中後期敵人與頭目掉落，是貫穿全篇的關鍵物。</p></div>
-    <div class="card"><h4>冒險者公會</h4><p class="desc">於公會登錄後取得 F 級「公會登錄證」。委託是章節推進的主要載體：第一章討伐哥布林頭目（200G）、第二章受老葛雷私託調查礦工失蹤。</p></div>
-    <div class="card"><h4>南方大道（伏筆）</h4><p class="desc">通往大城的道路因魔物騷動封鎖，由羅素隊長把守。第二章結束後鎮長囑咐「把礦山所見告訴大城的人」——第三章的出口。</p></div>
-  </div>
-
-  <h3>主線流程</h3>
-  <div class="flow e" data-static="1">
-    <div class="step"><div class="dot"></div><div class="stxt"><b>序章「礦山見習」</b><span class="fl chip">step 0→3</span><br>
-      路德跟隨 A 級冒險者亞倫前往礦山見習（單人隊伍、教學戰）→ 礦坑深處遭遇「異變的魔影」（撐 3 回合的劇情戰）→ 亞倫斷後失蹤，路德獨自回鎮。</div></div>
-    <div class="step"><div class="dot"></div><div class="stxt"><b>第一章開端・三天後</b><span class="fl chip">step 4 · reg 1</span><br>
-      瑪琳入隊 → 到公會找緹娜登錄成為 F 級冒險者（取得公會登錄證）。鎮上可拿三份贈禮：漢克贈鐵劍、瑪莎贈活力戒指、吉德贈藥水×2。</div></div>
-    <div class="step"><div class="dot"></div><div class="stxt"><b>第一章「東之森的哥布林」</b><span class="fl chip">ch1 1→3</span><br>
-      緹娜發布委託：討伐盤踞東之森深處的哥布林頭目（報酬 200G，建議 Lv5＋換裝）。東之森 I→II→III 推進，擊破頭目戰後回報結案。支線：米拉的鏡草×3。</div></div>
-    <div class="step"><div class="dot"></div><div class="stxt"><b>第二章「重返礦山」</b><span class="fl chip">ch2 1→3 · relic</span><br>
-      老葛雷私託調查礦工失蹤 → 礦山遇見化為骷髏的礦工（真相過場）→ 擊破狂暴洞熊、深處開路 → 帶「失蹤礦工的頭盔」回報老葛雷與鎮長。礦坑深處（Cave）開放。</div></div>
-    <div class="step"><div class="dot"></div><div class="stxt"><b>第三章（未開放）</b><span class="fl chip">南方大道</span><br>
-      深處異變源頭（洞窟食人魔已定義、遭遇待串接）→ 前往大城回報。南門封鎖解除為後續開發內容。</div></div>
-  </div>
-
-  <h3>技術規格</h3>
-  <div class="tw e" data-static="1"><table class="tbl">
-    <tr><td style="width:180px">引擎</td><td>Godot 4.7（stable）·GDScript·2D 像素風</td></tr>
-    <tr><td>畫面</td><td>1280×720 · stretch mode <code>viewport</code> · texture filter <code>nearest</code></td></tr>
-    <tr><td>資料真相源</td><td><code>resources/content/**/*.tres</code>（聚合於 <code>content_db.tres</code>，由 ContentDB autoload 載入；設計員直接在 Inspector 編輯）</td></tr>
-    <tr><td>規則真相源</td><td>GDevelop <code>build_cq2.py</code> 凍結抄錄 → <code>specs/</code>（本設定集依 specs v1.1）</td></tr>
-    <tr><td>全域狀態</td><td>Autoload 單例：GameState / SaveManager / ContentDB / SceneRouter / AudioBus 等 7 個</td></tr>
-    <tr><td>存檔</td><td>單一存檔槽 <code>user://cq_save.json</code>，自動存檔（進場／劇情／撿取／寶箱／買賣）</td></tr>
-  </table></div>
-</section>
-
-<!-- ═══════════ 主角 ═══════════ -->
-<section class="sec" id="party">
-  <h2 class="display">主角隊伍 <span class="cnt" data-cnt="party"></span></h2>
-  <p class="lead">衍生數值由公式 F-1 計算（含初始裝備）。屬性點：每級 +3 自由分配；技能點：每級 +1，技能上限 Lv10（每級威力 +15%）。</p>
-  <div class="grid2" id="partyGrid"></div>
-</section>
-
-<!-- ═══════════ NPC ═══════════ -->
-<section class="sec" id="npcs">
-  <h2 class="display">NPC 圖鑑 <span class="cnt" data-cnt="npc"></span></h2>
-  <p class="lead">全員常駐芳蕾鎮。對話依旗標由上而下擇一觸發（先寫後期條件），完整台詞見「劇情與對話」。</p>
-  <div class="grid2" id="npcGrid"></div>
-</section>
-
-<!-- ═══════════ 敵人 ═══════════ -->
-<section class="sec" id="bestiary">
-  <h2 class="display">敵人圖鑑 <span class="cnt" data-cnt="foe"></span></h2>
-  <p class="lead">DEF 為物理防禦；敵人魔防以 DEF×0.5 計、閃避以 SPD×1.5 計、會心一律 6.25%（見 F-3～F-5）。
-     ☠ 為頭目（<code>big</code>）：血條不顯示數字。掉落顯示「最終機率（×倍率）」——最終機率＝道具掉落基數 × 怪物倍率，上限 100%（F-10）。</p>
-  <div class="grid2" id="foeGrid"></div>
-</section>
-
-<!-- ═══════════ 技能 ═══════════ -->
-<section class="sec" id="skills">
-  <h2 class="display">技能 <span class="cnt" data-cnt="skill"></span></h2>
-  <p class="lead">傷害 =（基值×倍率＋固定值）×技能等級加成 − 敵防×0.6，浮動 0.85–1.00；治療無防禦修正。
-     基值：str/agi 系吃物攻、int 系吃魔攻。技能不判閃避。</p>
-  <div class="grid" id="skillGrid"></div>
-</section>
-
-<!-- ═══════════ 裝備 ═══════════ -->
-<section class="sec" id="equipment">
-  <h2 class="display">裝備 <span class="cnt" data-cnt="eq"></span></h2>
-  <p class="lead">六個裝備格：武器／防具／護腕／靴子／飾品×2（acc1/acc2）。武器・防具・靴子各分
-     <b>力量／敏捷／法力三型 × 8 階曲線</b>（1~4 階第一章即販售；5~8 階＝<span class="chip gold">II</span>，ch2 旗標後上架）——
-     型別只是分類標籤，<b>不限制誰能裝</b>。稀有度（優良／稀有／史詩）為 UI 色階，不影響數值。
-     護腕未擴充（維持 4 件）；飾品不分型共 40 件。賣價＝買價 30%。裝備 <code>desc</code> 風味文字目前 UI 尚未顯示（選單只列數值）。
-     詳細設計見 <code>道具武器設計.md</code>。</p>
-  <div id="eqWrap"></div>
-</section>
-
-<!-- ═══════════ 道具 ═══════════ -->
-<section class="sec" id="items">
-  <h2 class="display">道具 <span class="cnt" data-cnt="item"></span></h2>
-  <p class="lead">戰鬥中可用的道具僅限回復 HP／MP 兩類（F-6）。素材目前用途為變賣與未來煉金／鍛造。
-     「掉落基數」＝<code>base_drop_rate</code>，<b>每個物品各別設定</b>（0 表示不從戰鬥掉落）；
-     稀有度<b>不參與掉落計算</b>（引擎只讀 base_drop_rate），只是填值慣例（普通素材 20%／優良 12%／稀有 5%）＋UI 色階，
-     所以會有「優良但基數 0」的消耗品（如上級藥水）。怪物端 <code>drops[].rate</code> 為加乘倍率，見 F-10。</p>
-  <div id="itemWrap"></div>
-</section>
-
-<!-- ═══════════ 商店 ═══════════ -->
-<section class="sec" id="shops">
-  <h2 class="display">商店 <span class="cnt" data-cnt="shop"></span></h2>
-  <p class="lead">買賣完成時自動存檔。賣出任何裝備／道具一律以其 <code>sell</code> 價成交。</p>
-  <div class="grid2" id="shopGrid"></div>
-</section>
-
-<!-- ═══════════ 地圖 ═══════════ -->
-<section class="sec" id="world">
-  <h2 class="display">地圖與地區 <span class="cnt" data-cnt="map"></span></h2>
-  <p class="lead">節奏參數（pacing）定義每張圖的進場等級→目標等級與預計戰鬥數，EXP 縮放係數由此推得（F-9，現場計算）。
-     寶箱座標為圖塊座標（tx, ty）。</p>
-  <div id="mapWrap"></div>
-</section>
-
-<!-- ═══════════ 公式 ═══════════ -->
-<section class="sec" id="formulas">
-  <h2 class="display">戰鬥公式</h2>
-  <p class="lead">摘錄自 <code>specs/BATTLE_FORMULAS.md</code> <b>v2.0</b>。F-1～F-9 抄錄自 GDevelop <code>build_cq2.py</code>（附行號可回溯）；
-     <b>F-10 為 Godot 端刻意新增的平衡設計</b>（2026-07-15 遊玩回饋調整，非 GDevelop 抄錄）。</p>
-
-  <div class="e"><h3>F-1　衍生屬性 derive(m)</h3>
-  <pre><code>maxhp  = 30 + STR×8 + 裝備hp          maxmp = 8 + INT×5 + 裝備mp
-patk   = 6 + 主屬性×2 + 裝備patk       matk  = round(INT×2) + 裝備matk
-pdef   = STR + 裝備pdef                mdef  = round(INT×0.8) + 裝備mdef
-dodgeV = round(AGI×1.5) + 裝備dodge    critV = 6.25 + AGI×0.15 + 裝備crit（取一位小數）
-spd    = AGI</code></pre>
-  <p class="desc">裝備值＝各部位對應屬性加總。critV 取一位小數採 WORLD 版寫法（兩份 derive 不一致的技術債，Godot 版統一）。</p></div>
-
-  <div class="e"><h3>F-2　升級經驗 expNeed(lv)</h3>
-  <pre><code>expNeed(lv) = 10 + round(8 × lv^1.4)</code></pre></div>
-
-  <div class="e"><h3>F-3　普攻傷害 phys(att, defn)</h3>
-  <pre><code>base = atk×1.8 − def（下限 1）；防禦指令中 ×0.5
-會心率：我方 critV／敵方一律 6.25%；會心 ×1.5
-final = max(1, round(base × 隨機(0.85~1.00) × 會心倍率))</code></pre></div>
-
-  <div class="e"><h3>F-4　閃避判定 dodge(att, defn)</h3>
-  <pre><code>機率% = clamp(守方dodgeV − 攻方AGI×1.5, 0, 30)</code></pre>
-  <p class="desc">只有<b>普攻</b>判閃避；玩家技能傷害與全體技能一律不判（刻意設計，勿補）。敵方 dodgeV 以 SPD×1.5 計。</p></div>
-
-  <div class="e"><h3>F-5　技能傷害／治療</h3>
-  <pre><code>技能等級加成 skPow = 1 + 0.15 × (技能Lv − 1)
-基值 skBase：int 系→matk（敵人→atk×0.8）；其他→patk（敵人→atk）
-防禦 skDef ：int 系→mdef（敵人→def×0.5）；其他→pdef（敵人→def）
-傷害 = max(1, round((skBase×mult + flat) × skPow − skDef×0.6) × 隨機(0.85~1.00))
-治療 = round((skBase×mult + flat) × skPow)　→ 補至 maxhp 為止，無防禦修正</code></pre>
-  <p class="desc">技能只吃六成防禦（普攻吃全額）——刻意差異，不是筆誤。</p></div>
-
-  <div class="e"><h3>F-6　道具使用（戰鬥）</h3>
-  <p class="desc">僅 <code>kind = heal / mp</code> 可在戰鬥中使用：heal 補 HP、mp 補 MP，皆 clamp 至上限，使用後扣庫存 1。</p></div>
-
-  <div class="e"><h3>F-7　ATB 蓄力</h3>
-  <pre><code>ATB_K = 1.05（全域速度倍率，定案值）
-每幀（僅戰鬥 state == "run"）：atb = min(100, atb + (10 + AGI或SPD) × 1.05 × dt)
-初始值：我方 random()×40／敵方 random()×30；行動後歸 0
-我方優先：任一英雄蓄滿先開指令選單；同幀只處理第一個達標者</code></pre>
-  <p class="desc">選單／演出等非 run 狀態一律暫停蓄力（等待模式由狀態機天然實現）。</p></div>
-
-  <div class="e"><h3>F-8　敵人 AI（foeAct）</h3>
-  <pre><code>依序短路判定（非一次加權抽獎）：
-① healer：隊友中第一個 HP&lt;55% 者 → 治療 20~30（寫死常數），有對象就結束回合
-② 具名技能（foeSkills）：40% → 隨機一招；單體判閃避、傷害 = phys()×mult；全體不判閃避
-③ allAttack：30% → 對全體各打一次標準 phys()，不乘倍率、不判閃避
-④ fallback：對隨機一人普攻（判閃避）</code></pre>
-  <p class="desc">三旗標可同時存在。以狂暴洞熊為例：具名技能 40%、全體攻擊 60%×30%＝18%、一般攻擊 42%。</p></div>
-
-  <div class="e"><h3>F-9　EXP 縮放</h3>
-  <pre><code>實得 EXP = max(1, round(敵方原始 EXP 總和 × EXPSCALE[地圖]))
-EXPSCALE = round(隊伍數 × 升級所需經驗總和 ÷ (預計戰鬥數 × 每場平均EXP), 3)</code></pre>
-  <p class="desc">各地圖係數見「地圖與地區」（依 pacing 現場計算，與 <code>exp_scale.gd</code> 同式）。不在 pacing 表內的事件戰（頭目戰等）係數＝1。</p></div>
-
-  <div class="e"><h3>F-10　掉落機率（Godot 端新增，v2.0）</h3>
-  <pre><code>對每個敵人的每筆 drops 元素獨立擲骰：
-最終掉率 = clamp( 道具 base_drop_rate × 怪物 drops[].rate, 0, 1 )
-基數分級：普通素材 0.20／優良素材 0.12／稀有素材 0.05／0＝不從戰鬥掉落</code></pre>
-  <p class="desc">敵方 <code>rate</code> 語意自 v2.0 起是「加成倍率」，不再是絕對機率。<code>base_drop_rate</code> 是
-     <b>各物品獨立欄位</b>——上列分級只是填值慣例，稀有度本身不參與計算（引擎只讀 base_drop_rate）；drops 內物品 id
-     查不到時基數以 1.0 計（防呆，此時倍率＝絕對機率）。伴隨再平衡：一般怪 HP ×約1.7、頭目 ×約1.3；pacing 級距收斂
-     （透過 F-9 EXPSCALE 自動使升級變緩）；一般素材淨掉率降到 20~30%。</p></div>
-
-  <div class="e"><h3>成長常數（derived.tres）</h3>
-  <div class="tw"><table class="tbl" id="derivedTbl"></table></div></div>
-</section>
-
-<!-- ═══════════ 系統 ═══════════ -->
-<section class="sec" id="systems">
-  <h2 class="display">系統規格</h2>
-  <p class="lead">摘錄自 <code>specs/SAVE_SCHEMA.md</code> v1.1 與 <code>specs/DIALOGUE_SPEC.md</code> v1.1。</p>
-
-  <div class="e"><h3>全域狀態（GameState）</h3>
-  <div class="tw"><table class="tbl">
-    <tr><th>欄位</th><th>型別</th><th>內容</th><th>持久化</th></tr>
-    <tr><td class="id">party</td><td>Array</td><td>隊伍成員 {id, lv, exp, attrs, hp, mp, eq, sk, spts, pts}；衍生值由 derive() 補算</td><td>✓</td></tr>
-    <tr><td class="id">flags</td><td>Dictionary</td><td>劇情旗標（整數，未定義視為 0）</td><td>✓</td></tr>
-    <tr><td class="id">eq_inv</td><td>Array</td><td>裝備袋（未裝備的裝備 id 清單）</td><td>✓</td></tr>
-    <tr><td class="id">item_inv</td><td>Dictionary</td><td>背包 {itemId: count}，存取走 invAdd/invUse 介面</td><td>✓</td></tr>
-    <tr><td class="id">gold</td><td>int</td><td>金幣</td><td>✓</td></tr>
-    <tr><td class="id">chests</td><td>Array[String]</td><td>已開啟寶箱 id 清單（定案：字串陣列）</td><td>✓</td></tr>
-    <tr><td class="id">auto_battle</td><td>0/1</td><td>自動戰鬥開關</td><td>✓</td></tr>
-    <tr><td class="id">encounter</td><td>String</td><td>觸發中的遭遇 id</td><td>暫態</td></tr>
-    <tr><td class="id">return_scene / return_x / return_y</td><td>String/int</td><td>戰鬥後／讀檔要回去的場景與座標（−1＝無）</td><td>暫態</td></tr>
-    <tr><td class="id">result</td><td>String</td><td><code>win / lose / flee / story / resume</code>，一次性</td><td>暫態</td></tr>
-    <tr><td class="id">spawn</td><td>String</td><td>進場出生點 id</td><td>暫態</td></tr>
-  </table></div></div>
-
-  <div class="e"><h3>存檔規則</h3>
-  <p class="desc">存檔物件欄位：<code>v / scene / x / y / flags / party / eqInv / itemInv / gold / chests / auto</code>，寫入 <code>user://cq_save.json</code>。
-  自動存檔時機：場景進場、帶存檔動作的對話、撿取、開寶箱、買賣完成。室內存檔存「門口外」座標避免重載卡牆。
-  「重新開始」清空存檔重建預設值；只有一個存檔槽。</p></div>
-
-  <div class="e"><h3>場景轉場（SceneRouter）</h3>
-  <p class="desc">邏輯場景名 <code>Title / Town / Forest / Forest2 / Mine / Cave / Battle / Hub / EForest1~3</code> 經 <code>SCENE_PATHS</code> 對照表轉實際路徑。
-  進場定位：<code>result ∈ {win, flee, story, resume}</code> 且 <code>return_x ≥ 0</code> → 用 return 座標；否則用 spawn 出生點。場景讀完後自行清空 spawn／result。
-  <b>戰敗特例</b>：<code>lose</code> 強制回 Town、出生點 <code>shrine</code>（教堂重生），收斂在 <code>battle_result()</code> 內。</p></div>
-
-  <div class="e"><h3>對話系統（matchWhen）</h3>
-  <p class="desc">條件語法只有三種：<code>always</code>／<code>旗標==數字</code>／<code>旗標&gt;=數字</code>（未定義旗標視為 0）。
-  每個 NPC 的對話表由上而下取<b>第一個</b>成立的條目——越後期的條件要排越前面。
-  <code>action</code> 為對話結束後的具名副作用；<code>done</code> 旗標保證贈禮類只發一次。過場（CUTS）另支援 <code>battle / transfer / setstep / party</code> 四欄位。</p></div>
-
-  <div class="e"><h3>架構備忘：content_db.tres 內嵌副本</h3>
-  <p class="desc">遊戲實際只 <code>load()</code> 聚合檔 <code>content_db.tres</code>，其內容是<b>內嵌副本</b>、
-  不是連結到 <code>resources/content/&lt;分類&gt;/&lt;id&gt;.tres</code> 個別檔案——只改個別 .tres 而沒同步聚合檔，
-  改動<b>不會</b>反映在遊戲裡（兩邊都要改）。另外 <code>content.json</code> 是舊匯入種子，未含新增的 92 件裝備與
-  icon/rarity/attr_type 欄位；重跑 <code>build_tres.gd</code> 全量重建前務必先讀 <code>道具武器設計.md</code> 第六、七節。</p></div>
-
-  <div class="e"><h3>對話 action 一覽</h3>
-  <div class="tw"><table class="tbl">
-    <tr><th>action</th><th>效果</th></tr>
-    <tr><td class="id">register</td><td>登錄冒險者：reg=1，取得公會登錄證（F 級）</td></tr>
-    <tr><td class="id">ch1_take / ch1_reward</td><td>接第一章委託（ch1=1）／結案發 200G（ch1→3）</td></tr>
-    <tr><td class="id">ch2_take / ch2_report</td><td>接第二章委託（ch2=1）／礦山回報謝禮（ch2→3）</td></tr>
-    <tr><td class="id">heal</td><td>隊伍完全恢復（住宿／祈禱）</td></tr>
-    <tr><td class="id">give_sword / give_ring / give_potion</td><td>贈鐵劍（gotSword）／活力戒指（gotRing）／藥水×2（gotPotion）</td></tr>
-    <tr><td class="id">mira_start / mira_reward</td><td>鏡草支線開始（贈凝神耳環，gotEar）／完成獎勵藥水×3</td></tr>
-    <tr><td class="id">relic_turnin</td><td>交還礦工頭盔 → 100G</td></tr>
-    <tr><td class="id">shop_hank / shop_gid</td><td>開啟鐵匠鋪／道具店商店介面</td></tr>
-  </table></div></div>
-</section>
-
-<!-- ═══════════ 劇情 ═══════════ -->
-<section class="sec" id="story">
-  <h2 class="display">劇情與對話</h2>
-  <p class="lead">過場（CUTS）與 NPC 對話全文，取自 <code>dialogue.json</code>（抽取自 build_cq2.py）。</p>
-
-  <div class="e"><h3>劇情旗標一覽</h3>
-  <div class="tw"><table class="tbl">
-    <tr><th>旗標</th><th>意義</th></tr>
-    <tr><td class="id">step</td><td>序章進度：0 序章開始 → 3 亞倫失蹤・回鎮（demon_post 設定）→ 4 瑪琳入隊（town_start 設定）</td></tr>
-    <tr><td class="id">reg</td><td>1＝已登錄冒險者</td></tr>
-    <tr><td class="id">ch1</td><td>第一章：1 接委託 → 2 頭目已討伐（待領賞）→ 3 結案</td></tr>
-    <tr><td class="id">ch2</td><td>第二章：1 接委託 → 2 礦山真相揭露 → 3 回報完成（依對話推定）</td></tr>
-    <tr><td class="id">relic</td><td>1＝持有失蹤礦工的頭盔，待交還老葛雷（+100G）</td></tr>
-    <tr><td class="id">herb / mira2</td><td>鏡草採集數 0~3／米拉支線階段（1 進行中、2 完成）</td></tr>
-    <tr><td class="id">gotSword / gotRing / gotPotion / gotEar</td><td>一次性贈禮已領取</td></tr>
-    <tr><td class="id">c_*</td><td>過場只播一次的鎖（c_pro_town、c_mine_intro、c_cave_intro、c_demon、c_town、c_mine_truth、c_mine_after）</td></tr>
-  </table></div></div>
-
-  <h3>過場（CUTS）<span class="cnt" data-cnt="cut"></span></h3>
-  <div id="cutWrap"></div>
-
-  <h3>NPC 對話（DLG）<span class="cnt" data-cnt="dlg"></span></h3>
-  <div id="dlgWrap"></div>
-</section>
-
-<footer style="margin-top:64px;border-top:1px solid var(--line);padding-top:16px;font-size:11.5px;color:var(--mut)">
-  水晶傳說 Tale of Crystal · 設定集快照 2026-07-16 14:55 · 數值資料由建置腳本自動解析
-  <span class="mono">content_db.tres</span>（遊戲實際載入的聚合檔）產生。數值變動後此頁不會自動更新，跟小杰說一聲即可重新產生。
-</footer>
-</main>
-</div>
+<main id="main"></main>
 
 <script>
 "use strict";
+/* ── 建置時由 build_codex.py 注入（解析 content_db.tres / 對話 .tres / 掃素材圖） ── */
 const IMG = __IMG_JSON__;
 const DLG = __DLG_JSON__;
-
-/* ── 遊戲數值資料：建置時由 build_codex.py 解析 content_db.tres 注入 ── */
 const GAME = __GAME_JSON__;
 
-/* ── 手冊補充資料（手寫維護：NPC 設定、地圖說明、sprite 尺寸、角色立繪） ── */
+/* ── 手寫維護 META（角色定位、圖鑑描述、地圖說明、素材對照）── 對應設計專案 codex-meta.js ── */
 const META = {
-sprites:{bird:[32,31],gslime:[30,25],worm:[35,50],goblin:[34,52],maskedorc:[42,62],bear:[84,74],wolf:[78,40],wogol:[36,20],skeleton:[34,50],orc:[36,53],chort:[64,45],necro:[35,53],ogre:[49,72],demon:[62,82]},
-partyMeta:{ludo:{img:"p_ludo",fit:"cover"},marin:{img:"p_marin",fit:"cover"},alan:{img:"p_alan",fit:"cover"}},
-foeNotes:{ogre:"已定義、尚未配置遭遇（推定為礦坑深處頭目）",shadow_demon:"序章劇情戰（prologue_demon）：撐過 3 回合，不可擊破",necro:"1–3 章反覆遭遇的宿敵反派（小節6 首遇，擊退不擊殺）；為救垂危的妹妹走上邪道，礦工異變是其研究的代價。"},
+partyMeta:{
+  ludo: {role:"前衛劍士",   trait:"衝動熱血",   frameAspect:0.888},
+  marin:{role:"敏捷斥候",   trait:"冷靜務實",   frameAspect:0.5},
+  alan: {role:"資深冒險者", trait:"輕浮而可靠", frameAspect:0.888}
+},
 npcs:[
- {id:"tina",name:"緹娜",img:"p_tina",role:"冒險者公會・櫃檯",fn:["委託","登錄"],
-  desc:"公會接待員。負責冒險者登錄（F 級）與委託發布——第一章「討伐哥布林頭目」（200G）由她發出，也會指路第二章的老葛雷。"},
- {id:"dora",name:"朵拉",img:"p_dora",role:"旅店老闆娘",fn:["住宿（全恢復・免費）"],
-  desc:"爽利熱心、鎮上的情報站，把路德姊弟當自家孩子照顧的鄰居。住宿即隊伍完全恢復。"},
- {id:"shea",name:"希雅修女",img:"p_shea",role:"神殿・蓋婭女神侍奉者",fn:["祈禱（全恢復）"],
-  desc:"能察覺路德身上「女神的記號」的變化。祈禱即隊伍完全恢復；戰敗後隊伍會在教堂（shrine）重生。"},
- {id:"barton",name:"巴頓鎮長",img:"p_barton",role:"芳蕾鎮鎮長",fn:["劇情"],
-  desc:"對礦山異變放心不下的老鎮長。第二章結尾囑託把礦山所見帶往大城——牽出第三章的動線。"},
- {id:"hank",name:"漢克",img:"p_hank",role:"路德之父・退休冒險者",fn:["劇情"],
-  gift:"臨別把當年用舊的佩劍傳給路德（改版後移作老家劇情）",
-  desc:"路德之父，年輕時與瑪莎組隊闖蕩、混到 C 級上下就收手的退休冒險者。嘴硬心軟，把恐懼包裝成打壓；臨別把自己當年用舊的佩劍傳給路德。（改版後不再是鐵匠、暫未配置於鎮上場景。）"},
- {id:"martha",name:"瑪莎",img:"p_martha",role:"路德之母・退休冒險者",fn:["劇情"],
-  gift:"偷塞自己冒險時代的護身戒（gotRing）",
-  desc:"路德之母，漢克當年的隊友兼妻子，偏敏捷/斥候型、比漢克樂觀。用嘮叨掩飾擔心；把冒險時代的護身戒交給路德保平安。（暫未配置於鎮上場景。）"},
- {id:"gid",name:"吉德",img:"p_gid",role:"道具店老闆",fn:["商店","贈禮"],
-  gift:"新客招待：藥水×2（gotPotion）",
-  desc:"嗓門大、待客熱情的道具商。「補給要趁早，這是老冒險者的鐵則！」販售消耗品與飾品。"},
- {id:"gray",name:"老葛雷",img:"p_gray",role:"退休老礦工・水井旁",fn:["委託"],
-  gift:"交還礦工頭盔（relic）→ 100G 謝禮",
-  desc:"第二章委託人。老夥計一個個失蹤、官府當逃工不管，只有他知道礦工們絕不會丟下家人。委託：查明礦工失蹤的真相。"},
- {id:"mira",name:"米拉",img:"p_mira",role:"藥師",fn:["支線"],
-  gift:"開始支線贈「凝神耳環」（gotEar）；採齊鏡草×3 獎勵藥水×3",
-  desc:"藥草舖的年輕藥師。支線「鏡草採集」：到東之森的水邊與大石旁採三株會發光的鏡草（herb 0→3）。"},
- {id:"rossel",name:"羅素隊長",img:"p_rossel",role:"南門守衛隊長",fn:["劇情"],
-  desc:"把守封鎖中的南方大道。等王都指示放行——第三章往大城的出口，會把路德一行的事蹟寫進報告。"},
- {id:"don",name:"唐恩",img:"p_don",role:"鐵匠鋪・老鐵匠",fn:["商店"],
-  desc:"芳蕾鎮唯一的鐵匠，年邁、獨自經營鐵鋪，接手了鎮上的基礎武具店。手藝普通偏差、愛把瑕疵講成「特色」；「好裝備得往大城找」的稀缺感由他鋪陳。"},
- {id:"necro",name:"死靈術士",img:"p_necro",role:"宿敵反派（1–3 章）",fn:["劇情"],
-  desc:"1–3 章反覆遭遇的宿敵，小節6 首遇（擊退不擊殺）。為救垂危的妹妹、想查明黑水晶能否治療而走上邪道——非真心害人，礦工異變是其研究的代價。與路德「想救妹妹瑪琳」成正邪對照。"}
+ {id:"tina",  name:"緹娜",     role:"冒險者公會・櫃檯",     fn:["委託","登錄"], desc:"公會接待員。負責冒險者登錄（F 級）與委託發布——第一章「討伐哥布林頭目」（200G）由她發出，也會指路第二章的老葛雷。"},
+ {id:"dora",  name:"朵拉",     role:"旅店老闆娘",           fn:["住宿（全恢復・免費）"], desc:"爽利熱心、鎮上的情報站，把路德姊弟當自家孩子照顧的鄰居。住宿即隊伍完全恢復。"},
+ {id:"shea",  name:"希雅修女", role:"神殿・蓋婭女神侍奉者", fn:["祈禱（全恢復）"], desc:"能察覺路德身上「女神的記號」的變化。祈禱即隊伍完全恢復；戰敗後隊伍會在教堂（shrine）重生。"},
+ {id:"barton",name:"巴頓鎮長", role:"芳蕾鎮鎮長",           fn:["劇情"], desc:"對礦山異變放心不下的老鎮長。第二章結尾囑託把礦山所見帶往大城——牽出第三章的動線。"},
+ {id:"hank",  name:"漢克",     role:"路德之父・退休冒險者", fn:["劇情"], gift:"臨別把當年用舊的佩劍傳給路德（gotSword）", desc:"路德之父，年輕時與瑪莎組隊闖蕩、混到 C 級上下就收手的退休冒險者。嘴硬心軟，把恐懼包裝成打壓；臨別把自己當年用舊的佩劍傳給路德。"},
+ {id:"martha",name:"瑪莎",     role:"路德之母・退休冒險者", fn:["劇情"], gift:"偷塞自己冒險時代的護身戒（gotRing）", desc:"路德之母，漢克當年的隊友兼妻子，偏敏捷/斥候型、比漢克樂觀。用嘮叨掩飾擔心；把冒險時代的護身戒交給路德保平安。"},
+ {id:"gid",   name:"吉德",     role:"道具店老闆",           fn:["商店","贈禮"], gift:"新客招待：藥水×2（gotPotion）", desc:"嗓門大、待客熱情的道具商。「補給要趁早，這是老冒險者的鐵則！」販售消耗品與飾品。"},
+ {id:"gray",  name:"老葛雷",   role:"退休老礦工・水井旁",   fn:["委託"], gift:"交還礦工頭盔（relic）→ 100G 謝禮", desc:"第二章委託人。老夥計一個個失蹤、官府當逃工不管，只有他知道礦工們絕不會丟下家人。委託：查明礦工失蹤的真相。"},
+ {id:"mira",  name:"米拉",     role:"藥師",                 fn:["支線"], gift:"開始支線贈「凝神耳環」（gotEar）；採齊鏡草×3 獎勵藥水×3", desc:"藥草舖的年輕藥師。支線「鏡草採集」：到東之森的水邊與大石旁採三株會發光的鏡草（herb 0→3）。"},
+ {id:"rossel",name:"羅素隊長", role:"南門守衛隊長",         fn:["劇情"], desc:"把守封鎖中的南方大道。等王都指示放行——第三章往大城的出口，會把路德一行的事蹟寫進報告。"},
+ {id:"don",   name:"唐恩",     role:"鐵匠鋪・老鐵匠",       fn:["商店"], desc:"芳蕾鎮唯一的鐵匠，年邁、獨自經營鐵鋪。手藝普通偏差、愛把瑕疵講成「特色」；「好裝備得往大城找」的稀缺感由他鋪陳。"},
+ {id:"warden",name:"獄卒",     role:"（新對話・待補設定）", fn:["劇情"], desc:"dialogue 資料中新增的對話對象，META 尚未補設定——記得回頭補這一欄。"}
+],
+keyChars:[
+ {id:"necro",name:"死靈術士",role:"宿敵反派（1–3 章）",tags:["劇情關鍵","反覆遭遇・擊退不擊殺"],desc:"1–3 章反覆遭遇的宿敵，小節6 首遇。為救垂危的妹妹、想查明黑水晶能否治療而走上邪道——非真心害人，礦工異變是其研究的代價。與路德「想救妹妹瑪琳」成正邪對照。戰鬥數值見「敵人圖鑑」。"}
 ],
 maps:[
- {id:"town",name:"芳蕾鎮",scene:"Town",kind:"town",
-  desc:"主城鎮。公會／旅店／神殿／鎮長宅／道具店／鐵匠鋪等設施；無遭遇戰。戰敗重生點（shrine・教堂）。"},
- {id:"tutorial",name:"序章・礦山見習",scene:"（教學遭遇）",kind:"field",
-  desc:"序章教學用遭遇表（單人隊伍）。走進碎石地觸發戰鬥。"},
- {id:"forest",name:"森林・外圍",scene:"Forest",kind:"field",desc:"鎮外森林前段。"},
- {id:"forest2",name:"森林・深處",scene:"Forest2",kind:"field",desc:"森林後段，狼群出沒。"},
- {id:"eforest1",name:"東之森 I",scene:"EForest1",kind:"field",desc:"第一章舞台（gen-region 產出地區）。經 Hub 自鎮東門進入。"},
- {id:"eforest2",name:"東之森 II",scene:"EForest2",kind:"field",desc:"東之森中段。"},
- {id:"eforest3",name:"東之森 III",scene:"EForest3",kind:"field",desc:"東之森深處，通往哥布林頭目所在的空地。"},
- {id:"mine",name:"北方礦山",scene:"Mine",kind:"field",desc:"第二章舞台。骷髏礦工＝失蹤的礦工；深處由死靈術士盤踞（原狂暴洞熊改作森林/支線強敵）。"},
- {id:"cave",name:"礦坑深處",scene:"Cave",kind:"field",desc:"第二章後段開放。暗影系魔物與死靈術士（會治療隊友）盤踞。"}
+ {id:"town",    name:"芳蕾鎮",       scene:"Town",     kind:"town", desc:"主城鎮。公會／旅店／神殿／鎮長宅／道具店／鐵匠鋪等設施；無遭遇戰。戰敗重生點（shrine・教堂）。"},
+ {id:"tutorial",name:"序章・礦山見習",scene:"（教學遭遇）",kind:"field",desc:"序章教學用遭遇表（單人隊伍）。走進碎石地觸發戰鬥。"},
+ {id:"forest",  name:"森林・外圍",   scene:"Forest",   kind:"field",desc:"鎮外森林前段。"},
+ {id:"forest2", name:"森林・深處",   scene:"Forest2",  kind:"field",desc:"森林後段，狼群出沒。"},
+ {id:"eforest1",name:"東之森 I",     scene:"EForest1", kind:"field",desc:"第一章舞台（gen-region 產出地區）。經 Hub 自鎮東門進入。"},
+ {id:"eforest2",name:"東之森 II",    scene:"EForest2", kind:"field",desc:"東之森中段。"},
+ {id:"eforest3",name:"東之森 III",   scene:"EForest3", kind:"field",desc:"東之森深處，通往哥布林頭目所在的空地。"},
+ {id:"mine",    name:"北方礦山",     scene:"Mine",     kind:"field",desc:"第二章舞台。骷髏礦工＝失蹤的礦工；深處由死靈術士盤踞。"},
+ {id:"cave",    name:"礦坑深處",     scene:"Cave",     kind:"field",desc:"第二章後段開放。暗影系魔物與死靈術士（會治療隊友）盤踞。"}
 ],
 events:[
  {id:"prologue_demon",name:"序章・異變的魔影",note:"劇情戰：撐過 3 回合（scripted）。"},
- {id:"ch1_boss",name:"第一章頭目戰（舊配置）",note:"GDevelop 版遺留的頭目編成，與 eforest3_boss 並存。"},
- {id:"eforest3_boss",name:"東之森頭目戰",note:"第一章委託目標。建議 Lv5、先到漢克處換裝。"},
- {id:"ch2_bear",name:"第二章・狂暴洞熊",note:"礦山深處擋路頭目；擊破後深處礦道開通。"}
-]
+ {id:"ch1_boss",      name:"第一章頭目戰（舊配置）",note:"GDevelop 版遺留的頭目編成，與 eforest3_boss 並存。"},
+ {id:"eforest3_boss", name:"東之森頭目戰",note:"第一章委託目標。建議 Lv5、先到唐恩處換裝。"},
+ {id:"ch2_bear",      name:"第二章・狂暴洞熊",note:"礦山深處擋路頭目；擊破後深處礦道開通。"},
+ {id:"bear_forced",   name:"狂暴洞熊（強制戰）",note:""},
+ {id:"bear_rematch",  name:"狂暴洞熊（再戰）",note:""},
+ {id:"necro",         name:"死靈術士（精英遭遇）",note:""}
+],
+foeArt:{
+ bird:{b:"bird",c:"bird"}, gslime:{b:"gslime",c:"gslime"}, worm:{b:"worm",c:"worm"},
+ goblin:{b:"goblin",c:"goblin"}, goblin_chief:{b:"goblin_chief",c:"maskedorc"},
+ bear:{b:"bear",c:"bear",p:1}, bear_dire:{b:"bear_dire",c:"bear"}, wolf:{b:"wolf",c:"wolf",p:1},
+ wogol:{b:"wogol",c:"wogol",p:1}, skeleton:{b:"skeleton",c:"skeleton",p:1}, orc:{b:"orc",c:"orc",p:1},
+ chort:{b:"chort",c:null}, necro:{b:"necro",c:null,p:1}, ogre:{b:"ogre",c:null}, shadow_demon:{b:"shadow_demon",c:null}
+},
+foeDesc:{
+ bird:"成群掠過林梢的猛禽，俯衝時快得只剩一道殘影。單獨一隻不足為懼，偏偏牠們總愛呼朋引伴，等你回過神，肩上往往已經被啄了好幾口。羽毛輕軟，是縫製衣物的搶手貨。",
+ gslime:"地脈魔力滲進水窪，日積月累就凝成這麼一坨會抖的綠色果凍。沒腦、沒骨，也沒什麼脾氣，唯一的戰術是「慢慢靠近再黏上去」——以牠的移動速度，這計畫多半在靠近你之前就先失敗了。黏液拿來熬膠意外好用。",
+ worm:"潛伏在鬆軟土層裡的環節巨蟲，平時只把顎牙探出地面。牠沒有眼睛，靠地面震動鎖定獵物，所以你的腳步越重，牠就越興奮。外殼硬得出奇，敲下來能湊合當塊護甲。",
+ wolf:"山林間的狩獵者，落單時謹慎，成群時卻膽大包天。牠們懂得包抄與輪番進攻，遇上落單旅人絕不客氣。老獵人說，聽見第一聲狼嚎就該拔腿了——那是呼喚同伴的信號。",
+ bear:"北方礦山一帶的野生巨獸，厚毛皮下是一身橫練的筋肉。平時窩在洞裡打盹，一旦地盤被闖入就翻臉不認熊。鎮上不少獵人栽在牠掌下——據說連某位未來的冒險者，小時候也曾被牠追著滿山跑。",
+ goblin:"東之森一帶最常見的小型魔物，個頭不高、心眼不少。牠們不擅正面交鋒，專挑落單的旅人下手，得手就往草叢裡一鑽。與其說危險，不如說煩人——尤其當牠們成群結隊、又剛好看上你的行囊時。",
+ orc:"被驅使進礦坑挖掘的粗壯獸人，肌肉遠比腦子發達。揮起鎬來連岩壁都吃不消，更別提擋在中間的人。渾身沾滿鐵屑與礦渣，顯然這苦力活，牠們幹的不是一天兩天了。",
+ wogol:"在礦坑深處竄飛的小型魔物，速度快得令人咋舌，總在火把照不到的暗角忽隱忽現。牠們受水晶微光吸引而聚集，體內積著一點碎晶——這也讓牠們成了礦道裡最難纏的小偷。",
+ chort:"形體不定的小型暗影魔物，像從黑水晶的陰影裡滲出來的一團惡意。牠畏光，動作卻刁鑽，專趁人分神時撲上來抓一把。若在礦道裡撞見成群的牠們，意味著黑水晶的汙染已經不遠。",
+ goblin_chief:"盤踞東之森深處的哥布林群首領，體格是尋常同類的兩三倍，一身劫掠來的雜甲彰顯著牠的地位。牠靠蠻力與狡詐坐穩王座，麾下嘍囉為牠賣命。想安然穿過這片森林，就得先讓這傢伙低頭。",
+ bear_dire:"原本只是尋常的洞熊，卻因長期浸在黑水晶的氣息裡而徹底失了心智。牠雙眼滲著不祥的微光，咆哮能震落洞頂的碎石，痛覺與恐懼再也拉不住牠。這已不是野獸的兇性，而是腐化留下的、無從安撫的狂亂。",
+ ogre:"棲身礦坑最深處的龐然巨魔，據說是吞噬了大量水晶，才長成這副駭人的體格。牠揮舞的巨槌足以砸碎岩層，遲緩的身軀底下藏著毀天滅地的力量。膽敢深入母脈的人，牠是一道繞不過去的血肉高牆。",
+ necro:"遊走在生死之間的術士。他驅使黑水晶之力，將無法安息的礦工喚為傀儡——鎮民咒他褻瀆亡者，卻無人知道，他這麼做只為換取一線治好垂危妹妹的可能。戰場上他總是先癒合同伴的傷，再冷眼看你倒下。",
+ skeleton:"二十年前封礦時失蹤的礦工，如今提著鏽蝕的鎬，重新走回礦道。黑水晶奪走了他們的姓名與安息，只留下不斷挖掘的本能。有些骨手仍緊攥著當年沒能帶出去的礦石——他們，始終沒能下班。",
+ shadow_demon:"序章在礦山深處現身的異形存在，連 A 級冒險者都擋不住。牠不屬於這片大地——沒有名字，沒有來歷，只有一股令人窒息的惡意，與近乎必然的壓迫感。牠不過是黑水晶背後那個更深沉威脅的一縷投影；真正的黑幕，還藏在更遠的地方。"
+},
+foeNotes:{
+ ogre:"已定義完整數值與技能，但目前沒有任何 encounter 表引用（推定為礦坑母脈深處頭目，待接線）。",
+ shadow_demon:"序章劇情戰（prologue_demon）：撐過 3 回合，不可擊破。",
+ necro:"1–3 章反覆遭遇的宿敵反派（擊退不擊殺）；為救垂危的妹妹走上邪道，礦工異變是其研究的代價。"
+}
 };
-const DB = Object.assign({}, GAME, {sprites:META.sprites, npcs:META.npcs, maps:META.maps, events:META.events});
 
-/* ── 小工具 ── */
-const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const eqById=Object.fromEntries(DB.equipment.map(e=>[e.id,e]));
-const itemById=Object.fromEntries(DB.items.map(i=>[i.id,i]));
-const foeById=Object.fromEntries(DB.enemies.map(f=>[f.id,f]));
-const STATL={patk:"物攻",pdef:"物防",matk:"魔攻",mdef:"魔防",crit:"會心%",dodge:"閃避%",hp:"HP",mp:"MP"};
+/* ══════════ 小工具 ══════════ */
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=n=>n==null?"—":String(Math.round(n*100)/100);
+const chip=(t,tone)=>`<span class="chip${tone?" "+tone:""}">${esc(t)}</span>`;
+const faceHtml=(id,alt,extra)=>{const s=IMG["face_"+id];return s
+  ?`<img class="face" src="${s}" alt="${esc(alt)} 頭像" loading="lazy"${extra?` style="${extra}"`:""}>`
+  :`<div class="face" style="display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:10px;line-height:1.3;text-align:center${extra?";"+extra:""}">尚無<br>頭像</div>`;};
+const eqById=Object.fromEntries(GAME.equipment.map(e=>[e.id,e]));
+const itemById=Object.fromEntries(GAME.items.map(i=>[i.id,i]));
+const foeById=Object.fromEntries(GAME.enemies.map(f=>[f.id,f]));
+const mapMeta=Object.fromEntries(META.maps.map(m=>[m.id,m]));
+const evMeta=Object.fromEntries(META.events.map(e=>[e.id,e]));
 const SLOTL={weapon:"武器",armor:"防具",wrist:"護腕",boots:"靴子",acc:"飾品",acc1:"飾品1",acc2:"飾品2"};
-const ATTRL={str:"STR 力量",agi:"AGI 敏捷",int:"INT 智力"};
+const STATL={patk:"物攻",pdef:"物防",matk:"魔攻",mdef:"魔防",crit:"會心%",dodge:"閃避%",hp:"HP",mp:"MP"};
+const ATTRL={str:"力量型",agi:"敏捷型",int:"法力型"};
+const ATTRC={str:"c-bad",agi:"c-hp",int:"c-mp"};
 const CLSN={explorer:"探索者",veteran:"老練者"};
-const EQATTR={str:"力量型",agi:"敏捷型",int:"法力型"};
-const RAR={uncommon:{l:"優良",c:"r-un"},rare:{l:"稀有",c:"r-ra"},epic:{l:"史詩",c:"r-ep"},key:{l:"重要",c:"r-ra"}};
-const rarChip=r=>r&&RAR[r]?`<span class="chip ${RAR[r].c}">${RAR[r].l}</span>`:"";
-const statChips=st=>Object.entries(st).map(([k,v])=>`<span class="chip ${k==="hp"?"hp":k==="mp"?"mp":""}">${STATL[k]||k} +${v}</span>`).join(" ");
-
-function eqStat(eq,k){let s=0;for(const slot in eq){const e=eqById[eq[slot]];if(e&&e.stats[k])s+=e.stats[k];}return s;}
+const RAR={common:["","c-faint"],uncommon:["優良","c-hp"],rare:["稀有","c-pur"],epic:["史詩","c-gold"],key:["重要","c-pur"]};
+const statTxt=s=>Object.entries(s||{}).map(([k,v])=>(STATL[k]||k)+" +"+fmt(v)).join("　");
+const foeName=id=>foeById[id]?foeById[id].name:id;
+const mapName=id=>mapMeta[id]?mapMeta[id].name:(evMeta[id]?evMeta[id].name:id);
+function eqStat(eq,k){let s=0;for(const sl in eq){const e=eqById[eq[sl]];if(e&&e.stats&&e.stats[k])s+=e.stats[k];}return s;}
+const d0=GAME.derived;
 function derive(p){
-  const d=DB.derived,a=p.base,eq=p.eq;
-  const r={};
-  r.maxhp=d.hpBase+a.str*d.hpPerStr+eqStat(eq,"hp");
-  r.maxmp=d.mpBase+a.int*d.mpPerInt+eqStat(eq,"mp");
-  r.patk=d.weaponAtk+a[p.main]*2+eqStat(eq,"patk");
-  r.matk=Math.round(a.int*d.matkPerInt)+eqStat(eq,"matk");
+  const a=p.base,eq=p.eq,r={};
+  r.maxhp=d0.hpBase+a.str*d0.hpPerStr+eqStat(eq,"hp");
+  r.maxmp=d0.mpBase+a.int*d0.mpPerInt+eqStat(eq,"mp");
+  r.patk=d0.weaponAtk+a[p.main]*2+eqStat(eq,"patk");
+  r.matk=Math.round(a.int*d0.matkPerInt)+eqStat(eq,"matk");
   r.pdef=a.str+eqStat(eq,"pdef");
-  r.mdef=Math.round(a.int*d.mdefPerInt)+eqStat(eq,"mdef");
-  r.dodge=Math.round(a.agi*d.dodgePerAgi)+eqStat(eq,"dodge");
-  r.crit=Math.round((d.critBase+a.agi*d.critPerAgi+eqStat(eq,"crit"))*10)/10;
+  r.mdef=Math.round(a.int*d0.mdefPerInt)+eqStat(eq,"mdef");
+  r.dodge=Math.round(a.agi*d0.dodgePerAgi)+eqStat(eq,"dodge");
+  r.crit=Math.round((d0.critBase+a.agi*d0.critPerAgi+eqStat(eq,"crit"))*10)/10;
   r.spd=a.agi;
   return r;
 }
-const expNeed=lv=>DB.derived.expBase+Math.round(DB.derived.expCoef*Math.pow(lv,DB.derived.expPow));
-function expScale(mid){
-  const cfg=DB.pacing.maps[mid],groups=DB.encounters[mid];
-  if(!cfg||!groups)return null;
-  const sums=groups.map(g=>g.reduce((s,e)=>s+(foeById[e]?foeById[e].exp:0),0));
-  const avg=sums.reduce((a,b)=>a+b,0)/sums.length;
-  if(!(avg>0))return 1;
-  let need=0;for(let lv=cfg.entryLv;lv<cfg.targetLv;lv++)need+=expNeed(lv);
-  const party=cfg.party!=null?cfg.party:DB.pacing.partySize;
-  return Math.round(party*need/(cfg.battles*avg)*1000)/1000;
-}
+const expNeed=lv=>d0.expBase+Math.round(d0.expCoef*Math.pow(lv,d0.expPow));
+const SECS=[["ov","總覽"],["party","主角隊伍"],["key","關鍵角色"],["npc","NPC 圖鑑"],["foe","敵人圖鑑"],["skill","技能"],["eq","裝備"],["item","道具"],["shop","商店"],["world","地圖與地區"],["formula","戰鬥公式"],["system","系統規格"],["story","劇情與對話"]];
 
-/* ── 主角 ── */
-function renderParty(){
-  $("#partyGrid").innerHTML=DB.party.map(p=>{
-    const dv=derive(p);
+/* ══════════ 狀態 ══════════ */
+const state={mode:null,tab:"ov",q:"",open:{}};
+
+/* ══════════ 靜態內容（總覽／公式／系統）══════════ */
+const OV_CARDS=[
+ ["芳蕾鎮","故事起點的邊境小鎮。設施：冒險者公會（緹娜）、旅店（朵拉）、神殿（希雅修女）、鎮長宅（巴頓）、道具店（吉德）、鐵匠鋪（唐恩）、水井旁（老葛雷）、藥草舖（米拉）、南門（羅素隊長）。鎮內無遭遇戰。"],
+ ["蓋婭女神與記號","本地信仰的大地女神。序章礦山事件後，女神在路德身上留下「女神的記號」（劇情道具 goddess_mark），希雅修女能察覺其變化——主線暗線。"],
+ ["北方礦山","二十年前封閉的礦坑，近來夜裡有異聲。序章見習之地；第二章重返時揭露失蹤礦工已化為骷髏，深處藏著異變的源頭。"],
+ ["水晶碎片","蘊含魔力的稀有素材（crystal_shard），與礦山異變直接相關。中後期敵人與頭目掉落，是貫穿全篇的關鍵物。"],
+ ["冒險者公會","於公會登錄後取得 F 級「公會登錄證」。委託是章節推進的主要載體：第一章討伐哥布林頭目（200G）、第二章受老葛雷私託調查礦工失蹤。"],
+ ["南方大道（伏筆）","通往大城的道路因魔物騷動封鎖，由羅素隊長把守。第二章結束後鎮長囑咐「把礦山所見告訴大城的人」——第三章的出口。"]
+];
+const FLOW=[
+ {t:"序章「礦山見習」",fl:"step 0→3",d:"路德跟隨 A 級冒險者亞倫前往礦山見習（單人隊伍、教學戰）→ 礦坑深處遭遇「異變的魔影」（撐 3 回合的劇情戰）→ 亞倫斷後失蹤，路德獨自回鎮。"},
+ {t:"第一章開端・三天後",fl:"step 4 · reg 1",d:"瑪琳入隊 → 到公會找緹娜登錄成為 F 級冒險者（取得公會登錄證）。鎮上可拿三份贈禮：漢克贈鐵劍、瑪莎贈活力戒指、吉德贈藥水×2。"},
+ {t:"第一章「東之森的哥布林」",fl:"ch1 1→3",d:"緹娜發布委託：討伐盤踞東之森深處的哥布林頭目（報酬 200G，建議 Lv5＋換裝）。東之森 I→II→III 推進，擊破頭目戰後回報結案。支線：米拉的鏡草×3。"},
+ {t:"第二章「重返礦山」",fl:"ch2 1→3 · relic",d:"老葛雷私託調查礦工失蹤 → 礦山遇見化為骷髏的礦工（真相過場）→ 擊破狂暴洞熊、深處開路 → 帶「失蹤礦工的頭盔」回報老葛雷與鎮長。礦坑深處（Cave）開放。"},
+ {t:"第三章（未開放）",fl:"南方大道",d:"深處異變源頭（洞窟食人魔已定義、遭遇待串接）→ 前往大城回報。南門封鎖解除為後續開發內容。"}
+];
+const TECH=[
+ ["引擎","Godot 4.7（stable）· GDScript · 2D 手繪風"],
+ ["畫面","1920×1080（設計基準 1280×720）· stretch mode canvas_items · texture filter linear"],
+ ["資料真相源","resources/content/**/*.tres（聚合於 content_db.tres，由 ContentDB autoload 載入；設計員直接在 Inspector 編輯）"],
+ ["規則真相源","GDevelop build_cq2.py 凍結抄錄 → specs/（本設定集依 specs v1.1）"],
+ ["全域狀態","Autoload 單例：GameState / SaveManager / ContentDB / SceneRouter / AudioBus 等 7 個"],
+ ["存檔","單一存檔槽 user://cq_save.json，自動存檔（進場／劇情／撿取／寶箱／買賣）"]
+];
+const FORMULAS=[
+ {no:"F-1",t:"衍生屬性 derive(m)",code:"maxhp  = 30 + STR×8 + 裝備hp          maxmp = 8 + INT×5 + 裝備mp\npatk   = 6 + 主屬性×2 + 裝備patk       matk  = round(INT×2) + 裝備matk\npdef   = STR + 裝備pdef                mdef  = round(INT×0.8) + 裝備mdef\ndodgeV = round(AGI×1.5) + 裝備dodge    critV = 6.25 + AGI×0.2 + 裝備crit（取一位小數）\nspd    = AGI",d:"裝備值＝各部位對應屬性加總。critV 取一位小數採 WORLD 版寫法（Godot 版統一）。"},
+ {no:"F-2",t:"升級經驗 expNeed(lv)",code:"expNeed(lv) = 10 + round(8 × lv^1.4)",d:null},
+ {no:"F-3",t:"普攻傷害 phys(att, defn)",code:"base = atk×1.8 − def（下限 1）；防禦指令中 ×0.5\n會心率：我方 critV／敵方一律 6.25%；會心 ×1.5\nfinal = max(1, round(base × 隨機(0.85~1.00) × 會心倍率))",d:null},
+ {no:"F-4",t:"閃避判定 dodge(att, defn)",code:"機率% = clamp(守方dodgeV − 攻方AGI×1.5, 0, 30)",d:"只有普攻判閃避；玩家技能傷害與全體技能一律不判（刻意設計，勿補）。敵方 dodgeV 以 SPD×1.5 計。"},
+ {no:"F-5",t:"技能傷害／治療",code:"技能等級加成 skPow = 1 + 0.15 × (技能Lv − 1)\n基值 skBase：int 系→matk（敵人→atk×0.8）；其他→patk（敵人→atk）\n防禦 skDef ：int 系→mdef（敵人→def×0.5）；其他→pdef（敵人→def）\n傷害 = max(1, round((skBase×mult + flat) × skPow − skDef×0.6) × 隨機(0.85~1.00))\n治療 = round((skBase×mult + flat) × skPow)　→ 補至 maxhp 為止，無防禦修正",d:"技能只吃六成防禦（普攻吃全額）——刻意差異，不是筆誤。"},
+ {no:"F-6",t:"道具使用（戰鬥）",code:null,d:"僅 kind = heal / mp 可在戰鬥中使用：heal 補 HP、mp 補 MP，皆 clamp 至上限，使用後扣庫存 1。"},
+ {no:"F-7",t:"ATB 蓄力",code:'ATB_K = 1.05（全域速度倍率，定案值）\n每幀（僅戰鬥 state == "run"）：atb = min(100, atb + (10 + AGI或SPD) × 1.05 × dt)\n初始值：我方 random()×40／敵方 random()×30；行動後歸 0\n我方優先：任一英雄蓄滿先開指令選單；同幀只處理第一個達標者',d:"選單／演出等非 run 狀態一律暫停蓄力（等待模式由狀態機天然實現）。"},
+ {no:"F-8",t:"敵人 AI（foeAct）",code:"依序短路判定（非一次加權抽獎）：\n① healer：隊友中第一個 HP<55% 者 → 治療 20~30（寫死常數），有對象就結束回合\n② 具名技能（foeSkills）：40% → 隨機一招；單體判閃避、傷害 = phys()×mult；全體不判閃避\n③ allAttack：30% → 對全體各打一次標準 phys()，不乘倍率、不判閃避\n④ fallback：對隨機一人普攻（判閃避）",d:"三旗標可同時存在。以狂暴洞熊為例：具名技能 40%、全體攻擊 60%×30%＝18%、一般攻擊 42%。"},
+ {no:"F-9",t:"EXP 縮放",code:"實得 EXP = max(1, round(敵方原始 EXP 總和 × EXPSCALE[地圖]))\nEXPSCALE = round(隊伍數 × 升級所需經驗總和 ÷ (預計戰鬥數 × 每場平均EXP), 3)",d:"各地圖係數見「地圖與地區」（依 pacing 現場計算）。不在 pacing 表內的事件戰係數＝1。"},
+ {no:"F-10",t:"掉落機率（Godot 端新增，v2.0）",code:"對每個敵人的每筆 drops 元素獨立擲骰：\n最終掉率 = clamp( 道具 base_drop_rate × 怪物 drops[].rate, 0, 1 )\n基數分級：普通素材 0.20／優良素材 0.12／稀有素材 0.05／0＝不從戰鬥掉落",d:"敵方 rate 語意自 v2.0 起是「加成倍率」，不再是絕對機率。base_drop_rate 是各物品獨立欄位——稀有度本身不參與計算；drops 內物品 id 查不到時基數以 1.0 計。伴隨再平衡：一般怪 HP ×約1.7、頭目 ×約1.3；一般素材淨掉率降到 20~30%。"}
+];
+const DERL={hpBase:"HP 基底",hpPerStr:"每點 STR 加 HP",mpBase:"MP 基底",mpPerInt:"每點 INT 加 MP",weaponAtk:"物攻基底",pointsPerLevel:"每級屬性點",skillPointsPerLevel:"每級技能點",skillMaxLv:"技能等級上限",skillPowerPerLv:"技能每級威力加成",expBase:"經驗基底",expCoef:"經驗係數",expPow:"經驗次方",matkPerInt:"每點 INT 加魔攻",mdefPerInt:"每點 INT 加魔防",dodgePerAgi:"每點 AGI 加閃避",dodgeCap:"閃避上限%",critBase:"會心基底%",critPerAgi:"每點 AGI 加會心"};
+const GSTATE=[
+ ["party","Array","隊伍成員 {id, lv, exp, attrs, hp, mp, eq, sk, spts, pts}；衍生值由 derive() 補算","✓"],
+ ["flags","Dictionary","劇情旗標（整數，未定義視為 0）","✓"],
+ ["eq_inv","Array","裝備袋（未裝備的裝備 id 清單）","✓"],
+ ["item_inv","Dictionary","背包 {itemId: count}，存取走 invAdd/invUse 介面","✓"],
+ ["gold","int","金幣","✓"],
+ ["chests","Array[String]","已開啟寶箱 id 清單（定案：字串陣列）","✓"],
+ ["auto_battle","0/1","自動戰鬥開關","✓"],
+ ["encounter","String","觸發中的遭遇 id","暫態"],
+ ["return_scene / x / y","String/int","戰鬥後／讀檔要回去的場景與座標（−1＝無）","暫態"],
+ ["result","String","win / lose / flee / story / resume，一次性","暫態"],
+ ["spawn","String","進場出生點 id","暫態"]
+];
+const SYSNOTES=[
+ ["存檔規則","存檔物件欄位：v / scene / x / y / flags / party / eqInv / itemInv / gold / chests / auto，寫入 user://cq_save.json。自動存檔時機：場景進場、帶存檔動作的對話、撿取、開寶箱、買賣完成。室內存檔存「門口外」座標避免重載卡牆。「重新開始」清空存檔重建預設值；只有一個存檔槽。"],
+ ["場景轉場（SceneRouter）","邏輯場景名 Title / Town / Forest / Forest2 / Mine / Cave / Battle / Hub / EForest1~3 經 SCENE_PATHS 對照表轉實際路徑。進場定位：result ∈ {win, flee, story, resume} 且 return_x ≥ 0 → 用 return 座標；否則用 spawn 出生點。戰敗特例：lose 強制回 Town、出生點 shrine（教堂重生）。"],
+ ["對話系統（matchWhen）","條件語法只有三種：always／旗標==數字／旗標>=數字（未定義旗標視為 0）。每個 NPC 的對話表由上而下取第一個成立的條目——越後期的條件要排越前面。action 為對話結束後的具名副作用；done 旗標保證贈禮類只發一次。過場（CUTS）另支援 battle / transfer / setstep / party 四欄位。"],
+ ["架構備忘：content_db.tres 內嵌副本","遊戲實際只 load() 聚合檔 content_db.tres，其內容是內嵌副本、不是連結到個別 .tres——只改個別 .tres 而沒同步聚合檔，改動不會反映在遊戲裡（兩邊都要改）。"]
+];
+const ACTIONS=[
+ ["register","登錄冒險者：reg=1，取得公會登錄證（F 級）"],
+ ["ch1_take / ch1_reward","接第一章委託（ch1=1）／結案發 200G（ch1→3）"],
+ ["ch2_take / ch2_report","接第二章委託（ch2=1）／礦山回報謝禮（ch2→3）"],
+ ["heal","隊伍完全恢復（住宿／祈禱）"],
+ ["give_sword / give_ring / give_potion","贈鐵劍（gotSword）／活力戒指（gotRing）／藥水×2（gotPotion）"],
+ ["mira_start / mira_reward","鏡草支線開始（贈凝神耳環，gotEar）／完成獎勵藥水×3"],
+ ["relic_turnin","交還礦工頭盔 → 100G"],
+ ["shop_hank / shop_gid","開啟鐵匠鋪／道具店商店介面"]
+];
+
+/* ══════════ 主渲染 ══════════ */
+function render(){
+  const st=state,q=(st.q||"").trim().toLowerCase(),hasQ=!!q,mode=st.mode||"tabs",tab=st.tab;
+  const g=GAME,dg=DLG;
+  const mm=h=>!q||h.indexOf(q)>=0;
+  let hits=0;
+
+  /* ── party ── */
+  const party=g.party.map(p=>{
     const pm=META.partyMeta[p.id]||{};
-    const eqRow=Object.entries(p.eq).map(([s,id])=>`<span class="chip">${SLOTL[s]||s}｜${eqById[id]?eqById[id].name:id}</span>`).join(" ");
-    const growth=p.growth?Object.entries(p.growth).map(([k,v])=>`${k.toUpperCase()}+${v}`).join("・"):"固定數值（客座）";
-    const story=p.story.map(l=>l.startsWith("「")?`<em>${esc(l)}</em>`:esc(l)).join("<br>");
-    return `<div class="card pad0 e pcard" data-k="${p.id} ${p.cls}">
-      <div class="banner"><img src="${IMG[pm.img]||""}" alt="${p.name}立繪" class="${pm.fit==="contain"?"fit":""}" loading="lazy"></div>
-      <div class="body">
-        <div class="pname"><b class="display">${p.name}</b><span class="chip acc">${CLSN[p.cls]||p.cls} ${p.cls}</span>
-          <span class="chip">Lv${p.lv} 起始</span>${p.guest?'<span class="chip gold">客座 guest</span>':""}
-          <span class="chip">主屬性 ${p.main.toUpperCase()}</span></div>
-        <div class="statgrid">
-          <div class="stat"><div class="k">基礎屬性</div><div class="v">STR ${p.base.str}｜AGI ${p.base.agi}｜INT ${p.base.int}</div></div>
-          <div class="stat"><div class="k">每級成長</div><div class="v">${growth}</div></div>
-          <div class="stat"><div class="k">HP / MP（Lv${p.lv}）</div><div class="v">${dv.maxhp} / ${dv.maxmp}</div></div>
-          <div class="stat"><div class="k">物攻 / 魔攻</div><div class="v">${dv.patk} / ${dv.matk}</div></div>
-          <div class="stat"><div class="k">物防 / 魔防</div><div class="v">${dv.pdef} / ${dv.mdef}</div></div>
-          <div class="stat"><div class="k">閃避 / 會心 / 速度</div><div class="v">${dv.dodge} / ${dv.crit}% / ${dv.spd}</div></div>
-        </div>
-        <div class="srow">${eqRow}</div>
-        <div class="storylines">${story}</div>
-      </div></div>`;
-  }).join("");
-  document.querySelector('[data-cnt="party"]').textContent=DB.party.length+" 名";
-}
-
-/* ── NPC ── */
-function renderNpcs(){
-  $("#npcGrid").innerHTML=DB.npcs.map(n=>`
-    <div class="card e ncard" data-k="${n.id} npc">
-      <div class="face"><img src="${IMG[n.img]||""}" alt="${n.name}" loading="lazy"></div>
-      <div class="who">
-        <div class="pname"><b>${n.name}</b><span class="chip">${n.id}</span></div>
-        <div class="desc" style="font-size:12px;color:var(--mut)">${n.role}</div>
-        <div class="srow">${n.fn.map(f=>`<span class="chip acc">${f}</span>`).join(" ")}</div>
-        <p class="desc">${n.desc}</p>
-        ${n.gift?`<div class="gift">🎁 ${n.gift}</div>`:""}
-      </div></div>`).join("");
-  document.querySelector('[data-cnt="npc"]').textContent=DB.npcs.length+" 名";
-}
-
-/* ── 敵人 ── */
-const mapName=id=>{const m=DB.maps.find(m=>m.id===id);if(m)return m.name;const e=DB.events.find(e=>e.id===id);return e?e.name:id;};
-function habitats(fid){
-  const hs=[];
-  for(const mid in DB.encounters)if(DB.encounters[mid].some(g=>g.includes(fid)))hs.push(mid);
-  return hs;
-}
-function renderFoes(){
-  $("#foeGrid").innerHTML=DB.enemies.map(f=>{
-    const dim=DB.sprites[f.spr]||[32,32];
-    const sc=Math.max(1,Math.min(Math.round(72/dim[1]),Math.floor(96/dim[0])));
-    const hab=habitats(f.id).map(h=>`<span class="chip">${mapName(h)}</span>`).join(" ")||'<span class="chip bad">未配置遭遇</span>';
-    const drops=(f.drops||[]).map(([id,r])=>{
-      const it=itemById[id],nm=it?it.name:id;
-      if(it&&it.baseDrop>0){const pct=Math.round(Math.min(1,r*it.baseDrop)*1000)/10;return `${nm} ${pct}%<span style="opacity:.65">（×${r}）</span>`;}
-      return `${nm} ×${r}`;
-    }).join("、")||"—";
-    const flags=[f.big?'<span class="chip bad">☠ BOSS</span>':"",f.allAttack?'<span class="chip bad">全體攻擊 30%</span>':"",f.healer?'<span class="chip hp">治療者</span>':""].join(" ");
-    const fsk=f.foeSkills?`<div class="foesk">${f.foeSkills.map(s=>`<b>${s.name}</b>（${s.target==="all"?"全體":"單體"}・phys×${s.mult}）`).join("　")}<span style="color:var(--mut)">　發動 40%</span></div>`:"";
-    const note=META.foeNotes[f.id];
-    return `<div class="card e bcard ${f.big?"boss":""}" data-k="${f.id} ${f.spr} enemy">
-      <div class="spr"><img src="${IMG["f_"+f.spr]||""}" alt="${f.name}" width="${dim[0]*sc}" height="${dim[1]*sc}" loading="lazy"></div>
-      <div style="min-width:0;flex:1">
-        <div class="pname"><b>${f.big?"☠ ":""}${f.name}</b><span class="chip">${f.id}</span>${flags}</div>
-        <div class="srow">
-          <span class="chip hp">HP ${f.hp}</span><span class="chip">ATK ${f.atk}</span><span class="chip">DEF ${f.def}</span>
-          <span class="chip">SPD ${f.spd}</span><span class="chip">EXP ${f.exp}</span><span class="chip gold">${f.gold} G</span>
-        </div>
-        <p class="desc">掉落：${drops}</p>
-        <div class="srow">${hab}</div>
-        ${fsk}
-        ${note?`<p class="desc">※ ${note}</p>`:""}
-      </div></div>`;
-  }).join("");
-  document.querySelector('[data-cnt="foe"]').textContent=DB.enemies.length+" 種";
-}
-
-/* ── 技能 ── */
-function renderSkills(){
-  const TGT={enemy:"敵單體",ally:"我方單體",all_enemies:"敵全體"};
-  $("#skillGrid").innerHTML=DB.skills.map(s=>`
-    <div class="card e" data-k="${s.id} skill ${s.cls}">
-      <div class="pname"><b>${s.name}</b><span class="chip">${s.id}</span></div>
-      <div class="srow">
-        <span class="chip acc">${s.cls==="explorer"?"探索者":"老練者"}</span>
-        <span class="chip">Lv${s.lv} 習得</span>
-        <span class="chip mp">MP ${s.mp}</span>
-        <span class="chip ${s.kind==="heal"?"hp":""}">${s.kind==="heal"?"治療":"傷害"}・${TGT[s.target]}</span>
-        <span class="chip">${s.attr.toUpperCase()} 系</span>
+    const dv=derive(p);
+    const hay=[p.id,p.name,p.cls,pm.role,pm.trait,(p.story||[]).join("")].join(" ").toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const open=!!st.open["p_"+p.id];
+    const gr=p.growth?Object.entries(p.growth):null;
+    const gOf=k=>{if(!gr)return"固定";const f=gr.find(x=>x[0]===k);return f?"+"+fmt(f[1])+"/級":"—";};
+    const battle=IMG["bi_"+p.id]||null;
+    let tags=chip(CLSN[p.cls]+" "+p.cls,"acc")+chip("主屬 "+p.main.toUpperCase(),"pur")+chip("Lv"+p.lv+" 起始");
+    if(pm.role)tags+=chip(pm.role,"gold"); if(pm.trait)tags+=chip(pm.trait); if(p.guest)tags+=chip("客座 guest","bad");
+    const attrs=[["STR 力量",p.base.str,gOf("str")],["AGI 敏捷",p.base.agi,gOf("agi")],["INT 智力",p.base.int,gOf("int")],["LUCK 幸運",p.base.luck,"—"]]
+      .map(([k,v,gg])=>`<div class="tile"><div class="k">${k}</div><div class="v">${fmt(v)} <span class="c-hp" style="font-size:11px">${gg}</span></div></div>`).join("");
+    const dv2=[["HP",dv.maxhp,"c-hp"],["MP",dv.maxmp,"c-mp"],["物攻",dv.patk,""],["魔攻",dv.matk,""],["物防",dv.pdef,""],["魔防",dv.mdef,""],["閃避",dv.dodge,""],["會心%",dv.crit,"c-gold"],["速度",dv.spd,""]]
+      .map(([k,v,c])=>`<div class="tile"><div class="k">${k}</div><div class="v ${c}">${fmt(v)}</div></div>`).join("");
+    const eqs=Object.entries(p.eq||{}).map(([sl,id])=>{const e=eqById[id];return`<span class="chip" title="${esc(e?statTxt(e.stats):"")}">${SLOTL[sl]||sl}｜${esc(e?e.name:id)}</span>`;}).join("");
+    const skills=g.skills.filter(s=>s.cls===p.cls).map(s=>`<div class="skline"><span class="id">Lv${s.lv}</span><b class="c-ink">${esc(s.name)}</b><span class="c-mp mono" style="font-size:10.5px">MP ${s.mp}</span><span class="c-mut mono" style="font-size:11px">${(s.kind==="heal"?"治療":"傷害")+" = "+(s.attr==="int"?"魔攻":"物攻")+"×"+s.mult+" + "+fmt(s.flat)}</span></div>`).join("");
+    const story=(p.story||[]).map(l=>`<div class="${l.indexOf("「")===0?"c-ink":"c-mut"}">${esc(l)}</div>`).join("");
+    const biW=Math.round(100*(pm.frameAspect||0.9));
+    const biCell=battle
+      ? `<div class="rbi" style="width:${biW}px" title="戰鬥待機圖（單幀）"><img src="${battle}" alt="${esc(p.name)} 戰鬥待機" loading="lazy"></div>`
+      : `<div class="rbi none">待機圖<br>未備</div>`;
+    return `<div class="row${open?" open":""}" style="${open?"border-color:rgba(127,216,234,.45)":""}">
+      <div class="head" data-act="tg" data-id="p_${p.id}" role="button" tabindex="0">
+        ${faceHtml(p.id,p.name)}
+        ${biCell}
+        <div class="meta"><div class="nm"><b>${esc(p.name)}</b><span class="id">${p.id}</span></div>
+          <div class="tags">${tags}</div>
+          <p class="lead2">${esc((p.story&&p.story[0])||"")}</p></div>
+        <div class="chev" style="transform:rotate(${open?0:-90}deg)">▾</div>
       </div>
-      <p class="desc mono" style="font-size:12px">${s.kind==="heal"?"治療量":"傷害"} = ${s.attr==="int"?"魔攻":"物攻"} × ${s.mult} + ${s.flat}${s.kind==="damage"?" − 敵防×0.6":""}（技能每級 +15%）</p>
-    </div>`).join("");
-  document.querySelector('[data-cnt="skill"]').textContent=DB.skills.length+" 招";
-}
+      ${open?`<div class="exp">
+        <div class="art"><img src="${IMG["mn_"+p.id]||IMG["p_"+p.id]||""}" alt="${esc(p.name)} 全身立繪" loading="lazy"></div>
+        <div class="info">
+          <h5>基礎屬性・成長</h5><div class="tiles">${attrs}</div>
+          <h5 class="mt">衍生數值（Lv${p.lv}・含初始裝備）</h5><div class="tiles">${dv2}</div>
+          <h5 class="mt">初始裝備</h5><div class="eqline">${eqs}</div>
+          <h5 class="mt">習得技能（${CLSN[p.cls]||p.cls} 系）</h5><div style="display:flex;flex-direction:column;gap:5px">${skills}</div>
+          <div class="storybox">${story}</div>
+        </div></div>`:""}
+    </div>`;
+  }).filter(Boolean);
 
-/* ── 裝備 ── */
-function renderEq(){
-  const order=["weapon","armor","wrist","boots","acc"];
-  const rarOrder={common:0,uncommon:1,rare:2,epic:3};
-  $("#eqWrap").innerHTML=order.map(slot=>{
-    const list=DB.equipment.filter(e=>e.slot===slot).slice();
-    // 依「三型 8 階曲線」排序：先 str/agi/int（無型別排最後），同型內照買價升冪＝階數順序；飾品照稀有度再買價
-    const attrRank={str:0,agi:1,int:2,"":3};
-    list.sort((a,b)=>slot==="acc"
-      ? (rarOrder[a.rarity]-rarOrder[b.rarity])||(a.buy-b.buy)
-      : (attrRank[a.attr]-attrRank[b.attr])||(a.buy-b.buy));
-    const rows=list.map(e=>`
-      <tr class="e" data-k="${e.id} ${slot} ${e.attr} ${e.rarity} equipment">
-        <td><b>${e.name}</b>${e.tier===2?' <span class="chip gold">II</span>':""} ${rarChip(e.rarity)}<div class="id">${e.id}</div></td>
-        <td>${e.attr?`<span class="chip ${e.attr==="str"?"":e.attr==="agi"?"hp":"mp"}">${EQATTR[e.attr]}</span>`:"—"}</td>
-        <td>${statChips(e.stats)}</td>
-        <td class="num">${e.buy} G</td><td class="num">${e.sell} G</td>
-        <td class="desc">${e.desc}</td></tr>`).join("");
-    return `<h3>${SLOTL[slot]}<span class="cnt" style="font-size:12px;color:var(--mut);font-weight:400">　${list.length} 件</span></h3>
-      <div class="card pad0"><div class="tw"><table class="tbl">
-      <tr><th style="width:170px">名稱</th><th style="width:76px">型</th><th>數值</th><th style="width:64px">買價</th><th style="width:64px">賣價</th><th>說明</th></tr>${rows}</table></div></div>`;
-  }).join("");
-  document.querySelector('[data-cnt="eq"]').textContent=DB.equipment.length+" 件";
-}
+  /* ── key characters ── */
+  const keys=(META.keyChars||[]).map(k=>{
+    const hay=[k.id,k.name,k.role,k.desc,(k.tags||[]).join("")].join(" ").toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const open=!!st.open["k_"+k.id];
+    const tags=(k.tags||[]).map(t=>chip(t)).join("");
+    return `<div class="row key${open?" open":""}" style="${open?"border-color:rgba(167,155,242,.55)":""}">
+      <div class="head" data-act="tg" data-id="k_${k.id}" role="button" tabindex="0">
+        ${faceHtml(k.id,k.name,"border-color:#35306b")}
+        <div class="meta"><div class="nm"><b>${esc(k.name)}</b><span class="id">${k.id}</span></div>
+          <div class="tags">${chip(k.role,"pur")}${tags}</div>
+          <p class="lead2">${esc(k.desc.split("。")[0]+"。")}</p></div>
+        <div class="chev" style="transform:rotate(${open?0:-90}deg)">▾</div>
+      </div>
+      ${open?`<div class="exp key pur">
+        <div class="art"><img src="${IMG["p_"+k.id]||""}" alt="${esc(k.name)} 全身立繪" loading="lazy"></div>
+        <div class="info"><h5>定位</h5><p class="c-ink" style="margin:0 0 4px;font-size:13.5px">${esc(k.role)}</p>
+          <div class="storybox">${esc(k.desc)}</div></div></div>`:""}
+    </div>`;
+  }).filter(Boolean);
 
-/* ── 道具 ── */
-function renderItems(){
-  const cats=[["consumable","消耗品"],["material","素材"],["key","重要物品"]];
-  $("#itemWrap").innerHTML=cats.map(([cat,label])=>{
-    const rows=DB.items.filter(i=>i.cat===cat).map(i=>`
-      <tr class="e" data-k="${i.id} ${cat} ${i.rarity} item">
-        <td><b>${i.name}</b>${i.start?` <span class="chip">初始×${i.start}</span>`:""} ${cat!=="key"?rarChip(i.rarity):""}<div class="id">${i.id}</div></td>
-        <td class="desc">${i.effect}</td>
-        <td class="num">${i.baseDrop>0?Math.round(i.baseDrop*100)+"%":"—"}</td>
-        <td class="num">${i.buy!=null?i.buy+" G":"—"}</td><td class="num">${i.sell!=null?i.sell+" G":"—"}</td></tr>`).join("");
-    return `<h3>${label}</h3><div class="card pad0"><div class="tw"><table class="tbl">
-      <tr><th style="width:190px">名稱</th><th>效果</th><th style="width:76px">掉落基數</th><th style="width:64px">買價</th><th style="width:64px">賣價</th></tr>${rows}</table></div></div>`;
-  }).join("");
-  document.querySelector('[data-cnt="item"]').textContent=DB.items.length+" 種";
-}
+  /* ── npc ── */
+  const npcs=(META.npcs||[]).map(n=>{
+    const hay=[n.id,n.name,n.role,n.desc,n.gift||"",(n.fn||[]).join("")].join(" ").toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const open=!!st.open["n_"+n.id];
+    const dlgCnt=(dg.dlg[n.id]||[]).length;
+    const fns=(n.fn||[]).map(f=>chip(f,"acc sm")).join("")+chip("台詞 "+dlgCnt+" 組","sm");
+    return `<div class="ncard">
+      <div class="head" data-act="tg" data-id="n_${n.id}" role="button" tabindex="0">
+        ${faceHtml(n.id,n.name)}
+        <div class="meta" style="min-width:0">
+          <div class="nm"><b>${esc(n.name)}</b><span class="id">${n.id}</span><span class="chev" style="margin-left:auto;transform:rotate(${open?0:-90}deg)">▾</span></div>
+          <div class="role">${esc(n.role)}</div>
+          <div class="tags" style="margin:0 0 6px">${fns}</div>
+          <p class="c-mut" style="margin:0;font-size:12.5px">${esc(n.desc)}</p>
+          ${n.gift?`<div class="gift">贈禮：<span class="c-gdim">${esc(n.gift)}</span></div>`:""}
+        </div>
+      </div>
+      ${open?`<div class="nexp"><img src="${IMG["p_"+n.id]||""}" alt="${esc(n.name)} 全身立繪" loading="lazy"></div>`:""}
+    </div>`;
+  }).filter(Boolean);
 
-/* ── 商店 ── */
-function renderShops(){
-  $("#shopGrid").innerHTML=DB.shops.map(s=>{
-    const rows=s.sells.map(id=>{
-      const g=eqById[id]||itemById[id];
-      const kind=eqById[id]?SLOTL[eqById[id].slot]:"道具";
-      return `<tr class="e" data-k="${id} shop"><td>${g?g.name:id}<span class="id" style="margin-left:8px">${id}</span></td><td>${kind}</td><td class="num">${g&&g.buy!=null?g.buy+" G":"—"}</td></tr>`;
-    }).join("");
-    return `<div class="card e" data-k="${s.id} shop">
-      <div class="pname"><b>${s.name}</b><span class="chip">${s.id}</span></div>
-      <p class="desc">「${s.greet}」</p>
-      <div class="tw"><table class="tbl"><tr><th>商品</th><th style="width:64px">類別</th><th style="width:70px">售價</th></tr>${rows}</table></div>
+  /* ── foes ── */
+  const encMapIds=Object.keys(g.encounters);
+  const habitatsOf=fid=>encMapIds.filter(mid=>g.encounters[mid].some(gr=>gr.members.some(m=>m.id===fid)));
+  const foes=g.enemies.map(f=>{
+    const art=(META.foeArt||{})[f.id]||null;
+    const desc=(META.foeDesc||{})[f.id]||"";
+    const drops=(f.drops||[]).map(([id,r])=>{const it=itemById[id],nm=it?it.name:id;if(it&&it.baseDrop>0){const pct=Math.round(Math.min(1,r*it.baseDrop)*1000)/10;return nm+" "+pct+"%（×"+r+"）";}return nm+"（×"+r+"）";});
+    const hab=habitatsOf(f.id).map(mapName);
+    const hay=[f.id,f.name,f.spr,desc,drops.join(""),hab.join("")].join(" ").toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const open=!!st.open["f_"+f.id];
+    const bounty=art?IMG["bounty_"+art.b]:null;
+    const combat=art&&art.c?IMG["combat_"+art.c]:null;
+    const portrait=art&&art.p?IMG["p_"+art.b]:null;
+    const useFace=f.id==="necro";
+    const thumb=combat||(useFace?IMG["face_necro"]:bounty)||"";
+    const onParch=!combat&&!useFace;
+    const imgSel=portrait&&st.open["fi_"+f.id]!=="b"?"p":"b";
+    let feats="";
+    if(f.big)feats+=chip("☠ BOSS","bad sm"); if(f.allAttack)feats+=chip("全體攻擊 30%","bad sm"); if(f.healer)feats+=chip("治療者","hp sm");
+    const fstats=chip("HP "+fmt(f.hp),"hp")+chip("ATK "+fmt(f.atk))+chip("DEF "+fmt(f.def))+chip("SPD "+fmt(f.spd))+chip("EXP "+(f.exp||0),"pur")+chip(f.gold+" G","gold");
+    const bigStats=[["HP",f.hp],["ATK",f.atk],["DEF",f.def],["SPD",f.spd],["魔防(DEF×0.5)",f.def*0.5],["閃避(SPD×1.5)",f.spd*1.5]]
+      .map(([k,v])=>`<div class="tile"><div class="k">${k}</div><div class="v">${fmt(v)}</div></div>`).join("");
+    const fsk=f.foeSkills?f.foeSkills.map(s=>s.name+"（"+(s.target==="all"?"全體":"單體")+"・phys×"+s.mult+"）").join("　"):null;
+    const note=(META.foeNotes||{})[f.id]||null;
+    let artcol;
+    if(imgSel==="b"&&bounty){artcol=`<div class="poster"><img src="${bounty}" alt="${esc(f.name)} 懸賞水墨" loading="lazy"><span class="w">WANTED</span></div>`;}
+    else if(imgSel==="p"&&portrait){artcol=`<div class="foeport"><img src="${portrait}" alt="${esc(f.name)} 立繪" loading="lazy"></div>`;}
+    else{artcol=`<div class="noart"><span style="font-size:22px">◇</span>圖檔尚未備妥<span class="id">bounty_${f.id}.png</span></div>`;}
+    const toggle=(bounty&&portrait)?`<div class="itoggle">
+      <button data-act="fimg" data-id="${f.id}" data-v="b" class="${imgSel==="b"?"on":""}">懸賞圖</button>
+      <button data-act="fimg" data-id="${f.id}" data-v="p" class="${imgSel==="p"?"on":""}">立繪</button></div>`:"";
+    const pxfig=combat?`<div class="pxfig"><img src="${combat}" alt="${esc(f.name)} 戰鬥像素圖" loading="lazy"><span>遊戲內戰鬥圖</span></div>`:"";
+    return `<div class="row foe${open?" open":""}" style="border-color:${open?"#c9b98b":(f.big?"rgba(231,195,116,.4)":"var(--line)")};background:${f.big?"linear-gradient(160deg,#1a1f38,#131a2e)":"var(--card)"}">
+      <div class="head" data-act="tg" data-id="f_${f.id}" role="button" tabindex="0">
+        <div class="thumb${onParch?" parch":""}"><img src="${thumb}" alt="${esc(f.name)}" loading="lazy" style="image-rendering:${combat?"pixelated":"auto"};mix-blend-mode:${onParch?"multiply":"normal"}"></div>
+        <div class="meta"><div class="nm"><b>${f.big?"☠ ":""}${esc(f.name)}</b><span class="id">${f.id}</span>${feats}</div>
+          <p class="lead2" style="margin:3px 0 0;font-size:12.5px">${esc(desc.split("。")[0]+"。")}</p></div>
+        <div class="fstats">${fstats}</div>
+        <div class="chev" style="transform:rotate(${open?0:-90}deg)">▾</div>
+      </div>
+      ${open?`<div class="exp foe">
+        <div class="bar"><b>${f.big?"☠ ":""}${esc(f.name)}</b><span class="c-gdim mono" style="margin-left:auto;font-size:12px">討伐賞金 ${f.gold} G ・ EXP ${f.exp||"—"}</span></div>
+        <div class="body">
+          <div class="artcol">${artcol}${toggle}</div>
+          <div class="info" style="flex:2 1 360px;min-width:270px">
+            <p class="desc">${esc(desc)}</p>
+            <div class="bigstats">${bigStats}</div>
+            <div style="margin-top:12px;font-size:12.5px" class="c-mut"><b class="c-gold">掉落：</b>${esc(drops.join("、")||"—")}</div>
+            <div style="margin-top:5px;font-size:12.5px" class="c-mut"><b class="c-gold">出沒：</b>${esc(hab.join("、")||"未配置遭遇")}</div>
+            ${fsk?`<div class="foenote"><b class="c-bad">技能：</b>${esc(fsk)} <span class="c-dim">（發動 40%）</span></div>`:""}
+            ${note?`<div style="margin-top:8px;font-size:12px" class="c-dim">※ ${esc(note)}</div>`:""}
+          </div>
+          ${pxfig}
+        </div></div>`:""}
+    </div>`;
+  }).filter(Boolean);
+
+  /* ── skills ── */
+  const TGT={enemy:"敵單體",ally:"我方單體",all_enemies:"敵全體"};
+  const skills=g.skills.map(s=>{
+    const hay=[s.id,s.name,s.cls,s.attr].join(" ").toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const chips=chip(CLSN[s.cls]||s.cls,"acc")+chip("Lv"+s.lv+" 習得")+chip("MP "+s.mp,"mp")+chip((s.kind==="heal"?"治療":"傷害")+"・"+(TGT[s.target]||s.target),s.kind==="heal"?"hp":"bad")+chip(s.attr.toUpperCase()+" 系","pur");
+    const f=(s.kind==="heal"?"治療量":"傷害")+" = "+(s.attr==="int"?"魔攻":"物攻")+" × "+s.mult+" + "+fmt(s.flat)+(s.kind==="damage"?" − 敵防×0.6":"")+"（每級 +15%）";
+    return `<div class="card"><div class="nm" style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap"><b class="mono" style="font-family:var(--serif);font-weight:900;font-size:15px">${esc(s.name)}</b><span class="id">${s.id}</span></div>
+      <div class="tags" style="margin:8px 0">${chips}</div>
+      <p class="mono c-mut" style="margin:0;font-size:11.5px">${esc(f)}</p></div>`;
+  }).filter(Boolean);
+
+  /* ── equipment ── */
+  const attrRank={str:0,agi:1,int:2,"":3},rarOrder={common:0,uncommon:1,rare:2,epic:3};
+  const eqGroups=["weapon","armor","wrist","boots","acc"].map(slot=>{
+    const list=g.equipment.filter(e=>e.slot===slot).slice();
+    list.sort((a,b)=>slot==="acc"?((rarOrder[a.rarity]-rarOrder[b.rarity])||(a.buy-b.buy)):((attrRank[a.attr||""]-attrRank[b.attr||""])||(a.buy-b.buy)));
+    const rows=list.map(e=>{
+      const hay=[e.id,e.name,e.slot,e.attr||"",e.rarity,e.desc||""].join(" ").toLowerCase();
+      if(!mm(hay))return null; hits++;
+      const rr=RAR[e.rarity]||["","c-faint"];
+      return `<tr><td><b>${esc(e.name)}${e.tier===2?" Ⅱ":""}</b> <span class="${rr[1]}" style="font-family:var(--mono);font-size:10px">${rr[0]}</span><div class="id">${e.id}</div></td>
+        <td style="white-space:nowrap"><span class="mono ${e.attr?ATTRC[e.attr]:"c-faint"}" style="font-size:11px">${e.attr?ATTRL[e.attr]:"—"}</span></td>
+        <td class="mono" style="font-size:11.5px;color:#c3cdea">${esc(statTxt(e.stats))}</td>
+        <td class="num">${e.buy} G</td><td class="num c-mut">${e.sell} G</td>
+        <td class="c-mut" style="font-size:12.5px;min-width:200px">${esc(e.desc||"")}</td></tr>`;
+    }).filter(Boolean);
+    return {slot,label:SLOTL[slot],cnt:rows.length,rows:rows.join(""),hid:hasQ&&rows.length===0};
+  }).filter(gr=>!gr.hid).map(gr=>{
+    const open=hasQ?true:!!st.open["eqg_"+gr.slot];
+    return `<div class="grp">
+      <div class="gh" data-act="tg" data-id="eqg_${gr.slot}" role="button" tabindex="0">
+        <span class="gchev" style="transform:rotate(${open?0:-90}deg)">▾</span><h4>${gr.label}</h4><span class="cnt">${gr.cnt} 件</span></div>
+      ${open?`<div class="surface"><div class="tw"><table class="tbl" style="min-width:720px">
+        <thead><tr><th style="width:190px">名稱</th><th style="width:80px">型</th><th>數值</th><th style="width:70px;text-align:right">買價</th><th style="width:70px;text-align:right">賣價</th><th>說明</th></tr></thead>
+        <tbody>${gr.rows}</tbody></table></div></div>`:""}
     </div>`;
   }).join("");
-  document.querySelector('[data-cnt="shop"]').textContent=DB.shops.length+" 家";
-}
 
-/* ── 地圖 ── */
-function renderMaps(){
-  const TIERL={common:"一般",hidden:"隱藏",rare:"稀有"};
-  const lootTxt=l=>l.map(x=>x.type==="gold"?`${x.amount} G`:x.type==="eq"?(eqById[x.id]?eqById[x.id].name:x.id):`${itemById[x.id]?itemById[x.id].name:x.id}×${x.count||1}`).join("＋");
-  const mapCard=m=>{
-    const cfg=DB.pacing.maps[m.id];
-    const es=expScale(m.id);
-    const forms=DB.encounters[m.id];
-    const chests=DB.chests.filter(c=>c.map===m.id);
-    const pacingRow=cfg?`<div class="srow">
-      <span class="chip acc">Lv ${cfg.entryLv} → ${cfg.targetLv}</span>
-      <span class="chip">預計 ${cfg.battles} 戰</span>
-      <span class="chip">隊伍 ${cfg.party!=null?cfg.party:DB.pacing.partySize} 人</span>
-      ${es!=null?`<span class="chip gold">EXP×${es}</span>`:""}
-    </div>`:"";
-    const formRow=forms?`<div class="forms">${forms.map(g=>`<span class="form">${g.map(e=>foeById[e]?foeById[e].name:e).join("＋")}</span>`).join("")}</div>`:'<p class="desc">無遭遇戰。</p>';
-    const chestRows=chests.length?`<div class="tw"><table class="tbl">
-      <tr><th>寶箱</th><th>級別</th><th>座標</th><th>內容</th></tr>
-      ${chests.map(c=>`<tr class="e" data-k="${c.id} chest"><td class="id">${c.id}</td><td>${TIERL[c.tier]||c.tier}</td><td class="num">(${c.tx}, ${c.ty})</td><td>${lootTxt(c.loot)}</td></tr>`).join("")}
-    </table></div>`:"";
-    return `<div class="card e mapcard" data-k="${m.id} ${m.scene} map">
-      <h4><b class="display">${m.name}</b><span class="chip">${m.id}</span><span class="chip">${m.scene}</span></h4>
-      <p class="desc">${m.desc}</p>${pacingRow}${forms?formRow:""}${chestRows}</div>`;
-  };
-  const evCard=e=>{
-    const forms=DB.encounters[e.id];
-    return `<div class="card e mapcard" data-k="${e.id} event battle">
-      <h4><b>${e.name}</b><span class="chip">${e.id}</span><span class="chip gold">EXP×1（不縮放）</span></h4>
-      <p class="desc">${e.note}</p>
-      <div class="forms">${forms.map(g=>`<span class="form">${g.map(x=>foeById[x]?foeById[x].name:x).join("＋")}</span>`).join("")}</div></div>`;
-  };
-  $("#mapWrap").innerHTML=`<div class="grid2">${DB.maps.map(mapCard).join("")}</div>
-    <h3>事件戰鬥</h3><div class="grid2">${DB.events.map(evCard).join("")}</div>`;
-  document.querySelector('[data-cnt="map"]').textContent=DB.maps.length+" 區＋"+DB.events.length+" 場事件戰";
-}
-
-/* ── 公式常數表 ── */
-function renderDerived(){
-  const L=[["hpBase","基礎 HP"],["hpPerStr","每點 STR 增 HP"],["mpBase","基礎 MP"],["mpPerInt","每點 INT 增 MP"],
-    ["weaponAtk","基礎攻擊（徒手）"],["pointsPerLevel","升級屬性點"],["skillPointsPerLevel","升級技能點"],
-    ["skillMaxLv","技能等級上限"],["skillPowerPerLv","技能每級威力加成"],["expBase","經驗基數"],["expCoef","經驗係數"],
-    ["expPow","經驗指數"],["matkPerInt","每點 INT 增魔攻"],["mdefPerInt","每點 INT 增魔防"],
-    ["dodgePerAgi","每點 AGI 增閃避"],["dodgeCap","閃避率上限 %"],["critBase","基礎會心 %"],["critPerAgi","每點 AGI 增會心 %"]];
-  $("#derivedTbl").innerHTML=`<tr><th>常數</th><th>值</th><th>說明</th></tr>`+
-    L.map(([k,lab])=>`<tr><td class="id">${k}</td><td class="num">${DB.derived[k]}</td><td class="desc">${lab}</td></tr>`).join("")+
-    `<tr><td class="id">ATB_K</td><td class="num">1.05</td><td class="desc">ATB 全域速度倍率（F-7，定案值，不在 derived.tres）</td></tr>`;
-}
-
-/* ── 劇情 ── */
-const CUT_ORDER=[["prologue_town","序章・出發之前（芳蕾鎮）"],["mine_intro","序章・礦山外圍（教學）"],
-  ["cave_intro","序章・礦坑深處"],["demon_pre","序章・遭遇魔影"],["demon_post","序章・亞倫斷後"],
-  ["town_start","第一章開端・三天後"],["mine_truth","第二章・礦坑的真相"],["mine_after","第二章・深處開路"]];
-const NPC_NAME={tina:"緹娜",dora:"朵拉",sister:"希雅修女",barton:"巴頓鎮長",hank:"漢克",martha:"瑪莎",gid:"吉德",gray:"老葛雷",mira:"米拉",guard:"羅素隊長"};
-const CMDL={quest:"委託",talk:"閒聊",rest:"住宿",pray:"祈禱",trade:"交易",hank_gift:"臨別贈言",martha_gift:"母親的心意",gid_gift:"新客招待"};
-
-function lineHtml(spk,txt){
-  const sys=!spk||txt.startsWith("（");
-  return `<div class="line ${sys?"sysline":""}"><div class="spk">${esc(spk||"")}</div><div class="txt">${esc(txt)}</div></div>`;
-}
-function renderCuts(){
-  const known=new Set(CUT_ORDER.map(c=>c[0]));
-  const extra=Object.keys(DLG.cuts||{}).filter(k=>!known.has(k)).map(k=>[k,k]);
-  const list=CUT_ORDER.filter(([k])=>DLG.cuts&&DLG.cuts[k]).concat(extra);
-  $("#cutWrap").innerHTML=list.map(([k,title])=>{
-    const c=DLG.cuts[k];
-    const chips=[
-      c.once?`<span class="chip">once：${c.once}</span>`:'<span class="chip bad">可重播</span>',
-      c.battle?`<span class="chip bad">→ 戰鬥 ${c.battle}</span>`:"",
-      c.transfer?`<span class="chip acc">→ 傳送 ${c.transfer[0]}（${c.transfer[1]}）</span>`:"",
-      c.setstep!=null?`<span class="chip">step=${c.setstep}</span>`:"",
-      c.party?`<span class="chip hp">隊伍：${c.party.join("、")}</span>`:""
-    ].join(" ");
-    return `<div class="card e cut" data-k="${k} cut 過場">
-      <div class="pname"><b class="display">${esc(title)}</b><span class="chip">${k}</span></div>
-      <div class="srow">${chips}</div>
-      <div class="lines">${c.lines.map(l=>lineHtml(l.speaker,l.text)).join("")}</div></div>`;
+  /* ── items ── */
+  const itemGroups=[["consumable","消耗品"],["material","素材"],["key","重要物品"]].map(([cat,label])=>{
+    const rows=g.items.filter(i=>i.cat===cat).map(i=>{
+      const hay=[i.id,i.name,i.effect,cat,i.rarity].join(" ").toLowerCase();
+      if(!mm(hay))return null; hits++;
+      const rr=RAR[i.rarity]||["","c-faint"];
+      return `<tr><td><b>${esc(i.name)}</b> <span class="${rr[1]}" style="font-family:var(--mono);font-size:10px">${cat==="key"?"":rr[0]}</span>${i.start?"（初始×"+i.start+"）":""}<div class="id">${i.id}</div></td>
+        <td class="c-mut" style="font-size:12.5px">${esc(i.effect)}</td>
+        <td class="num">${i.baseDrop>0?Math.round(i.baseDrop*100)+"%":"—"}</td>
+        <td class="num">${i.buy!=null?i.buy+" G":"—"}</td><td class="num c-mut">${i.sell!=null?i.sell+" G":"—"}</td></tr>`;
+    }).filter(Boolean);
+    return {cat,label,cnt:rows.length,rows:rows.join(""),hid:hasQ&&rows.length===0};
+  }).filter(gr=>!gr.hid).map(gr=>{
+    const open=hasQ?true:!!st.open["itg_"+gr.cat];
+    return `<div class="grp">
+      <div class="gh" data-act="tg" data-id="itg_${gr.cat}" role="button" tabindex="0">
+        <span class="gchev" style="transform:rotate(${open?0:-90}deg)">▾</span><h4>${gr.label}</h4><span class="cnt">${gr.cnt} 種</span></div>
+      ${open?`<div class="surface"><div class="tw"><table class="tbl" style="min-width:640px">
+        <thead><tr><th style="width:200px">名稱</th><th>效果</th><th style="width:80px;text-align:right">掉落基數</th><th style="width:70px;text-align:right">買價</th><th style="width:70px;text-align:right">賣價</th></tr></thead>
+        <tbody>${gr.rows}</tbody></table></div></div>`:""}
+    </div>`;
   }).join("");
-  document.querySelector('[data-cnt="cut"]').textContent=list.length+" 段";
-}
-function renderDlg(){
-  let total=0;
-  $("#dlgWrap").innerHTML=Object.entries(DLG.dlg||{}).map(([npc,entries])=>{
-    total+=entries.length;
-    const rows=entries.map(e=>{
-      const chips=[
-        `<span class="chip ${e.when==="always"?"":"acc"}">${e.when==="always"?"預設":esc(e.when)}</span>`,
-        e.cmd?`<span class="chip">${CMDL[e.cmd]||e.cmd}${e.label&&CMDL[e.cmd]!==e.label?"・"+esc(e.label):""}</span>`:"",
-        e.action?`<span class="chip gold">action: ${e.action}</span>`:"",
-        e.done?`<span class="chip">done: ${e.done}</span>`:""
-      ].join(" ");
-      return `<div class="dlge e" data-k="${npc} dlg 對話">
-        <div class="cond">${chips}</div>
-        ${e.lines.map(l=>`<div class="l ${l.startsWith("（")?"desc":""}">${esc(l)}</div>`).join("")}
-      </div>`;
+
+  /* ── shops ── */
+  const shops=g.shops.map(sh=>{
+    const rows=sh.sells.map(id=>{
+      const e=eqById[id],it=itemById[id],nm=e?e.name:(it?it.name:id);
+      const hay=(id+" "+nm+" "+sh.name).toLowerCase();
+      if(!mm(hay))return null; if(hasQ)hits++;
+      return `<tr><td>${esc(nm)}<span class="id" style="margin-left:8px">${id}</span></td><td class="c-mut" style="white-space:nowrap">${e?SLOTL[e.slot]:"道具"}</td><td class="num c-gold">${(e||it)&&(e||it).buy!=null?(e||it).buy+" G":"—"}</td></tr>`;
+    }).filter(Boolean);
+    if(hasQ&&rows.length===0)return null;
+    return `<div class="card"><div class="nm" style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap"><b style="font-family:var(--serif);font-weight:900;font-size:16px">${esc(sh.name)}</b><span class="id">${sh.id}</span><span class="mono c-mut" style="font-size:11px">${rows.length} 項</span></div>
+      <p class="c-dim" style="margin:6px 0 10px;font-size:12.5px">「${esc(sh.greet)}」</p>
+      <div style="max-height:420px;overflow-y:auto;border:1px solid var(--line-row);border-radius:10px"><table class="tbl" style="font-size:12.5px"><tbody>${rows.join("")}</tbody></table></div></div>`;
+  }).filter(Boolean);
+
+  /* ── world ── */
+  const encStr=gr=>gr.members.map(m=>foeName(m.id)+"×"+(m.min===m.max?m.min:m.min+"~"+m.max)).join(" ＋ ");
+  const TIERC={common:"c-mut",hidden:"c-acc",rare:"c-gold"},TIERL={common:"普通",hidden:"隱藏",rare:"稀有"};
+  const maps=META.maps.map(m=>{
+    const cfg=g.pacing.maps[m.id];
+    let pacing=null;
+    if(cfg){
+      const groups=g.encounters[m.id];let scale=null;
+      if(groups&&groups.length){
+        const sums=groups.map(gr=>gr.members.reduce((s,mem)=>s+(foeById[mem.id]?(foeById[mem.id].exp||0)*(mem.min+mem.max)/2:0),0));
+        const avg=sums.reduce((a,b)=>a+b,0)/sums.length;
+        if(avg>0){let need=0;for(let lv=cfg.entryLv;lv<cfg.targetLv;lv++)need+=expNeed(lv);scale=Math.round((cfg.party!=null?cfg.party:g.pacing.partySize)*need/(cfg.battles*avg)*1000)/1000;}
+      }
+      pacing="Lv"+fmt(cfg.entryLv)+" → Lv"+fmt(cfg.targetLv)+" ・ 預計 "+fmt(cfg.battles)+" 戰"+(scale!=null?" ・ EXPSCALE "+scale:"");
+    }
+    const encs=(g.encounters[m.id]||[]).map(gr=>({w:fmt(gr.weight),t:encStr(gr)}));
+    const chests=g.chests.filter(c=>c.map===m.id).map(c=>({tier:TIERL[c.tier]||c.tier,tc:TIERC[c.tier]||"c-mut",tx:c.tx,ty:c.ty,loot:c.loot.map(l=>l.type==="gold"?fmt(l.amount)+" G":((eqById[l.id]?eqById[l.id].name:(itemById[l.id]?itemById[l.id].name:l.id))+(l.count?"×"+fmt(l.count):""))).join("、")}));
+    const hay=[m.id,m.name,m.scene,m.desc,encs.map(e=>e.t).join("")].join(" ").toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const encHtml=encs.length?`<div class="c-dim" style="font-size:11px;letter-spacing:.08em;margin:8px 0 4px">遭遇編組（加權抽選）</div>`+encs.map(e=>`<div class="mapenc"><span class="mono c-gold" style="flex:none">w${e.w}</span><span style="color:#c3cdea">${esc(e.t)}</span></div>`).join(""):"";
+    const chHtml=chests.length?`<div class="c-dim" style="font-size:11px;letter-spacing:.08em;margin:10px 0 4px">寶箱</div>`+chests.map(c=>`<div class="mapenc" style="flex-wrap:wrap"><span class="mono ${c.tc}" style="flex:none">${c.tier}</span><span class="mono c-faint" style="flex:none">(${c.tx},${c.ty})</span><span style="color:#c3cdea">${esc(c.loot)}</span></div>`).join(""):"";
+    return `<div class="card"><div class="nm" style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap"><b style="font-family:var(--serif);font-weight:900;font-size:16px">${esc(m.name)}</b><span class="id">${m.scene}</span>${chip(m.kind==="town"?"城鎮":"野外")}</div>
+      <p class="c-mut" style="margin:6px 0 8px;font-size:12.5px">${esc(m.desc)}</p>
+      ${pacing?`<div class="mono c-acc" style="font-size:11.5px;margin-bottom:7px">${esc(pacing)}</div>`:""}${encHtml}${chHtml}</div>`;
+  }).filter(Boolean);
+  const events=encMapIds.filter(id=>!mapMeta[id]).map(id=>({id,name:mapName(id),comp:g.encounters[id].map(encStr).join("／"),note:(evMeta[id]||{}).note||""}));
+
+  /* ── story ── */
+  const cuts=Object.entries(dg.cuts).map(([key,c])=>{
+    const hay=(key+" "+c.lines.map(l=>l.speaker+l.text).join("")).toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const open=hasQ?true:!!st.open["cut_"+key];
+    let meta="";
+    if(c.battle)meta+=chip("battle: "+c.battle,"gold sm");
+    if(c.transfer)meta+=chip("transfer: "+c.transfer.join(" · "),"gold sm");
+    if(c.setstep!=null)meta+=chip("setstep: "+c.setstep,"gold sm");
+    if(c.party)meta+=chip("party: "+JSON.stringify(c.party),"gold sm");
+    const lines=c.lines.map(l=>`<div class="line"><span class="spk">${esc(l.speaker||"—")}</span><span style="color:${l.speaker?"var(--ink)":"var(--dim)"};font-size:${l.speaker?13:12.5}px">${esc(l.text)}</span></div>`).join("");
+    return `<div class="scard">
+      <div class="sh" data-act="tg" data-id="cut_${key}" role="button" tabindex="0">
+        <span class="schev" style="transform:rotate(${open?0:-90}deg)">▾</span>
+        <b class="mono c-ink" style="font-size:13px">${esc(key)}</b>
+        ${c.once?chip("once: "+c.once,"sm"):""}${meta}
+        <span class="mono c-faint" style="margin-left:auto;font-size:11px">${c.lines.length} 句</span></div>
+      ${open?`<div class="sbody">${lines}</div>`:""}
+    </div>`;
+  }).filter(Boolean);
+  const npcNameOf=id=>{const n=(META.npcs||[]).find(x=>x.id===id);if(n)return n.name;const arr=dg.dlg[id];return(arr&&arr[0]&&arr[0].speaker)||id;};
+  const dlgs=Object.entries(dg.dlg).map(([id,arr])=>{
+    const hay=(id+" "+npcNameOf(id)+" "+arr.map(e=>e.when+e.lines.join("")).join("")).toLowerCase();
+    if(!mm(hay))return null; hits++;
+    const open=hasQ?true:!!st.open["dlg_"+id];
+    const entries=arr.map(e=>{
+      const chips=chip(e.when,"acc sm")+[e.cmd,e.label,e.action?"action: "+e.action:null,e.done?"done: "+e.done:null].filter(Boolean).map(c=>chip(c,"sm")).join("");
+      const lines=e.lines.map(t=>`<div class="l" style="color:${t.indexOf("（")===0?"var(--dim)":"#c3cdea"};font-size:${t.indexOf("（")===0?12.5:13}px">${esc(t)}</div>`).join("");
+      return `<div class="dlge"><div class="cond">${chips}</div>${lines}</div>`;
     }).join("");
-    return `<div class="card dlgset" style="margin-bottom:14px">
-      <div class="pname"><b class="display">${NPC_NAME[npc]||npc}</b><span class="chip">${npc}</span>
-        <span class="chip">${entries.length} 條</span></div>${rows}</div>`;
-  }).join("");
-  document.querySelector('[data-cnt="dlg"]').textContent=total+" 條";
-}
+    return `<div class="scard">
+      <div class="sh" data-act="tg" data-id="dlg_${id}" role="button" tabindex="0">
+        <span class="schev" style="transform:rotate(${open?0:-90}deg)">▾</span>
+        <b style="font-family:var(--serif);font-weight:900;font-size:15px">${esc(npcNameOf(id))}</b>
+        <span class="id">${id}</span>
+        <span class="mono c-faint" style="margin-left:auto;font-size:11px">${arr.length} 組條目</span></div>
+      ${open?`<div class="dlgbody">${entries}</div>`:""}
+    </div>`;
+  }).filter(Boolean);
 
-/* ── 搜尋 ── */
-function setupSearch(){
-  const q=$("#q"),hits=$("#hits"),box=$("#sbox");
-  const entries=Array.from(document.querySelectorAll(".e"));
-  const cache=entries.map(el=>({el,txt:(el.textContent+" "+(el.dataset.k||"")).toLowerCase()}));
-  const secs=Array.from(document.querySelectorAll(".sec"));
-  function apply(){
-    const v=q.value.trim().toLowerCase();
-    box.classList.toggle("hasq",!!v);
-    if(!v){cache.forEach(c=>c.el.hidden=false);secs.forEach(s=>s.hidden=false);hits.textContent="";return;}
-    let n=0;
-    cache.forEach(c=>{const hit=c.txt.includes(v);c.el.hidden=!hit;if(hit)n++;});
-    secs.forEach(s=>{s.hidden=!Array.from(s.querySelectorAll(".e")).some(e=>!e.hidden);});
-    hits.textContent=n?`${n} 筆符合`:"沒有符合的條目";
+  /* ── 可見性 ── */
+  const has={party:party.length,key:keys.length,npc:npcs.length,foe:foes.length,skill:skills.length,eq:eqGroups.length,item:itemGroups.length,shop:shops.length,world:maps.length,story:cuts.length+dlgs.length};
+  const show=(id,isStatic)=>hasQ?(!isStatic&&has[id]>0):(mode==="tabs"?tab===id:true);
+  const showHero=hasQ?false:(mode==="scroll"||tab==="ov");
+
+  /* ── 組裝 HTML ── */
+  const P=[];
+  const secHead=(id,label,cnt,cls,en)=>`<div class="sec-h">${cls?`<h2>${label}${en?` <span class="en">${en}</span>`:""}</h2>`:`<h2>${label}</h2>`}${cnt?`<span class="cnt">${cnt}</span>`:""}</div>`;
+
+  if(showHero)P.push(`<section class="hero"><img src="${IMG["p_ludo"]||""}" alt="">
+    <div class="in"><div class="kick">TALE OF CRYSTAL — GODOT 4.7 EDITION</div>
+    <h1>水晶傳說 設定集</h1>
+    <p>十五歲的路德為查明恩人亞倫失蹤的真相，與青梅竹馬瑪琳一同踏上冒險。水晶碎片、封閉二十年的北方礦山、化為骷髏的失蹤礦工——黑影正在甦醒。</p>
+    <div class="metarow">${chip("2 人隊伍（上限 4）","acc")}${chip("ATB 戰鬥")}${chip("單一存檔槽")}${chip("1280×720 設計基準 · 手繪風 · linear")}${chip("GDScript")}</div></div></section>`);
+
+  if(show("ov",true))P.push(`<section class="sec" id="sec_ov">${secHead("ov","總覽")}
+    <p class="lead">世界觀、章節主線與技術規格。旗標細節見「劇情與對話」，數值規則見「戰鬥公式」。</p>
+    <div class="grid">${OV_CARDS.map(([h,d])=>`<div class="card"><h4>${esc(h)}</h4><p>${esc(d)}</p></div>`).join("")}</div>
+    <h3 class="sub">主線流程</h3><div class="flow">${FLOW.map(s=>`<div class="step"><div class="dot"></div><div class="t"><b>${esc(s.t)}</b> ${chip(s.fl,"sm")}<br>${esc(s.d)}</div></div>`).join("")}</div>
+    <h3 class="sub">技術規格</h3><div class="surface"><div class="tw"><table class="tbl"><tbody>${TECH.map(([k,v])=>`<tr><td style="width:160px;white-space:nowrap" class="c-mut">${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</tbody></table></div></div></section>`);
+
+  if(show("party"))P.push(`<section class="sec" id="sec_party">${secHead("party","主角隊伍",party.length+" 名")}
+    <p class="lead">衍生數值由公式 F-1 計算（含初始裝備）。屬性點：每級 +3 自由分配；技能點：每級 +1，技能上限 Lv10（每級威力 +15%）。點列展開完整檔案。</p>
+    <div class="rows">${party.join("")}</div></section>`);
+
+  if(show("key"))P.push(`<section class="sec pur" id="sec_key">${secHead("key","關鍵角色",keys.length+" 名","pur","KEY FIGURES")}
+    <p class="lead">不時出現在劇情中、扮演關鍵角色的核心人物——非常駐鎮民、也不只是敵人。戰鬥數值（若有）見「敵人圖鑑」。</p>
+    <div class="rows">${keys.join("")}${!hasQ?`<div class="stub"><span style="font-size:20px" class="c-faint">◇</span>未來核心角色（待設計）<span class="id">於 META.keyChars 新增即出現</span></div>`:""}</div></section>`);
+
+  if(show("npc"))P.push(`<section class="sec" id="sec_npc">${secHead("npc","NPC 圖鑑",npcs.length+" 名")}
+    <p class="lead">全員常駐芳蕾鎮。對話依旗標由上而下擇一觸發（先寫後期條件），完整台詞見「劇情與對話」。點列展開全身立繪。</p>
+    <div class="grid-npc">${npcs.join("")}</div></section>`);
+
+  if(show("foe"))P.push(`<section class="sec gold" id="sec_foe">${secHead("foe","敵人圖鑑",foes.length+" 種","gold","GUILD BOUNTY")}
+    <p class="lead">DEF 為物理防禦；敵人魔防以 DEF×0.5 計、閃避以 SPD×1.5 計、會心一律 6.25%（F-3～F-5）。☠ 為頭目（big）：血條不顯示數字。掉落顯示「最終機率（×倍率）」＝道具掉落基數 × 怪物倍率，上限 100%（F-10）。<b>點列攤開公會懸賞單。</b></p>
+    <div class="rows">${foes.join("")}</div></section>`);
+
+  if(show("skill"))P.push(`<section class="sec" id="sec_skill">${secHead("skill","技能",skills.length+" 招")}
+    <p class="lead">傷害 =（基值×倍率＋固定值）×技能等級加成 − 敵防×0.6，浮動 0.85–1.00；治療無防禦修正。基值：str/agi 系吃物攻、int 系吃魔攻。技能不判閃避。</p>
+    <div class="grid">${skills.join("")}</div></section>`);
+
+  if(show("eq"))P.push(`<section class="sec" id="sec_eq">${secHead("eq","裝備",g.equipment.length+" 件")}
+    <p class="lead">六個裝備格：武器／防具／護腕／靴子／飾品×2。武器・防具・靴子各分<b>力量／敏捷／法力三型 × 8 階曲線</b>（5~8 階＝II，ch2 旗標後上架）——型別只是分類標籤，不限制誰能裝。稀有度為 UI 色階，不影響數值。賣價＝買價 30%。點分類標題可收合。</p>
+    ${eqGroups}</section>`);
+
+  if(show("item"))P.push(`<section class="sec" id="sec_item">${secHead("item","道具",g.items.length+" 種")}
+    <p class="lead">戰鬥中可用的道具僅限回復 HP／MP 兩類（F-6）。「掉落基數」＝base_drop_rate，每個物品各別設定（0＝不從戰鬥掉落）；稀有度不參與掉落計算，只是填值慣例＋UI 色階。怪物端 drops[].rate 為加乘倍率，見 F-10。</p>
+    ${itemGroups}</section>`);
+
+  if(show("shop"))P.push(`<section class="sec" id="sec_shop">${secHead("shop","商店",shops.length+" 間")}
+    <p class="lead">買賣完成時自動存檔。賣出任何裝備／道具一律以其 sell 價成交。</p>
+    <div class="grid-npc">${shops.join("")}</div></section>`);
+
+  if(show("world"))P.push(`<section class="sec" id="sec_world">${secHead("world","地圖與地區",maps.length+" 張")}
+    <p class="lead">節奏參數（pacing）定義每張圖的進場等級→目標等級與預計戰鬥數，EXP 縮放係數由此推得（F-9，現場計算）。寶箱座標為圖塊座標（tx, ty）。</p>
+    <div class="grid-npc">${maps.join("")}</div>
+    <h3 class="sub">事件戰・頭目編成</h3><div class="surface"><div class="tw"><table class="tbl"><tbody>${events.map(e=>`<tr><td style="white-space:nowrap"><b>${esc(e.name)}</b><div class="id">${e.id}</div></td><td style="color:#c3cdea;font-size:12.5px">${esc(e.comp)}</td><td class="c-mut" style="font-size:12px">${esc(e.note)}</td></tr>`).join("")}</tbody></table></div></div></section>`);
+
+  if(show("formula",true)){
+    const derivedRows=Object.entries(g.derived).map(([k,v])=>`<tr><td class="mono c-acc" style="font-size:11.5px;white-space:nowrap">${k}</td><td class="num" style="width:90px">${fmt(v)}</td><td class="c-mut">${esc(DERL[k]||"")}</td></tr>`).join("");
+    P.push(`<section class="sec" id="sec_formula">${secHead("formula","戰鬥公式")}
+      <p class="lead">摘錄自 specs/BATTLE_FORMULAS.md v2.0。F-1～F-9 抄錄自 GDevelop build_cq2.py（附行號可回溯）；F-10 為 Godot 端刻意新增的平衡設計（2026-07-15 遊玩回饋調整）。</p>
+      ${FORMULAS.map(f=>`<div class="formula"><h4><span class="no">${f.no}</span>${esc(f.t)}</h4>${f.code?`<pre>${esc(f.code)}</pre>`:""}${f.d?`<p>${esc(f.d)}</p>`:""}</div>`).join("")}
+      <h4 style="margin:0 0 10px">成長常數（derived.tres）</h4><div class="surface"><div class="tw"><table class="tbl" style="font-size:12.5px"><tbody>${derivedRows}</tbody></table></div></div></section>`);
   }
-  q.addEventListener("input",apply);
-  $("#qc").addEventListener("click",()=>{q.value="";apply();q.focus();});
-  document.addEventListener("keydown",e=>{
-    if(e.key==="/"&&document.activeElement!==q){e.preventDefault();q.focus();}
-    if(e.key==="Escape"&&document.activeElement===q){q.value="";apply();q.blur();}
+
+  if(show("system",true))P.push(`<section class="sec" id="sec_system">${secHead("system","系統規格")}
+    <p class="lead">摘錄自 specs/SAVE_SCHEMA.md v1.1 與 specs/DIALOGUE_SPEC.md v1.1。</p>
+    <h4 style="margin:0 0 10px">全域狀態（GameState）</h4>
+    <div class="surface" style="margin-bottom:20px"><div class="tw"><table class="tbl" style="font-size:12.5px;min-width:560px"><thead><tr><th>欄位</th><th>型別</th><th>內容</th><th>持久化</th></tr></thead><tbody>${GSTATE.map(r=>`<tr><td class="mono c-acc" style="font-size:11.5px;white-space:nowrap">${esc(r[0])}</td><td class="c-mut" style="white-space:nowrap">${esc(r[1])}</td><td style="color:#c3cdea">${esc(r[2])}</td><td class="c-mut">${esc(r[3])}</td></tr>`).join("")}</tbody></table></div></div>
+    ${SYSNOTES.map(n=>`<div style="margin-bottom:18px"><h4 style="margin:0 0 6px">${esc(n[0])}</h4><p class="c-mut" style="margin:0;font-size:13px;max-width:88ch">${esc(n[1])}</p></div>`).join("")}
+    <h4 style="margin:0 0 10px">對話 action 一覽</h4><div class="surface"><div class="tw"><table class="tbl" style="font-size:12.5px"><tbody>${ACTIONS.map(a=>`<tr><td class="mono c-acc" style="font-size:11.5px;white-space:nowrap">${esc(a[0])}</td><td style="color:#c3cdea">${esc(a[1])}</td></tr>`).join("")}</tbody></table></div></div></section>`);
+
+  if(show("story"))P.push(`<section class="sec pur" id="sec_story">${secHead("story","劇情與對話")}
+    <p class="lead">過場（CUTS）與 NPC 對話全文，取自 dialogue .tres 真相源。過場預設展開、NPC 對話預設收合；對話依旗標由上而下取第一個成立的條目。</p>
+    <h3 class="sub">過場（CUTS）<span class="mono c-mut" style="font-size:12px;font-weight:400">　${cuts.length} 段</span></h3>
+    <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:30px">${cuts.join("")}</div>
+    <h3 class="sub">NPC 對話（DLG）<span class="mono c-mut" style="font-size:12px;font-weight:400">　${dlgs.length} 名</span></h3>
+    <div style="display:flex;flex-direction:column;gap:9px">${dlgs.join("")}</div></section>`);
+
+  const main=document.getElementById("main");
+  main.innerHTML=P.length
+    ? P.join("")+`<footer>水晶傳說 Tale of Crystal · 團隊內部設定資料庫 · 資料快照 tools/codex/data.json · 數值由 build_codex.py 解析 <span class="mono">content_db.tres</span> 產生，變動後重跑產生器即更新。</footer>`
+    : `<div class="empty">沒有符合「${esc(st.q)}」的條目。</div>`;
+
+  /* ── header 動態 ── */
+  document.getElementById("sbox").classList.toggle("hasq",hasQ);
+  document.getElementById("hits").textContent="命中 "+hits+" 筆";
+  const mb=document.getElementById("modeBtn");
+  mb.textContent=(mode==="tabs"?"☰":"⿻")+" 切換："+(mode==="tabs"?"長卷模式":"檔案室分頁");
+  document.querySelectorAll("#tabs button").forEach(b=>{
+    const on=mode==="tabs"&&!hasQ&&b.dataset.id===tab;
+    b.classList.toggle("on",on);
   });
 }
 
-/* ── 導覽高亮 ── */
-function setupNav(){
-  const links=Array.from(document.querySelectorAll("#nav a"));
-  const byId=Object.fromEntries(links.map(a=>[a.getAttribute("href").slice(1),a]));
-  const obs=new IntersectionObserver(es=>{
-    es.forEach(en=>{
-      if(en.isIntersecting){
-        links.forEach(a=>a.classList.remove("on"));
-        const a=byId[en.target.id];if(a)a.classList.add("on");
-      }
-    });
-  },{rootMargin:"-15% 0px -75% 0px"});
-  document.querySelectorAll(".sec").forEach(s=>obs.observe(s));
+/* ══════════ 事件 ══════════ */
+function goTab(id){
+  const st=state,hasQ=!!st.q.trim();
+  if(st.mode==="tabs"&&!hasQ){st.tab=id;render();window.scrollTo({top:0});}
+  else{const el=document.getElementById("sec_"+id);if(el)window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-118,behavior:"smooth"});}
 }
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-act]");if(!t)return;
+  const act=t.dataset.act;
+  if(act==="tg"){const id=t.dataset.id;state.open[id]=!state.open[id];render();}
+  else if(act==="fimg"){state.open["fi_"+t.dataset.id]=t.dataset.v;render();}
+  else if(act==="tab"){goTab(t.dataset.id);}
+  else if(act==="mode"){const m=state.mode==="tabs"?"scroll":"tabs";try{localStorage.setItem("cq_codex_mode",m);}catch(x){}state.mode=m;render();window.scrollTo({top:0});}
+  else if(act==="qclear"){state.q="";document.getElementById("q").value="";render();document.getElementById("q").focus();}
+});
+document.addEventListener("keydown",e=>{
+  const t=e.target.closest("[data-act]");
+  if(t&&(e.key==="Enter"||e.key===" ")&&t.dataset.act==="tg"){e.preventDefault();state.open[t.dataset.id]=!state.open[t.dataset.id];render();}
+  const q=document.getElementById("q");
+  if(e.key==="/"&&document.activeElement!==q){e.preventDefault();q.focus();}
+  if(e.key==="Escape"&&document.activeElement===q){state.q="";q.value="";render();q.blur();}
+});
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
+document.getElementById("qc").dataset.act="qclear";
+document.getElementById("modeBtn").dataset.act="mode";
 
-/* ── init ── */
-const heroArt=$("#heroArt");
-if(IMG.p_ludo)heroArt.src=IMG.p_ludo;
-renderParty();renderNpcs();renderFoes();renderSkills();renderEq();renderItems();renderShops();renderMaps();renderDerived();renderCuts();renderDlg();
-setupSearch();setupNav();
+/* ══════════ init ══════════ */
+(function init(){
+  let saved=null;try{saved=localStorage.getItem("cq_codex_mode");}catch(e){}
+  state.mode=saved||(window.innerWidth<880?"scroll":"tabs");
+  Object.keys(DLG.cuts||{}).forEach(k=>{state.open["cut_"+k]=true;});
+  ["weapon","armor","wrist","boots","acc"].forEach(s=>{state.open["eqg_"+s]=true;});
+  ["consumable","material","key"].forEach(c=>{state.open["itg_"+c]=true;});
+  const tabsEl=document.getElementById("tabs");
+  tabsEl.innerHTML=SECS.map(([id,label])=>`<button data-act="tab" data-id="${id}">${label}</button>`).join("");
+  render();
+})();
 </script>

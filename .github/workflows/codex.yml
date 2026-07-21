@@ -1,0 +1,76 @@
+name: 建置並發佈設定集 codex
+
+# 取代舊的 claude.ai Artifact 發佈：資料（content_db.tres／對話 .tres）、立繪素材
+# （assets-source/role）、模板或產生器一有變更，就在 CI 重跑 build_codex.py 產出
+# crystal_codex.html，只挑「HTML 實際引用到的圖」組成站台，部署到 GitHub Pages。
+# 產出檔不進版控（見 tools/codex/.gitignore）；版控裡只留可 diff 的 data.json 快照。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "godot-project/resources/content/**"   # 數值＋對話 .tres 真相源
+      - "assets-source/role/**"                 # 立繪／敵人圖素材
+      - "tools/codex/codex_template.html"       # 版面／樣式／邏輯
+      - "tools/codex/build_codex.py"            # 產生器
+      - ".github/workflows/codex.yml"           # 本 workflow
+  workflow_dispatch: {}                          # 也可手動觸發
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一時間只跑一個 Pages 部署，新的取代排隊中的
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"   # build_codex.py 只用標準庫，無需 pip install
+
+      - name: 產出 codex（解析 .tres → 文字內嵌、圖片走相對路徑）
+        run: python3 tools/codex/build_codex.py
+
+      - name: 組站台（HTML＋只挑引用到的圖＋根目錄轉址）
+        run: |
+          python3 - <<'PY'
+          import re, pathlib, shutil
+          site = pathlib.Path("_site")
+          # HTML 放回 tools/codex/ 的相對深度，讓其 ../../assets-source/... 相對路徑成立
+          dst_html = site / "tools/codex/crystal_codex.html"
+          dst_html.parent.mkdir(parents=True, exist_ok=True)
+          html = pathlib.Path("tools/codex/crystal_codex.html").read_text(encoding="utf-8")
+          shutil.copy("tools/codex/crystal_codex.html", dst_html)
+          # 只複製 HTML 真正引用到的素材（assets-source/role 整包 102MB，多為源圖，不需全上）
+          refs = sorted(set(re.findall(r'\.\./\.\./(assets-source/role/[^"\'()\s]+)', html)))
+          for rel in refs:
+              src = pathlib.Path(rel)
+              if src.is_file():
+                  out = site / rel
+                  out.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy(src, out)
+          # 根目錄轉址到 codex
+          (site / "index.html").write_text(
+              '<!doctype html><meta charset="utf-8">'
+              '<meta http-equiv="refresh" content="0; url=./tools/codex/crystal_codex.html">'
+              '<title>水晶傳說 設定集</title>', encoding="utf-8")
+          print(f"組站台完成：HTML + {len(refs)} 張引用素材")
+          PY
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

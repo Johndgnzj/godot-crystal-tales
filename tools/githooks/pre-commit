@@ -4,6 +4,9 @@
 # build_codex.py 重新產生 tools/codex/data.json（.tres 資料的可 diff 快照）並加入本次
 # commit，確保版控上的設定快照永遠跟 .tres 真相源一致，不會脫勾。
 #
+# 可看的 codex 網頁（crystal_codex.html）改由 GitHub Actions 在 push 後建置並部署到
+# GitHub Pages（見 .github/workflows/codex.yml），不進版控、hook 也不管它。
+#
 # 只在 content 變更時觸發，其餘 commit 不受影響。
 # 緊急略過： git commit --no-verify
 set -e

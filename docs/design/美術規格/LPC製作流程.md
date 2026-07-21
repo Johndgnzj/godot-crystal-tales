@@ -70,7 +70,7 @@ Claude 讀該角色立繪／`docs/story/角色設定.md` 外觀 → 給對應的
 - `CREDITS_素材授權.md`：該角色 LPC 圖層作者/授權寫進去（依 Credits.txt；完整逐層另存 `assets-source/role/<id>/<id>_lpc_credits.txt`）；配方存 `<id>_lpc_recipe.json`。
 - `docs/story/角色設定.md`：該角色美術狀態。
 - 本檔／memory `lpc-walk-generator` 若流程有變一起改。
-- 設定集 Artifact 視需要重發。
+- 設定集 codex：push 後由 GitHub Actions 自動重建發佈到 GitHub Pages（不需手動重發）。
 
 ---
 

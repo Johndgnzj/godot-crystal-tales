@@ -44,7 +44,7 @@ cd godot-project
 
 **找/處理素材**：讀 **`docs/素材管理規範.md`**——素材放哪、進 Godot 後怎麼處理、授權怎麼記。
 
-> ⚠️ **改任何內容後，記得同步文件**（對應 docs、本 README 索引、設定集 Artifact）。規則見 `CLAUDE.md` 的「文件同步規則」。
+> ⚠️ **改任何內容後，記得同步文件**（對應 docs、本 README 索引；設定集 codex 由 CI 自動發佈到 GitHub Pages）。規則見 `CLAUDE.md` 的「文件同步規則」。
 
 ## 權威來源
 - 數值資料：**Godot 端 `godot-project/resources/content/**/*.tres`**（唯一真相源，設計員在編輯器 Inspector 編輯）。

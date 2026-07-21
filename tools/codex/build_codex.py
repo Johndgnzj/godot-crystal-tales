@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 """組建水晶傳說設定集：解析 content_db.tres → GAME JSON、解析對話 .tres 真相源
-（dialogue_db.tres 聚合）→ DLG/CUTS、注入 base64 圖片 → crystal_codex.html。
-資料變更後重跑本腳本＋重新發佈 Artifact 即可同步。"""
-import base64
-import io
+（dialogue_db.tres 聚合）→ DLG/CUTS、掃 assets-source/role 產圖片相對路徑映射（IMG，非 base64——
+圖片直接參考專案素材）→ 注入 codex_template.html，產出 crystal_codex.html＋可 diff 的 data.json 快照。
+發佈＝GitHub Actions（.github/workflows/codex.yml）在 push 後重跑本腳本並部署 GitHub Pages，
+不再用 claude.ai Artifact。本地重跑本腳本即可預覽最新產出（見 tools/codex/README.md）。"""
 import json
 import pathlib
 import re
 import sys
-
-from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
 REPO = HERE.parents[1]  # tools/codex/ -> repo 根（跨機器可攜）
@@ -234,28 +232,38 @@ def build_dialogue() -> dict:
     return {"dlg": dlg, "cuts": cuts}
 
 
-# ── 圖片 ─────────────────────────────────────────────────────────────
-def data_uri(p: pathlib.Path) -> str:
-    mime = "image/jpeg" if p.suffix == ".jpg" else "image/png"
-    return f"data:{mime};base64,{base64.b64encode(p.read_bytes()).decode()}"
-
-
-def thumb_uri(png_path, max_px=280):
-    """讀原始立繪 PNG，等比縮到 max_px、保留透明，base64 內嵌（避免內嵌全尺寸大圖）。"""
-    im = Image.open(png_path).convert("RGBA")
-    im.thumbnail((max_px, max_px), Image.LANCZOS)
-    buf = io.BytesIO()
-    im.save(buf, format="PNG", optimize=True)
-    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+# ── 圖片：掃 assets-source/role 目錄，逐 id 收 face/portrait/battle_idle/bounty/combat ──
+# html 在 tools/codex/，故相對路徑走 ../../assets-source/role/…；GitHub Pages 從 repo root
+# 服務時同一相對路徑亦成立。有就收、缺就略——template 靠 face_/p_/bi_/bounty_/combat_ 這些
+# key 掛圖（key 的 id ＝ role 子資料夾名，需與遊戲 party/enemy id 對得上）。
+ROLE = REPO / "assets-source/role"
+ROLE_REL = "../../assets-source/role"
 
 
 def build_img():
     img = {}
-    portrait_ids = ["ludo", "marin", "alan", "tina", "dora", "shea", "barton", "hank", "martha", "gid", "gray", "mira", "rossel", "don", "necro"]
-    for pid in portrait_ids:
-        img[f"p_{pid}"] = thumb_uri(UI / f"portrait_{pid}.png")
-    for s in ["bird", "gslime", "worm", "goblin", "maskedorc", "bear", "wolf", "wogol", "skeleton", "orc", "chort", "necro", "ogre", "demon"]:
-        img[f"f_{s}"] = data_uri(BATTLE / f"foe_{s}_0.png")
+    for sub in ("main", "npc", "enemies"):
+        base = ROLE / sub
+        if not base.is_dir():
+            continue
+        for d in sorted(p for p in base.iterdir() if p.is_dir()):
+            rid = d.name
+            rel = f"{ROLE_REL}/{sub}/{rid}"
+            if (d / f"face_{rid}.png").exists():
+                img[f"face_{rid}"] = f"{rel}/face_{rid}.png"
+            if (d / f"portrait_{rid}.png").exists():
+                img[f"p_{rid}"] = f"{rel}/portrait_{rid}.png"
+            if (d / f"menuart_{rid}.png").exists():
+                img[f"mn_{rid}"] = f"{rel}/menuart_{rid}.png"
+            if (d / f"bounty_{rid}.png").exists():
+                img[f"bounty_{rid}"] = f"{rel}/bounty_{rid}.png"
+            if (d / "combat_0.png").exists():
+                img[f"combat_{rid}"] = f"{rel}/combat_0.png"
+            bi = d / "battle_idle"
+            if bi.is_dir():
+                al = sorted(bi.glob(f"{rid}_battle_idle_alpha_*.png"))
+                if al:
+                    img[f"bi_{rid}"] = f"{rel}/battle_idle/{al[-1].name}"
     return img
 
 
