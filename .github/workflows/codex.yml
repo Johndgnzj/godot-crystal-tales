@@ -10,7 +10,7 @@ on:
     branches: [main]
     paths:
       - "godot-project/resources/content/**"   # 數值＋對話 .tres 真相源
-      - "assets-source/role/**"                 # 立繪／敵人圖素材
+      - "assets-source/**"                       # codex 素材（立繪／敵人圖／UI 水晶等）
       - "tools/codex/codex_template.html"       # 版面／樣式／邏輯
       - "tools/codex/build_codex.py"            # 產生器
       - ".github/workflows/codex.yml"           # 本 workflow
@@ -52,8 +52,9 @@ jobs:
           dst_html.parent.mkdir(parents=True, exist_ok=True)
           html = pathlib.Path("tools/codex/crystal_codex.html").read_text(encoding="utf-8")
           shutil.copy("tools/codex/crystal_codex.html", dst_html)
-          # 只複製 HTML 真正引用到的素材（assets-source/role 整包 102MB，多為源圖，不需全上）
-          refs = sorted(set(re.findall(r'\.\./\.\./(assets-source/role/[^"\'()\s]+)', html)))
+          # 只複製 HTML 真正引用到的 assets-source 素材（整包多為源圖、不需全上；
+          # codex 一律從 assets-source 取圖，含 role 立繪與 ui 水晶飾紋）
+          refs = sorted(set(re.findall(r'\.\./\.\./(assets-source/[^"\'()\s]+\.(?:png|jpg|jpeg|webp|svg))', html)))
           for rel in refs:
               src = pathlib.Path(rel)
               if src.is_file():

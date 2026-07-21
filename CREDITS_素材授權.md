@@ -135,7 +135,8 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/ui/title_layers/title_bg.png`、`title_heroes.png`（模組化標題畫面既有圖層）：AI 生成（OpenAI Imagen，提示詞作者 John/協作 Agent，
   2026-07-17，依 /gen-art 的 title 構圖規格生成）。背景與男女主角剪影皆為獨立 PNG；透明圖層由洋紅色鍵去背。
 - `assets/ui/title_layers/title_crystal.png`、`title_backplate.png`（新版水晶徽記／半透明符文背板）：OpenAI 內建 imagegen 生成，
-  經 John 於 2026-07-20 驗收；提示詞作者 John／協作 Agent，洋紅色鍵去背。`title_zh.png` 與
+  經 John 於 2026-07-20 驗收；提示詞作者 John／協作 Agent，洋紅色鍵去背。title_crystal 另存一份
+  `assets-source/ui/title_crystal.png`（同圖同授權）供設定集 codex 背景飾紋引用。`title_zh.png` 與
   `title_en.png` 為協作 Agent 以系統字體合成的透明文字圖層，內容為「水晶傳說：路德篇」與
   「Tale of Crystal: The Legend of Ludo」，無外部素材授權需求。
   標題選單描邊字 `t_start/t_cont/t_restart.png` 亦為 PIL 系統字體烘製（自製）。

@@ -11,8 +11,8 @@
   --acc:#7fd8ea; --acc-hi:#aee8f4; --pur:#a79bf2; --gold:#e7c374; --gold-dim:#c9b892;
   --bad:#f09090; --hp:#7fdea3; --mp:#86b4f4;
   --line:#253156; --line-2:#2a3760; --line-soft:#1f2b4e; --line-dash:#2c3a63; --line-row:#1d2848;
-  --card:linear-gradient(160deg,#141c36,#101627); --key:linear-gradient(160deg,#191c3a,#12162b);
-  --code:#0e1428; --input:#0e1530;
+  --card:linear-gradient(160deg,rgba(20,28,54,.8),rgba(16,22,39,.8)); --key:linear-gradient(160deg,rgba(25,28,58,.8),rgba(18,22,43,.8));
+  --code:rgba(14,20,40,.8); --input:rgba(14,21,48,.8);
   --serif:"Noto Serif TC","Songti TC","PingFang TC",serif;
   --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -20,11 +20,20 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 var(--sans);
+body{margin:0;background:#131a33;color:var(--ink);font:14px/1.7 var(--sans);
   -webkit-font-smoothing:antialiased;
-  background-image:radial-gradient(1100px 500px at 85% -100px,rgba(127,216,234,.10),transparent 60%),
-    radial-gradient(900px 600px at -10% 30%,rgba(167,155,242,.08),transparent 55%);
+  background-image:
+    radial-gradient(78% 90% at 50% 30%,rgba(148,168,214,.16),rgba(148,168,214,.05) 55%,transparent 80%),
+    radial-gradient(1100px 500px at 85% -100px,rgba(127,216,234,.12),transparent 60%),
+    radial-gradient(900px 600px at -10% 30%,rgba(167,155,242,.10),transparent 55%),
+    linear-gradient(165deg,#1a2240,#111730);
   background-attachment:fixed}
+/* 水晶飾紋（素材源 assets-source/ui，相對路徑引用、非 base64）＋中央冷光；position:fixed 捲動不動、14% 不搶內容 */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("../../assets-source/ui/title_crystal.png") no-repeat 50% 46% / min(805px,84vw) auto;
+  opacity:.14;filter:blur(1.2px) drop-shadow(0 0 60px rgba(127,216,234,.5))}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(46% 52% at 50% 44%,rgba(127,216,234,.10),transparent 70%)}
 a{color:var(--acc);text-decoration:none}
 a:hover{color:var(--acc-hi);text-decoration:underline}
 ::selection{background:rgba(127,216,234,.28)}
@@ -56,7 +65,7 @@ header.top{position:sticky;top:0;z-index:60;background:rgba(9,13,26,.88);
 .hdr-r{display:flex;align-items:center;gap:10px;flex:none;margin-left:auto}
 .hits{font-family:var(--mono);font-size:11.5px;color:var(--acc);display:none}
 .search.hasq~.hdr-r .hits{display:inline}
-.mode{display:flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:#111a38;color:#c3cdea;
+.mode{display:flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:rgba(17,26,56,.8);color:#c3cdea;
   font:12.5px var(--sans);padding:7px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;transition:border-color .2s,color .2s}
 .mode:hover{border-color:var(--acc);color:var(--ink)}
 nav.tabs{max-width:1220px;margin:0 auto;padding:9px 24px 11px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
@@ -66,7 +75,7 @@ nav.tabs button{flex:none;border:1px solid #242f52;background:transparent;color:
 nav.tabs button:hover{color:var(--ink)}
 nav.tabs button.on{color:#0b1020;background:linear-gradient(135deg,var(--acc),var(--pur));border-color:transparent;font-weight:700}
 
-main{max-width:1220px;margin:0 auto;padding:8px 24px 100px}
+main{max-width:1220px;margin:0 auto;padding:8px 24px 100px;position:relative;z-index:1}
 
 /* ── hero ── */
 .hero{position:relative;margin-top:26px;border:1px solid #263256;border-radius:16px;overflow:hidden;
@@ -138,7 +147,7 @@ code{font-family:var(--mono);font-size:12px;color:var(--acc)}
 .row .head:hover{background:rgba(127,216,234,.04)}
 .row.key .head:hover,.row.pur .head:hover{background:rgba(167,155,242,.05)}
 .row.foe .head:hover{background:rgba(231,195,116,.05)}
-.face{width:88px;height:88px;object-fit:cover;border-radius:12px;border:1px solid var(--line-2);flex:none;background:#0e1428}
+.face{width:88px;height:88px;object-fit:cover;border-radius:12px;border:1px solid var(--line-2);flex:none;background:rgba(14,20,40,.8)}
 .rbi{height:100px;overflow:hidden;flex:none;display:flex;align-items:flex-end}
 .rbi img{height:100%;width:auto;display:block}
 .rbi.none{width:76px;border:1.5px dashed var(--line-dash);border-radius:10px;display:flex;align-items:center;
@@ -192,7 +201,7 @@ code{font-family:var(--mono);font-size:12px;color:var(--acc)}
   align-items:center;justify-content:center;gap:5px;color:var(--faint);font-size:12.5px;padding:16px;text-align:center}
 
 /* ── foe ── */
-.foe .thumb{flex:none;width:64px;height:64px;border-radius:10px;border:1px solid #223055;background:#0e1428;
+.foe .thumb{flex:none;width:64px;height:64px;border-radius:10px;border:1px solid #223055;background:rgba(14,20,40,.8);
   display:flex;align-items:center;justify-content:center;overflow:hidden}
 .foe .thumb.parch{background:#ece0bf;border-color:#c9b98b}
 .foe .thumb img{max-width:86%;max-height:86%;width:auto;height:auto}
@@ -615,7 +624,7 @@ function render(){
       <button data-act="fimg" data-id="${f.id}" data-v="b" class="${imgSel==="b"?"on":""}">懸賞圖</button>
       <button data-act="fimg" data-id="${f.id}" data-v="p" class="${imgSel==="p"?"on":""}">立繪</button></div>`:"";
     const pxfig=combat?`<div class="pxfig"><img src="${combat}" alt="${esc(f.name)} 戰鬥像素圖" loading="lazy"><span>遊戲內戰鬥圖</span></div>`:"";
-    return `<div class="row foe${open?" open":""}" style="border-color:${open?"#c9b98b":(f.big?"rgba(231,195,116,.4)":"var(--line)")};background:${f.big?"linear-gradient(160deg,#1a1f38,#131a2e)":"var(--card)"}">
+    return `<div class="row foe${open?" open":""}" style="border-color:${open?"#c9b98b":(f.big?"rgba(231,195,116,.4)":"var(--line)")};background:${f.big?"linear-gradient(160deg,rgba(26,31,56,.8),rgba(19,26,46,.8))":"var(--card)"}">
       <div class="head" data-act="tg" data-id="f_${f.id}" role="button" tabindex="0">
         <div class="thumb${onParch?" parch":""}"><img src="${thumb}" alt="${esc(f.name)}" loading="lazy" style="image-rendering:${combat?"pixelated":"auto"};mix-blend-mode:${onParch?"multiply":"normal"}"></div>
         <div class="meta"><div class="nm"><b>${f.big?"☠ ":""}${esc(f.name)}</b><span class="id">${f.id}</span>${feats}</div>
