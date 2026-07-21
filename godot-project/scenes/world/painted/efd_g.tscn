@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/world_scene.gd" id="1_cp0hm"]
+[ext_resource type="Texture2D" path="res://assets/map/east_forest_depths/efd_g.png" id="2_u40gp"]
+[ext_resource type="TileSet" path="res://resources/map/collision_tileset_32.tres" id="3_jw3ay"]
+[ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_wrb4e"]
+[ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_okw3t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ukpfx"]
+size = Vector2(1120, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kae4m"]
+size = Vector2(1120, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bpvt6"]
+size = Vector2(22, 14)
+
+[node name="EFDG" type="Node2D" unique_id=24879634]
+script = ExtResource("1_cp0hm")
+scene_id = "EFDG"
+map_w = 40
+map_h = 40
+ground_tiles = PackedInt32Array()
+blk_rows = PackedStringArray()
+enc_rows = PackedStringArray()
+spawns = {
+"from_e": Vector2(640, 120),
+"from_h": Vector2(640, 1160),
+"start": Vector2(640, 740)
+}
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1545388788]
+texture = ExtResource("2_u40gp")
+centered = false
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=775958359]
+
+[node name="CollisionPaint" type="TileMapLayer" parent="." unique_id=1086137326]
+tile_set = ExtResource("3_jw3ay")
+
+[node name="Zones" type="Node2D" parent="." unique_id=1265838314]
+
+[node name="north" type="Area2D" parent="Zones" unique_id=2074833540]
+position = Vector2(640, 22)
+script = ExtResource("4_wrb4e")
+to_scene = "EFDE"
+spawn_id = "from_g"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/north" unique_id=1587724297]
+shape = SubResource("RectangleShape2D_ukpfx")
+
+[node name="south" type="Area2D" parent="Zones" unique_id=1859782079]
+position = Vector2(640, 1258)
+script = ExtResource("4_wrb4e")
+to_scene = "EFDH"
+spawn_id = "from_g"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/south" unique_id=1903101325]
+shape = SubResource("RectangleShape2D_kae4m")
+
+[node name="YSort" type="Node2D" parent="." unique_id=1682825120]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="YSort" unique_id=601921924 groups=["player"]]
+position = Vector2(640, 740)
+script = ExtResource("5_okw3t")
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/Player" unique_id=1697777654]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_bpvt6")
+
+[node name="Camera2D" type="Camera2D" parent="YSort/Player" unique_id=805856884]

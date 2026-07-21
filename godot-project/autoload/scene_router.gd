@@ -50,7 +50,7 @@ const SCENE_PATHS := {
 	"EForest1": "res://scenes/world/eforest1.tscn",
 	"EForest2": "res://scenes/world/eforest2.tscn",
 	"EForest3": "res://scenes/world/eforest3.tscn",
-	# M3 東邊森林：手繪畫面地圖（新美術路線試作，見 assets-source/map/map-def.xlsx）
+	# M3 東邊森林：手繪畫面地圖（連通真相源 assets-source/map/map-def.json；場景骨架由 scripts/map/build_scenes.gd 生成）
 	"EFA": "res://scenes/world/painted/ef_a.tscn",
 	"EFB": "res://scenes/world/painted/ef_b.tscn",
 	"EFC": "res://scenes/world/painted/ef_c.tscn",
@@ -67,6 +67,22 @@ const SCENE_PATHS := {
 	"NMD": "res://scenes/world/painted/nm_d.tscn",
 	"NME": "res://scenes/world/painted/nm_e.tscn",
 	"NMF": "res://scenes/world/painted/nm_f.tscn",
+	# M4 東之森深處：手繪畫面地圖（由 scripts/map/build_scenes.gd 依 map-def.json 生成）
+	"EFDA": "res://scenes/world/painted/efd_a.tscn",
+	"EFDB": "res://scenes/world/painted/efd_b.tscn",
+	"EFDC": "res://scenes/world/painted/efd_c.tscn",
+	"EFDD": "res://scenes/world/painted/efd_d.tscn",
+	"EFDE": "res://scenes/world/painted/efd_e.tscn",
+	"EFDF": "res://scenes/world/painted/efd_f.tscn",
+	"EFDG": "res://scenes/world/painted/efd_g.tscn",
+	"EFDH": "res://scenes/world/painted/efd_h.tscn",
+	"EFDI": "res://scenes/world/painted/efd_i.tscn",
+	"EFDJ": "res://scenes/world/painted/efd_j.tscn",
+	"EFDK": "res://scenes/world/painted/efd_k.tscn",
+	"EFDL": "res://scenes/world/painted/efd_l.tscn",
+	"EFDM": "res://scenes/world/painted/efd_m.tscn",
+	"EFDN": "res://scenes/world/painted/efd_n.tscn",
+	"EFDM2": "res://scenes/world/painted/efd_m2.tscn",
 }
 
 ## `back()` 的 fallback（build_cq2.py L2820：`g.get("g_returnScene").getAsString()||"Town"`）：

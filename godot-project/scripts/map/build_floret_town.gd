@@ -1,4 +1,6 @@
 extends SceneTree
+## ⚠️ 已被 scripts/map/build_scenes.gd 取代（讀 map-def.json 的通用版，一次處理全 region）；保留供歷史參考，勿再執行。
+##（註：Town 含 NPC/門/劇情/實例，build_scenes.gd 將其列為「受保護、不重生」，仍由本檔的產出為準。）
 ## 建構 M1 芳蕾鎮手繪版場景（取代 tile 版 Town）：world_scene.gd 完整契約（NPC/門/劇情資料驅動）
 ## ＋ 手繪背景圖 ＋ CollisionPaint（32px；圖外背景與建築體已預刷，地形細節由 John 手刷）。
 ## 座標依 assets/map/floret/floret_town.png（1280×1280，40×40 格 @32px）視覺定位。

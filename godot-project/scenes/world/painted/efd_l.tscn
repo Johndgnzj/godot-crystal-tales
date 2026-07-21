@@ -1,0 +1,59 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/world_scene.gd" id="1_bsof5"]
+[ext_resource type="Texture2D" path="res://assets/map/east_forest_depths/efd_l.png" id="2_xfm4s"]
+[ext_resource type="TileSet" path="res://resources/map/collision_tileset_32.tres" id="3_nejx3"]
+[ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_716wo"]
+[ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_qw0a3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_85cui"]
+size = Vector2(44, 1120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fi46h"]
+size = Vector2(22, 14)
+
+[node name="EFDL" type="Node2D" unique_id=1822674823]
+script = ExtResource("1_bsof5")
+scene_id = "EFDL"
+map_w = 40
+map_h = 40
+ground_tiles = PackedInt32Array()
+blk_rows = PackedStringArray()
+enc_rows = PackedStringArray()
+spawns = {
+"from_h": Vector2(1160, 640),
+"start": Vector2(640, 740)
+}
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1240041185]
+texture = ExtResource("2_xfm4s")
+centered = false
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=956106600]
+
+[node name="CollisionPaint" type="TileMapLayer" parent="." unique_id=203886494]
+tile_set = ExtResource("3_nejx3")
+
+[node name="Zones" type="Node2D" parent="." unique_id=697704050]
+
+[node name="east" type="Area2D" parent="Zones" unique_id=1345584650]
+position = Vector2(1258, 640)
+script = ExtResource("4_716wo")
+to_scene = "EFDH"
+spawn_id = "from_l"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/east" unique_id=208001575]
+shape = SubResource("RectangleShape2D_85cui")
+
+[node name="YSort" type="Node2D" parent="." unique_id=2129385065]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="YSort" unique_id=345755685 groups=["player"]]
+position = Vector2(640, 740)
+script = ExtResource("5_qw0a3")
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/Player" unique_id=1515868845]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_fi46h")
+
+[node name="Camera2D" type="Camera2D" parent="YSort/Player" unique_id=669319310]

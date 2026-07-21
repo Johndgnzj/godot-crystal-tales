@@ -1,4 +1,5 @@
 extends SceneTree
+## ⚠️ 已被 scripts/map/build_scenes.gd 取代（讀 map-def.json 的通用版，一次處理全 region）；保留供歷史參考，勿再執行。
 ## 批次建構：M3 東邊森林 9 張手繪畫面場景（ef_a 已存在→只補出口/落點；b–i 全新建）。
 ## 依 assets-source/map/map-def.xlsx 的空間網格接連通：
 ##          i

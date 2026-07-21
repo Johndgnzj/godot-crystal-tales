@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/world_scene.gd" id="1_6213c"]
+[ext_resource type="Texture2D" path="res://assets/map/east_forest_depths/efd_a.png" id="2_j0f50"]
+[ext_resource type="TileSet" path="res://resources/map/collision_tileset_32.tres" id="3_455cb"]
+[ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_g5qjb"]
+[ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_ywwwb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p3lwo"]
+size = Vector2(44, 1120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6pi4e"]
+size = Vector2(44, 1120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0trjg"]
+size = Vector2(22, 14)
+
+[node name="EFDA" type="Node2D" unique_id=816698041]
+script = ExtResource("1_6213c")
+scene_id = "EFDA"
+map_w = 40
+map_h = 40
+ground_tiles = PackedInt32Array()
+blk_rows = PackedStringArray()
+enc_rows = PackedStringArray()
+spawns = {
+"from_EFG": Vector2(120, 640),
+"from_b": Vector2(1160, 640),
+"start": Vector2(640, 740)
+}
+
+[node name="Background" type="Sprite2D" parent="." unique_id=637255539]
+texture = ExtResource("2_j0f50")
+centered = false
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=1037629341]
+
+[node name="CollisionPaint" type="TileMapLayer" parent="." unique_id=1996863186]
+tile_set = ExtResource("3_455cb")
+
+[node name="Zones" type="Node2D" parent="." unique_id=25025906]
+
+[node name="west" type="Area2D" parent="Zones" unique_id=1399615335]
+position = Vector2(22, 640)
+script = ExtResource("4_g5qjb")
+to_scene = "EFG"
+spawn_id = "from_EFDA"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/west" unique_id=1843484645]
+shape = SubResource("RectangleShape2D_p3lwo")
+
+[node name="east" type="Area2D" parent="Zones" unique_id=60469438]
+position = Vector2(1258, 640)
+script = ExtResource("4_g5qjb")
+to_scene = "EFDB"
+spawn_id = "from_a"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/east" unique_id=518862937]
+shape = SubResource("RectangleShape2D_6pi4e")
+
+[node name="YSort" type="Node2D" parent="." unique_id=200413650]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="YSort" unique_id=17608911 groups=["player"]]
+position = Vector2(640, 740)
+script = ExtResource("5_ywwwb")
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/Player" unique_id=121517442]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_0trjg")
+
+[node name="Camera2D" type="Camera2D" parent="YSort/Player" unique_id=1836533969]

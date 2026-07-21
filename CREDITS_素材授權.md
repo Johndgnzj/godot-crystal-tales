@@ -88,10 +88,10 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 a 畫面。已依地圖產圖規格移除箭頭、寶箱、告示牌、木箱與木桶等互動物件，保留原有地形與出入口。
 - `assets/map/east_forest/ef_{b,c,d}.png`（素材源＝`assets-source/map/east_forest/ef_{b,c,d}.png`，2026-07-21 統一命名；清理前版本存於 `east_forest/_backup/east-forest-{b,c,d-boss-room}-before-cleanup-2026-07-20.png`）：
   AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 b、c、d 畫面。已依地圖產圖規格移除箭頭與烘入的互動物件；d 的中央狼型敵人亦已移除，保留原有地形與出入口。
-- `assets/map/east_forest_depths/efd_{a,b,c,d,e,f}.png`（素材源＝`assets-source/map/east_forest_depths/efd_*.png`，2026-07-21 統一命名；source 端另有 g～n 全 14 張＋`efd_m_boss.png`，專案端 g～n 待整合）：
-  AI 生成素材（OpenAI Imagen，提示詞作者 John/協作 Agent，2026-07-17）；東之森深處 M4-a～f 手繪畫面地圖。a 以 M3 `east-forest-g.png` 作視覺延續參考，b～f 再以 a 鎖定同區域的森林低霧、像素尺度與視覺語彙；全部正規化為 1280×1280。
+- `assets/map/east_forest_depths/efd_{a…n}.png`（素材源＝`assets-source/map/east_forest_depths/efd_*.png`，2026-07-21 統一命名；**a～f 早已在專案；g～n 於 2026-07-21 整合進專案**，供塊 C `build_scenes.gd` 生成 M4 場景骨架；source 端另存 `efd_m_boss.png` 變體）：
+  AI 生成素材（OpenAI Imagen，提示詞作者 John/協作 Agent，2026-07-17）；東之森深處 M4 手繪畫面地圖（a～n）。a 以 M3 `east-forest-g.png` 作視覺延續參考，b～f 再以 a 鎖定同區域的森林低霧、像素尺度與視覺語彙；全部正規化為 1280×1280。
   （原 `east-forest-depths-map.png` 總覽衍生圖依已退休的 `map-def.xlsx` 拼合、現已不在素材庫；總覽改用 map_editor 的連通視圖，`compose_map_overviews.py` 已標為過時。）
-- `assets-source/map/east_forest_depths/efd_m2.png`（素材源；專案端待整合）：
+- `assets/map/east_forest_depths/efd_m2.png`（素材源＝`assets-source/map/east_forest_depths/efd_m2.png`；**2026-07-21 已整合進專案**）：
   AI 生成素材（ChatGPT 內建圖片生成，提示詞作者 John／協作 Agent，2026-07-20）；M4 東之森深處 m2 畫面——`j` 的 boss（`m`）擊破後開放的分支路線、通往 M7。
 - **[2026-07-21 尺寸統一]** `ef_a–i`、`efd_g–n`＋`efd_m2` 共 18 張原 1254 地圖圖批次縮放（sips）至 1280×1280，讓碰撞格 32／16 整除、消除遷就 1254 的 38；原 1254 版備份於各 dir 的 `_backup/orig_1254/`。屬機械縮放、無新授權變動。
 - `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。

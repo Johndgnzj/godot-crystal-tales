@@ -1,0 +1,85 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/world_scene.gd" id="1_0hvnk"]
+[ext_resource type="Texture2D" path="res://assets/map/east_forest_depths/efd_i.png" id="2_0j25q"]
+[ext_resource type="TileSet" path="res://resources/map/collision_tileset_32.tres" id="3_l66lb"]
+[ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_gm5lk"]
+[ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_r8010"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_co7wl"]
+size = Vector2(44, 1120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ootkk"]
+size = Vector2(44, 1120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jcuab"]
+size = Vector2(1120, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_14m6q"]
+size = Vector2(22, 14)
+
+[node name="EFDI" type="Node2D" unique_id=2003717904]
+script = ExtResource("1_0hvnk")
+scene_id = "EFDI"
+map_w = 40
+map_h = 40
+ground_tiles = PackedInt32Array()
+blk_rows = PackedStringArray()
+enc_rows = PackedStringArray()
+spawns = {
+"from_h": Vector2(120, 640),
+"from_j": Vector2(1160, 640),
+"from_k": Vector2(640, 1160),
+"start": Vector2(640, 740)
+}
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1091800263]
+texture = ExtResource("2_0j25q")
+centered = false
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=1239132297]
+
+[node name="CollisionPaint" type="TileMapLayer" parent="." unique_id=1962407894]
+tile_set = ExtResource("3_l66lb")
+
+[node name="Zones" type="Node2D" parent="." unique_id=156071152]
+
+[node name="west" type="Area2D" parent="Zones" unique_id=1270003463]
+position = Vector2(22, 640)
+script = ExtResource("4_gm5lk")
+to_scene = "EFDH"
+spawn_id = "from_i"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/west" unique_id=171332154]
+shape = SubResource("RectangleShape2D_co7wl")
+
+[node name="east" type="Area2D" parent="Zones" unique_id=1914215856]
+position = Vector2(1258, 640)
+script = ExtResource("4_gm5lk")
+to_scene = "EFDJ"
+spawn_id = "from_i"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/east" unique_id=1533365031]
+shape = SubResource("RectangleShape2D_ootkk")
+
+[node name="south" type="Area2D" parent="Zones" unique_id=1335941805]
+position = Vector2(640, 1258)
+script = ExtResource("4_gm5lk")
+to_scene = "EFDK"
+spawn_id = "from_i"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/south" unique_id=2031733776]
+shape = SubResource("RectangleShape2D_jcuab")
+
+[node name="YSort" type="Node2D" parent="." unique_id=1652025977]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="YSort" unique_id=2058436147 groups=["player"]]
+position = Vector2(640, 740)
+script = ExtResource("5_r8010")
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/Player" unique_id=751646427]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_14m6q")
+
+[node name="Camera2D" type="Camera2D" parent="YSort/Player" unique_id=913538435]

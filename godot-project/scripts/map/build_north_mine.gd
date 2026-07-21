@@ -1,4 +1,5 @@
 extends SceneTree
+## ⚠️ 已被 scripts/map/build_scenes.gd 取代（讀 map-def.json 的通用版，一次處理全 region）；保留供歷史參考，勿再執行。
 ## 建構 M2 北方礦山 a～f 手繪畫面地圖：背景、32px 碰撞格、出生點與場景出口。
 ## 執行：Godot --headless -s res://scripts/map/build_north_mine.gd --path .
 
