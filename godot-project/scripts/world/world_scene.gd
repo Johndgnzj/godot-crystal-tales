@@ -97,6 +97,7 @@ func _ready() -> void:
 	_player.world_state = world_state
 	_ensure_prompt_ui()
 	_clear_handpainted_doorways()
+	_hide_paint_layers()
 	_fill_ground()
 	_spawn_props()
 	_spawn_npcs()
@@ -155,6 +156,15 @@ func _clear_handpainted_doorways() -> void:
 		for y in range(mini(entry_cell.y, outside_cell.y), maxi(entry_cell.y, outside_cell.y) + 1):
 			for x in range(mini(entry_cell.x, outside_cell.x), maxi(entry_cell.x, outside_cell.x) + 1):
 				collision.erase_cell(Vector2i(x, y))
+
+
+## 塊 B 的 PathPaint 設計標記層（可走區草稿）只在編輯器刷圖時看，執行期一律隱藏。
+## 對沒有這些層的場景（如舊場景）無害。
+func _hide_paint_layers() -> void:
+	for n in ["PathPaint32", "PathPaint16"]:
+		var layer := get_node_or_null(n)
+		if layer is CanvasItem:
+			(layer as CanvasItem).visible = false
 
 
 func _physics_process(delta: float) -> void:

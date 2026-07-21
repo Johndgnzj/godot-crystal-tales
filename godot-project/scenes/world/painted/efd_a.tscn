@@ -5,6 +5,9 @@
 [ext_resource type="TileSet" path="res://resources/map/collision_tileset_32.tres" id="3_455cb"]
 [ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_g5qjb"]
 [ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_ywwwb"]
+[ext_resource type="TileSet" path="res://resources/map/path_tileset_32.tres" id="6_pth32"]
+[ext_resource type="TileSet" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
+[ext_resource type="TileSet" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p3lwo"]
 size = Vector2(44, 1120)
@@ -36,7 +39,18 @@ centered = false
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1037629341]
 
 [node name="CollisionPaint" type="TileMapLayer" parent="." unique_id=1996863186]
+visible = false
 tile_set = ExtResource("3_455cb")
+
+[node name="CollisionDetail" type="TileMapLayer" parent="."]
+visible = false
+tile_set = ExtResource("8_cdt16")
+
+[node name="PathPaint32" type="TileMapLayer" parent="."]
+tile_set = ExtResource("6_pth32")
+
+[node name="PathPaint16" type="TileMapLayer" parent="."]
+tile_set = ExtResource("7_pth16")
 
 [node name="Zones" type="Node2D" parent="." unique_id=25025906]
 
