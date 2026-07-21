@@ -437,7 +437,8 @@
               "side": "north",
               "to": "b"
             }
-          }
+          },
+          "label": "東之森深處"
         },
         "e": {
           "kind": "forest",
@@ -459,7 +460,8 @@
               "side": "south",
               "to": "g"
             }
-          }
+          },
+          "label": "東之森深處"
         },
         "g": {
           "kind": "forest",
@@ -477,7 +479,8 @@
               "side": "south",
               "to": "h"
             }
-          }
+          },
+          "label": "東之森深處小徑"
         },
         "h": {
           "kind": "forest",
@@ -591,6 +594,10 @@
             "north": {
               "side": "north",
               "to": "i"
+            },
+            "east": {
+              "side": "east",
+              "to": "n"
             }
           }
         },
@@ -605,6 +612,10 @@
             "north": {
               "side": "north",
               "to": "j"
+            },
+            "west": {
+              "side": "west",
+              "to": "k"
             }
           }
         },
