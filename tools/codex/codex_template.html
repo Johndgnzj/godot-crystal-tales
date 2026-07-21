@@ -342,12 +342,12 @@ events:[
  {id:"bear_rematch",  name:"狂暴洞熊（再戰）",note:""},
  {id:"necro",         name:"死靈術士（精英遭遇）",note:""}
 ],
+// 敵人圖預設全動態走 IMG（build_img 掃 assets-source/role/enemies）：bounty_<id>／p_<id>／
+// combat_<id> 有檔就顯示。此表只在「戰鬥像素圖沿用別隻」時覆蓋 combat 來源（c）；新增敵人補了
+// 立繪/懸賞圖不必動這裡。
 foeArt:{
- bird:{b:"bird",c:"bird"}, gslime:{b:"gslime",c:"gslime"}, worm:{b:"worm",c:"worm"},
- goblin:{b:"goblin",c:"goblin"}, goblin_chief:{b:"goblin_chief",c:"maskedorc"},
- bear:{b:"bear",c:"bear",p:1}, bear_dire:{b:"bear_dire",c:"bear"}, wolf:{b:"wolf",c:"wolf",p:1},
- wogol:{b:"wogol",c:"wogol",p:1}, skeleton:{b:"skeleton",c:"skeleton",p:1}, orc:{b:"orc",c:"orc",p:1},
- chort:{b:"chort",c:null}, necro:{b:"necro",c:null,p:1}, ogre:{b:"ogre",c:null}, shadow_demon:{b:"shadow_demon",c:null}
+ goblin_chief:{c:"maskedorc"},
+ bear_dire:{c:"bear"}
 },
 foeDesc:{
  bird:"成群掠過林梢的猛禽，俯衝時快得只剩一道殘影。單獨一隻不足為懼，偏偏牠們總愛呼朋引伴，等你回過神，肩上往往已經被啄了好幾口。羽毛輕軟，是縫製衣物的搶手貨。",
@@ -580,18 +580,20 @@ function render(){
   const encMapIds=Object.keys(g.encounters);
   const habitatsOf=fid=>encMapIds.filter(mid=>g.encounters[mid].some(gr=>gr.members.some(m=>m.id===fid)));
   const foes=g.enemies.map(f=>{
-    const art=(META.foeArt||{})[f.id]||null;
+    const art=(META.foeArt||{})[f.id]||{};
     const desc=(META.foeDesc||{})[f.id]||"";
     const drops=(f.drops||[]).map(([id,r])=>{const it=itemById[id],nm=it?it.name:id;if(it&&it.baseDrop>0){const pct=Math.round(Math.min(1,r*it.baseDrop)*1000)/10;return nm+" "+pct+"%（×"+r+"）";}return nm+"（×"+r+"）";});
     const hab=habitatsOf(f.id).map(mapName);
     const hay=[f.id,f.name,f.spr,desc,drops.join(""),hab.join("")].join(" ").toLowerCase();
     if(!mm(hay))return null; hits++;
     const open=!!st.open["f_"+f.id];
-    const bounty=art?IMG["bounty_"+art.b]:null;
-    const combat=art&&art.c?IMG["combat_"+art.c]:null;
-    const portrait=art&&art.p?IMG["p_"+art.b]:null;
-    const useFace=f.id==="necro";
-    const thumb=combat||(useFace?IMG["face_necro"]:bounty)||"";
+    // 圖片走 build_img 動態掃到的 IMG（assets-source/role/enemies 有檔就顯示）；
+    // foeArt 只用來覆蓋「戰鬥像素圖沿用別隻」的敵人（art.c）。
+    const bounty=IMG["bounty_"+f.id]||null;
+    const combat=IMG["combat_"+(art.c||f.id)]||null;
+    const portrait=IMG["p_"+f.id]||null;
+    const useFace=!combat&&!!IMG["face_"+f.id];
+    const thumb=combat||(useFace?IMG["face_"+f.id]:bounty)||"";
     const onParch=!combat&&!useFace;
     const imgSel=portrait&&st.open["fi_"+f.id]!=="b"?"p":"b";
     let feats="";
