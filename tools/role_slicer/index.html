@@ -6,7 +6,7 @@
 <title>角色立繪切圖工具 — 水晶傳說</title>
 <style>
   :root{
-    --bg:#14161c; --panel:#1d212b; --line:#2c313d; --ink:#e6e9f0; --dim:#8b93a7;
+    --bg:#14161c; --panel:#1d212b; --line:#2c313d; --ink:#e6e9f0; --dim:#a4acbf;
     --accent:#5ac8fa; --a:#5ad1c4; --b:#ffb454; --ok:#59d98a; --err:#ff7b7b;
   }
   *{box-sizing:border-box}
@@ -94,7 +94,7 @@
 <body>
 <header>
   <h1>角色立繪切圖工具</h1>
-  <p>上傳一張「去背前的全身圖」→ 去螢光底 → 框選頭像(a)/半身(b) → 匯出三張到 <code>assets-source/role/&lt;id&gt;/</code>（暫存，不會動到遊戲專案）</p>
+  <p>上傳一張「去背前的全身圖」→ 去螢光底 → 框選頭像(a)/半身(b) → 匯出三張到 <code id="exportPath">…/&lt;id&gt;/</code>（暫存區）</p>
 </header>
 
 <main>
@@ -142,7 +142,7 @@
     <p class="hint" style="margin-top:0">關閉＝原始解析度（暫存來源建議用原尺寸，整合時再縮）。</p>
 
     <div class="btns">
-      <button class="primary" id="exportBtn" disabled>匯出到專案暫存</button>
+      <button class="primary" id="exportBtn" disabled>匯出到暫存區</button>
       <button id="downloadBtn" disabled title="改用瀏覽器下載三張">下載</button>
     </div>
     <div class="status" id="status"></div>
@@ -464,6 +464,10 @@ $("#downloadBtn").addEventListener("click", ()=>{
   setStatus("已觸發下載三張到瀏覽器下載資料夾","ok");
 });
 function setStatus(msg,kind){ const el=$("#status"); el.textContent=msg; el.className="status "+(kind||""); }
+// 顯示 hub 實際的匯出位置（反映 --out），取代硬編碼路徑
+fetch("/api/export-info").then(r=>r.json()).then(j=>{
+  const el=$("#exportPath"); if(el&&j.base) el.textContent=j.base.replace(/\/+$/,"")+"/<id>/";
+}).catch(()=>{});
 </script>
 </body>
 </html>

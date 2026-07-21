@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>水晶傳說 · 工具集</title>
+<style>
+:root{
+  --void:#0c0e14; --rail:#12151d; --rail2:#0e1017; --edge:#232838; --edge2:#2f3548;
+  --ink:#e8ebf3; --dim:#c2c9d8; --dim2:#a2abc0;
+  --map:#5dcaa5; --slicer:#ffb454; --stick:#5ac8fa;   /* 三工具代表色 */
+  --rail-w:236px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--void);color:var(--ink);overflow:hidden;
+  font:14px/1.5 -apple-system,"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+
+.app{display:flex;height:100vh}
+
+/* ── 側邊軌 ── */
+.rail{width:var(--rail-w);flex:0 0 auto;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,var(--rail),var(--rail2));
+  border-right:1px solid var(--edge);position:relative;z-index:2;
+  transition:width .28s cubic-bezier(.4,.14,.3,1)}
+.rail::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 40% at -10% 0%,#5ac8fa14,transparent 60%)}
+.rail.collapsed{width:64px}
+
+.brand{display:flex;align-items:center;gap:11px;padding:16px 16px 14px;
+  border-bottom:1px solid var(--edge)}
+.crystal{width:30px;height:30px;flex:0 0 auto;position:relative;filter:drop-shadow(0 2px 6px #0008);cursor:pointer}
+.rail.collapsed .crystal{filter:drop-shadow(0 2px 6px #0008) drop-shadow(0 0 6px #5ac8fa55)}
+.crystal i{position:absolute;inset:0;clip-path:polygon(50% 0,100% 32%,82% 100%,18% 100%,0 32%)}
+.crystal i:nth-child(1){background:linear-gradient(150deg,#7fe3cf,#2f9e86)}
+.crystal i:nth-child(2){clip-path:polygon(50% 0,100% 32%,50% 46%);background:#bff4e9;opacity:.9}
+.crystal i:nth-child(3){clip-path:polygon(50% 46%,100% 32%,82% 100%);background:#3fae95}
+.crystal i:nth-child(4){clip-path:polygon(50% 46%,0 32%,18% 100%);background:#2b8d78}
+.brand-txt{display:flex;flex-direction:column;line-height:1.15;overflow:hidden;white-space:nowrap}
+.brand-txt b{font-size:14.5px;letter-spacing:.06em;font-weight:700}
+.brand-txt span{font-size:10.5px;color:var(--dim);letter-spacing:.24em;text-transform:uppercase;margin-top:2px}
+.burger{margin-left:auto;flex:0 0 auto;width:30px;height:30px;border:1px solid var(--edge);
+  background:#0000;color:var(--dim);border-radius:8px;cursor:pointer;font-size:14px;line-height:1;
+  display:grid;place-items:center;transition:.15s}
+.burger:hover{color:var(--ink);border-color:var(--edge2)}
+.rail.collapsed .brand-txt{opacity:0;width:0}
+.rail.collapsed .brand{padding:16px 0 14px;justify-content:center}
+.rail.collapsed .burger{display:none}
+
+/* ── 工具清單 ── */
+.tools{display:flex;flex-direction:column;gap:4px;padding:12px 10px;flex:1}
+.tool{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px;cursor:pointer;
+  border:1px solid transparent;background:#0000;color:var(--dim);text-align:left;width:100%;
+  font:inherit;position:relative;transition:.16s ease}
+.tool:hover{background:#ffffff08;color:var(--ink)}
+.tool .ic{width:24px;height:24px;flex:0 0 auto;position:relative;display:grid;place-items:center;transition:.16s}
+.tool .ic::before{content:"";width:14px;height:14px;background:var(--c);
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);transition:.16s;box-shadow:0 0 0 0 var(--c)}
+.tool .lbl{display:flex;flex-direction:column;line-height:1.25;overflow:hidden;white-space:nowrap}
+.tool .lbl b{font-size:13.5px;font-weight:600}
+.tool .lbl em{font-size:11px;font-style:normal;color:var(--dim2)}
+.tool.active{color:var(--ink);background:linear-gradient(100deg,color-mix(in srgb,var(--c) 20%,transparent),#ffffff06);
+  border-color:color-mix(in srgb,var(--c) 45%,transparent)}
+.tool.active .ic::before{box-shadow:0 0 13px 2px var(--c);transform:scale(1.14)}
+.tool.active::before{content:"";position:absolute;left:-10px;top:50%;transform:translateY(-50%);
+  width:3px;height:22px;border-radius:2px;background:var(--c);box-shadow:0 0 10px var(--c)}
+.rail.collapsed .tool{justify-content:center;padding:11px 0}
+.rail.collapsed .tool .lbl{opacity:0;width:0}
+
+.foot{padding:12px 16px;border-top:1px solid var(--edge);color:var(--dim2);font-size:10.5px;
+  letter-spacing:.02em;white-space:nowrap;overflow:hidden}
+.foot code{font:11px ui-monospace,Menlo,monospace;color:var(--dim);background:#0000}
+.rail.collapsed .foot{opacity:0}
+
+/* ── 舞台（iframe 容器）── */
+.stage{flex:1;position:relative;background:var(--void);min-width:0}
+.stage::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  box-shadow:inset 22px 0 40px -34px #000c}
+.frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--void);
+  animation:rise .34s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.hint{position:absolute;inset:0;display:grid;place-items:center;color:var(--dim2);z-index:0}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail" id="rail">
+    <div class="brand">
+      <div class="crystal"><i></i><i></i><i></i><i></i></div>
+      <div class="brand-txt"><b>水晶傳說</b><span>Toolkit</span></div>
+      <button class="burger" id="burger" title="收合／展開">‹</button>
+    </div>
+    <nav class="tools" id="tools">
+      <button class="tool" data-tool="map" style="--c:var(--map)" title="地圖維護">
+        <span class="ic"></span><span class="lbl"><b>地圖維護</b><em>連通・出入口・備註</em></span>
+      </button>
+      <button class="tool" data-tool="slicer" style="--c:var(--slicer)" title="立繪切圖">
+        <span class="ic"></span><span class="lbl"><b>立繪切圖</b><em>去背・框選・匯出</em></span>
+      </button>
+      <button class="tool" data-tool="stickman" style="--c:var(--stick)" title="火柴人動畫">
+        <span class="ic"></span><span class="lbl"><b>火柴人動畫</b><em>骨架・關鍵幀</em></span>
+      </button>
+    </nav>
+    <div class="foot">一次啟動 · 一個入口 · <code>Ctrl+B</code> 收合</div>
+  </aside>
+  <main class="stage" id="stage">
+    <div class="hint">載入中…</div>
+  </main>
+</div>
+
+<script>
+"use strict";
+const stage = document.getElementById("stage");
+const rail = document.getElementById("rail");
+const frames = {};                                   // tool → iframe（懶載入＋保留狀態）
+const TOOLS = ["map", "slicer", "stickman"];
+
+function show(tool){
+  if(!TOOLS.includes(tool)) tool = "map";
+  const hint = stage.querySelector(".hint"); if(hint) hint.remove();
+  if(!frames[tool]){
+    const f = document.createElement("iframe");
+    f.className = "frame";
+    f.src = "/" + tool + "/";                         // 同源 iframe，第一次點才載入
+    stage.appendChild(f);
+    frames[tool] = f;
+  }
+  for(const k of TOOLS){ if(frames[k]) frames[k].style.display = (k === tool) ? "block" : "none"; }
+  document.querySelectorAll(".tool").forEach(b => b.classList.toggle("active", b.dataset.tool === tool));
+  if(location.hash.slice(1) !== tool) history.replaceState(null, "", "#" + tool);
+}
+
+document.querySelectorAll(".tool").forEach(b => b.addEventListener("click", () => show(b.dataset.tool)));
+function toggleRail(){
+  rail.classList.toggle("collapsed");
+  document.getElementById("burger").textContent = rail.classList.contains("collapsed") ? "›" : "‹";
+}
+document.getElementById("burger").addEventListener("click", toggleRail);
+document.querySelector(".crystal").addEventListener("click", toggleRail);  // 收合後點 logo 也能展開
+document.addEventListener("keydown", e => {
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b"){ e.preventDefault(); document.getElementById("burger").click(); }
+});
+
+show(location.hash.slice(1) || "map");
+</script>
+</body>
+</html>

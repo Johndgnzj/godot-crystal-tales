@@ -7,7 +7,7 @@
 <style>
 :root{
   --bg:#1b1e26; --panel:#232733; --panel2:#2b3040; --line:#3a4152;
-  --text:#dfe3ee; --muted:#8b93a7; --accent:#5dcaa5; --accent-d:#0f6e56;
+  --text:#dfe3ee; --muted:#a4acbf; --accent:#5dcaa5; --accent-d:#0f6e56;
   --danger:#e2664a; --warn:#e0a72e; --link:#85b7eb;
 }
 *{box-sizing:border-box}
@@ -24,10 +24,21 @@ button.primary{background:var(--accent-d);border-color:var(--accent)}
 button.on{background:var(--accent-d);border-color:var(--accent);color:#fff}
 input,select,textarea{font-family:inherit;background:var(--bg);color:var(--text);
   border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:13px}
+.mapdef{max-width:200px;font-size:12px;color:var(--muted);padding:3px 6px}
 textarea{width:100%;resize:vertical;line-height:1.5;min-height:40px}
-header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);
-  border-bottom:1px solid var(--line);flex-wrap:wrap}
-header .title{font-weight:500;margin-right:6px}
+header{background:var(--panel);border-bottom:1px solid var(--line)}
+header .title{font-weight:500;margin-right:2px;white-space:nowrap}
+.hrow{display:flex;align-items:center;gap:8px;padding:8px 12px}
+.hrow1{flex-wrap:wrap}
+.hrow2{padding:5px 8px;gap:5px;border-top:1px solid var(--line)}
+.tabswrap{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden}
+.tabswrap::-webkit-scrollbar{height:6px}
+.tabswrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.tabswrap .tabs{flex-wrap:nowrap}
+.tabswrap .tab{flex:0 0 auto;white-space:nowrap}
+.tabnav{flex:0 0 auto;width:26px;height:26px;padding:0;color:var(--muted);
+  display:grid;place-items:center;font-size:17px;line-height:1;transition:opacity .15s ease,color .12s}
+.tabnav:hover{color:var(--text)}
 .tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
 .tab{padding:4px 10px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);
   font-size:13px;color:var(--muted);cursor:pointer;
@@ -99,16 +110,23 @@ aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
 </head>
 <body>
 <header>
-  <span class="title">🗺️ 地圖連通維護</span>
-  <div class="tabs" id="regionTabs"></div>
-  <span class="spacer"></span>
-  <button id="btnLink">🔗 連線模式</button>
-  <button id="btnBi">⇄ 雙向</button>
-  <button id="btnThumb" class="on">🖼️ 縮圖</button>
-  <button id="zOut">🔍−</button><span id="zLbl" class="badge">100%</span><button id="zIn">🔍＋</button><button id="zFit">⤢ 全覽</button>
-  <button id="btnJson">{ } JSON</button>
-  <button id="btnReload">↻ 重載</button>
-  <button id="btnSave" class="primary">💾 存檔</button>
+  <div class="hrow hrow1">
+    <span class="title">🗺️ 地圖連通維護</span>
+    <select id="mapDefSel" class="mapdef" title="切換要編輯的 map-def.json（同一資料夾）"></select>
+    <button id="btnSave" class="primary">💾 存檔</button>
+    <button id="btnReload">↻ 重載</button>
+    <button id="btnJson">{ } JSON</button>
+    <span class="spacer"></span>
+    <button id="btnLink">🔗 連線模式</button>
+    <button id="btnBi">⇄ 雙向</button>
+    <button id="btnThumb" class="on">🖼️ 縮圖</button>
+    <button id="zOut">🔍−</button><span id="zLbl" class="badge">100%</span><button id="zIn">🔍＋</button><button id="zFit">⤢ 全覽</button>
+  </div>
+  <div class="hrow hrow2">
+    <button class="tabnav" id="tabScrollL" title="往左捲">‹</button>
+    <div class="tabswrap" id="tabsWrap"><div class="tabs" id="regionTabs"></div></div>
+    <button class="tabnav" id="tabScrollR" title="往右捲">›</button>
+  </div>
 </header>
 <div class="floorbar" id="floorBar" style="display:none"></div>
 <div id="main">
@@ -196,7 +214,7 @@ function freeCell(reg,floor){
 }
 function commonKind(reg){const c={};let best="other",n=0;for(const k in reg.maps){const t=reg.maps[k].kind||"other";c[t]=(c[t]||0)+1;if(c[t]>n){n=c[t];best=t;}}return best;}
 
-function renderAll(){ renderTabs(); renderFloors(); renderCanvas(); renderInspector(); validate(); }
+function renderAll(){ renderTabs(); renderFloors(); renderCanvas(); renderInspector(); validate(); requestAnimationFrame(updateTabNav); }
 
 function renderTabs(){
   const t=$("#regionTabs"); t.innerHTML="";
@@ -542,12 +560,43 @@ function validate(){
 
 // 工具列
 $("#btnSave").onclick=save;
+// 地區列（第二列）可左右捲：箭頭捲動 + 依可捲性淡化提示使用者
+function updateTabNav(){
+  const w=$("#tabsWrap"); if(!w) return;
+  const can=w.scrollWidth>w.clientWidth+1;
+  $("#tabScrollL").style.opacity=(can&&w.scrollLeft>2)?"1":".28";
+  $("#tabScrollR").style.opacity=(can&&w.scrollLeft<w.scrollWidth-w.clientWidth-2)?"1":".28";
+}
+$("#tabScrollL").onclick=()=>$("#tabsWrap").scrollBy({left:-220,behavior:"smooth"});
+$("#tabScrollR").onclick=()=>$("#tabsWrap").scrollBy({left:220,behavior:"smooth"});
+$("#tabsWrap").addEventListener("scroll",updateTabNav);
+window.addEventListener("resize",updateTabNav);
 $("#btnReload").onclick=()=>{if(confirm("重載會丟棄未存變更，確定？"))load();};
 $("#btnLink").onclick=()=>{S.link=!S.link;S.linkFrom=null;S.linkSide=null;$("#btnLink").classList.toggle("on",S.link);$("#linkHint").style.display=S.link?"block":"none";renderCanvas();};
 $("#btnBi").onclick=()=>{S.bidir=!S.bidir;$("#btnBi").classList.toggle("on",S.bidir);};
 $("#btnThumb").onclick=()=>{S.thumbs=!S.thumbs;$("#btnThumb").classList.toggle("on",S.thumbs);renderCanvas();};
 $("#btnJson").onclick=()=>{$("#jsonBody").textContent=JSON.stringify(S.data,null,2);$("#jsonModal").style.display="block";};
 $("#jsonClose").onclick=()=>{$("#jsonModal").style.display="none";};
+
+// map-def 選擇：列出同資料夾下的 *.json、顯示目前載入哪份、可切換（切換＝後端換檔＋重載）
+async function loadMapDefs(){
+  try{
+    const r=await fetch("/api/map-defs"); if(!r.ok) return; const j=await r.json();
+    const sel=$("#mapDefSel"); if(!sel) return;
+    sel.innerHTML=(j.files||[]).map(f=>'<option'+(f===j.current?" selected":"")+'>'+esc(f)+'</option>').join("");
+    sel.title="目前 map-def："+j.current+"　@ "+j.dir;
+  }catch(e){}
+}
+$("#mapDefSel").onchange=async e=>{
+  const name=e.target.value;
+  if(!confirm("切換到 "+name+" 會重新載入、丟棄未存變更，確定？")){ loadMapDefs(); return; }
+  try{
+    const r=await fetch("/api/map-def-select",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name})});
+    const j=await r.json(); if(!r.ok||!j.ok) throw new Error(j.error||("HTTP "+r.status));
+    location.reload();
+  }catch(err){ toast("切換失敗："+err.message); loadMapDefs(); }
+};
+loadMapDefs();
 
 function setZoom(z,vpx,vpy){
   const wrap=$("#canvas-wrap"),svg=$("#canvas");
