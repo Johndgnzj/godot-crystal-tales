@@ -153,10 +153,16 @@ code{font-family:var(--mono);font-size:12px;color:var(--acc)}
 .row.foe .chev{color:var(--gold)}
 .exp{border-top:1px solid var(--line-soft);padding:22px;display:flex;gap:26px;flex-wrap:wrap;background:rgba(10,15,32,.5);animation:cxIn .3s ease}
 .exp.key{border-top-color:#23204a}
-.exp .art{flex:1 1 260px;min-width:230px;max-width:380px;display:flex;align-items:flex-start;justify-content:center;
-  background:radial-gradient(340px 300px at 50% 32%,rgba(127,216,234,.10),transparent 70%);border-radius:12px;padding:8px}
-.exp.pur .art{background:radial-gradient(340px 300px at 50% 32%,rgba(167,155,242,.12),transparent 70%)}
-.exp .art img{max-width:100%;max-height:520px;width:auto;height:auto;display:block;filter:drop-shadow(0 14px 28px rgba(0,0,0,.5))}
+.exp .art{flex:1 1 260px;min-width:230px;max-width:380px}
+.exp .art img{max-width:100%;max-height:520px;width:auto;height:auto;display:block}
+/* 立繪展示台底板（暗色立繪不再沉入深背景）：青光＝主角/敵人，紫光＝NPC/關鍵角色；
+   用 drop-shadow（非 box-shadow）讓光暈沿透明 PNG 輪廓走出 rim glow */
+.exp .art,.foeport,.nexp .stand{display:flex;align-items:flex-start;justify-content:center;
+  border:1px solid #2c3a63;border-radius:12px;padding:14px 8px;
+  background:radial-gradient(78% 82% at 50% 42%,rgba(148,168,214,.30),rgba(148,168,214,.10) 55%,transparent 78%),linear-gradient(165deg,#232c4e,#161d38)}
+.exp .art img,.foeport img,.nexp .stand img{filter:drop-shadow(0 0 18px rgba(127,216,234,.30)) drop-shadow(0 14px 28px rgba(0,0,0,.45))}
+.exp.pur .art,.nexp .stand{background:radial-gradient(78% 82% at 50% 42%,rgba(160,150,214,.28),rgba(160,150,214,.09) 55%,transparent 78%),linear-gradient(165deg,#232c4e,#161d38)}
+.exp.pur .art img,.nexp .stand img{filter:drop-shadow(0 0 18px rgba(167,155,242,.30)) drop-shadow(0 14px 28px rgba(0,0,0,.45))}
 .exp .info{flex:2 1 380px;min-width:280px}
 .exp h5{margin:0 0 8px;font-size:13px;color:var(--acc);letter-spacing:.12em;font-weight:700}
 .exp.pur h5{color:var(--pur)}
@@ -180,9 +186,8 @@ code{font-family:var(--mono);font-size:12px;color:var(--acc)}
 .ncard .role{font-size:12px;color:var(--dim);margin:1px 0 6px}
 .gift{margin-top:8px;padding:6px 11px;border-left:2px solid var(--gold);background:var(--code);
   border-radius:0 8px 8px 0;font-size:12px;color:var(--gold)}
-.nexp{border-top:1px solid var(--line-soft);padding:16px;display:flex;justify-content:center;
-  background:radial-gradient(300px 260px at 50% 30%,rgba(167,155,242,.10),transparent 70%);animation:cxIn .3s ease}
-.nexp img{max-width:100%;max-height:460px;width:auto;height:auto;display:block;filter:drop-shadow(0 12px 24px rgba(0,0,0,.5))}
+.nexp{border-top:1px solid var(--line-soft);padding:16px;display:flex;justify-content:center;animation:cxIn .3s ease}
+.nexp .stand img{max-width:100%;max-height:460px;width:auto;height:auto;display:block}
 .stub{border:1.5px dashed var(--line-dash);border-radius:16px;min-height:90px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:5px;color:var(--faint);font-size:12.5px;padding:16px;text-align:center}
 
@@ -204,9 +209,8 @@ code{font-family:var(--mono);font-size:12px;color:var(--acc)}
   width:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:6px}
 .poster img{max-width:100%;max-height:300px;width:auto;height:auto;mix-blend-mode:multiply;transform:rotate(-.6deg)}
 .poster .w{font-family:var(--latin);font-weight:600;font-size:17px;letter-spacing:.4em;color:#3b3121;text-indent:.4em}
-.foeport{display:flex;justify-content:center;width:100%;border-radius:12px;padding:8px;box-sizing:border-box;
-  background:radial-gradient(300px 260px at 50% 34%,rgba(231,195,116,.10),transparent 70%)}
-.foeport img{max-width:100%;max-height:320px;width:auto;height:auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.5))}
+.foeport{width:100%;box-sizing:border-box}
+.foeport img{max-width:100%;max-height:320px;width:auto;height:auto}
 .noart{width:100%;height:220px;border:1.5px dashed var(--line-dash);border-radius:12px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:6px;color:var(--faint);font-size:12px;box-sizing:border-box}
 .itoggle{display:flex;gap:6px}
@@ -572,7 +576,7 @@ function render(){
           ${n.gift?`<div class="gift">贈禮：<span class="c-gdim">${esc(n.gift)}</span></div>`:""}
         </div>
       </div>
-      ${open?`<div class="nexp"><img src="${IMG["p_"+n.id]||""}" alt="${esc(n.name)} 全身立繪" loading="lazy"></div>`:""}
+      ${open?`<div class="nexp"><div class="stand"><img src="${IMG["p_"+n.id]||""}" alt="${esc(n.name)} 全身立繪" loading="lazy"></div></div>`:""}
     </div>`;
   }).filter(Boolean);
 
