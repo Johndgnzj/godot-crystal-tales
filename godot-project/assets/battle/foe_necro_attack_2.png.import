@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8u0yk5dculvf"
-path="res://.godot/imported/foe_necro_0.png-54fb0929c2986c83e9ffea98463b3ec9.ctex"
+uid="uid://b8cjd0do4pxj4"
+path="res://.godot/imported/foe_necro_attack_2.png-8f680f22496e711adda286a8289b2d29.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/battle/foe_necro_0.png"
-dest_files=["res://.godot/imported/foe_necro_0.png-54fb0929c2986c83e9ffea98463b3ec9.ctex"]
+source_file="res://assets/battle/foe_necro_attack_2.png"
+dest_files=["res://.godot/imported/foe_necro_attack_2.png-8f680f22496e711adda286a8289b2d29.ctex"]
 
 [params]
 

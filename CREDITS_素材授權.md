@@ -117,6 +117,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 ## 敵人戰鬥圖（全部 LPC 重製，2026-07-12；取代原 16px 商店圖，來源 `assets/battle/lpc_src/`）
 
 **人形怪**（哥布林/獸人/哥布林頭目/骷髏/死靈術士/食人魔）：LPC 角色產生器圖層合成（`art_v8_foes.py`：body＋怪物頭＋衣物染色）。授權 **CC-BY-SA 3.0 / GPL 3.0**（同主角，LPC 貢獻者群）。
+- **死靈術士二頭身戰鬥動畫（2026-07-22）**：`assets/battle/foe_necro_0..3.png` 為 4 幀 `idle`，`foe_necro_attack_0..4.png` 為 5 幀 `attack`；`foe_necro_hurt.png`、`foe_necro_cast.png`、`foe_necro_death.png` 為單幀動作。素材由 OpenAI 內建 `imagegen` 依 `menuart_necro.png` 與已驗收 seed 參考生成，經 John 驗收後以螢光綠鍵去背、等格切圖輸出透明 PNG；原始 strip、alpha strip 與切格原檔保存於 `assets-source/role/enemies/necro/`，提示詞作者 John／協作 Agent。strip 採固定幀間距與四周安全留邊，未加入格線或分隔框。舊 LPC `foe_necro_0..3.png` 已移至 `godot-project/assets/battle/legacy_lpc_necro/` 備份。
 
 **非人形怪**（OpenGameArt LPC 相容生物包，`art_v9_creatures.py` 裁切；原表存 `tools/lpc-creatures/`）：
 - 綠黏史萊姆 / 巨牙蟲 / 礦坑飛魔 / 異變的魔影：[**[LPC] Monsters**](https://opengameart.org/content/lpc-monsters)（slime / big_worm / bat / ghost）—— **CC-BY-SA 3.0 / GPL 3.0** —— Charles Sanchez (CharlesGabriel)、bagzie、bluecarrot16。
