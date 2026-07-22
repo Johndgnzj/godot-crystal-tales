@@ -1,7 +1,9 @@
 # LPC 角色行走圖／戰鬥圖製作流程（可復用）
 
 - 最後更新: 2026-07-18
-- 狀態: 定案（路德 `ludo` ＝首個完整案例，可當範本）
+- 狀態: **legacy/fallback**（2026-07-21 起，見下方橫幅）／原定案：路德 `ludo` ＝首個完整案例
+
+> ⚠️ **LEGACY（2026-07-21 起）**：LPC 圖層產生器路線已非主力。角色動畫現行方向＝**高品質像素風＋二頭身**（AI 產），權威見 [角色戰鬥動畫產圖規格.md](角色戰鬥動畫產圖規格.md)。本流程保留供 **walk 過渡期沿用**與 **AI 未達標時的 fallback**。
 - 適用: 主角／隊友的 **overworld 走路圖** ＋ **戰鬥身體圖**（idle／揮劍／突刺／詠唱）。
   角色**立繪**（a 頭像／b 半身／c 全身）是另一條線，見 [角色立繪產圖規格.md](角色立繪產圖規格.md)。
 - 工具: **Universal LPC Spritesheet Generator**（`sanderfrenken.github.io/Universal-LPC-Spritesheet-Character-Generator`）
