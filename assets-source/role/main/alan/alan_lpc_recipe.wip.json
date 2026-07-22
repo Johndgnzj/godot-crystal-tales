@@ -1,5 +1,5 @@
 {
-  "_note": "WIP LPC 配方：僅 URL＋解析，尚未從產生器正式匯出（無 layers/credits）。定稿後由 John 匯出取代為 alan_lpc_recipe.json，流程見 docs/design/美術規格/LPC製作流程.md。",
+  "_note": "WIP LPC 配方：僅 URL＋解析，尚未從產生器正式匯出（無 layers/credits）。定稿後由 John 匯出取代為 alan_lpc_recipe.json，流程見 reference/legacy_art/LPC製作流程.md。",
   "status": "wip",
   "recordedDate": "2026-07-20",
   "character": "alan / 亞倫（26・恩師・序章 guest）",

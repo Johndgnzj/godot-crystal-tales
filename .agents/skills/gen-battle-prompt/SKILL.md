@@ -16,15 +16,15 @@ description: 組出「戰鬥立繪」的產圖 prompt（純文字，直接貼到
 
 ## 流程
 
-1. **確認單位與動作**：查 `prompts/descriptions/<id>.md`（一單位一檔）有沒有該單位的「最後一版」描述；
-   動作需求（戰鬥預備／seed／idle／attack…）John 沒講就問。
-2. **取 preset**：角色以 `prompts/role.md`、敵人以 `prompts/enemy.md`「正式版本」節指向的 preset 為準
+1. **確認單位、seed 與動作**：查 `prompts/descriptions/<id>.md`（一單位一檔）有沒有該單位的「最後一版」描述與固定 seed 路徑。沒有已驗收 seed 時，先只產 seed（中性外觀錨點，不屬於任何動作幀）；有 seed 才能產動作，且必須提醒 John 在產圖工具附上該 seed 圖作 reference。
+2. **以資料集問答選動作**：讀 `prompts/actions/<action>.md`。先讓 John 選動作 ID 與該檔列出的姿勢／分鏡選項，再組入 prompt；不可自行以籠統「攻擊姿勢」或「施法姿勢」代替。
+3. **取 preset**：角色以 `prompts/role.md`、敵人以 `prompts/enemy.md`「正式版本」節指向的 preset 為準
    （不要自己挑舊版），整段沿用、不改內文。
-3. **帶入單位描述**：把 preset 結尾的描述插槽換成該單位的一段（外觀＋服裝配色＋武器＋姿勢與面向，
+4. **帶入單位描述與動作模板**：把 preset 結尾的描述插槽換成該單位的一段（外觀＋服裝配色＋武器＋姿勢與面向，
    我方面向左、敵方面向右）。descriptions 沒有的單位→用問答補齊（角色外觀先引 `docs/story/角色設定.md`、
    敵人照 `portrait_<id>` 特徵，缺再問），去背底色依 `prompts/sections/50_去背螢光底.md` 的挑色規則。
-4. **輸出**：一個 code block、純 prompt 文字、繁體中文、整段同一語言；不含 markdown 標記以外的說明文字。
-5. **輸出後提醒（一行）**：產完照 `battle_art/checklist.md` 驗收（先預覽給 John 驗收、過了才整合——
+5. **輸出**：一個 code block、純 prompt 文字、繁體中文、整段同一語言；不含 markdown 標記以外的說明文字。
+6. **輸出後提醒（一行）**：產完照 `battle_art/checklist.md` 驗收（先預覽給 John 驗收、過了才整合——
    CLAUDE.md 產圖驗收流程）；驗收通過把這次的描述回寫 `prompts/descriptions/<id>.md`（沒有就新增一檔）。
 
 ## 邊界
