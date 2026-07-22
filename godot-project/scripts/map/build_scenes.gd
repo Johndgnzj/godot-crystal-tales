@@ -6,7 +6,7 @@ extends SceneTree
 ## 取代舊 per-地區腳本 build_painted_region / build_floret_town / build_north_mine
 ## （那些讀退休的 map-def.xlsx、把連通硬編碼在腳本裡、且用 1254/38 座標）。
 ##
-## 設計依 docs/design/地圖區域設計.md：
+## 設計依 docs/pipeline/地圖製作流程.md：
 ##   §1 真相分離——語意（通到哪／落點）在 map-def.json；幾何（碰撞／出入口位置）在場景，用「出口 id」綁定。
 ##   §5 工作流——本腳本只負責「建／同步骨架、擺出入口、填 to_scene/spawn_id」；碰撞留空是塊 B 的事、美術不動。
 ##

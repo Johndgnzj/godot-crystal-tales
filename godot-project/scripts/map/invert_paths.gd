@@ -1,7 +1,7 @@
 extends SceneTree
 ## invert_paths.gd — 塊 B 收尾：把設計員刷的 PathPaint（可走區）反轉成 CollisionPaint 碰撞。
 ##
-## 規則（見 docs/design/地圖區域設計.md §7）：
+## 規則（見 docs/pipeline/地圖製作流程.md §7）：
 ##   PathPaint32 有的 32 格＝「整格可走」；只有 PathPaint16 刷到的 32 格＝「部分可走」（子格層級）。
 ##   一個 32 格：整格可走 → 無牆；部分可走 → 未刷的 16 子格放 16 牆（CollisionDetail）；
 ##   整格都沒刷 → 一顆 32 牆（CollisionPaint）。
