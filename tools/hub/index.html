@@ -8,7 +8,7 @@
 :root{
   --void:#0c0e14; --rail:#12151d; --rail2:#0e1017; --edge:#232838; --edge2:#2f3548;
   --ink:#e8ebf3; --dim:#c2c9d8; --dim2:#a2abc0;
-  --map:#5dcaa5; --slicer:#ffb454; --stick:#5ac8fa;   /* 三工具代表色 */
+  --map:#5dcaa5; --slicer:#ffb454; --stick:#5ac8fa; --aligner:#b06bff;   /* 四工具代表色 */
   --rail-w:236px;
 }
 *{box-sizing:border-box}
@@ -102,6 +102,9 @@ body{background:var(--void);color:var(--ink);overflow:hidden;
       <button class="tool" data-tool="stickman" style="--c:var(--stick)" title="火柴人動畫">
         <span class="ic"></span><span class="lbl"><b>火柴人動畫</b><em>骨架・關鍵幀</em></span>
       </button>
+      <button class="tool" data-tool="aligner" style="--c:var(--aligner)" title="Sprite 幀對齊">
+        <span class="ic"></span><span class="lbl"><b>幀對齊</b><em>縮放・定位・裁切</em></span>
+      </button>
     </nav>
     <div class="foot">一次啟動 · 一個入口 · <code>Ctrl+B</code> 收合</div>
   </aside>
@@ -115,7 +118,7 @@ body{background:var(--void);color:var(--ink);overflow:hidden;
 const stage = document.getElementById("stage");
 const rail = document.getElementById("rail");
 const frames = {};                                   // tool → iframe（懶載入＋保留狀態）
-const TOOLS = ["map", "slicer", "stickman"];
+const TOOLS = ["map", "slicer", "stickman", "aligner"];
 
 function show(tool){
   if(!TOOLS.includes(tool)) tool = "map";

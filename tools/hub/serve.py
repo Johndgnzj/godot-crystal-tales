@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""水晶傳說工具集 Hub — 一個 port 整合三個本機工具。
+"""水晶傳說工具集 Hub — 一個 port 整合四個本機工具。
 
-一次啟動、一個入口頁（漢堡選單），三個工具在同一視窗切換（同源 iframe）：
-  地圖連通維護（map_editor）／角色立繪切圖（role_slicer）／火柴人動畫（stickman_animator）。
-取代三支各別的 serve.py／start.sh。純標準庫、零外部套件。
+一次啟動、一個入口頁（漢堡選單），四個工具在同一視窗切換（同源 iframe）：
+  地圖連通維護（map_editor）／角色立繪切圖（role_slicer）／火柴人動畫（stickman_animator）
+  ／Sprite 幀對齊（frame_aligner）。取代各別的 serve.py／start.sh。純標準庫、零外部套件。
 
 用法:
     python3 tools/hub/serve.py                     # 起服務並自動開瀏覽器
@@ -31,6 +31,7 @@ TOOL_FRONTENDS = {
     "map": TOOLS_DIR / "map_editor",
     "slicer": TOOLS_DIR / "role_slicer",
     "stickman": TOOLS_DIR / "stickman_animator",
+    "aligner": TOOLS_DIR / "frame_aligner",
 }
 
 DEFAULT_MAP_DEF = REPO_ROOT / "assets-source" / "map" / "map-def.json"
@@ -41,6 +42,10 @@ ID_RE = re.compile(r"^[a-z][a-z0-9_]{0,31}$")
 FILE_RE = re.compile(r"^(face|portrait|menuart)_[a-z0-9_]{1,32}\.png$")
 DATAURL_RE = re.compile(r"^data:image/png;base64,(.+)$", re.S)
 MAX_BODY = 96 * 1024 * 1024
+
+# Sprite 幀對齊：輸出目錄／檔名驗證（沿用 frame_aligner，直接寫回 assets-source）
+SUBDIR_RE = re.compile(r"^[a-z0-9_]+(?:/[a-z0-9_]+)*$")
+FRAME_FILE_RE = re.compile(r"^[a-z][a-z0-9_]*\.png$")
 
 STATIC_TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
                 ".css": "text/css; charset=utf-8", ".json": "application/json; charset=utf-8",
@@ -131,6 +136,8 @@ class Handler(BaseHTTPRequestHandler):
             self._select_map_def()
         elif path == "/save":
             self._save_portraits()
+        elif path == "/api/frames-save":
+            self._save_frames()
         else:
             self._json(404, {"error": "unknown endpoint"})
 
@@ -237,8 +244,64 @@ class Handler(BaseHTTPRequestHandler):
         print("  已匯出 →", out_dir, "：", "、".join(saved))
         self._json(200, {"saved": saved, "dir": str(out_dir)})
 
+    def _save_frames(self):
+        """Sprite 幀對齊：寫回 assets-source/<subdir>（沿用 frame_aligner/serve.py 的防護）。"""
+        raw, err = self._read_body()
+        if err:
+            self._json(err[0], {"error": err[1]})
+            return
+        try:
+            payload = json.loads(raw.decode("utf-8"))
+        except (ValueError, UnicodeDecodeError) as e:
+            self._json(400, {"error": f"JSON 解析失敗: {e}"})
+            return
+        subdir = str(payload.get("subdir", "")).strip().strip("/")
+        if not SUBDIR_RE.match(subdir):
+            self._json(400, {"error": "輸出目錄需為 assets-source 下的相對路徑（小寫英數底線／斜線）"})
+            return
+        files = payload.get("files")
+        if not isinstance(files, list) or not files:
+            self._json(400, {"error": "沒有要儲存的檔案"})
+            return
+        out_dir = (ASSETS / subdir).resolve()
+        if ASSETS != out_dir and ASSETS not in out_dir.parents:
+            self._json(400, {"error": "非法輸出路徑（超出 assets-source）"})
+            return
+        # 先全部驗證＋解碼，任一張不合法就整批拒絕（避免只寫一半）
+        decoded = []
+        for f in files:
+            name = str(f.get("name", ""))
+            if not FRAME_FILE_RE.match(name):
+                self._json(400, {"error": f"非法檔名: {name}"})
+                return
+            m = DATAURL_RE.match(str(f.get("dataURL", "")))
+            if not m:
+                self._json(400, {"error": f"{name} 不是 PNG data URL"})
+                return
+            try:
+                data = base64.b64decode(m.group(1), validate=True)
+            except ValueError as e:
+                self._json(400, {"error": f"{name} base64 解碼失敗: {e}"})
+                return
+            decoded.append((name, data))
+        try:
+            out_dir.mkdir(parents=True, exist_ok=True)
+        except OSError as e:
+            self._json(500, {"error": f"建立目錄失敗: {e}"})
+            return
+        saved = []
+        for name, data in decoded:
+            try:
+                (out_dir / name).write_bytes(data)
+            except OSError as e:
+                self._json(500, {"error": f"寫檔失敗 {name}: {e}"})
+                return
+            saved.append(name)
+        print("  已匯出（幀對齊）→", out_dir, "：", "、".join(saved))
+        self._json(200, {"saved": saved, "dir": str(out_dir.relative_to(REPO_ROOT))})
+
     def log_message(self, *args):
-        pass  # 靜音逐請求 log；匯出成功另外印在 _save_portraits
+        pass  # 靜音逐請求 log；匯出成功另外印在 _save_portraits／_save_frames
 
 
 def main():
