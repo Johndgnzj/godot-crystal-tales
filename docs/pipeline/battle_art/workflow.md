@@ -7,7 +7,7 @@
 
 ---
 
-# Step 1 建立需求
+# Step 1 建立需求與選擇動作
 
 輸入：
 
@@ -18,8 +18,19 @@
 輸出：
 
 - 本次需要產製的角色
-- 動作
+- 動作與動作模板
 - 特殊要求
+
+先確認單位、面向與要產製的動畫。再依 `prompts/actions/` 的資料集，以對話方式讓 John 選擇
+動作模板；不可只填入籠統的 `attack` 或 `cast`。
+
+- `idle`：選擇重心與呼吸幅度。
+- `hurt`：選擇受擊方向與防禦反應。
+- `cast`：選擇施法媒介、施法手與法術發射方向。
+- `death`：選擇倒下或潰散方式。
+- `attack`：選擇招式、主手與武器運動方向。
+
+資料集的動作 ID、必填選項與硬限制是 prompt 的權威來源；角色描述只補足該單位的外觀與裝備。
 
 ---
 
@@ -42,21 +53,24 @@
 # Step 3 建立 Prompt
 
 使用目前正式 preset：角色 `prompts/presets/battle_role_hd_pixel_v2.md`、敵人 `prompts/presets/battle_enemy_v2.md`。
-- 首幀產製順序：idle → hurt → cast → death → attack，各動作首幀驗收通過後，再進入 strip 動畫製作
+- **先產 seed，再產動作首幀**。seed 是唯一外觀 reference，不屬於 idle 或任何動畫；seed 驗收通過後才依 `idle → hurt → cast → death → attack` 產製。
+- 各動作首幀驗收通過後，再進入該動作的 strip 動畫製作。
 - 組裝規則見 `prompts/role.md`（敵人 `prompts/enemy.md`）。
 - 填入單位描述（各單位最後一版見 `prompts/descriptions/<id>.md`）。
+- 加入所選 `prompts/actions/<action>.md` 模板的文字與選項；持武器角色必須帶入其武器規格。
 - 要實驗新規則：只改 `prompts/sections/` 對應檔，成功後另存新 preset，再回來更新上面那一行。
 
 ---
 
 # Step 4 AI 產圖
 
-產生三張候選圖。
+先產三張 **seed** 候選圖。seed 必須是非動作的中性備戰站姿，只用來鎖定角色外觀、服裝、配色、武器、比例與基準面向；不得當作 idle 或任何動作的首幀。
+seed 驗收通過後，才產指定動作的三張候選首幀。每次產動作都必須附上該單位已驗收的 `battle_seed_alpha.png` 作為 image reference；換對話也一樣，固定檔名本身不會使產圖工具自動讀圖。
 若結果不符合規格：
 回到 Step 3 修正 Prompt。
 
 動畫 strip 產法：
-先核可 1 張 seed frame（中性站姿、基準面向、定造型）當唯一 reference，
+以已核可、**不屬於任何動作幀**的 seed（中性備戰站姿、基準面向、定造型）當唯一 reference，
 再一次產完整條 strip。
 禁止逐幀硬湊。
 strip 必須在每格之間保留固定空白間距，並在整張圖四周保留安全留邊；角色、武器與特效不可貼邊或跨格。
@@ -90,12 +104,24 @@ Review 時必須同時查看原始 strip 與逐幀 PNG／montage，依 `checklis
 
 # Step 6 素材整理
 
-通過 strip 預覽與逐幀驗收後，將正式輸出存放至素材源（與既有素材同一套位置）：
+通過 strip 預覽與逐幀驗收後，將正式輸出存放至素材源（與既有素材同一套位置）。產線檔名一律固定、不得附日期；同一單位重產時覆蓋對應檔案：
 
 - 角色：`assets-source/role/main/<id>/`
 - 敵人：`assets-source/role/enemies/<id>/`（`combat_0/1.png`，從 0 連號）
 
-依素材管理規範命名。
+角色檔名：
+
+| 用途 | 固定檔名 |
+|---|---|
+| Seed 候選 | `battle_seed_candidate_1_raw.png` 至 `candidate_3_raw.png` |
+| 外觀錨點 | `battle_seed_raw.png`、`battle_seed_alpha.png` |
+| 動作首幀候選 | `battle_<action>_candidate_1_raw.png` 至 `candidate_3_raw.png` |
+| 核可的動作首幀 | `battle_<action>_raw.png`、`battle_<action>_alpha.png` |
+| 動畫 strip | `battle_<action>_strip_raw.png`、`battle_<action>_strip_alpha.png` |
+| 從 strip 拆出的來源逐幀圖 | `battle_<action>_0.png` 至 `battle_<action>_N.png` |
+| 驗收 montage | `battle_<action>_review_montage.png` |
+
+敵人沿用相同 `battle_*` 來源檔命名；正式 runtime 檔才依 Step 8 的 `hero_`／`foe_` 規則命名。若要保留舊版，必須由 John 明確指定另行封存，不能把日期帶入正式產線。
 
 ---
 

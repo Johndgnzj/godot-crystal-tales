@@ -31,6 +31,7 @@
 | [design/戰鬥立繪規格.md](design/戰鬥立繪規格.md) | **〔主〕戰鬥素材**長怎樣（角色＋敵人，高品質像素＋二頭身）：動畫集/幀數/排版/風格/逐幀一致性＋敵人專節 |
 | [design/世界立繪規格.md](design/世界立繪規格.md) | **地圖移動素材**長怎樣（overworld walk：9 幀×4 向、步態相位）|
 | [design/地圖畫面規格.md](design/地圖畫面規格.md) | 手繪**地圖背景畫面**長怎樣（32px 網格/1280²/禁項/遮擋/色彩/城鎮建築）|
+| [design/地圖互動物件規格.md](design/地圖互動物件規格.md) | 寶箱、任務拾取物等**引擎另擺的物件**長怎樣（外觀族、狀態、錨點、尺寸與互動資料分離）|
 
 ## 三、pipeline/ — 怎麼產生
 
@@ -38,7 +39,8 @@
 |---|---|
 | [pipeline/設計員指南.md](pipeline/設計員指南.md) | 怎麼在 Godot 編輯器改角色/道具/武器/數值/美術/地圖（不寫程式）|
 | [pipeline/角色立繪流程.md](pipeline/角色立繪流程.md) | 角色/敵人立繪：產圖→去背螢光底→切圖→整合＋**prompt 固定開頭模板**＋交付檢查＋帳本（`gen-role-prompt` skill 引用）|
-| [pipeline/battle_art/](pipeline/battle_art/workflow.md) | 戰鬥立繪**產線**（唯一入口，`gen-battle-prompt` skill 引用）：workflow 8 步驟（含 seed→strip 產法、交付命名）＋checklist 驗收＋`prompts/`（`sections/` 一檔一規則、`presets/` 凍結正式版、`descriptions/` 各單位最後一版描述（一單位一檔）、組裝規則 `role.md`/`enemy.md`（enemy 含 Gemini 產法＋現況帳本））|
+| [pipeline/battle_art/](pipeline/battle_art/workflow.md) | 戰鬥立繪**產線**（唯一入口，`gen-battle-prompt` skill 引用）：workflow 8 步驟（獨立 seed→動作選擇→strip、固定檔名）＋checklist 驗收＋`prompts/`（`actions/` 對話式動作資料集、`sections/` 一檔一規則、`presets/` 凍結正式版、`descriptions/` 各單位最後一版描述（一單位一檔）、組裝規則 `role.md`/`enemy.md`（enemy 含 Gemini 產法＋現況帳本））|
+| [pipeline/world_object_art/](pipeline/world_object_art/workflow.md) | 地圖互動物件**產線**：獨立 design anchor→狀態圖→固定命名→整合；首批支援共用寶箱與任務拾取物|
 | [pipeline/世界立繪流程.md](pipeline/世界立繪流程.md) | walk 素材：產法/去背/切圖命名/LPC 過渡現況 |
 | [pipeline/地圖產圖流程.md](pipeline/地圖產圖流程.md) | 畫一張手繪地圖 png：**prompt 固定開頭模板**＋交付檢查（`gen-map-prompt` skill 引用）|
 | [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋場景生成（塊 A/B/C）|
@@ -77,7 +79,8 @@ docs/
 │   ├── 角色立繪規格.md
 │   ├── 戰鬥立繪規格.md
 │   ├── 世界立繪規格.md
-│   └── 地圖畫面規格.md
+│   ├── 地圖畫面規格.md
+│   └── 地圖互動物件規格.md
 └── pipeline/            # 怎麼產生
     ├── 設計員指南.md
     ├── 角色立繪流程.md
@@ -91,12 +94,16 @@ docs/
     │   ├── checklist.md     # 驗收
     │   └── prompts/
     │       ├── role.md / enemy.md   # 組裝規則（enemy 含 Gemini 產法＋現況帳本）
+    │       ├── actions/             # 對話式動作資料集（idle/hurt/cast/death/attack）
     │       ├── sections/        # 一檔一規則（10_風格…80_禁項＋15/65 魔物專用）
     │       ├── presets/         # 凍結正式版（battle_role_hd_pixel、battle_enemy_v1）
     │       └── descriptions/    # 各單位「最後一版」描述，一單位一檔
+    ├── world_object_art/ # 地圖互動物件產線
+    │   ├── workflow.md / checklist.md
+    │   └── prompts/             # preset、類型模板、外觀族描述
     └── prompt/          # 各資源「最後一版」產圖 prompt（portrait/world）
 ```
 
 **規格與流程的配對**：每種素材一份 `design/*規格.md`（長什麼樣）＋一份 pipeline 產線（怎麼產）——
-角色立繪/世界立繪/地圖為 `pipeline/*流程.md`，**戰鬥立繪為 `pipeline/battle_art/`**（sections 一檔一規則、presets 凍結正式版）。
+角色立繪/世界立繪/地圖為 `pipeline/*流程.md`，**戰鬥立繪為 `pipeline/battle_art/`**（actions 動作資料集、sections 一檔一規則、presets 凍結正式版）；**地圖互動物件為 `pipeline/world_object_art/`**（design anchor、狀態模板與固定檔名）。
 `gen-role-prompt`／`gen-map-prompt`／`gen-battle-prompt` skill 的規則與模板**只存在對應的 pipeline 文件**（skill 引用文件、不內嵌副本），改規則只改文件即可。

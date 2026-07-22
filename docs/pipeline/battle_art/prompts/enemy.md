@@ -11,6 +11,7 @@
 <魔物描述>
 
 - 魔物描述＝本體特徵（照 `portrait_<id>`，image-to-image 時可用參考圖帶入、不必逐字寫外觀）＋特殊姿勢；面向一律**右方**（我方左、敵方右）。各魔物**最後一版**存 [descriptions/](descriptions)（一單位一檔）。
+- 產動作前必須由 [`actions/`](actions) 選出動作模板與選項；seed 驗收後，所有動作都必須實際附上固定的 `battle_seed_alpha.png` 作 image reference。seed 不屬於任何動作幀。
 - 去背底色依 `sections/50_去背螢光底.md` 挑色（避開魔物自身配色）。
 - 語言一律繁體中文、整段同一語言。
 
