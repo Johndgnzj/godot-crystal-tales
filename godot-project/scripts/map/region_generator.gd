@@ -518,6 +518,7 @@ func _build_scene(scene_name: String, mb: MapGrid, spawns: Dictionary, exits: Ar
 		var sh := ph if ph > 0.0 else th
 		var pnode := Node2D.new()
 		pnode.name = "Prop%d" % pi
+		pnode.add_to_group("layout_prop", true)
 		pnode.position = Vector2(float(p["x"]) + sw / 2.0, float(p["y"]) + sh)
 		var pspr := Sprite2D.new()
 		pspr.name = "Sprite"

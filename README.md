@@ -20,7 +20,7 @@
 | `reference/gdevelop/` | 原 GDevelop 專案的凍結快照（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`），唯讀 |
 | `MIGRATION_OVERVIEW.md` | 可複用 vs 需重寫的盤點總表 |
 | `godot-project/` | Godot 專案本體（`autoload/` 全域單例、`scenes/` 場景、`scripts/` 模組、`resources/content/` 資料 .tres、`assets/` 美術、`tests/` 測試）|
-| `tools/` | 開發輔助工具（非遊戲程式）。`role_slicer/`：上傳一張全身圖 → 去螢光底＋框頭像(a)/半身(b) → 匯出 `face_/portrait_/menuart_` 到 `assets-source/role/<id>/` 暫存。啟動 `python3 tools/role_slicer/serve.py` |
+| `tools/` | 開發輔助工具（非遊戲程式）。`map_editor/`：地圖連通維護＋**40×40 地格藍圖** paint 工具（真相＝`assets-source/map/map-def.json`；詞彙＝`terrain_palette.json`），啟動 `python3 tools/map_editor/serve.py`；`role_slicer/`：上傳一張全身圖 → 去螢光底＋框頭像(a)/半身(b) → 匯出 `face_/portrait_/menuart_` 到 `assets-source/role/<id>/` 暫存，啟動 `python3 tools/role_slicer/serve.py` |
 
 ## 怎麼開始
 

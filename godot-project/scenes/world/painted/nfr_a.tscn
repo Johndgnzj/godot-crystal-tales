@@ -1,0 +1,197 @@
+[gd_scene format=3 uid="uid://beilvrwdcyoxl"]
+
+[ext_resource type="Script" uid="uid://cwis7b2m541rq" path="res://scripts/world/world_scene.gd" id="1_1be1b"]
+[ext_resource type="Texture2D" uid="uid://b2sv1r2vwiegt" path="res://assets/map/new_floret_road/nfr_a.png" id="2_dkwnf"]
+[ext_resource type="TileSet" uid="uid://6ed70bfxyapt" path="res://resources/map/collision_tileset_32.tres" id="3_wvq8l"]
+[ext_resource type="Script" uid="uid://bkjq7y275b06f" path="res://scripts/world/exit_zone.gd" id="4_4psrt"]
+[ext_resource type="TileSet" uid="uid://tffllkuxmw7m" path="res://resources/map/collision_tileset_16.tres" id="4_ol222"]
+[ext_resource type="TileSet" uid="uid://b2wjb3a77ee5y" path="res://resources/map/path_tileset_32.tres" id="5_cbdcv"]
+[ext_resource type="Script" uid="uid://bawlbgce7gq88" path="res://scripts/world/player_controller.gd" id="5_ol222"]
+[ext_resource type="TileSet" uid="uid://bxtocmtgda8yn" path="res://resources/map/path_tileset_16.tres" id="6_3r6y4"]
+[ext_resource type="Texture2D" uid="uid://dcvp5i5taeji7" path="res://assets/props/m5_tree.png" id="7_m5tree"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8hl0e"]
+size = Vector2(44, 1120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4kgbs"]
+size = Vector2(1120, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w45p6"]
+size = Vector2(1120, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tree"]
+size = Vector2(68.00001, 25.875)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fgukc"]
+size = Vector2(22, 14)
+
+[node name="NFRA" type="Node2D" unique_id=934847715]
+script = ExtResource("1_1be1b")
+scene_id = "NFRA"
+map_w = 40
+map_h = 40
+ground_tiles = PackedInt32Array()
+blk_rows = PackedStringArray()
+enc_rows = PackedStringArray()
+spawns = {
+"from_b": Vector2(1160, 640),
+"from_d": Vector2(640, 1160),
+"start": Vector2(640, 740)
+}
+
+[node name="Background" type="Sprite2D" parent="." unique_id=541312075]
+texture = ExtResource("2_dkwnf")
+centered = false
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=575621094]
+
+[node name="CollisionPaint" type="TileMapLayer" parent="." unique_id=720159817]
+visible = false
+tile_set = ExtResource("3_wvq8l")
+
+[node name="CollisionDetail" type="TileMapLayer" parent="." unique_id=703991546]
+visible = false
+tile_set = ExtResource("4_ol222")
+
+[node name="PathPaint32" type="TileMapLayer" parent="." unique_id=1497838628]
+tile_set = ExtResource("5_cbdcv")
+
+[node name="PathPaint16" type="TileMapLayer" parent="." unique_id=758180627]
+tile_set = ExtResource("6_3r6y4")
+
+[node name="Zones" type="Node2D" parent="." unique_id=570211409]
+
+[node name="east" type="Area2D" parent="Zones" unique_id=1767851824]
+position = Vector2(1258, 640)
+script = ExtResource("4_4psrt")
+enabled = false
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/east" unique_id=354063647]
+shape = SubResource("RectangleShape2D_8hl0e")
+
+[node name="south" type="Area2D" parent="Zones" unique_id=134134458]
+position = Vector2(640, 1258)
+script = ExtResource("4_4psrt")
+enabled = false
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/south" unique_id=58215633]
+shape = SubResource("RectangleShape2D_4kgbs")
+
+[node name="new" type="Area2D" parent="Zones" unique_id=2146914069]
+position = Vector2(640, 22)
+script = ExtResource("4_4psrt")
+enabled = false
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/new" unique_id=1419545683]
+shape = SubResource("RectangleShape2D_w45p6")
+
+[node name="YSort" type="Node2D" parent="." unique_id=1389382166]
+y_sort_enabled = true
+
+[node name="Props" type="Node2D" parent="YSort" unique_id=1033334935]
+
+[node name="TreeNorthWest" type="Node2D" parent="YSort" unique_id=855195243]
+position = Vector2(278, 224)
+
+[node name="Sprite" type="Sprite2D" parent="YSort/TreeNorthWest" unique_id=1300470588]
+position = Vector2(-114, -281)
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("7_m5tree")
+centered = false
+
+[node name="Collision" type="StaticBody2D" parent="YSort/TreeNorthWest" unique_id=592321369]
+position = Vector2(1.9999847, 3)
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/TreeNorthWest/Collision" unique_id=1411025658]
+position = Vector2(0, -18.25)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="TreeNorthEast" type="Node2D" parent="YSort" unique_id=1823845278]
+position = Vector2(661.64, 321.6)
+
+[node name="Sprite" type="Sprite2D" parent="YSort/TreeNorthEast" unique_id=1948523233]
+position = Vector2(113.64, -281.6)
+scale = Vector2(-0.22, 0.22)
+texture = ExtResource("7_m5tree")
+centered = false
+
+[node name="Collision" type="StaticBody2D" parent="YSort/TreeNorthEast" unique_id=42307878]
+position = Vector2(1.3599854, 2.399994)
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/TreeNorthEast/Collision" unique_id=1817321529]
+position = Vector2(0, -17)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="TreeWest" type="Node2D" parent="YSort" unique_id=1728614974]
+position = Vector2(456.4, 714)
+
+[node name="Sprite" type="Sprite2D" parent="YSort/TreeWest" unique_id=843725797]
+position = Vector2(-103.4, -250)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("7_m5tree")
+centered = false
+
+[node name="Collision" type="StaticBody2D" parent="YSort/TreeWest" unique_id=739677156]
+position = Vector2(0.6000061, 3)
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/TreeWest/Collision" unique_id=967368035]
+position = Vector2(-2, -10.0625)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="TreeEast" type="Node2D" parent="YSort" unique_id=1964994782]
+position = Vector2(895.4, 611)
+
+[node name="Sprite" type="Sprite2D" parent="YSort/TreeEast" unique_id=207463655]
+position = Vector2(102.39994, -254)
+scale = Vector2(-0.2, 0.2)
+texture = ExtResource("7_m5tree")
+centered = false
+
+[node name="Collision" type="StaticBody2D" parent="YSort/TreeEast" unique_id=553965252]
+position = Vector2(-0.40008545, 2)
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/TreeEast/Collision" unique_id=176199492]
+position = Vector2(-1, -12.875)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="TreeSouthWest" type="Node2D" parent="YSort" unique_id=899398927]
+position = Vector2(331, 1191)
+
+[node name="Sprite" type="Sprite2D" parent="YSort/TreeSouthWest" unique_id=1835881034]
+position = Vector2(-102.4, -248)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("7_m5tree")
+centered = false
+
+[node name="Collision" type="StaticBody2D" parent="YSort/TreeSouthWest" unique_id=398276569]
+position = Vector2(-0.3999939, 4)
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/TreeSouthWest/Collision" unique_id=296441312]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="TreeSouthEast" type="Node2D" parent="YSort" unique_id=1779437269]
+position = Vector2(1080, 1090)
+
+[node name="Sprite" type="Sprite2D" parent="YSort/TreeSouthEast" unique_id=1412269934]
+position = Vector2(102.800026, -250)
+scale = Vector2(-0.2, 0.2)
+texture = ExtResource("7_m5tree")
+centered = false
+
+[node name="Collision" type="StaticBody2D" parent="YSort/TreeSouthEast" unique_id=1561559411]
+position = Vector2(0.00012207031, 2)
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/TreeSouthEast/Collision" unique_id=2056893622]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="Player" type="CharacterBody2D" parent="YSort" unique_id=682239820 groups=["player"]]
+position = Vector2(640, 740)
+script = ExtResource("5_ol222")
+
+[node name="Shape" type="CollisionShape2D" parent="YSort/Player" unique_id=964788992]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_fgukc")
+
+[node name="Camera2D" type="Camera2D" parent="YSort/Player" unique_id=976319353]

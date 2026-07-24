@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="EncounterDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="1_w81jl"]
+
+[resource]
+script = ExtResource("1_w81jl")
+map_id = "str_e"
+formations = [{
+"members": [{
+"id": "worm",
+"max": 2,
+"min": 1
+}],
+"weight": 1.0
+}, {
+"members": [{
+"id": "goblin",
+"max": 2,
+"min": 1
+}, {
+"id": "wolf",
+"max": 2,
+"min": 1
+}],
+"weight": 1.0
+}, {
+"members": [{
+"id": "goblin",
+"max": 2,
+"min": 1
+}, {
+"id": "worm",
+"max": 2,
+"min": 1
+}],
+"weight": 1.0
+}, {
+"members": [{
+"id": "worm",
+"max": 3,
+"min": 1
+}, {
+"id": "wolf",
+"max": 2,
+"min": 1
+}],
+"weight": 1.0
+}]

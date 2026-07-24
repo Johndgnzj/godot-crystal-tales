@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="RegionDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/map_def.gd" id="1_dyqrc"]
+[ext_resource type="Script" path="res://scripts/content/map_exit_def.gd" id="2_phjhu"]
+[ext_resource type="Script" path="res://scripts/content/region_def.gd" id="3_icoay"]
+
+[sub_resource type="Resource" id="Resource_rb6bp"]
+script = ExtResource("2_phjhu")
+to = "M1"
+at = "north"
+spawn = "from_nfr_a"
+
+[sub_resource type="Resource" id="Resource_yg6ho"]
+script = ExtResource("2_phjhu")
+to = "NFRB"
+spawn = "from_nfr_a"
+
+[sub_resource type="Resource" id="Resource_4k6na"]
+script = ExtResource("2_phjhu")
+to = "NFRD"
+at = "south"
+spawn = "from_nfr_a"
+
+[sub_resource type="Resource" id="Resource_bmbyv"]
+script = ExtResource("1_dyqrc")
+id = "nfr_a"
+scene_name = "NFRA"
+kind = "grassland"
+h = 40
+layout = "open"
+level_band = Array[int]([1, 1])
+enemies = Array[String](["gslime"])
+entries = Array[String](["M1"])
+exits = Array[ExtResource("2_phjhu")]([SubResource("Resource_rb6bp"), SubResource("Resource_yg6ho"), SubResource("Resource_4k6na")])
+
+[resource]
+script = ExtResource("3_icoay")
+region_id = "m5_a_layout_guide"
+maps = Array[ExtResource("1_dyqrc")]([SubResource("Resource_bmbyv")])

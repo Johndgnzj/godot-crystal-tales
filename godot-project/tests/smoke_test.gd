@@ -65,6 +65,7 @@ const SCENES := {
 	"NMD": "res://scenes/world/painted/nm_d.tscn",
 	"NME": "res://scenes/world/painted/nm_e.tscn",
 	"NMF": "res://scenes/world/painted/nm_f.tscn",
+	"NFRA": "res://scenes/world/painted/nfr_a.tscn",
 	"DialogueBox": "res://scenes/ui/dialogue_box.tscn",
 }
 

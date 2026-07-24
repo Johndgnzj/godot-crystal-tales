@@ -11,6 +11,8 @@ extends SceneTree
 ##   menu[:頁]          new_game 後開遊戲選單；頁 = char/items/map/titles/system（預設 char）
 ##   world:<場景ID>     new_game 後載入世界場景（Town/Mine/EFA…，見 SceneRouter.SCENE_PATHS）
 ##                      ※ 進場可能自動播開場過場（對話框會入鏡），屬正常
+##   scene:<res://路徑> 直接載入任意場景；用於尚未接進 SceneRouter 的試作場景
+##   guide:<res://路徑> 直接載入並隱藏 layout_prop／Player，輸出可供手繪背景參考的乾淨 guide
 ##   battle_preview     LPC 怪物試作，沿用正式 battle.tscn 的 UI／版面
 ##
 ## 例：
@@ -79,6 +81,23 @@ func _shoot(target: String) -> void:
 				print("[SHOT] 略過 world:%s（SceneRouter 無此場景ID或檔案不存在）" % arg)
 				return
 			host = _instance(path)
+		"scene":
+			if not arg.begins_with("res://"):
+				print("[SHOT] scene 目標必須是 res:// 路徑：%s" % arg)
+				return
+			host = _instance(arg)
+		"guide":
+			if not arg.begins_with("res://"):
+				print("[SHOT] guide 目標必須是 res:// 路徑：%s" % arg)
+				return
+			host = _instance(arg)
+			if host != null:
+				for prop in get_nodes_in_group("layout_prop"):
+					if host.is_ancestor_of(prop) and prop is CanvasItem:
+						(prop as CanvasItem).visible = false
+				var player := host.get_node_or_null("YSort/Player")
+				if player is CanvasItem:
+					(player as CanvasItem).visible = false
 		"battle_preview":
 			host = _instance("res://scenes/battle/lpc_preview.tscn")
 		_:

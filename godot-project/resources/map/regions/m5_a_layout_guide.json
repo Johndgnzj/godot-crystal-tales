@@ -1,0 +1,22 @@
+{
+  "region_id": "m5_a_layout_guide",
+  "maps": [
+    {
+      "id": "nfr_a",
+      "scene_name": "NFRA",
+      "kind": "grassland",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "medium",
+      "level_band": [1, 1],
+      "enemies": ["gslime"],
+      "entries": ["M1"],
+      "exits": [
+        { "to": "M1", "at": "north", "spawn": "from_nfr_a" },
+        { "to": "NFRB", "at": "east", "spawn": "from_nfr_a" },
+        { "to": "NFRD", "at": "south", "spawn": "from_nfr_a" }
+      ]
+    }
+  ]
+}

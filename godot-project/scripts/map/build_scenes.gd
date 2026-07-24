@@ -25,6 +25,9 @@ const GRID := 40                        # map_w/h＝1280/32
 const HALF := 640.0
 const OUT_DIR := "res://scenes/world/painted/"
 const TILESET := "res://resources/map/collision_tileset_32.tres"   # 塊 B 主格 32；本腳本只掛空層
+const DETAIL_TILESET := "res://resources/map/collision_tileset_16.tres"
+const PATH_TILESET := "res://resources/map/path_tileset_32.tres"
+const PATH_DETAIL_TILESET := "res://resources/map/path_tileset_16.tres"
 const WS := "res://scripts/world/world_scene.gd"
 const EZ := "res://scripts/world/exit_zone.gd"
 const PC := "res://scripts/world/player_controller.gd"
@@ -41,9 +44,10 @@ var _regions: Dictionary = {}
 var _existing: Dictionary = {}          # scene_id -> {scene_id, fields, exits[], spawns, protected}
 var _all_maps: Array = []               # 每個 region×map 一筆 entry（見 _index_maps）
 var _generated_set: Dictionary = {}     # 已（重）生成的 scene_id
+var _only_scene_id := ""                # 可選：只生成一張，避免新素材同步時碰到其他地圖
 var _report := {
 	"generated": [], "preserved": [], "pending": [], "placeholders": [], "empty_regions": [],
-	"resync": [], "cleared": [],
+	"resync": [], "cleared": [], "blueprint": [],
 }
 
 
@@ -57,6 +61,7 @@ func _run() -> void:
 		quit(1)
 		return
 	_regions = mapdef.get("regions", {})
+	_parse_only_scene()
 	_index_maps()
 	if _all_maps.is_empty():
 		push_error("map-def.json 沒有任何 map")
@@ -68,6 +73,24 @@ func _run() -> void:
 	_collect_placeholders()
 	_print_report()
 	quit(0)
+
+
+## 可用 `-- M5:a` 只同步單一 map；未指定時維持全量行為。
+func _parse_only_scene() -> void:
+	var args := OS.get_cmdline_user_args()
+	if args.is_empty():
+		return
+	var parts := str(args[0]).split(":", false)
+	if parts.size() != 2:
+		push_error("單圖參數格式應為 Region:map，例如 M5:a")
+		return
+	var region_id := parts[0]
+	var map_key := parts[1]
+	if not _regions.has(region_id) or not (_regions[region_id].get("maps", {}) as Dictionary).has(map_key):
+		push_error("map-def.json 找不到指定地圖：%s" % args[0])
+		return
+	_only_scene_id = _scene_id(region_id, map_key, _regions[region_id]["maps"][map_key])
+	print("單圖同步：", _only_scene_id)
 
 
 # ---------------------------------------------------------------------------
@@ -183,6 +206,11 @@ func _res_exists(res_path: String) -> bool:
 func _resolve_all_exits() -> void:
 	for e in _all_maps:
 		var exits: Dictionary = (e["map"] as Dictionary).get("exits", {})
+		var openings := _blueprint_openings(e["map"])          # side -> {lo,hi}（藍圖 E 格開口，可能為空）
+		var side_count := {}                                   # 每 side 幾個出口：>1 則開口無法唯一對應
+		for ek: String in exits:
+			var sd := str((exits[ek] as Dictionary).get("side", ""))
+			side_count[sd] = int(side_count.get(sd, 0)) + 1
 		var resolved := []
 		for ek: String in exits:
 			var ex: Dictionary = exits[ek]
@@ -192,6 +220,15 @@ func _resolve_all_exits() -> void:
 			var spawn_id := ""
 			if r["resolvable"]:
 				spawn_id = _spawn_id_for(e, r)
+			var opening: Variant = null
+			if openings.has(side):
+				if int(side_count.get(side, 0)) == 1:
+					opening = openings[side]
+					_report["blueprint"].append("%s.%s 用藍圖開口 %s[%d..%d]" %
+						[e["scene_id"], ek, side, opening["lo"], opening["hi"]])
+				else:
+					_report["blueprint"].append("%s.%s side=%s 有多個出口共用、藍圖開口無法唯一對應 → 回退整邊" %
+						[e["scene_id"], ek, side])
 			resolved.append({
 				"name": ek, "side": side,
 				"to_scene": (r["tgt_scene_id"] if r["resolvable"] else ""),
@@ -199,6 +236,7 @@ func _resolve_all_exits() -> void:
 				"enabled": r["resolvable"],
 				"resolvable": r["resolvable"],
 				"tgt_desc": to, "reason": r.get("reason", ""),
+				"opening": opening,
 			})
 		e["resolved"] = resolved
 
@@ -257,13 +295,70 @@ func _edge_spawn(side: String) -> Vector2:
 		_: return Vector2(HALF, HALF + 100.0)         # up/down/interior：無邊，落中央（現況 M2–M4 未用）
 
 
-func _exit_pos(side: String) -> Vector2:
+## 讀藍圖 terrain 的 E（出入口）格，依「最近邊」分組，回傳 {side: {lo,hi}}。
+## west/east 的 lo,hi 是 row 範圍；north/south 是 col 範圍。無藍圖或無 E 格＝回空字典。
+func _blueprint_openings(m: Dictionary) -> Dictionary:
+	var terrain: Variant = m.get("terrain", null)
+	if not (terrain is Array) or (terrain as Array).is_empty():
+		return {}
+	var by_side := {}
+	var rows: Array = terrain
+	for r in mini(rows.size(), GRID):
+		var row := str(rows[r])
+		for c in mini(row.length(), GRID):
+			if row[c] != "E":
+				continue
+			var dw := c
+			var de := GRID - 1 - c
+			var dn := r
+			var ds := GRID - 1 - r
+			var nearest := mini(mini(dw, de), mini(dn, ds))
+			var side := ""
+			var idx := 0
+			if nearest == dw:
+				side = "west"
+				idx = r
+			elif nearest == de:
+				side = "east"
+				idx = r
+			elif nearest == dn:
+				side = "north"
+				idx = c
+			else:
+				side = "south"
+				idx = c
+			if not by_side.has(side):
+				by_side[side] = []
+			(by_side[side] as Array).append(idx)
+	var out := {}
+	for sd: String in by_side:
+		var arr: Array = by_side[sd]
+		arr.sort()
+		out[sd] = {"lo": int(arr[0]), "hi": int(arr[arr.size() - 1])}
+	return out
+
+
+func _exit_pos(side: String, opening: Variant = null) -> Vector2:
+	var mid := HALF
+	if opening != null:
+		mid = (float(opening["lo"]) + float(opening["hi"]) + 1.0) * 0.5 * 32.0   # 開口中心（像素）
 	match side:
-		"west": return Vector2(22.0, HALF)
-		"east": return Vector2(SIZE - 22.0, HALF)
-		"north": return Vector2(HALF, 22.0)
-		"south": return Vector2(HALF, SIZE - 22.0)
+		"west": return Vector2(22.0, mid)
+		"east": return Vector2(SIZE - 22.0, mid)
+		"north": return Vector2(mid, 22.0)
+		"south": return Vector2(mid, SIZE - 22.0)
 		_: return Vector2(HALF, HALF)
+
+
+func _exit_size(side: String, opening: Variant = null) -> Vector2:
+	var span := 1120.0
+	if opening != null:
+		span = (float(opening["hi"]) - float(opening["lo"]) + 1.0) * 32.0 + 32.0   # 開口寬＋各邊 16px 緩衝
+	if side in ["west", "east"]:
+		return Vector2(44.0, span)
+	if side in ["north", "south"]:
+		return Vector2(span, 44.0)
+	return Vector2(200.0, 200.0)
 
 
 # ---------------------------------------------------------------------------
@@ -273,6 +368,8 @@ func _exit_pos(side: String) -> Vector2:
 func _generate() -> void:
 	for e in _all_maps:
 		var sid: String = e["scene_id"]
+		if _only_scene_id != "" and sid != _only_scene_id:
+			continue
 		if not e["has_image"]:
 			_report["pending"].append("%s:%s (%s) 無專案圖 %s" % [e["r"], e["k"], sid, e["image"]])
 			continue
@@ -360,7 +457,29 @@ func _build_scene(e: Dictionary) -> void:
 	var ts := load(TILESET) as TileSet
 	if ts != null:
 		col.tile_set = ts
+	col.visible = false
 	_add(root, col, root)
+	var detail := TileMapLayer.new()
+	detail.name = "CollisionDetail"
+	var detail_ts := load(DETAIL_TILESET) as TileSet
+	if detail_ts != null:
+		detail.tile_set = detail_ts
+	detail.visible = false
+	_add(root, detail, root)
+
+	# 設計員刷可走區的暫存層；invert_paths.gd 讀取後反轉為上述兩個碰撞層。
+	var path32 := TileMapLayer.new()
+	path32.name = "PathPaint32"
+	var path32_ts := load(PATH_TILESET) as TileSet
+	if path32_ts != null:
+		path32.tile_set = path32_ts
+	_add(root, path32, root)
+	var path16 := TileMapLayer.new()
+	path16.name = "PathPaint16"
+	var path16_ts := load(PATH_DETAIL_TILESET) as TileSet
+	if path16_ts != null:
+		path16.tile_set = path16_ts
+	_add(root, path16, root)
 
 	var zones := Node2D.new()
 	zones.name = "Zones"
@@ -417,10 +536,11 @@ func _collect_placeholders() -> void:
 
 
 func _add_exit(root: Node, zones: Node, rex: Dictionary) -> void:
+	var opening: Variant = rex.get("opening", null)          # 藍圖開口（無藍圖＝null＝維持整邊粗長條）
 	var area := Area2D.new()
 	area.name = rex["name"]
 	area.set_script(load(EZ))
-	area.position = _exit_pos(rex["side"])
+	area.position = _exit_pos(rex["side"], opening)
 	area.set("to_scene", rex["to_scene"])
 	area.set("spawn_id", rex["spawn_id"])
 	area.set("enabled", rex["enabled"])
@@ -428,12 +548,7 @@ func _add_exit(root: Node, zones: Node, rex: Dictionary) -> void:
 	var shape := CollisionShape2D.new()
 	shape.name = "Shape"
 	var rect := RectangleShape2D.new()
-	if rex["side"] in ["west", "east"]:
-		rect.size = Vector2(44.0, 1120.0)
-	elif rex["side"] in ["north", "south"]:
-		rect.size = Vector2(1120.0, 44.0)
-	else:
-		rect.size = Vector2(200.0, 200.0)
+	rect.size = _exit_size(rex["side"], opening)
 	shape.shape = rect
 	_add(root, shape, area)
 
@@ -468,6 +583,9 @@ func _print_report() -> void:
 	for p in _report["pending"]:
 		print("   ", p)
 	print("空地區 %d：%s" % [_report["empty_regions"].size(), ", ".join(_report["empty_regions"])])
+	print("藍圖出入口 %d：" % _report["blueprint"].size())
+	for b in _report["blueprint"]:
+		print("   ", b)
 	print("SCENE_PATHS 需登錄（新場景）：")
 	for e in _all_maps:
 		if _report["generated"].has(e["scene_id"]) and not _existing.has(e["scene_id"]):

@@ -52,25 +52,25 @@
 
 # Step 3 建立 Prompt
 
-使用目前正式 preset：角色 `prompts/presets/battle_role_hd_pixel_v2.md`、敵人 `prompts/presets/battle_enemy_v2.md`。
-- **先產 seed，再產動作首幀**。seed 是唯一外觀 reference，不屬於 idle 或任何動畫；seed 驗收通過後才依 `idle → hurt → cast → death → attack` 產製。
+使用目前正式 preset：角色 `prompts/presets/battle_role_hd_pixel_v3.md`、敵人 `prompts/presets/battle_enemy_v2.md`。
+- **先產 seed，再產動作首幀**。seed 是唯一角色外觀 reference，不屬於 idle 或任何動畫；持武器角色另以 weapon reference 鎖定武器外觀。seed 驗收通過後才依 `idle → hurt → cast → death → attack` 產製。
 - 各動作首幀驗收通過後，再進入該動作的 strip 動畫製作。
 - 組裝規則見 `prompts/role.md`（敵人 `prompts/enemy.md`）。
 - 填入單位描述（各單位最後一版見 `prompts/descriptions/<id>.md`）。
-- 加入所選 `prompts/actions/<action>.md` 模板的文字與選項；持武器角色必須帶入其武器規格。
+- 加入所選 `prompts/actions/<action>.md` 模板的文字與選項；持武器角色必須帶入其武器規格與獨立 weapon reference。
 - 要實驗新規則：只改 `prompts/sections/` 對應檔，成功後另存新 preset，再回來更新上面那一行。
 
 ---
 
 # Step 4 AI 產圖
 
-先產三張 **seed** 候選圖。seed 必須是非動作的中性備戰站姿，只用來鎖定角色外觀、服裝、配色、武器、比例與基準面向；不得當作 idle 或任何動作的首幀。
-seed 驗收通過後，才產指定動作的三張候選首幀。每次產動作都必須附上該單位已驗收的 `battle_seed_alpha.png` 作為 image reference；換對話也一樣，固定檔名本身不會使產圖工具自動讀圖。
+先產三張 **seed** 候選圖。seed 必須是非動作的中性備戰站姿，只用來鎖定角色外觀、服裝、配色、比例與基準面向；不得當作 idle 或任何動作的首幀。持武器角色產 seed 時，必須實際附上 weapon reference 與角色設定圖，讓武器外觀與手部持握在 seed 階段即固定。
+seed 驗收通過後，才產指定動作的三張候選首幀。每次產動作都必須附上該單位已驗收的 `battle_seed_alpha.png` 作為 image reference；持武器角色還必須同時附上 `battle_weapon_<id>_alpha.png`。換對話也一樣，固定檔名或專案路徑本身不會使產圖工具自動讀圖。
 若結果不符合規格：
 回到 Step 3 修正 Prompt。
 
 動畫 strip 產法：
-以已核可、**不屬於任何動作幀**的 seed（中性備戰站姿、基準面向、定造型）當唯一 reference，
+以已核可、**不屬於任何動作幀**的 seed（中性備戰站姿、基準面向、定造型）為角色 reference；持武器角色另附已驗收 weapon reference 鎖定武器外觀，
 再一次產完整條 strip。
 禁止逐幀硬湊。
 strip 必須在每格之間保留固定空白間距，並在整張圖四周保留安全留邊；角色、武器與特效不可貼邊或跨格。

@@ -1,0 +1,175 @@
+[gd_resource type="Resource" script_class="RegionDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/map_def.gd" id="1_0v3l0"]
+[ext_resource type="Script" path="res://scripts/content/map_exit_def.gd" id="2_ctfy3"]
+[ext_resource type="Script" path="res://scripts/content/region_def.gd" id="3_0hp0q"]
+
+[sub_resource type="Resource" id="Resource_rgwt8"]
+script = ExtResource("2_ctfy3")
+to = "Town"
+at = "north"
+spawn = "from_stra"
+
+[sub_resource type="Resource" id="Resource_l23qf"]
+script = ExtResource("2_ctfy3")
+to = "str_b"
+
+[sub_resource type="Resource" id="Resource_pe5vv"]
+script = ExtResource("2_ctfy3")
+to = "str_d"
+at = "south"
+
+[sub_resource type="Resource" id="Resource_ojvq5"]
+script = ExtResource("1_0v3l0")
+id = "str_a"
+scene_name = "STRA"
+h = 40
+layout = "open"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+entries = Array[String](["Town"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_rgwt8"), SubResource("Resource_l23qf"), SubResource("Resource_pe5vv")])
+
+[sub_resource type="Resource" id="Resource_m3bnd"]
+script = ExtResource("2_ctfy3")
+to = "str_a"
+at = "west"
+
+[sub_resource type="Resource" id="Resource_x3b2h"]
+script = ExtResource("2_ctfy3")
+to = "str_c"
+
+[sub_resource type="Resource" id="Resource_ulwms"]
+script = ExtResource("2_ctfy3")
+to = "str_e"
+at = "south"
+
+[sub_resource type="Resource" id="Resource_3r1ve"]
+script = ExtResource("1_0v3l0")
+id = "str_b"
+scene_name = "STRB"
+h = 40
+layout = "open"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_m3bnd"), SubResource("Resource_x3b2h"), SubResource("Resource_ulwms")])
+
+[sub_resource type="Resource" id="Resource_frq4d"]
+script = ExtResource("2_ctfy3")
+to = "str_b"
+at = "west"
+
+[sub_resource type="Resource" id="Resource_mi7ho"]
+script = ExtResource("1_0v3l0")
+id = "str_c"
+scene_name = "STRC"
+h = 40
+layout = "open"
+openness = "tight"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_frq4d")])
+
+[sub_resource type="Resource" id="Resource_mmkq1"]
+script = ExtResource("2_ctfy3")
+to = "str_a"
+at = "north"
+
+[sub_resource type="Resource" id="Resource_y3lg2"]
+script = ExtResource("2_ctfy3")
+to = "str_f"
+at = "south"
+
+[sub_resource type="Resource" id="Resource_vcloh"]
+script = ExtResource("1_0v3l0")
+id = "str_d"
+scene_name = "STRD"
+h = 40
+layout = "open"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_mmkq1"), SubResource("Resource_y3lg2")])
+
+[sub_resource type="Resource" id="Resource_t7gmg"]
+script = ExtResource("2_ctfy3")
+to = "str_b"
+at = "north"
+
+[sub_resource type="Resource" id="Resource_js5qa"]
+script = ExtResource("2_ctfy3")
+to = "str_g"
+at = "south"
+
+[sub_resource type="Resource" id="Resource_hduda"]
+script = ExtResource("1_0v3l0")
+id = "str_e"
+scene_name = "STRE"
+h = 40
+layout = "open"
+openness = "tight"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_t7gmg"), SubResource("Resource_js5qa")])
+
+[sub_resource type="Resource" id="Resource_vevcu"]
+script = ExtResource("2_ctfy3")
+to = "str_d"
+at = "north"
+
+[sub_resource type="Resource" id="Resource_ui3jh"]
+script = ExtResource("2_ctfy3")
+to = "str_h"
+at = "south"
+
+[sub_resource type="Resource" id="Resource_ea07k"]
+script = ExtResource("1_0v3l0")
+id = "str_f"
+scene_name = "STRF"
+h = 40
+layout = "open"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_vevcu"), SubResource("Resource_ui3jh")])
+
+[sub_resource type="Resource" id="Resource_fpon8"]
+script = ExtResource("2_ctfy3")
+to = "str_e"
+at = "north"
+
+[sub_resource type="Resource" id="Resource_kt6cp"]
+script = ExtResource("1_0v3l0")
+id = "str_g"
+scene_name = "STRG"
+h = 40
+layout = "open"
+openness = "tight"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_fpon8")])
+
+[sub_resource type="Resource" id="Resource_0ws3y"]
+script = ExtResource("2_ctfy3")
+to = "str_f"
+at = "north"
+
+[sub_resource type="Resource" id="Resource_qrgdi"]
+script = ExtResource("2_ctfy3")
+to = "M8"
+at = "south"
+spawn = "from_strh"
+
+[sub_resource type="Resource" id="Resource_ko7qj"]
+script = ExtResource("1_0v3l0")
+id = "str_h"
+scene_name = "STRH"
+h = 40
+layout = "open"
+level_band = Array[int]([4, 6])
+enemies = Array[String](["goblin", "wolf", "worm"])
+exits = Array[ExtResource("2_ctfy3")]([SubResource("Resource_0ws3y"), SubResource("Resource_qrgdi")])
+
+[resource]
+script = ExtResource("3_0hp0q")
+region_id = "m5_south_route"
+seed = 50724
+maps = Array[ExtResource("1_0v3l0")]([SubResource("Resource_ojvq5"), SubResource("Resource_3r1ve"), SubResource("Resource_mi7ho"), SubResource("Resource_vcloh"), SubResource("Resource_hduda"), SubResource("Resource_ea07k"), SubResource("Resource_kt6cp"), SubResource("Resource_ko7qj")])

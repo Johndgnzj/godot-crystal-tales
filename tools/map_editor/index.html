@@ -84,6 +84,8 @@ aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
 .toast.show{opacity:1}
 .node{cursor:pointer} .node rect.bg{stroke:var(--line);stroke-width:2}
 .node.sel rect.bg{stroke:var(--accent);stroke-width:3}
+.node.bp rect.bg{stroke:none}                 /* 藍圖預覽：去邊框，相鄰藍圖無縫接合 */
+.node.bp.sel rect.bg{stroke:var(--accent);stroke-width:3}
 .node text{text-anchor:middle;dominant-baseline:middle;pointer-events:none}
 .node .key{fill:#fff;font-size:15px;font-weight:500;paint-order:stroke;stroke:rgba(12,14,19,.92);stroke-width:3px;stroke-linejoin:round}
 .node .sub{font-size:10px;fill:#e9edf5;stroke-width:2.5px}
@@ -106,6 +108,20 @@ aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
 .sidebtn.on text{fill:#0b1a14}
 .linkhint{position:absolute;top:8px;left:8px;background:var(--accent-d);border:1px solid var(--accent);
   padding:4px 10px;border-radius:6px;font-size:12px}
+/* —— 藍圖 paint 模式 —— */
+#paintBar{flex-wrap:wrap}
+.swatch{display:flex;align-items:center;gap:5px;padding:3px 9px;font-size:12px}
+.swatch .sw{width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,.4);flex:none}
+.swatch .hk{opacity:.5;font-size:10px}
+.ptool{padding:3px 9px;font-size:12px}
+.psep{width:1px;background:var(--line);margin:3px 5px;align-self:stretch}
+.sw-empty{background:repeating-linear-gradient(45deg,#3a3f4c,#3a3f4c 3px,#2a2f3a 3px,#2a2f3a 6px)}
+#ppreview{pointer-events:none}
+.pneigh{opacity:.5}
+.pcell{pointer-events:none}
+#pgrid line{stroke:rgba(255,255,255,.14);stroke-width:1;pointer-events:none}
+#pgrid line.maj{stroke:rgba(255,255,255,.34)}
+#phit{cursor:crosshair}
 </style>
 </head>
 <body>
@@ -118,8 +134,10 @@ aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
     <button id="btnJson">{ } JSON</button>
     <span class="spacer"></span>
     <button id="btnLink">🔗 連線模式</button>
+    <button id="btnPaint">🖌️ 藍圖</button>
     <button id="btnBi">⇄ 雙向</button>
     <button id="btnThumb" class="on">🖼️ 縮圖</button>
+    <button id="btnBpView" title="總覽節點改顯示地格藍圖，並隱藏連接線">🗺️ 藍圖預覽</button>
     <button id="zOut">🔍−</button><span id="zLbl" class="badge">100%</span><button id="zIn">🔍＋</button><button id="zFit">⤢ 全覽</button>
   </div>
   <div class="hrow hrow2">
@@ -129,6 +147,7 @@ aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
   </div>
 </header>
 <div class="floorbar" id="floorBar" style="display:none"></div>
+<div class="floorbar" id="paintBar" style="display:none"></div>
 <div id="main">
   <div id="canvas-wrap">
     <div class="linkhint" id="linkHint" style="display:none">連線模式：點起點的 side 圓鈕定出口方向 → 點終點（可再點終點 side 鈕定回程）；也可直接點兩格自動判方位。</div>
@@ -150,6 +169,16 @@ aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button id="askCancel">取消</button><button id="askOk" class="primary">建立</button></div>
   </div>
 </div>
+<div id="importModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:60;align-items:center;justify-content:center">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:10px;width:430px;padding:16px">
+    <h3 style="margin:0 0 10px">匯入其它地圖的藍圖</h3>
+    <div class="field"><label>地區</label><select id="impRegion"></select></div>
+    <div class="field"><label>地圖</label><select id="impMap"></select></div>
+    <div id="impPreview" style="width:100%;aspect-ratio:1/1;background:var(--bg);border:1px solid var(--line);border-radius:8px;margin:8px 0;overflow:hidden;display:flex;align-items:center;justify-content:center"></div>
+    <p class="hint" id="impHint" style="margin:0 0 10px"></p>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button id="impCancel">取消</button><button id="impOk" class="primary">載入</button></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -162,7 +191,10 @@ const SIDES=["east","west","north","south","up","down","interior"];
 const OPP={east:"west",west:"east",north:"south",south:"north",up:"down",down:"up",interior:"interior"};
 const DIR={east:[1,0],west:[-1,0],north:[0,-1],south:[0,1],up:[.7,-.7],down:[.7,.7],interior:[0,1]};
 
-const S={data:null, region:null, floor:null, sel:null, link:false, bidir:false, linkFrom:null, linkSide:null, thumbs:true, zoom:1, baseW:0, baseH:0};
+const S={data:null, region:null, floor:null, sel:null, link:false, bidir:false, linkFrom:null, linkSide:null, thumbs:true, zoom:1, baseW:0, baseH:0, paint:false, brush:".", tool:"brush", neighbors:true, ovBlueprint:false};
+const GRIDN=40, TILE=32;                         // 藍圖：40×40 格、每格 32px（＝1280 圖）
+let PALETTE=[], PAL_BY={}, BASE=".";             // 地格詞彙（讀 assets-source/map/terrain_palette.json）
+let undoStack=[], redoStack=[], undoFor=null;    // 藍圖復原堆疊（per 選中地圖，切圖時重置）
 const $=s=>document.querySelector(s);
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1600);}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
@@ -198,7 +230,9 @@ function pngSrc(reg,key,m){
 }
 function mapsOnFloor(reg,floor){const o={};for(const k in reg.maps)if((reg.maps[k].floor||0)===floor)o[k]=reg.maps[k];return o;}
 function regionFloors(reg){const s=new Set();for(const k in reg.maps)s.add(reg.maps[k].floor||0);return [...s].sort((a,b)=>a-b);}
-function cellXY(c,r){return {x:c*(CELL+GAP), y:r*(CELL+GAP)};}          // 未加 PAD 的原始座標
+function ovGap(){return S.ovBlueprint?0:GAP;}                          // 藍圖預覽：圖間距 0，看得到接起來的樣子
+function ovStep(){return CELL+ovGap();}
+function cellXY(c,r){return {x:c*ovStep(), y:r*ovStep()};}             // 未加 PAD 的原始座標
 function centerOf(m){const p=cellXY(m.cell[0],m.cell[1]);return {x:p.x+CELL/2,y:p.y+CELL/2};}
 function freeCell(reg,floor){
   const used=new Set(); let has=false,maxc=0,minr=0;
@@ -214,7 +248,7 @@ function freeCell(reg,floor){
 }
 function commonKind(reg){const c={};let best="other",n=0;for(const k in reg.maps){const t=reg.maps[k].kind||"other";c[t]=(c[t]||0)+1;if(c[t]>n){n=c[t];best=t;}}return best;}
 
-function renderAll(){ renderTabs(); renderFloors(); renderCanvas(); renderInspector(); validate(); requestAnimationFrame(updateTabNav); }
+function renderAll(){ renderTabs(); renderFloors(); renderPaintBar(); renderCanvas(); renderInspector(); validate(); requestAnimationFrame(updateTabNav); }
 
 function renderTabs(){
   const t=$("#regionTabs"); t.innerHTML="";
@@ -244,6 +278,7 @@ function renderFloors(){
 
 function renderCanvas(){
   const svg=$("#canvas"), reg=curRegion(); if(!reg){svg.innerHTML="";return;}
+  if(S.paint&&S.sel&&reg.maps[S.sel]){ renderPaint(); return; }   // 藍圖模式：改畫單圖 40×40 塗格視圖
   const floor=S.floor??0, maps=mapsOnFloor(reg,floor);
   let edges="",xedges="",nodes="",rnodes="";
   const drawn=new Set(), xtargets={};                 // 跨區目標去重 → 一個地區節點
@@ -263,7 +298,7 @@ function renderCanvas(){
       }else if(info.cross || !maps[info.map]){          // 跨區/待接 → 地區節點（同級方塊）
         if(!xtargets[ex.to]){
           const d=DIR[ex.side]||DIR.east;
-          xtargets[ex.to]={x:a.x+d[0]*(CELL+GAP),y:a.y+d[1]*(CELL+GAP),info:info,to:ex.to};
+          xtargets[ex.to]={x:a.x+d[0]*ovStep(),y:a.y+d[1]*ovStep(),info:info,to:ex.to};
         }
         const tp=xtargets[ex.to];
         xedges+='<line class="xedge" x1="'+a.x+'" y1="'+a.y+'" x2="'+tp.x+'" y2="'+tp.y+'"/>';
@@ -276,12 +311,14 @@ function renderCanvas(){
     const col=KIND_COLORS[m.kind]||KIND_COLORS.other;
     const label=m.label||"";
     let thumb="";
-    const tsrc=S.thumbs?pngSrc(reg,k,m):null;
-    if(tsrc){
-      thumb='<image href="'+tsrc+'" x="'+(p.x+3)+'" y="'+(p.y+3)+'" width="'+(CELL-6)+'" height="'+(CELL-6)+'" preserveAspectRatio="xMidYMid slice" onerror="this.remove()" style="pointer-events:none"/>';
+    if(S.ovBlueprint){
+      thumb=blueprintMini(reg,k,m,p.x,p.y,CELL);          // 填滿整格 → 相鄰藍圖無縫貼合
+    }else{
+      const tsrc=S.thumbs?pngSrc(reg,k,m):null;
+      if(tsrc) thumb='<image href="'+tsrc+'" x="'+(p.x+3)+'" y="'+(p.y+3)+'" width="'+(CELL-6)+'" height="'+(CELL-6)+'" preserveAspectRatio="xMidYMid slice" onerror="this.remove()" style="pointer-events:none"/>';
     }
-    nodes+='<g class="node'+(S.sel===k?" sel":"")+'" data-key="'+esc(k)+'">'+
-      '<rect class="bg" x="'+p.x+'" y="'+p.y+'" width="'+CELL+'" height="'+CELL+'" rx="9" fill="'+col+'"/>'+thumb+
+    nodes+='<g class="node'+(S.ovBlueprint?" bp":"")+(S.sel===k?" sel":"")+'" data-key="'+esc(k)+'">'+
+      '<rect class="bg" x="'+p.x+'" y="'+p.y+'" width="'+CELL+'" height="'+CELL+'" rx="'+(S.ovBlueprint?0:9)+'" fill="'+col+'"/>'+thumb+
       (m.boss?'<text class="star" x="'+(p.x+CELL-14)+'" y="'+(p.y+16)+'">★</text>':"")+
       '<text class="key" x="'+(p.x+CELL/2)+'" y="'+(p.y+CELL-12)+'">'+esc(k.toUpperCase())+(label?'  <tspan class="sub">'+esc(label)+'</tspan>':"")+'</text>'+
       '</g>';
@@ -305,10 +342,224 @@ function renderCanvas(){
   svg.setAttribute("width",W*S.zoom); svg.setAttribute("height",H*S.zoom);
   let sidebtns="";
   if(S.link) for(const k in maps) sidebtns+=sideBtnsSvg(k,cellXY(maps[k].cell[0],maps[k].cell[1]));
-  svg.innerHTML=edges+xedges+nodes+rnodes+sidebtns;
+  svg.innerHTML=(S.ovBlueprint?"":edges+xedges)+nodes+rnodes+sidebtns;   // 藍圖預覽隱藏連接線
   svg.querySelectorAll(".node").forEach(g=>g.addEventListener("mousedown",e=>startNodeDrag(e,g)));
   svg.querySelectorAll(".sidebtn").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();onSidePick(b.dataset.key,b.dataset.side);}));
   svg.querySelectorAll(".rnode").forEach(g=>g.onclick=()=>{S.region=g.dataset.region;S.floor=null;S.sel=g.dataset.map||null;renderAll();});
+}
+
+// —— 藍圖 paint 模式：讀 terrain_palette.json，在單張圖上疊 40×40 逐格塗地格 ——
+async function loadPalette(){
+  try{
+    const r=await fetch("/assets/map/terrain_palette.json"); if(!r.ok) throw new Error("HTTP "+r.status);
+    const j=await r.json(); PALETTE=Array.isArray(j.cells)?j.cells:[];
+  }catch(e){
+    PALETTE=[{code:".",label:"草地",walkable:true,role:"base",color:"#6d9a3a"},
+             {code:"#",label:"牆",walkable:false,color:"#4a4f5c"}];
+  }
+  PAL_BY={}; for(const p of PALETTE) PAL_BY[p.code]=p;
+  for(const p of PALETTE) if(p.role==="base") BASE=p.code;
+  if(!PAL_BY[S.brush]||S.brush===BASE){const nb=PALETTE.find(p=>p.role!=="base"); S.brush=nb?nb.code:BASE;}
+}
+function ensureTerrain(m){
+  if(!Array.isArray(m.terrain)||m.terrain.length!==GRIDN){
+    m.terrain=Array.from({length:GRIDN},()=>BASE.repeat(GRIDN)); return m.terrain;
+  }
+  for(let r=0;r<GRIDN;r++){let row=String(m.terrain[r]);      // 就地正規化、保持同一陣列引用（floodFill 需要）
+    if(row.length!==GRIDN) row=(row.length<GRIDN?row+BASE.repeat(GRIDN-row.length):row).slice(0,GRIDN);
+    m.terrain[r]=row;}
+  return m.terrain;
+}
+function setTerrainCell(m,c,r,code){
+  if(c<0||c>=GRIDN||r<0||r>=GRIDN) return false;
+  const t=ensureTerrain(m); if(t[r][c]===code) return false;
+  t[r]=t[r].slice(0,c)+code+t[r].slice(c+1); return true;
+}
+const TOOLS=[{k:"brush",label:"✏️ 筆刷"},{k:"fill",label:"🪣 填滿"},{k:"line",label:"／ 直線"},{k:"rect",label:"▭ 矩形填滿"}];
+function renderPaintBar(){
+  const bar=$("#paintBar"); if(!bar) return;
+  if(!S.paint){bar.style.display="none"; return;}
+  bar.style.display="flex";
+  const tools=TOOLS.map((t,i)=>'<button class="ptool'+(S.tool===t.k?" on":"")+'" data-tool="'+t.k+'">'+t.label+'<span class="hk">'+["q","w","e","r"][i]+'</span></button>').join("");
+  const head=S.sel?"":'<span style="color:var(--warn);font-size:12px;align-self:center;margin:0 4px">← 先點一張地圖開始畫</span>';
+  const sw=PALETTE.map((p,i)=>{
+    const swi=p.color?'<span class="sw" style="background:'+esc(p.color)+'"></span>':'<span class="sw sw-empty"></span>';
+    const hk=(p.role==="base")?"-":(i<9?String(i+1):"");     // 空用「-」；其餘 1..9
+    return '<button class="swatch'+(S.brush===p.code?" on":"")+'" data-code="'+esc(p.code)+'" title="'+esc(p.label)+(p.walkable?"（可走）":"（阻擋）")+'">'+swi+esc(p.label)+(hk?'<span class="hk">'+hk+'</span>':'')+'</button>';
+  }).join("");
+  bar.innerHTML=tools+'<span class="psep"></span>'+head+sw+
+    '<span style="flex:1"></span>'+
+    '<button class="ptool'+(S.neighbors?" on":"")+'" id="pbNeighbors" title="顯示鄰接地圖(唯讀)供對接開口">🧭 鄰圖</button>'+
+    '<button id="pbImport" title="從其它地圖複製藍圖">📋 匯入</button>'+
+    '<button id="pbClear" title="清空這張圖的藍圖" style="color:var(--danger)">🗑️ 清空</button>'+
+    '<span class="badge" style="align-self:center">左鍵畫・右鍵擦・qwer工具・1–9地格・⌘Z復原・⌘S存檔</span>';
+  bar.querySelectorAll(".ptool[data-tool]").forEach(b=>b.onclick=()=>{S.tool=b.dataset.tool;renderPaintBar();});
+  bar.querySelectorAll(".swatch").forEach(b=>b.onclick=()=>{S.brush=b.dataset.code;renderPaintBar();});
+  $("#pbNeighbors").onclick=()=>{S.neighbors=!S.neighbors;renderPaintBar();if(S.sel)renderPaint();};
+  $("#pbImport").onclick=openImport;
+  $("#pbClear").onclick=clearTerrain;
+}
+function cellsSvg(m,op){                                       // 已塗地格（非空）→ rect 字串；op=fill-opacity
+  let s="";
+  if(Array.isArray(m.terrain)) for(let r=0;r<GRIDN;r++){const row=String(m.terrain[r]||"");
+    for(let c=0;c<GRIDN;c++){const code=row[c]||BASE; if(code===BASE)continue; const p=PAL_BY[code]; if(!p||!p.color)continue;
+      s+='<rect class="pcell" data-c="'+c+'" data-r="'+r+'" x="'+(c*TILE)+'" y="'+(r*TILE)+'" width="'+TILE+'" height="'+TILE+'" fill="'+esc(p.color)+'" fill-opacity="'+op+'"/>';}}
+  return s;
+}
+function renderPaint(){
+  if(undoFor!==S.sel){ resetUndo(); undoFor=S.sel; }             // 切到別張圖 → 重置復原堆疊
+  const svg=$("#canvas"), reg=curRegion(), m=reg.maps[S.sel];
+  const W=GRIDN*TILE, H=GRIDN*TILE, src=pngSrc(reg,S.sel,m), BAND=10*TILE;
+  const bg=src?'<image href="'+src+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" onerror="this.remove()"/>'
+              :'<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#2a2f3d"/>';
+  const cells=cellsSvg(m,"0.6");
+  let grid="";
+  for(let i=0;i<=GRIDN;i++){const q=i*TILE, maj=(i%5===0)?' class="maj"':"";
+    grid+='<line'+maj+' x1="'+q+'" y1="0" x2="'+q+'" y2="'+H+'"/>';
+    grid+='<line'+maj+' x1="0" y1="'+q+'" x2="'+W+'" y2="'+q+'"/>';}
+  // 鄰圖（唯讀參考帶，供對接開口）——用巢狀 svg 裁切到靠共同邊的一條帶
+  let neigh="", x0=0,y0=0,x1=W,y1=H;
+  if(S.neighbors){
+    const nb=neighborsOf(reg,S.sel);
+    const band=(nkey,side)=>{
+      const nm=reg.maps[nkey], nsrc=pngSrc(reg,nkey,nm);
+      let inner=nsrc?'<image href="'+nsrc+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" onerror="this.remove()"/>'
+                    :'<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#23283a"/>';
+      inner+=cellsSvg(nm,"0.55");
+      let vx=0,vy=0,vw=W,vh=H,px=0,py=0,pw=W,ph=H;
+      if(side==="west"){vx=W-BAND;vw=BAND;px=-BAND;pw=BAND;x0=-BAND;}
+      else if(side==="east"){vw=BAND;px=W;pw=BAND;x1=W+BAND;}
+      else if(side==="north"){vy=H-BAND;vh=BAND;py=-BAND;ph=BAND;y0=-BAND;}
+      else {vh=BAND;py=H;ph=BAND;y1=H+BAND;}
+      return '<svg class="pneigh" x="'+px+'" y="'+py+'" width="'+pw+'" height="'+ph+'" viewBox="'+vx+' '+vy+' '+vw+' '+vh+'">'+inner+'</svg>';
+    };
+    for(const side of ["west","east","north","south"]) if(nb[side]) neigh+=band(nb[side],side);
+  }
+  svg.setAttribute("viewBox",x0+" "+y0+" "+(x1-x0)+" "+(y1-y0));
+  S.baseW=x1-x0; S.baseH=y1-y0; svg.setAttribute("width",S.baseW*S.zoom); svg.setAttribute("height",S.baseH*S.zoom);
+  svg.innerHTML='<g id="pneighbors">'+neigh+'</g><g id="pbg">'+bg+'</g><g id="pcells">'+cells+'</g><g id="pgrid">'+grid+'</g><rect id="phit" x="0" y="0" width="'+W+'" height="'+H+'" fill="transparent"/>';
+  bindPaint(svg,m);
+}
+function paintCellOf(svg,cx,cy){const pt=clientToSvg(svg,cx,cy);return [Math.floor(pt.x/TILE),Math.floor(pt.y/TILE)];}
+function pClamp(v){return Math.max(0,Math.min(GRIDN-1,v));}
+function lineCells(c0,r0,c1,r1){                              // Bresenham
+  const pts=[]; let dx=Math.abs(c1-c0),dy=-Math.abs(r1-r0),sx=c0<c1?1:-1,sy=r0<r1?1:-1,err=dx+dy,c=c0,r=r0;
+  while(true){pts.push([c,r]); if(c===c1&&r===r1)break; const e2=2*err; if(e2>=dy){err+=dy;c+=sx;} if(e2<=dx){err+=dx;r+=sy;}}
+  return pts;
+}
+function rectCells(c0,r0,c1,r1){                              // 實心矩形
+  const out=[],a=Math.min(c0,c1),b=Math.max(c0,c1),d=Math.min(r0,r1),e=Math.max(r0,r1);
+  for(let r=d;r<=e;r++) for(let c=a;c<=b;c++) out.push([c,r]);
+  return out;
+}
+function floodFill(m,cellsG,c0,r0,code){                     // 4 向連通填滿（同 code 區域 → brush）
+  if(c0<0||c0>=GRIDN||r0<0||r0>=GRIDN) return;
+  const t=ensureTerrain(m), target=t[r0][c0]; if(target===code) return;
+  const stack=[[c0,r0]], seen={};
+  while(stack.length){const [c,r]=stack.pop();
+    if(c<0||c>=GRIDN||r<0||r>=GRIDN) continue;
+    const key=c+","+r; if(seen[key]) continue; seen[key]=1;
+    if(t[r][c]!==target) continue;
+    if(setTerrainCell(m,c,r,code)) updateCellRect(cellsG,c,r,code);
+    stack.push([c+1,r],[c-1,r],[c,r+1],[c,r-1]);}
+}
+function bindPaint(svg,m){
+  const hit=svg.querySelector("#phit"), cellsG=svg.querySelector("#pcells");
+  hit.addEventListener("contextmenu",e=>e.preventDefault());
+  hit.addEventListener("mousedown",e=>{
+    if(e.button!==0&&e.button!==2) return; e.preventDefault();
+    const code=(e.button===2)?BASE:S.brush;
+    snapshotTerrain(m);                                       // 每個動作一次快照（供 ⌘Z 復原）
+    const put=(c,r)=>{if(c>=0&&c<GRIDN&&r>=0&&r<GRIDN&&setTerrainCell(m,c,r,code)) updateCellRect(cellsG,c,r,code);};
+    const [sc,sr]=paintCellOf(svg,e.clientX,e.clientY);
+    if(S.tool==="fill"){ floodFill(m,cellsG,sc,sr,code); return; }
+    if(S.tool==="brush"){                                     // 自由塗（拖曳連塗）
+      put(sc,sr);
+      const mv=ev=>{const [c,r]=paintCellOf(svg,ev.clientX,ev.clientY);put(c,r);};
+      const up=()=>{document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);};
+      document.addEventListener("mousemove",mv); document.addEventListener("mouseup",up);
+      return;
+    }
+    // 直線／矩形：拖曳預覽 → 放開提交
+    const gen=(c1,r1)=> S.tool==="line"?lineCells(sc,sr,c1,r1):rectCells(sc,sr,c1,r1);
+    const pv=document.createElementNS("http://www.w3.org/2000/svg","g"); pv.id="ppreview"; svg.appendChild(pv);
+    const col=(PAL_BY[code]&&PAL_BY[code].color)||"#888";
+    const draw=(c1,r1)=>{
+      if(S.tool==="rect"){                                    // 矩形：預覽用單一外框矩形（省重繪）
+        const a=Math.min(sc,c1),b=Math.max(sc,c1),d=Math.min(sr,r1),e=Math.max(sr,r1);
+        pv.innerHTML='<rect x="'+(a*TILE)+'" y="'+(d*TILE)+'" width="'+((b-a+1)*TILE)+'" height="'+((e-d+1)*TILE)+'" fill="'+col+'" fill-opacity="0.4" stroke="#fff" stroke-opacity="0.6"/>';
+      }else{                                                  // 直線：逐格預覽
+        let s=""; for(const [c,r] of gen(c1,r1)) s+='<rect x="'+(c*TILE)+'" y="'+(r*TILE)+'" width="'+TILE+'" height="'+TILE+'" fill="'+col+'" fill-opacity="0.5" stroke="#fff" stroke-opacity="0.55"/>'; pv.innerHTML=s;
+      }};
+    draw(sc,sr);
+    const mv=ev=>{const [c,r]=paintCellOf(svg,ev.clientX,ev.clientY);draw(pClamp(c),pClamp(r));};
+    const up=ev=>{document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);
+      const [c,r]=paintCellOf(svg,ev.clientX,ev.clientY);
+      for(const [cc,rr] of gen(pClamp(c),pClamp(r))) put(cc,rr);
+      pv.remove();};
+    document.addEventListener("mousemove",mv); document.addEventListener("mouseup",up);
+  });
+}
+function updateCellRect(cellsG,c,r,code){
+  const ex=cellsG.querySelector('[data-c="'+c+'"][data-r="'+r+'"]');
+  if(code===BASE){ if(ex) ex.remove(); return; }
+  const p=PAL_BY[code]; if(!p) return;
+  if(ex){ ex.setAttribute("fill",p.color||"#888"); return; }
+  const n=document.createElementNS("http://www.w3.org/2000/svg","rect");
+  n.setAttribute("class","pcell"); n.setAttribute("data-c",c); n.setAttribute("data-r",r);
+  n.setAttribute("x",c*TILE); n.setAttribute("y",r*TILE); n.setAttribute("width",TILE); n.setAttribute("height",TILE);
+  n.setAttribute("fill",p.color||"#888"); n.setAttribute("fill-opacity","0.6");
+  cellsG.appendChild(n);
+}
+function curMap(){const r=curRegion();return (r&&S.sel&&r.maps[S.sel])?r.maps[S.sel]:null;}
+function neighborsOf(reg,key){                               // 依總覽 cell 相鄰（同區同層）判鄰圖
+  const m=reg.maps[key], f=m.floor||0, c=m.cell[0], r=m.cell[1];
+  const at={west:[c-1,r],east:[c+1,r],north:[c,r-1],south:[c,r+1]}, res={west:null,east:null,north:null,south:null};
+  for(const k in reg.maps){ if(k===key)continue; const mm=reg.maps[k]; if((mm.floor||0)!==f)continue;
+    for(const side in at) if(mm.cell[0]===at[side][0]&&mm.cell[1]===at[side][1]) res[side]=k; }
+  return res;
+}
+// —— 復原 / 清空 / 匯入 ——
+function snapshotTerrain(m){ ensureTerrain(m); undoStack.push(m.terrain.slice()); if(undoStack.length>80)undoStack.shift(); redoStack.length=0; }
+function resetUndo(){ undoStack.length=0; redoStack.length=0; }
+function undoPaint(){ const m=curMap(); if(!m||!undoStack.length)return; ensureTerrain(m); redoStack.push(m.terrain.slice()); m.terrain=undoStack.pop(); renderPaint(); toast("復原"); }
+function redoPaint(){ const m=curMap(); if(!m||!redoStack.length)return; ensureTerrain(m); undoStack.push(m.terrain.slice()); m.terrain=redoStack.pop(); renderPaint(); toast("重做"); }
+function clearTerrain(){ const m=curMap(); if(!m)return;
+  if(!confirm("清空這張圖的所有地格藍圖？（可用 ⌘Z 復原）"))return;
+  snapshotTerrain(m); m.terrain=Array.from({length:GRIDN},()=>BASE.repeat(GRIDN)); renderPaint(); toast("已清空藍圖"); }
+function terrainPreviewSvg(reg,key,m,size){
+  const W=GRIDN*TILE,H=GRIDN*TILE, src=pngSrc(reg,key,m);
+  let s='<svg viewBox="0 0 '+W+' '+H+'" width="'+size+'" height="'+size+'">';
+  s+= src?'<image href="'+src+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" onerror="this.remove()"/>':'<rect width="'+W+'" height="'+H+'" fill="#2a2f3d"/>';
+  s+=cellsSvg(m,"0.62");
+  return s+'</svg>';
+}
+function blueprintMini(reg,key,m,x,y,size){                   // 總覽節點用的地格藍圖縮圖（巢狀 svg、不吃事件）
+  const W=GRIDN*TILE,H=GRIDN*TILE, src=pngSrc(reg,key,m);
+  let inner=src?'<image href="'+src+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" opacity="0.3" onerror="this.remove()"/>':'<rect width="'+W+'" height="'+H+'" fill="#2a2f3d"/>';
+  inner+=cellsSvg(m,"0.9");
+  return '<svg x="'+x+'" y="'+y+'" width="'+size+'" height="'+size+'" viewBox="0 0 '+W+' '+H+'" style="pointer-events:none">'+inner+'</svg>';
+}
+function openImport(){
+  if(!curMap()){ toast("先點一張地圖"); return; }
+  const rsel=$("#impRegion"), msel=$("#impMap");
+  rsel.innerHTML=Object.keys(S.data.regions).map(rid=>'<option value="'+esc(rid)+'"'+(rid===S.region?" selected":"")+'>'+esc(rid+" "+S.data.regions[rid].name)+'</option>').join("");
+  const updPrev=()=>{ const rg=S.data.regions[rsel.value], mm=rg&&rg.maps[msel.value];
+    $("#impPreview").innerHTML=mm?terrainPreviewSvg(rg,msel.value,mm,388):"";
+    $("#impHint").textContent=!mm?"":(Array.isArray(mm.terrain)?"這張圖有藍圖；載入會覆蓋目前藍圖（可 ⌘Z 復原）":"這張圖沒有藍圖資料；載入＝清空目前藍圖"); };
+  const fillMaps=()=>{ const rg=S.data.regions[rsel.value];
+    const keys=Object.keys(rg.maps).filter(k=>!(rsel.value===S.region&&k===S.sel));
+    msel.innerHTML=keys.map(k=>'<option value="'+esc(k)+'">'+esc(k.toUpperCase()+(rg.maps[k].label?"｜"+rg.maps[k].label:"")+(Array.isArray(rg.maps[k].terrain)?" ✎":""))+'</option>').join("");
+    updPrev(); };
+  rsel.onchange=fillMaps; msel.onchange=updPrev; fillMaps();
+  $("#importModal").style.display="flex";
+  $("#impCancel").onclick=()=>{$("#importModal").style.display="none";};
+  $("#impOk").onclick=()=>{ const rg=S.data.regions[rsel.value], mm=rg&&rg.maps[msel.value], m=curMap();
+    if(!m){$("#importModal").style.display="none";return;}
+    snapshotTerrain(m);
+    m.terrain=Array.isArray(mm&&mm.terrain)?mm.terrain.slice():Array.from({length:GRIDN},()=>BASE.repeat(GRIDN));
+    ensureTerrain(m);                                         // 正規化長度、脫離來源引用
+    $("#importModal").style.display="none"; renderPaint(); toast("已載入 "+rsel.value+":"+msel.value.toUpperCase()+" 的藍圖"); };
 }
 
 function onNodeClick(k){
@@ -359,7 +610,7 @@ function clientToSvg(svg,cx,cy){const pt=svg.createSVGPoint();pt.x=cx;pt.y=cy;re
 function showGrid(on){
   const svg=$("#canvas"), old=svg.querySelector("#gridlayer"); if(old)old.remove();
   if(!on) return;
-  const vb=svg.getAttribute("viewBox").split(" ").map(Number), step=CELL+GAP;
+  const vb=svg.getAttribute("viewBox").split(" ").map(Number), step=ovStep();
   const x0=Math.floor(vb[0]/step)*step, y0=Math.floor(vb[1]/step)*step, x1=vb[0]+vb[2], y1=vb[1]+vb[3];
   let l="";
   for(let x=x0;x<=x1;x+=step) l+='<line x1="'+x+'" y1="'+vb[1]+'" x2="'+x+'" y2="'+y1+'"/>';
@@ -384,7 +635,7 @@ function startNodeDrag(e,g){
   if(!m) return;
   e.preventDefault();
   const start=clientToSvg(svg,e.clientX,e.clientY), p0=cellXY(m.cell[0],m.cell[1]);
-  const off={x:start.x-p0.x,y:start.y-p0.y}, linkMode=S.link; let moved=false;
+  const off={x:start.x-p0.x,y:start.y-p0.y}, linkMode=S.link||S.paint; let moved=false;   // 藍圖模式也只點選、不拖曳
   const mv=ev=>{const cur=clientToSvg(svg,ev.clientX,ev.clientY);
     if(!moved&&Math.hypot(cur.x-start.x,cur.y-start.y)<5) return;
     if(linkMode) return;                                             // 連線模式不拖曳，交給 onNodeClick
@@ -394,7 +645,7 @@ function startNodeDrag(e,g){
     if(!moved){onNodeClick(key);return;}                             // 沒拖動＝點擊
     g.classList.remove("dragging");showGrid(false);
     const cur=clientToSvg(svg,ev.clientX,ev.clientY);
-    dropAt(key,Math.round((cur.x-off.x)/(CELL+GAP)),Math.round((cur.y-off.y)/(CELL+GAP)));};
+    dropAt(key,Math.round((cur.x-off.x)/ovStep()),Math.round((cur.y-off.y)/ovStep()));};
   document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up);
 }
 
@@ -575,6 +826,25 @@ $("#btnReload").onclick=()=>{if(confirm("重載會丟棄未存變更，確定？
 $("#btnLink").onclick=()=>{S.link=!S.link;S.linkFrom=null;S.linkSide=null;$("#btnLink").classList.toggle("on",S.link);$("#linkHint").style.display=S.link?"block":"none";renderCanvas();};
 $("#btnBi").onclick=()=>{S.bidir=!S.bidir;$("#btnBi").classList.toggle("on",S.bidir);};
 $("#btnThumb").onclick=()=>{S.thumbs=!S.thumbs;$("#btnThumb").classList.toggle("on",S.thumbs);renderCanvas();};
+$("#btnBpView").onclick=()=>{S.ovBlueprint=!S.ovBlueprint;$("#btnBpView").classList.toggle("on",S.ovBlueprint);renderCanvas();};
+$("#btnPaint").onclick=()=>{
+  S.paint=!S.paint;
+  $("#btnPaint").classList.toggle("on",S.paint);
+  if(S.paint&&S.link){S.link=false;S.linkFrom=null;S.linkSide=null;$("#btnLink").classList.remove("on");$("#linkHint").style.display="none";}
+  renderAll(); fitZoom();
+};
+window.addEventListener("keydown",e=>{
+  const tn=e.target.tagName, typing=(tn==="INPUT"||tn==="TEXTAREA"||tn==="SELECT"), mod=e.metaKey||e.ctrlKey;
+  if(mod&&(e.key==="s"||e.key==="S")){ e.preventDefault(); save(); return; }     // ⌘S/Ctrl+S 存檔（全域）
+  if(!S.paint||typing) return;
+  if(mod&&(e.key==="z"||e.key==="Z")){ e.preventDefault(); if(e.shiftKey)redoPaint(); else undoPaint(); return; }
+  if(mod) return;
+  const ti=["q","w","e","r"].indexOf(e.key.toLowerCase());
+  if(ti>=0&&TOOLS[ti]){ S.tool=TOOLS[ti].k; renderPaintBar(); return; }             // q/w/e/r 切工具
+  if(e.key==="-"){ S.brush=BASE; renderPaintBar(); return; }                        // - 選空（留白）
+  const n=parseInt(e.key,10);
+  if(n>=1&&n<=9&&PALETTE[n-1]){ S.brush=PALETTE[n-1].code; renderPaintBar(); }     // 數字鍵 1–9 選地格
+});
 $("#btnJson").onclick=()=>{$("#jsonBody").textContent=JSON.stringify(S.data,null,2);$("#jsonModal").style.display="block";};
 $("#jsonClose").onclick=()=>{$("#jsonModal").style.display="none";};
 
@@ -634,7 +904,7 @@ $("#canvas").addEventListener("click",e=>{if(e.target.id==="canvas"){S.sel=null;
   wrap.addEventListener("auxclick",e=>{if(e.button===1)e.preventDefault();});
 })();
 
-load();
+loadPalette().then(load);
 </script>
 </body>
 </html>

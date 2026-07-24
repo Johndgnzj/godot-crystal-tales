@@ -30,7 +30,7 @@
 | [design/角色立繪規格.md](design/角色立繪規格.md) | 對話/介紹用**高品質立繪**長怎樣（a 頭像／b 半身／c 全身＋敵人設定集/懸賞立繪）|
 | [design/戰鬥立繪規格.md](design/戰鬥立繪規格.md) | **〔主〕戰鬥素材**長怎樣（角色＋敵人，高品質像素＋二頭身）：動畫集/幀數/排版/風格/逐幀一致性＋敵人專節 |
 | [design/世界立繪規格.md](design/世界立繪規格.md) | **地圖移動素材**長怎樣（overworld walk：9 幀×4 向、步態相位）|
-| [design/地圖畫面規格.md](design/地圖畫面規格.md) | 手繪**地圖背景畫面**長怎樣（32px 網格/1280²/禁項/遮擋/色彩/城鎮建築）|
+| [design/地圖畫面規格.md](design/地圖畫面規格.md) | 手繪**地圖背景畫面**長怎樣（32px 網格/1280²/禁項/遮擋/色彩/城鎮建築/地格藍圖）|
 | [design/地圖互動物件規格.md](design/地圖互動物件規格.md) | 寶箱、任務拾取物等**引擎另擺的物件**長怎樣（外觀族、狀態、錨點、尺寸與互動資料分離）|
 
 ## 三、pipeline/ — 怎麼產生
@@ -43,7 +43,7 @@
 | [pipeline/world_object_art/](pipeline/world_object_art/workflow.md) | 地圖互動物件**產線**：獨立 design anchor→狀態圖→固定命名→整合；首批支援共用寶箱與任務拾取物|
 | [pipeline/世界立繪流程.md](pipeline/世界立繪流程.md) | walk 素材：產法/去背/切圖命名/LPC 過渡現況 |
 | [pipeline/地圖產圖流程.md](pipeline/地圖產圖流程.md) | 畫一張手繪地圖 png：**prompt 固定開頭模板**＋交付檢查（`gen-map-prompt` skill 引用）|
-| [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋場景生成（塊 A/B/C）|
+| [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋**40×40 地格藍圖（§2.5）**＋場景生成（塊 A/B/C）|
 | [pipeline/素材管理規範.md](pipeline/素材管理規範.md) | 素材放哪、進 Godot 後怎麼處理、授權標註規則、檢查清單 |
 | [pipeline/劇本寫作心法.md](pipeline/劇本寫作心法.md) | 劇本寫作教材（訪談整理，構思劇情時的方法論）|
 | [pipeline/prompt/](pipeline/prompt/) | 各資源「最後一版」產圖 prompt（role/enemies × portrait/world 四份；戰鬥 prompt 在 `battle_art/prompts/`）|

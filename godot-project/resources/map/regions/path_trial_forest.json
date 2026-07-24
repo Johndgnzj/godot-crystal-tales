@@ -1,0 +1,21 @@
+{
+  "region_id": "path_trial_forest",
+  "seed": 240724,
+  "maps": [
+    {
+      "id": "path_trial_forest",
+      "scene_name": "PathTrialForest",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "medium",
+      "level_band": [1, 3],
+      "enemies": ["bird", "gslime"],
+      "exits": [
+        { "to": "TrialNorth", "at": "north", "spawn": "start" },
+        { "to": "TrialEast", "at": "east", "spawn": "start" }
+      ]
+    }
+  ]
+}

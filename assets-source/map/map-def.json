@@ -642,12 +642,577 @@
       }
     },
     "M5": {
-      "name": "通往大都市的路",
-      "dir": "south-test-route",
-      "file_prefix": "str",
-      "scene_prefix": "STR",
+      "name": "通往休斯的路",
+      "dir": "new_floret_road",
+      "file_prefix": "nfr",
+      "scene_prefix": "NFR",
       "grid_size": 32,
-      "maps": {}
+      "maps": {
+        "a": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            0,
+            0
+          ],
+          "exits": {
+            "east": {
+              "side": "east",
+              "to": "b"
+            },
+            "south": {
+              "side": "south",
+              "to": "d"
+            },
+            "new": {
+              "side": "north",
+              "to": "M1"
+            }
+          },
+          "terrain": [
+            "~~~~gggggggggggggEEEEEggggg^^ggggggggggg",
+            "~~~~ggggggggggggggdddgggggg^^^gggggggggg",
+            "~~~~~gggggggggggggdddggggggg^^^^^gggggg^",
+            "~~~~~gggggggggggggdddggggggggg^^^^^^^^^^",
+            "~~~~~gggggggggggggddgggggggggggg^^^^^^^^",
+            "~~~~~gggggggggggggddgggggggggggggg^^^^^^",
+            "~~~~~~gggggggggggdddgggggggggggggggggggE",
+            "~~~~~~gggggggggggddggggggggggggggggggggE",
+            "~~~~~~ggggggggggdddggggggggggggggggggggE",
+            "~~~~~~ggggggggggddgggggggggggggggggggggE",
+            "~~~~~~gggggggggdddgggggggggggggggggggggE",
+            "~~~~~~gggggggggdddgggggggggggggggggggggE",
+            "~~~~~~ggggggggdddggggggggggggggggggggggE",
+            "~~~~~~ggggggggdddggggggggggddddddddggggE",
+            "~~~~~gggggggggdddggggggggddddddddddddddE",
+            "~~~~~gggggggggddddggggggdddddddddddddddE",
+            "~~~~gggggggggggddddggggddddgggggggdddddE",
+            "~~~~gggggggggggddddddddddggggggggggggggE",
+            "~~~~ggggggggggggddddddddgggggggggggggggE",
+            "~~~~ggggggggggggggddddddgggggggggggggggE",
+            "~~~ggggggggggggggggdddddggggggggggg^^^^^",
+            "~~~~ggggggggggggggggddddgggggggg^^^^^^gg",
+            "~~~~ggggggggggggggggddddggggggg^^^^^gggg",
+            "~~~~~gggggggggggggggddddgggggg^^^ggggggg",
+            "~~~~~gggggggggggggggddddgggggg^^^ggggggg",
+            "~~~~~gggggggggggggggdddgggggg^^^gggggggg",
+            "~~~~~~gggggggggggggddddgggggg^^^gggggggg",
+            "~~~~~~gggggggggggggdddgggggg^^^ggggggggg",
+            "~~~~~~ggggggggggggdddgggggg^^^gggggggggg",
+            "~~~~~~gggggggggggddddgggggg^^^gggggggggg",
+            "~~~~~~gggggggggggddddgggggg^^ggggggggggg",
+            "~~~~~~gggggggggggddddgggggg^gggggggggggg",
+            "~~~~~gggggggggggggdddggggg^^gggggggggggg",
+            "~~~~~ggggggggggggddddggggg^^gggggggggggg",
+            "~~~~~ggggggggggggddddggggg^^gggggggggggg",
+            "~~~~~ggggggggggggddddggggg^ggggggggggggg",
+            "~~~~~ggggggggggggddddggggg^ggggggggggggg",
+            "~~~~~~gggggggggggddddggggg^ggggggggggggg",
+            "~~~~~~gggggggggggdddddgggg^ggggggggggggg",
+            "~~~~~~~gggggggggEEEEEEEggg^^gggggggggggg"
+          ]
+        },
+        "b": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            1,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "a"
+            },
+            "east": {
+              "side": "east",
+              "to": "c"
+            },
+            "south": {
+              "side": "south",
+              "to": "e"
+            }
+          },
+          "terrain": [
+            "gggggggggggggggggggggggg^^^ggggggggggggg",
+            "ggggggggggggggggggggggg^^^gggggggggggggg",
+            "^gggggggggggggggggggggg^^^gggggggggggggg",
+            "^^^^gggggggggggggggggg^^^ggggggggggggggg",
+            "^^^^^^^^^^^^^^^^^^^^^^^^ggddddddgggggggg",
+            "^^^^^^^^^^^^^^^^^^^^^^^ggdddddddddgggggg",
+            "Eggggggggggggggggggggggdddddddddddddgggg",
+            "Egggggggggggggggggdddddddddgggggdddddggg",
+            "EggggggggggggddddddddddddgggggggggddddgE",
+            "Egggggggggddddddddddddddgg^^^^^ggggddddE",
+            "Eggggggggdddddddddddggggg^^^^^^ggggggddE",
+            "Eggggggdddddgggggdddgggg^^^gg^gggggggddE",
+            "Egggdddddddgggggdddggggg^^ggg^ggggggggdE",
+            "Egddddddggggggggdddggggggggg^^gggggggggE",
+            "Edddddggggggggggddgggggggggg^ggggggggggg",
+            "Edddgggggggggggddggggggggggg^ggggggggggg",
+            "Eggggggggggggggddggggggggggg^ggggggggggg",
+            "Eggggggggggggggddggggggggggg^^gggggggggg",
+            "Eggggggggggggggddggggggggggg^^gggggggggg",
+            "Eggggggggggggggddggggggggggg^^gggggggggg",
+            "^^^gggggggggggdddggggggggggg^^^^gggggggg",
+            "^^^^^^^^ggggggdddggggggggggggg^^gggggggg",
+            "gggg^^^^^gggggdddgggggggggggggg^^^gggggg",
+            "ggggggg^^^ggggdddgggggggggggggggg^^ggggg",
+            "ggggggg^^^ggggddddgggggggggggggggg^^^ggg",
+            "gggggggg^^^gggdddddggggggggggggggggg^^gg",
+            "ggggggggg^^gggddddddggggggggggggggggg^^g",
+            "ggggggggg^^^ggggddddddddddggggggggggg^^^",
+            "gggggggggg^^ggggggddddddddddgggggggggg^^",
+            "gggggggggg^^ggggggggdddddddddggggggggg^^",
+            "ggggggggggg^^ggggggggddddddddgggggggggg^",
+            "ggggggggggg^^^ggggggggggggdddddgggggggg^",
+            "gggggggggggg^^gggggggggggggddddggggggggg",
+            "gggggggggggg^^^ggggggggggggggdddgggggggg",
+            "gggggggggggg^^^^ggggggggggggggdddggggggg",
+            "ggggggggggggg^^^ggggggggggggggdddggggggg",
+            "ggggggggggggg^^^gggggggggggggggdddgggggg",
+            "gggggggggggggg^^^ggggggggggggggdddgggggg",
+            "ggggggggggggggg^^ggggggggggggggdddgggggg",
+            "ggggggggggggggg^^^ggggggggggggEEEEEggggg"
+          ]
+        },
+        "c": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            2,
+            0
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "b"
+            }
+          },
+          "terrain": [
+            "gggggggggg^^^^^^^^^^^^^^^^^^^^^^gggggggg",
+            "ggggggggggg^^^^^^^^^^^^^^^^^^^^ggggggggg",
+            "ggggggggggggg^^^^^^^^^^^^^^^^^gggggggggg",
+            "ggggggggggggggg^^^^^^^^^^^^^gggggggggggg",
+            "ggggggggggggggggg^^^^^^^^^^ggggggggggggg",
+            "gggggggggggggggggg^^^^^^^^gggggggggggggg",
+            "gggggggggggggggggg^^^^^^^^gggggggggggggg",
+            "ggggggggggggggggggg^^^^^^ggggggggggggggg",
+            "Eddddgggggggggggggg^^^^^gggggggggggggggg",
+            "Edddddgggggggggggggg^^^ggggggggggggggggg",
+            "Edddddgggggggggggggg^^^ggggggdddddgggggg",
+            "Edddddgggggggggggggg^^ggggggdddddddggggg",
+            "Edddddgggggggggggggg^^gggggddgggdddggggg",
+            "Edddddggggggggggggg^^gggggddgggggddggggg",
+            "gggdddggggggggggggg^^ggggddggggggdddgggg",
+            "gggdddgggggggggggg^^ggggddgggg^gggddgggg",
+            "gggdddggggggggggg^^^ggggdgggg^^gggdddggg",
+            "gggdddgggggggggg^^^ggggddggg^^ggggdddggg",
+            "gggdddgggggggggg^^ggggddggg^^gggggdddggg",
+            "ggggdddggggggggg^^ggggdggg^^ggggggdddggg",
+            "ggggdddgggggggg^^ggggddgg^^gggggggdddggg",
+            "ggggdddggggggg^^^gggdddgg^^gggggggdddggg",
+            "ggggdddggggggg^^^ggddddg^^^ggggggddddggg",
+            "gggggddgggggg^^^gggdddgg^^ggggggddddgggg",
+            "gggggddgggggg^^ggggddggg^^ggggggdddddggg",
+            "ggggggddgggg^^^ggggddggg^^gggggddddddggg",
+            "ggggggddgggg^^gggggddggg^^ggggdddddddggg",
+            "gggggggddgggggggggddgggg^^ggggdddddddggg",
+            "^ggggggddggggggggdddgggg^ggggddddddddddg",
+            "^^ggggggddgggggggddggggg^ggggddddddddddg",
+            "^^^gggggdddggggdddggggg^^ggggddddddddddg",
+            "^^^ggggggdddggdddgggggg^ggggdddddddddddd",
+            "g^^^ggggggddggdddggggg^^ggggdddddddddddd",
+            "ggg^^gggggddddddgggggg^ggggddddddddddddd",
+            "gggg^^gggggdddddggggg^ggggdddddddddddddd",
+            "ggggg^^ggggggggggggg^^ggggdddddddddddddg",
+            "gggggg^^gggggggggggg^ggggggdddddddddddgg",
+            "ggggggg^^gggggggggg^^ggggggdddddddddddgg",
+            "ggggggg^^^gggggggg^^gggggggggddddddggggg",
+            "ggggggggg^^^^^^^^^^ggggggggggggggggggggg"
+          ]
+        },
+        "d": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            0,
+            1
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "a"
+            },
+            "east": {
+              "side": "east",
+              "to": "e"
+            },
+            "south": {
+              "side": "south",
+              "to": "f"
+            }
+          },
+          "terrain": [
+            "~~~~~~~gggggggggEEEEEEgggg^^gggggggggggg",
+            "~~~~~~~ggggggggggddddggggg^^gggggggggggg",
+            "~~~~~~~ggggggggggddddggggg^ggggggggggggg",
+            "~~~~~~~gggggggggddddggggg^^ggggggggggggg",
+            "~~~~~~~gggggggggddddggggg^gggggggggggggg",
+            "~~~~~~ggggggggggddddgggg^^gggggggggggg^^",
+            "~~~~~~ggggggggggddddgggg^^gggggggggg^^^^",
+            "~~~~~~gggggggggddddgggg^^ggggggggg^^^^^E",
+            "~~~~~~gggggggggddddgggg^^ggggggg^^^^gggE",
+            "~~~~~~gggggggggddddgggg^^ggggg^^^^ggggdE",
+            "~~~~~~gggggggggddddgggg^^^^^^^^gggggdddE",
+            "~~~~~~ggggggggddddggggg^^^^gggggggdddddE",
+            "~~~~~~ggggggggdddddgggggggggggggdddddggE",
+            "~~~~~gggggggggdddddgggggggggggdddddggggE",
+            "~~~~~gggggggggddddggggggggggdddddggggg^^",
+            "~~~~~gggggggggddddggggggggdddddgggggg^^g",
+            "~~~~gggggggggdddddggggggdddddggggggg^^gg",
+            "~~~~gggggggggddddgggggdddddgggggggg^^ggg",
+            "~~~~gggggggggddddgggddddddgggggggg^^^ggg",
+            "~~~~gggggggggddddgddddddgggggggggg^^gggg",
+            "~~~~ggggggggddddddddddggggggggggg^^ggggg",
+            "~~~~ggggggggddddddddgggggggggggg^^gggggg",
+            "~~~~ggggggggddddddgggggggggggggg^ggggggg",
+            "~~~~ggggggggddddggggggggggggggg^gggggggg",
+            "~~~~gggggggdddddgggggggggggggg^^gggggggg",
+            "~~~~gggggggdddddgggggggggggggg^ggggggggg",
+            "~~~~gggggggddddgggggggggggggg^^ggggggggg",
+            "~~~~gggggggddddggggggggggggg^^gggggggggg",
+            "~~~~gggggggddddggggggggggggg^ggggggggggg",
+            "~~~~ggggggddddggggggggggggg^^ggggggggggg",
+            "~~~~ggggggddddggggggggggggg^gggggggggggg",
+            "~~~~ggggggddddgggggggggggg^^gggggggggggg",
+            "~~~~gggggddddggggggggggggg^ggggggggggggg",
+            "~~~ggggggddddgggggggggggg^^ggggggggggggg",
+            "~~~ggggggddddgggggggggggg^gggggggggggggg",
+            "~~~gggggddddgggggggggggg^^gggggggggggggg",
+            "~~~gggggddddggggggggggg^^ggggggggggggggg",
+            "~~~gggggddddggggggggggg^^ggggggggggggggg",
+            "~~~ggggddddgggggggggggg^gggggggggggggggg",
+            "~~~gggEEEEEEgggggggggg^^gggggggggggggggg"
+          ]
+        },
+        "e": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            1,
+            1
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "b"
+            },
+            "west": {
+              "side": "west",
+              "to": "d"
+            },
+            "south": {
+              "side": "south",
+              "to": "g"
+            }
+          },
+          "terrain": [
+            "ggggggggggggg^^^^^ggggggggggggEEEEEggggg",
+            "ggggggggg^^^^^^^^^ggggggggggggddddgggggg",
+            "gggggg^^^^^^g^^^^^ggggggggggggddddgggggg",
+            "gg^^^^^^gggggg^^^^^ggggggggggddddddggggg",
+            "^^^^^ggggggggggg^^^ggggggggdddddddddgggg",
+            "^^gggggggggggggg^^^^gggggggddddddddddggg",
+            "Eggggggggggggggg^^^^gggggggddddddddddggg",
+            "Egggggggddddgggg^^^^^ggggggdddddddddddgg",
+            "Egggggddddddgggg^^^^^ggggggggdddddddddgg",
+            "Edddddddddddgggg^^^^^^ggggggggddddddddgg",
+            "Edddddddddddgggg^^^^^^^ggggggggddddddggg",
+            "Egggggggdddddgggg^^^^^^^ggggggggddgggggg",
+            "Eggggggggddddgggg^^^^^^^^ggggggggggggggg",
+            "^^^^^gggggdddgggg^^^^^^^^^^ggggggggggggg",
+            "g^^^^^^ggggddggggg^^^^^^^^^^^^^^^^^^^^^^",
+            "ggggg^^ggggddggggg^^^^^^^^^^^^^^^^^^^^^^",
+            "gggggg^^gggddggggg^^^^^^^^^^^^^^^^^^^^^^",
+            "ggggggg^gggddggggg^^^^^^^^^^^^^^^^^^^^^^",
+            "ggggggg^gggddgggggg^^^^^^^^^^^^^^^^^^^^^",
+            "ggggggg^^ggddgggggg^^^^^^^^^^^^^^^^^^^^^",
+            "ggggggg^^ggddgggggg^^^^^^^^^^^^^^^^^^^^^",
+            "ggggggg^^ggdddgggggggg^^^^^^^^^^^^^^^^^^",
+            "ggggggg^^gggddgggggggg^^^^gggggggggggfff",
+            "ggggggg^^gggddgggggggggggggggggggggggfff",
+            "gggggggg^^ggdddggggggggggggggggggggggfff",
+            "gggggggg^^gggdddgggggggggggggggggggggfff",
+            "gggggggg^^gggddddggggggggggggggggggggfff",
+            "gggggggg^^gggdddddddddgggggggggggggggfff",
+            "gggggggg^^ggggddddddddddddgggggggggggfff",
+            "ggggggggg^^gggggggggggddddddgggggggggfff",
+            "ggggggggg^^ggggggggggggggddddggggggggfff",
+            "ggggggggg^^gggggggggggggggdddggggggggfff",
+            "ggggggggg^gggggggggggggggggddggggggggfff",
+            "ggggggggg^gggggggggggggggggddggggggggfff",
+            "ggggggggg^gggggggggggggggggddggggggggfff",
+            "ggggggggg^gggggggggggggggggddggggggggfff",
+            "ggggggggg^gggggggggggggggggddggggggggfff",
+            "ggggggggg^gggggggggggggggggddggggggggfff",
+            "gggggggg^^gggggggggggggggggddggggggggfff",
+            "gggggggg^^gggggggggggggEEEEEEEEEEggggfff"
+          ]
+        },
+        "f": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            0,
+            2
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "d"
+            },
+            "east": {
+              "side": "east",
+              "to": "g"
+            },
+            "south": {
+              "side": "south",
+              "to": "h"
+            }
+          },
+          "terrain": [
+            "~~~gggEEEEEEgggggggggg^^gggggggggggggggg",
+            "~~~ggggdddgggggggggggg^^gggggggggggggggg",
+            "~~~ggggdddgggggggggggg^^gggggggggggggggg",
+            "~~~gggddddgggggggggggg^ggggggggggggggggg",
+            "~~~gggddddggggggggggg^^ggggggggggggggggg",
+            "~~~gggddddggggggggggg^^ggggggggggggggggg",
+            "~~~gggdddgggggggggggg^^ggggggggggggggggg",
+            "~~~gggdddgggggggggggg^gggggggggggggggggg",
+            "~~~ggddddggggggggggg^^gggggggggggggggggg",
+            "~~~ggddddggggggggggg^^gggggggggggggggggg",
+            "~~~~gddddggggggggggg^ggggggggggggggggggg",
+            "~~~~ddddgggggggggggg^ggggggggggggggggggg",
+            "~~~~ddddggggggggggg^^ggggggggggggggggggg",
+            "~~~~~dddggggggggggg^^ggggggggggggggggggg",
+            "~~~~~dddggggggggggg^^ggggggggggggggggggg",
+            "~~~~~~ddggggggggggg^^^gggggggggggggggggg",
+            "~~~~~~~gggggggggggg^^^^ggggggggggggggggg",
+            "~~~~~~~~ggggggggggg^^^^^gggggggggggggggg",
+            "~~~~~~~~~~ggggggggg^^^^^^^^^^^^^^^^^gggg",
+            "~~~~~~~~~~~gggggggg^^^^^^^^^^^^^^^^^^^^^",
+            "~~~~~~~~~~~~~~ggggg^^^^^^^^^^^^^^^^^^^^^",
+            "gggdd~~~~~~~~~~~~gg^^^^^^^^^^^^^^^^^^^^^",
+            "gggdd~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^",
+            "gggddddg~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^",
+            "gggddddgggg~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+            "gggddddggggg~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+            "gggddddggggggggg~~~~~~~~~~~~~~~~~~~~~~~~",
+            "gggddddgggggggggggggg~~~~~~~~~~~~~~~~~~~",
+            "ggggdddggggggggggggggggggg~~~~~~~~~~~~~~",
+            "ggggddddggggggggggggggggggggg~~~~~~~~~~~",
+            "ggggddddgggggggggggggggggggggggg~~~~~~~~",
+            "ggggddddgggggggggggggggggggggggggg~~~~~~",
+            "ggggddddgggggggggfffffffgggggggggggg~~~~",
+            "ggggddddggggggggfffffffffffffgggggggg~~~",
+            "gggggddddgggggggffffffffffffffffgggggg~~",
+            "gggggddddggggggggfffffffffffffffffffffg~",
+            "gggggddddggggggggfffffffffffffffffffffff",
+            "gggggddddgggggggffffffffffffffffffffffff",
+            "gggggddddgggggggffffffffffffffffffffffff",
+            "ggggEEEEEEggggggffffffffffffffffffffffff"
+          ]
+        },
+        "g": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            1,
+            2
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "e"
+            },
+            "west": {
+              "side": "west",
+              "to": "f"
+            },
+            "south": {
+              "side": "south",
+              "to": "i"
+            }
+          },
+          "terrain": [
+            "ggggggggg^ggggggggggggggEEEEEEEEgggggfff",
+            "ggggggggg^gggggggggggggggggBBggggggggfff",
+            "ggggggggg^gggggggggggggggggBBggggggggfff",
+            "ggggggggg^gggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^ggggggggggggggggggBBggggggggfff",
+            "gggggggg^^gggggggggggggggggBBgggggggggff",
+            "ggggggggg^gggggggggggggggggBBgggggggggff",
+            "^^^^^^^^^^gggggggggggggggggBBggggggggggf",
+            "^^^^^^^^^^gggggggggggggggggBBggggggggggf",
+            "^^^^^^^^^^gggggggggggggggggBBggggggggggg",
+            "^^^^^^^^^^gggggggggggggggggBBggggggggggg",
+            "^^^^^^^^^^gggggggggggggggggBBggggggggggg",
+            "~~~~~~~~~~~~~~~~~~~~gggggg====gggggggggg",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~====~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~====~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~====~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~====~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~====~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~====~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~gg====ggg~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~ggggggggBBggggggggggg",
+            "~~~~~~~~~~~~~ggggggggggggggBBggggggggggg",
+            "~~~~~~~~fffggggggggggggggggBBggggggggggg",
+            "~~~ffffffffggggggggggggggggBBggggggggggg",
+            "fffffffffffggggggggggggggggBBggggggggggg",
+            "fffffffffffggggggggggggggggBBggggggggggg",
+            "fffffffffffggggggggggggggggBBggggggggggg",
+            "fffffffffffgggggggggggggggEEEEgggggggggg"
+          ]
+        },
+        "h": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            0,
+            3
+          ],
+          "exits": {
+            "north": {
+              "side": "north",
+              "to": "f"
+            },
+            "east": {
+              "side": "east",
+              "to": "i"
+            }
+          },
+          "terrain": [
+            "ggggEEEEEEggggggffffffffffffffffffffffff",
+            "gggggdddddggggggffffffffffffffffffffffff",
+            "gggggdddddgggggggfffffffffffffffffffffff",
+            "gggggdddddggggggggffffffffffffffffffffff",
+            "gggggdddddgggggggggfffffffffffffffffffff",
+            "gggggdddddgggggggggggfffffffffffffffffff",
+            "gggggdddddggggggggggggffffffffffffffffff",
+            "gggggdddddggggggggggggggffffffffffffffff",
+            "gggggdddddggggggggggggggggffffffffffffff",
+            "gggggdddddgggggggggggggggggfffffffffffff",
+            "ggggggddddgggggggggggggggggggfffffffffff",
+            "ggggggdddddgggggggggggggggggggffffffffff",
+            "ggggggdddddggggggggggggggggggggggfffffff",
+            "ggggggdddddgggggggggggggggggggggggggffff",
+            "ggggggdddddggggggggggggggggggggggggggggg",
+            "ggggggddddddgggggggggggggggggggggggggggg",
+            "ggggggddddddgggggggggggggggggggggggggggg",
+            "ggggggdddddddggggggggggggggggggggggggggg",
+            "gggggggddddddddggggggggggggggggggggggggg",
+            "gggggggddddddddddddggggggggggggggggggggE",
+            "ggggggggdddddddddddddddddddddddddddddddE",
+            "gggggggggddddddddddddddddddddddddddddddE",
+            "ggggggggggdddddddddddddddddddddddddddddE",
+            "ggggggggggggdddddddddddddddddddddddddddE",
+            "ggggggggggggggdddddddddddddddddddddddggE",
+            "ggggggggggggggggggdddddddddddggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg"
+          ]
+        },
+        "i": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            1,
+            3
+          ],
+          "exits": {
+            "west": {
+              "side": "west",
+              "to": "h"
+            },
+            "new": {
+              "side": "south",
+              "to": "M8"
+            },
+            "north": {
+              "side": "north",
+              "to": "g"
+            }
+          },
+          "terrain": [
+            "fffffffffffggggggggggggggEEEEEgggggggggg",
+            "fffffffffffgggggggggggggggBBBggggggggggg",
+            "fffffffffffgggggggggggggggBBBggggggggggg",
+            "fffffffffffgggggggggggggggBBBggggggggggg",
+            "ffffffffffffgggggggggggggBBBgggggggggggg",
+            "ffffffffffffgggggggggggggBBBgggggggggggg",
+            "ffffffffffffgggggggggggggBBBgggggggggggg",
+            "ffffffffffffgggggggggggggBBBgggggggggggg",
+            "fffffffffffggggggggggggggBBBgggggggggggg",
+            "fffffffffffggggggggggggggBBBgggggggggggg",
+            "fffffffffffgggggggggggggBBBggggggggggggg",
+            "ffffffffffggggggggggggggBBBggggggggggggg",
+            "ffffffffffggggggggggggggBBBggggggggggggg",
+            "ffffffffggggggggggggggggBBBggggggggggggg",
+            "ggggggggggggggggggggggggBBBggggggggggggg",
+            "ggggggggggggggggggggggggBBBggggggggggggg",
+            "ggggggggggggggggggggggggBBBggggggggggggg",
+            "gggggggggggggggggggggggBBBgggggggggggggg",
+            "gggggggggggggggggggggggBBBgggggggggggggg",
+            "EBBBBBBBBBBBBBBggggggggBBBgggggggggggggg",
+            "EBBBBBBBBBBBBBBBBBBBgggBBBgggggggggggggg",
+            "EBBBBBBBBBBBBBBBBBBBBBgBBBgggggggggggggg",
+            "EBBBBBBBBBBBBBBBBBBBBBBBBBgggggggggggggg",
+            "EBBBBBBBBBBBBBBBBBBBBBBBBggggggggggggggg",
+            "EgggggggggggggggBBBBBBBBBggggggggggggggg",
+            "ggggggggggggggggggggBBBBBggggggggggggggg",
+            "gggggggggggggggggggggBBBBggggggggggggggg",
+            "ggggggggggggggggggggggBBBggggggggggggggg",
+            "ggggggggggggggggggggggBBBggggggggggggggg",
+            "ggggggggggggggggggggggBBBggggggggggggggg",
+            "gggggggggggggggggggggBBBgggggggggggggggg",
+            "gggggggggggggggggggggBBBgggggggggggggggg",
+            "gggggggggggggggggggggBBBgggggggggggggggg",
+            "gggggggggggggggggggggBBBgggggggggggggggg",
+            "gggggggggggggggggggggBBBgggggggggggggggg",
+            "gggggggggggggggggggggBBBgggggggggggggggg",
+            "ggggggggggggggggggggBBBggggggggggggggggg",
+            "ggggggggggggggggggggBBBggggggggggggggggg",
+            "ggggggggggggggggggggBBBggggggggggggggggg",
+            "gggggggggggggggggggEEEEEgggggggggggggggg"
+          ]
+        }
+      }
     },
     "M6": {
       "name": "新的地圖往北",
@@ -707,6 +1272,30 @@
       "scene_prefix": "",
       "grid_size": 32,
       "maps": {}
+    },
+    "M8": {
+      "name": "休斯城",
+      "dir": "",
+      "file_prefix": "",
+      "scene_prefix": "",
+      "grid_size": 32,
+      "maps": {
+        "a": {
+          "kind": "other",
+          "floor": 0,
+          "cell": [
+            0,
+            0
+          ],
+          "exits": {
+            "new": {
+              "side": "north",
+              "to": "M5"
+            }
+          },
+          "label": "休斯城"
+        }
+      }
     }
   }
 }

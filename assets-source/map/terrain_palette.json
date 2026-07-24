@@ -1,0 +1,16 @@
+{
+  "version": 4,
+  "note": "地格藍圖詞彙 — 單一定義源。三方共讀：tools/map_editor/index.html（塗色調色盤）、tools/map_editor/blueprint_desc.py（產圖描述）、godot-project/scripts/map/blueprint_to_paths.gd（碰撞導出）。改這裡就好，勿在三處各自寫死。cells 順序＝調色盤排列＋數字快捷鍵（1..9 對前九個；role=base 的空用「-」）。code 皆單一 ASCII 字元。role=base（'.'）＝空/未定義（透明留白、預設；坑洞或沒畫滿就留這個），排在最後、導出碰撞時視為可走開闊地面（要擋請畫牆/山壁/河/森林）。walkable=false＝碰撞牆。森林＝密林樹牆，阻擋。describe=false＝blueprint_desc 不寫進產圖 Layout（一般地面靠 Theme 帶）。",
+  "cells": [
+    { "code": "g", "label": "草地", "label_en": "grass", "walkable": true, "color": "#6d9a3a", "describe": false },
+    { "code": "B", "label": "磚路", "label_en": "brick road", "walkable": true, "color": "#b5623b" },
+    { "code": "d", "label": "泥路", "label_en": "dirt path", "walkable": true, "color": "#a9843f" },
+    { "code": "=", "label": "橋", "label_en": "wooden bridge", "walkable": true, "color": "#8a5a2b" },
+    { "code": "E", "label": "出入口", "label_en": "entrance", "walkable": true, "role": "exit", "color": "#e6c930" },
+    { "code": "~", "label": "河", "label_en": "river", "walkable": false, "color": "#3f7fbf" },
+    { "code": "#", "label": "牆", "label_en": "wall", "walkable": false, "color": "#4a4f5c" },
+    { "code": "^", "label": "山壁", "label_en": "cliff", "walkable": false, "color": "#6b7280" },
+    { "code": "f", "label": "森林", "label_en": "dense forest", "walkable": false, "color": "#2e6b46" },
+    { "code": ".", "label": "空（預設）", "label_en": "empty", "walkable": true, "role": "base", "describe": false }
+  ]
+}

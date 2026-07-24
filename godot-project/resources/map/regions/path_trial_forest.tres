@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="RegionDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/map_def.gd" id="1_da0m5"]
+[ext_resource type="Script" path="res://scripts/content/map_exit_def.gd" id="2_ngu6e"]
+[ext_resource type="Script" path="res://scripts/content/region_def.gd" id="3_r5yo4"]
+
+[sub_resource type="Resource" id="Resource_s66an"]
+script = ExtResource("2_ngu6e")
+to = "TrialNorth"
+at = "north"
+spawn = "start"
+
+[sub_resource type="Resource" id="Resource_5035q"]
+script = ExtResource("2_ngu6e")
+to = "TrialEast"
+spawn = "start"
+
+[sub_resource type="Resource" id="Resource_1706i"]
+script = ExtResource("1_da0m5")
+id = "path_trial_forest"
+scene_name = "PathTrialForest"
+h = 40
+layout = "open"
+enemies = Array[String](["bird", "gslime"])
+exits = Array[ExtResource("2_ngu6e")]([SubResource("Resource_s66an"), SubResource("Resource_5035q")])
+
+[resource]
+script = ExtResource("3_r5yo4")
+region_id = "path_trial_forest"
+seed = 240724
+maps = Array[ExtResource("1_da0m5")]([SubResource("Resource_1706i")])

@@ -1,0 +1,127 @@
+{
+  "region_id": "m5_south_route",
+  "seed": 50724,
+  "maps": [
+    {
+      "id": "str_a",
+      "scene_name": "STRA",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "medium",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "entries": ["Town"],
+      "exits": [
+        { "to": "Town", "at": "north", "spawn": "from_stra" },
+        { "to": "str_b", "at": "east" },
+        { "to": "str_d", "at": "south" }
+      ]
+    },
+    {
+      "id": "str_b",
+      "scene_name": "STRB",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "medium",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "exits": [
+        { "to": "str_a", "at": "west" },
+        { "to": "str_c", "at": "east" },
+        { "to": "str_e", "at": "south" }
+      ]
+    },
+    {
+      "id": "str_c",
+      "scene_name": "STRC",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "tight",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "exits": [
+        { "to": "str_b", "at": "west" }
+      ]
+    },
+    {
+      "id": "str_d",
+      "scene_name": "STRD",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "medium",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "exits": [
+        { "to": "str_a", "at": "north" },
+        { "to": "str_f", "at": "south" }
+      ]
+    },
+    {
+      "id": "str_e",
+      "scene_name": "STRE",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "tight",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "exits": [
+        { "to": "str_b", "at": "north" },
+        { "to": "str_g", "at": "south" }
+      ]
+    },
+    {
+      "id": "str_f",
+      "scene_name": "STRF",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "medium",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "exits": [
+        { "to": "str_d", "at": "north" },
+        { "to": "str_h", "at": "south" }
+      ]
+    },
+    {
+      "id": "str_g",
+      "scene_name": "STRG",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "tight",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "exits": [
+        { "to": "str_e", "at": "north" }
+      ]
+    },
+    {
+      "id": "str_h",
+      "scene_name": "STRH",
+      "kind": "forest",
+      "w": 40,
+      "h": 40,
+      "layout": "open",
+      "openness": "medium",
+      "level_band": [4, 6],
+      "enemies": ["goblin", "wolf", "worm"],
+      "exits": [
+        { "to": "str_f", "at": "north" },
+        { "to": "M8", "at": "south", "spawn": "from_strh" }
+      ]
+    }
+  ]
+}

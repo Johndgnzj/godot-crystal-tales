@@ -94,6 +94,10 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   2026-07-17 依地圖連線調整 a、b、c、e 出入口構圖與路徑。
 - `assets/map/floret/floret_town.png`（素材源＝`assets-source/map/floret/floret_town.png`）：
   AI 生成素材；M1 芳蕾鎮手繪畫面地圖。2026-07-20 已由 Godot runtime 的無箭頭版本回存為原圖；舊的含箭頭錯誤版本（1254）於 2026-07-21 統一命名時移至 `assets-source/map/floret/_backup/floret-town-1254-old.png`，不作為來源圖使用。
+- `assets/map/new_floret_road/nfr_a.png`（素材源＝`assets-source/map/new_floret_road/nfr_a.png`）：
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5「通往大都市的路」a 的草原手繪背景。已依 John 確認的 M1 北口、NFR-b 東口、NFR-d 南口 Y 字路徑配置繪製；同日將不可通行河流固定於左側邊界，未加橋或可涉水處。替換前版本保留於 `assets-source/map/new_floret_road/_backup/nfr_a_before_river-2026-07-24.png`；正式圖已機械縮放為 1280×1280，以對齊 32px 格。
+- `assets/props/m5_tree.png`（素材源＝`assets-source/props/m5_tree/m5_tree_{raw,alpha}.png`）：
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5-a 用的俯視手繪闊葉樹。John 驗收後以洋紅鍵去背，原始鍵圖與 alpha 版皆保留；正式場景以六個縮放／鏡像實例使用，碰撞只放在樹幹腳點，樹根節點直接位於 `YSort`，以腳點 y 座標決定角色遮擋。
 - `assets/map/east_forest/ef_a.png`（素材源＝`assets-source/map/east_forest/ef_a.png`，2026-07-21 統一命名）：
   AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 a 畫面。已依地圖產圖規格移除箭頭、寶箱、告示牌、木箱與木桶等互動物件，保留原有地形與出入口。
 - `assets/map/east_forest/ef_{b,c,d}.png`（素材源＝`assets-source/map/east_forest/ef_{b,c,d}.png`，2026-07-21 統一命名；清理前版本存於 `east_forest/_backup/east-forest-{b,c,d-boss-room}-before-cleanup-2026-07-20.png`）：
@@ -117,9 +121,8 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/char/gray_*/rossel_*.png`（老葛雷/羅素隊長 36 幀走路圖，戶外遊走 NPC）：
   LPC 角色產生器圖層合成（`art_v10_npcwalk.py`；body＋頭＋鬍/帽/鎖甲染色），授權同主角 **CC-BY-SA 3.0 / GPL 3.0**。
 - `assets/char/ludo_*.png`（路德 36 幀走路圖，**2026-07-18 重製**）：由 **Universal LPC Spritesheet Generator**（sanderfrenken）組裝 LPC 圖層（teen body＋messy2 髮＋leather 皮甲＋紅 cape＋cuffed pants＋leather boots＋bracers），採**乾淨無拔劍**版當 overworld 走路圖。授權 **OGA-BY 3.0 / CC-BY-SA 3.0 / GPL 3.0**（shadow 層 CC0）。**逐層完整作者／授權／連結見 `assets-source/role/main/ludo/ludo_lpc_credits.txt`**；配方存 `assets-source/role/main/ludo/ludo_lpc_recipe.json`（可 Import 回產生器重出/微調）。主要貢獻者：bluecarrot16、Stephen Challener (Redshrike)、Benjamin K. Smith (BenCreating)、JaidynReiman、ElizaWy、Johannes Sjölund (wulax)、Matthew Krohn (makrohn)、Pierre Vigier (pvigier)、Evert、TheraHedwig、MuffinElZangano、Durrani、Manuel Riecke (MrBeast)、Nila122、drjamgo 等 LPC 貢獻者。**戰鬥攻擊圖** `assets/battle/hero_ludo_{slash,thrust,spellcast}_*`（揮劍／突刺／詠唱；slash＝oversized `custom/slash_128`、thrust/spellcast＝standard）取自同一 LPC **有劍版**（`ludo_lpc/without_sword`，含紅 cape＋Arming Sword），授權／作者同上。**戰鬥 idle 圖** `assets/battle/hero_ludo_f0-3` 於 2026-07-20 改為 OpenAI 內建 imagegen 生成、經 John 驗收的兩格待機動作（f0/f2、f1/f3 各對應一格），以螢光綠鍵去背後輸出透明 PNG；原始鍵圖與 alpha 版保存於 `assets-source/role/main/ludo/battle_idle/`，提示詞作者 John／協作 Agent。
-- `assets/props/chest_closed.png`／`chest_opened.png`（地圖寶箱兩態）、`herb.png`（支線鏡草）、
-  `helmet.png`（支線阿吉的頭盔）：程序化像素繪製（自製，build_cq2.py 內以 PIL 繪，無授權限制；
-  同 barrel/crate/lamp 等程序繪 props）。
+- `assets/props/chest_closed.png`／`chest_opened.png`（地圖寶箱兩態）：程序化像素繪製（自製，build_cq2.py 內以 PIL 繪，無授權限制；同 barrel/crate/lamp 等程序繪 props）。
+- `assets/props/herb.png`（第一章委託鏡草）／`helmet.png`（第一章礦山遺物「阿吉的礦工頭盔」）：OpenAI 內建 imagegen 生成，經 John 驗收後以洋紅鍵去背、最近鄰縮放為 32×32px 透明 PNG（2026-07-23）；原圖與 alpha 版分別保存於 `assets-source/props/mirror_grass/`、`assets-source/props/miner_helmet/`，提示詞作者 John／協作 Agent。
 - `assets/ui/joybase/joyknob/btn_a/btn_menu/btn_back/pad_*/btn_s*`（觸控虛擬搖桿與按鈕）：
   程序化繪製（自製，build_cq2.py 內以 PIL 繪；力/敏/智 字用系統字體 STHeiti 烘入）。
 - 地牢地板圖磚（gravel 遇敵/cavedark，art_v2.py toroidal wrap_dither 無縫重繪）：自製像素，無授權限制。
