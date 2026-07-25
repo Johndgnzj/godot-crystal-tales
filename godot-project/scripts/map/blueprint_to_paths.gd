@@ -5,8 +5,9 @@ extends SceneTree
 ## PathPaint32 層（等同 John 平常在編輯器手刷的可走區）；之後照常跑 invert_paths.gd 反轉成
 ## CollisionPaint 碰撞。本腳本只寫 PathPaint32、不動任何碰撞層——碰撞仍由 invert_paths 這唯一 builder 產。
 ##
-## 地格語意讀 assets-source/map/terrain_palette.json：walkable=false 的 code（河/牆/山壁）＝擋、不刷；
-## 其餘（含未列 code、空白）一律當可走地面 → 刷 PathPaint32。
+## 地格語意讀 assets-source/map/terrain_palette.json：walkable=false 的 code（河/牆/山壁/森林/空）＝擋、不刷；
+## 其餘 code 當可走地面 → 刷 PathPaint32。**空（.）＝圖外/未畫＝擋**（要可走就得畫地格）。
+## **出入口另讀 map 的 entrances 屬性**（獨立於 terrain）：entrances 的 E 格一律當可走開口（刷 PathPaint，覆蓋 terrain 的擋）。
 ##
 ## 執行：Godot --headless -s res://scripts/map/blueprint_to_paths.gd --path <proj> -- [場景名...]
 ##   不給名＝處理 map-def 內所有「有 terrain 藍圖」的圖。給名（如 nfr_a）＝只做那幾張。
@@ -17,7 +18,7 @@ const OUT_DIR := "res://scenes/world/painted/"
 const PATH_SRC := 0
 const PATH_ATLAS := Vector2i(0, 0)
 ## palette 讀失敗時的保底擋格集合（須與 terrain_palette.json 的 walkable=false 對齊）。
-const FALLBACK_BLOCKED := ["~", "#", "^"]
+const FALLBACK_BLOCKED := ["~", "#", "^", "f", "."]         # 河/牆/山壁/森林/空(圖外)
 
 
 func _initialize() -> void:
@@ -46,13 +47,14 @@ func _run() -> void:
 			var scene_name := "%s_%s" % [prefix, k]
 			if not only.is_empty() and not only.has(scene_name):
 				continue
-			if _apply(scene_name, terrain, blocked):
+			var entrances: Variant = (maps[k] as Dictionary).get("entrances", null)
+			if _apply(scene_name, terrain, entrances, blocked):
 				count += 1
 	print("\nblueprint_to_paths 完成：寫入 PathPaint32 的圖 = %d。接著跑 invert_paths.gd 產碰撞。" % count)
 	quit(0)
 
 
-func _apply(scene_name: String, terrain: Array, blocked: Dictionary) -> bool:
+func _apply(scene_name: String, terrain: Array, entrances: Variant, blocked: Dictionary) -> bool:
 	var path := OUT_DIR + scene_name + ".tscn"
 	if not ResourceLoader.exists(path):
 		push_warning("找不到場景（先跑 build_scenes？）：" + path)
@@ -64,15 +66,20 @@ func _apply(scene_name: String, terrain: Array, blocked: Dictionary) -> bool:
 		root.free()
 		return false
 	p32.clear()                                             # 藍圖為可走區的新真相源，重寫整層
+	var has_ent: bool = entrances is Array
 	var walk := 0
 	var block := 0
 	for r in mini(terrain.size(), N32):
 		var row := str(terrain[r])
+		var erow := ""
+		if has_ent and r < (entrances as Array).size():
+			erow = str((entrances as Array)[r])
 		for c in mini(row.length(), N32):
-			if blocked.has(row[c]):
+			var is_ent: bool = c < erow.length() and erow[c] == "E"   # 出入口格＝一律可走開口（覆蓋 terrain 的擋）
+			if not is_ent and blocked.has(row[c]):
 				block += 1
 				continue
-			p32.set_cell(Vector2i(c, r), PATH_SRC, PATH_ATLAS)   # 可走 → 刷 PathPaint32
+			p32.set_cell(Vector2i(c, r), PATH_SRC, PATH_ATLAS)   # 可走(或出入口) → 刷 PathPaint32
 			walk += 1
 	var packed := PackedScene.new()
 	if packed.pack(root) == OK:

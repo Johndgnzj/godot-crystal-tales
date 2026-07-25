@@ -191,8 +191,10 @@ const SIDES=["east","west","north","south","up","down","interior"];
 const OPP={east:"west",west:"east",north:"south",south:"north",up:"down",down:"up",interior:"interior"};
 const DIR={east:[1,0],west:[-1,0],north:[0,-1],south:[0,1],up:[.7,-.7],down:[.7,.7],interior:[0,1]};
 
-const S={data:null, region:null, floor:null, sel:null, link:false, bidir:false, linkFrom:null, linkSide:null, thumbs:true, zoom:1, baseW:0, baseH:0, paint:false, brush:".", tool:"brush", neighbors:true, ovBlueprint:false};
+const S={data:null, region:null, floor:null, sel:null, link:false, bidir:false, linkFrom:null, linkSide:null, thumbs:true, zoom:1, baseW:0, baseH:0, paint:false, brush:".", tool:"brush", neighbors:true, ovBlueprint:false, entranceMode:false};
 const GRIDN=40, TILE=32;                         // 藍圖：40×40 格、每格 32px（＝1280 圖）
+const ENTRANCE="E", ENTRANCE_COLOR="#ff4136", SVGNS="http://www.w3.org/2000/svg";  // 出入口＝獨立層（非地形），紅框、不填滿
+const ENT_ATTR='fill="none" stroke="'+ENTRANCE_COLOR+'" stroke-width="2" vector-effect="non-scaling-stroke"';  // 出入口格＝紅外框（底下地格看得到）
 let PALETTE=[], PAL_BY={}, BASE=".";             // 地格詞彙（讀 assets-source/map/terrain_palette.json）
 let undoStack=[], redoStack=[], undoFor=null;    // 藍圖復原堆疊（per 選中地圖，切圖時重置）
 const $=s=>document.querySelector(s);
@@ -361,19 +363,29 @@ async function loadPalette(){
   for(const p of PALETTE) if(p.role==="base") BASE=p.code;
   if(!PAL_BY[S.brush]||S.brush===BASE){const nb=PALETTE.find(p=>p.role!=="base"); S.brush=nb?nb.code:BASE;}
 }
-function ensureTerrain(m){
-  if(!Array.isArray(m.terrain)||m.terrain.length!==GRIDN){
-    m.terrain=Array.from({length:GRIDN},()=>BASE.repeat(GRIDN)); return m.terrain;
+function activeField(){ return S.entranceMode?"entrances":"terrain"; }
+function ensureGrid(m,field){                                  // 就地正規化 40×40、保持同一陣列引用（floodFill 需要）
+  if(!Array.isArray(m[field])||m[field].length!==GRIDN){
+    m[field]=Array.from({length:GRIDN},()=>BASE.repeat(GRIDN)); return m[field];
   }
-  for(let r=0;r<GRIDN;r++){let row=String(m.terrain[r]);      // 就地正規化、保持同一陣列引用（floodFill 需要）
+  for(let r=0;r<GRIDN;r++){let row=String(m[field][r]);
     if(row.length!==GRIDN) row=(row.length<GRIDN?row+BASE.repeat(GRIDN-row.length):row).slice(0,GRIDN);
-    m.terrain[r]=row;}
-  return m.terrain;
+    m[field][r]=row;}
+  return m[field];
 }
-function setTerrainCell(m,c,r,code){
+function setCellIn(m,field,c,r,code){
   if(c<0||c>=GRIDN||r<0||r>=GRIDN) return false;
-  const t=ensureTerrain(m); if(t[r][c]===code) return false;
+  const t=ensureGrid(m,field); if(t[r][c]===code) return false;
   t[r]=t[r].slice(0,c)+code+t[r].slice(c+1); return true;
+}
+function migrateEntrances(m){                                  // 舊資料相容：terrain 內的 E → entrances 層、terrain 補空
+  if(!Array.isArray(m.terrain)) return;
+  let has=false; for(const row of m.terrain) if(String(row).indexOf(ENTRANCE)>=0){has=true;break;}
+  if(!has) return;
+  ensureGrid(m,"terrain"); ensureGrid(m,"entrances");
+  for(let r=0;r<GRIDN;r++){const tr=m.terrain[r],er=m.entrances[r]; let nt="",ne="";
+    for(let c=0;c<GRIDN;c++){const ch=tr[c]; if(ch===ENTRANCE){nt+=BASE;ne+=ENTRANCE;}else{nt+=ch;ne+=(er[c]||BASE);}}
+    m.terrain[r]=nt; m.entrances[r]=ne;}
 }
 const TOOLS=[{k:"brush",label:"✏️ 筆刷"},{k:"fill",label:"🪣 填滿"},{k:"line",label:"／ 直線"},{k:"rect",label:"▭ 矩形填滿"}];
 function renderPaintBar(){
@@ -381,38 +393,51 @@ function renderPaintBar(){
   if(!S.paint){bar.style.display="none"; return;}
   bar.style.display="flex";
   const tools=TOOLS.map((t,i)=>'<button class="ptool'+(S.tool===t.k?" on":"")+'" data-tool="'+t.k+'">'+t.label+'<span class="hk">'+["q","w","e","r"][i]+'</span></button>').join("");
+  const entBtn='<button class="ptool'+(S.entranceMode?" on":"")+'" id="pbEntrance" title="切換出入口標記層（獨立屬性，非地形）">🚪 出入口</button>';
   const head=S.sel?"":'<span style="color:var(--warn);font-size:12px;align-self:center;margin:0 4px">← 先點一張地圖開始畫</span>';
   const sw=PALETTE.map((p,i)=>{
     const swi=p.color?'<span class="sw" style="background:'+esc(p.color)+'"></span>':'<span class="sw sw-empty"></span>';
-    const hk=(p.role==="base")?"-":(i<9?String(i+1):"");     // 空用「-」；其餘 1..9
+    const hk=(p.role==="base")?"-":(i<9?String(i+1):"");     // 空用「-」；地格 1..8
     return '<button class="swatch'+(S.brush===p.code?" on":"")+'" data-code="'+esc(p.code)+'" title="'+esc(p.label)+(p.walkable?"（可走）":"（阻擋）")+'">'+swi+esc(p.label)+(hk?'<span class="hk">'+hk+'</span>':'')+'</button>';
   }).join("");
-  bar.innerHTML=tools+'<span class="psep"></span>'+head+sw+
+  const swArea=S.entranceMode
+    ?'<span style="color:'+ENTRANCE_COLOR+';font-size:12px;align-self:center;margin:0 6px">🚪 出入口層：左鍵標記・右鍵清除（獨立屬性，不算地形、不畫進地圖）</span>'
+    :sw;
+  bar.innerHTML=tools+entBtn+'<span class="psep"></span>'+head+swArea+
     '<span style="flex:1"></span>'+
     '<button class="ptool'+(S.neighbors?" on":"")+'" id="pbNeighbors" title="顯示鄰接地圖(唯讀)供對接開口">🧭 鄰圖</button>'+
-    '<button id="pbImport" title="從其它地圖複製藍圖">📋 匯入</button>'+
-    '<button id="pbClear" title="清空這張圖的藍圖" style="color:var(--danger)">🗑️ 清空</button>'+
-    '<span class="badge" style="align-self:center">左鍵畫・右鍵擦・qwer工具・1–9地格・⌘Z復原・⌘S存檔</span>';
+    '<button id="pbImport" title="從其它地圖複製藍圖（含出入口）">📋 匯入</button>'+
+    '<button id="pbExport" title="匯出這張藍圖成 1280×1280 結構參考圖 PNG（下一階段產圖用）">⬇️ 匯出</button>'+
+    '<button id="pbClear" title="清空目前層（地格或出入口）" style="color:var(--danger)">🗑️ 清空</button>'+
+    '<span class="badge" style="align-self:center">左鍵畫・右鍵擦・qwer工具・1–8地格・🚪出入口・⌘Z復原・⌘S存檔</span>';
   bar.querySelectorAll(".ptool[data-tool]").forEach(b=>b.onclick=()=>{S.tool=b.dataset.tool;renderPaintBar();});
   bar.querySelectorAll(".swatch").forEach(b=>b.onclick=()=>{S.brush=b.dataset.code;renderPaintBar();});
+  $("#pbEntrance").onclick=()=>{S.entranceMode=!S.entranceMode;renderPaintBar();if(S.sel)renderPaint();};
   $("#pbNeighbors").onclick=()=>{S.neighbors=!S.neighbors;renderPaintBar();if(S.sel)renderPaint();};
   $("#pbImport").onclick=openImport;
+  $("#pbExport").onclick=exportBlueprint;
   $("#pbClear").onclick=clearTerrain;
 }
-function cellsSvg(m,op){                                       // 已塗地格（非空）→ rect 字串；op=fill-opacity
-  let s="";
-  if(Array.isArray(m.terrain)) for(let r=0;r<GRIDN;r++){const row=String(m.terrain[r]||"");
-    for(let c=0;c<GRIDN;c++){const code=row[c]||BASE; if(code===BASE)continue; const p=PAL_BY[code]; if(!p||!p.color)continue;
-      s+='<rect class="pcell" data-c="'+c+'" data-r="'+r+'" x="'+(c*TILE)+'" y="'+(r*TILE)+'" width="'+TILE+'" height="'+TILE+'" fill="'+esc(p.color)+'" fill-opacity="'+op+'"/>';}}
+function gridCellsSvg(m,field,op){                             // 某層已塗格 → rect；terrain 用地格色、entrances 用出入口黃
+  let s=""; const grid=m[field]; if(!Array.isArray(grid)) return s;
+  const ent=(field==="entrances");
+  for(let r=0;r<GRIDN;r++){const row=String(grid[r]||"");
+    for(let c=0;c<GRIDN;c++){const code=row[c]||BASE; let attr;
+      if(ent){ if(code!==ENTRANCE)continue; attr=ENT_ATTR; }             // 出入口＝紅外框、不填滿
+      else { if(code===BASE)continue; const p=PAL_BY[code]; if(!p||!p.color)continue; attr='fill="'+p.color+'" fill-opacity="'+op+'"'; }
+      s+='<rect class="pcell" data-c="'+c+'" data-r="'+r+'" x="'+(c*TILE)+'" y="'+(r*TILE)+'" width="'+TILE+'" height="'+TILE+'" '+attr+'/>';}}
   return s;
 }
+function cellsSvg(m,op){ return gridCellsSvg(m,"terrain",op); }
 function renderPaint(){
   if(undoFor!==S.sel){ resetUndo(); undoFor=S.sel; }             // 切到別張圖 → 重置復原堆疊
   const svg=$("#canvas"), reg=curRegion(), m=reg.maps[S.sel];
   const W=GRIDN*TILE, H=GRIDN*TILE, src=pngSrc(reg,S.sel,m), BAND=10*TILE;
   const bg=src?'<image href="'+src+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" onerror="this.remove()"/>'
               :'<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#2a2f3d"/>';
+  migrateEntrances(m);                                          // 舊資料相容：terrain 的 E → entrances 層
   const cells=cellsSvg(m,"0.6");
+  const entCells=gridCellsSvg(m,"entrances",S.entranceMode?"0.85":"0.55");
   let grid="";
   for(let i=0;i<=GRIDN;i++){const q=i*TILE, maj=(i%5===0)?' class="maj"':"";
     grid+='<line'+maj+' x1="'+q+'" y1="0" x2="'+q+'" y2="'+H+'"/>';
@@ -425,7 +450,7 @@ function renderPaint(){
       const nm=reg.maps[nkey], nsrc=pngSrc(reg,nkey,nm);
       let inner=nsrc?'<image href="'+nsrc+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" onerror="this.remove()"/>'
                     :'<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#23283a"/>';
-      inner+=cellsSvg(nm,"0.55");
+      inner+=cellsSvg(nm,"0.55")+gridCellsSvg(nm,"entrances","0.7");
       let vx=0,vy=0,vw=W,vh=H,px=0,py=0,pw=W,ph=H;
       if(side==="west"){vx=W-BAND;vw=BAND;px=-BAND;pw=BAND;x0=-BAND;}
       else if(side==="east"){vw=BAND;px=W;pw=BAND;x1=W+BAND;}
@@ -437,7 +462,7 @@ function renderPaint(){
   }
   svg.setAttribute("viewBox",x0+" "+y0+" "+(x1-x0)+" "+(y1-y0));
   S.baseW=x1-x0; S.baseH=y1-y0; svg.setAttribute("width",S.baseW*S.zoom); svg.setAttribute("height",S.baseH*S.zoom);
-  svg.innerHTML='<g id="pneighbors">'+neigh+'</g><g id="pbg">'+bg+'</g><g id="pcells">'+cells+'</g><g id="pgrid">'+grid+'</g><rect id="phit" x="0" y="0" width="'+W+'" height="'+H+'" fill="transparent"/>';
+  svg.innerHTML='<g id="pneighbors">'+neigh+'</g><g id="pbg">'+bg+'</g><g id="pcells">'+cells+'</g><g id="pent">'+entCells+'</g><g id="pgrid">'+grid+'</g><rect id="phit" x="0" y="0" width="'+W+'" height="'+H+'" fill="transparent"/>';
   bindPaint(svg,m);
 }
 function paintCellOf(svg,cx,cy){const pt=clientToSvg(svg,cx,cy);return [Math.floor(pt.x/TILE),Math.floor(pt.y/TILE)];}
@@ -452,27 +477,28 @@ function rectCells(c0,r0,c1,r1){                              // 實心矩形
   for(let r=d;r<=e;r++) for(let c=a;c<=b;c++) out.push([c,r]);
   return out;
 }
-function floodFill(m,cellsG,c0,r0,code){                     // 4 向連通填滿（同 code 區域 → brush）
+function floodFill(m,field,c0,r0,code){                      // 4 向連通填滿（同 code 區域 → code）
   if(c0<0||c0>=GRIDN||r0<0||r0>=GRIDN) return;
-  const t=ensureTerrain(m), target=t[r0][c0]; if(target===code) return;
+  const t=ensureGrid(m,field), target=t[r0][c0]; if(target===code) return;
   const stack=[[c0,r0]], seen={};
   while(stack.length){const [c,r]=stack.pop();
     if(c<0||c>=GRIDN||r<0||r>=GRIDN) continue;
     const key=c+","+r; if(seen[key]) continue; seen[key]=1;
     if(t[r][c]!==target) continue;
-    if(setTerrainCell(m,c,r,code)) updateCellRect(cellsG,c,r,code);
+    if(setCellIn(m,field,c,r,code)) updateLayerRect(field,c,r,code);
     stack.push([c+1,r],[c-1,r],[c,r+1],[c,r-1]);}
 }
 function bindPaint(svg,m){
-  const hit=svg.querySelector("#phit"), cellsG=svg.querySelector("#pcells");
+  const hit=svg.querySelector("#phit");
   hit.addEventListener("contextmenu",e=>e.preventDefault());
   hit.addEventListener("mousedown",e=>{
     if(e.button!==0&&e.button!==2) return; e.preventDefault();
-    const code=(e.button===2)?BASE:S.brush;
-    snapshotTerrain(m);                                       // 每個動作一次快照（供 ⌘Z 復原）
-    const put=(c,r)=>{if(c>=0&&c<GRIDN&&r>=0&&r<GRIDN&&setTerrainCell(m,c,r,code)) updateCellRect(cellsG,c,r,code);};
+    const field=activeField();
+    const code=(e.button===2)?BASE:(S.entranceMode?ENTRANCE:S.brush);
+    snapshotLayer(m);                                         // 每個動作一次快照（供 ⌘Z 復原）
+    const put=(c,r)=>{if(c>=0&&c<GRIDN&&r>=0&&r<GRIDN&&setCellIn(m,field,c,r,code)) updateLayerRect(field,c,r,code);};
     const [sc,sr]=paintCellOf(svg,e.clientX,e.clientY);
-    if(S.tool==="fill"){ floodFill(m,cellsG,sc,sr,code); return; }
+    if(S.tool==="fill"){ floodFill(m,field,sc,sr,code); return; }
     if(S.tool==="brush"){                                     // 自由塗（拖曳連塗）
       put(sc,sr);
       const mv=ev=>{const [c,r]=paintCellOf(svg,ev.clientX,ev.clientY);put(c,r);};
@@ -482,14 +508,17 @@ function bindPaint(svg,m){
     }
     // 直線／矩形：拖曳預覽 → 放開提交
     const gen=(c1,r1)=> S.tool==="line"?lineCells(sc,sr,c1,r1):rectCells(sc,sr,c1,r1);
-    const pv=document.createElementNS("http://www.w3.org/2000/svg","g"); pv.id="ppreview"; svg.appendChild(pv);
+    const pv=document.createElementNS(SVGNS,"g"); pv.id="ppreview"; svg.appendChild(pv);
     const col=(PAL_BY[code]&&PAL_BY[code].color)||"#888";
+    const pvAttr=S.entranceMode
+      ? 'fill="none" stroke="'+ENTRANCE_COLOR+'" stroke-width="2.5" vector-effect="non-scaling-stroke"'
+      : 'fill="'+col+'" fill-opacity="0.45" stroke="#fff" stroke-opacity="0.6"';
     const draw=(c1,r1)=>{
       if(S.tool==="rect"){                                    // 矩形：預覽用單一外框矩形（省重繪）
         const a=Math.min(sc,c1),b=Math.max(sc,c1),d=Math.min(sr,r1),e=Math.max(sr,r1);
-        pv.innerHTML='<rect x="'+(a*TILE)+'" y="'+(d*TILE)+'" width="'+((b-a+1)*TILE)+'" height="'+((e-d+1)*TILE)+'" fill="'+col+'" fill-opacity="0.4" stroke="#fff" stroke-opacity="0.6"/>';
+        pv.innerHTML='<rect x="'+(a*TILE)+'" y="'+(d*TILE)+'" width="'+((b-a+1)*TILE)+'" height="'+((e-d+1)*TILE)+'" '+pvAttr+'/>';
       }else{                                                  // 直線：逐格預覽
-        let s=""; for(const [c,r] of gen(c1,r1)) s+='<rect x="'+(c*TILE)+'" y="'+(r*TILE)+'" width="'+TILE+'" height="'+TILE+'" fill="'+col+'" fill-opacity="0.5" stroke="#fff" stroke-opacity="0.55"/>'; pv.innerHTML=s;
+        let s=""; for(const [c,r] of gen(c1,r1)) s+='<rect x="'+(c*TILE)+'" y="'+(r*TILE)+'" width="'+TILE+'" height="'+TILE+'" '+pvAttr+'/>'; pv.innerHTML=s;
       }};
     draw(sc,sr);
     const mv=ev=>{const [c,r]=paintCellOf(svg,ev.clientX,ev.clientY);draw(pClamp(c),pClamp(r));};
@@ -500,16 +529,20 @@ function bindPaint(svg,m){
     document.addEventListener("mousemove",mv); document.addEventListener("mouseup",up);
   });
 }
-function updateCellRect(cellsG,c,r,code){
-  const ex=cellsG.querySelector('[data-c="'+c+'"][data-r="'+r+'"]');
-  if(code===BASE){ if(ex) ex.remove(); return; }
-  const p=PAL_BY[code]; if(!p) return;
-  if(ex){ ex.setAttribute("fill",p.color||"#888"); return; }
-  const n=document.createElementNS("http://www.w3.org/2000/svg","rect");
+function updateLayerRect(field,c,r,code){                    // 局部更新一格（terrain→#pcells / entrances→#pent）
+  const ent=(field==="entrances"), g=document.getElementById(ent?"pent":"pcells"); if(!g) return;
+  const ex=g.querySelector('[data-c="'+c+'"][data-r="'+r+'"]');
+  let color=null;
+  if(ent){ if(code===ENTRANCE) color=ENTRANCE_COLOR; }
+  else if(code!==BASE){ const p=PAL_BY[code]; if(p&&p.color) color=p.color; }
+  if(!color){ if(ex) ex.remove(); return; }
+  if(ex){ if(!ent) ex.setAttribute("fill",color); return; }  // 出入口樣式固定（紅外框），存在即可
+  const n=document.createElementNS(SVGNS,"rect");
   n.setAttribute("class","pcell"); n.setAttribute("data-c",c); n.setAttribute("data-r",r);
   n.setAttribute("x",c*TILE); n.setAttribute("y",r*TILE); n.setAttribute("width",TILE); n.setAttribute("height",TILE);
-  n.setAttribute("fill",p.color||"#888"); n.setAttribute("fill-opacity","0.6");
-  cellsG.appendChild(n);
+  if(ent){ n.setAttribute("fill","none"); n.setAttribute("stroke",ENTRANCE_COLOR); n.setAttribute("stroke-width","2"); n.setAttribute("vector-effect","non-scaling-stroke"); }
+  else { n.setAttribute("fill",color); n.setAttribute("fill-opacity","0.6"); }
+  g.appendChild(n);
 }
 function curMap(){const r=curRegion();return (r&&S.sel&&r.maps[S.sel])?r.maps[S.sel]:null;}
 function neighborsOf(reg,key){                               // 依總覽 cell 相鄰（同區同層）判鄰圖
@@ -519,25 +552,43 @@ function neighborsOf(reg,key){                               // 依總覽 cell �
     for(const side in at) if(mm.cell[0]===at[side][0]&&mm.cell[1]===at[side][1]) res[side]=k; }
   return res;
 }
-// —— 復原 / 清空 / 匯入 ——
-function snapshotTerrain(m){ ensureTerrain(m); undoStack.push(m.terrain.slice()); if(undoStack.length>80)undoStack.shift(); redoStack.length=0; }
+// —— 復原 / 清空 / 匯入 ——（undo 以「當前層」為單位，快照帶 field）
+function snapshotLayer(m){ const f=activeField(); ensureGrid(m,f); undoStack.push({f:f,g:m[f].slice()}); if(undoStack.length>80)undoStack.shift(); redoStack.length=0; }
 function resetUndo(){ undoStack.length=0; redoStack.length=0; }
-function undoPaint(){ const m=curMap(); if(!m||!undoStack.length)return; ensureTerrain(m); redoStack.push(m.terrain.slice()); m.terrain=undoStack.pop(); renderPaint(); toast("復原"); }
-function redoPaint(){ const m=curMap(); if(!m||!redoStack.length)return; ensureTerrain(m); undoStack.push(m.terrain.slice()); m.terrain=redoStack.pop(); renderPaint(); toast("重做"); }
-function clearTerrain(){ const m=curMap(); if(!m)return;
-  if(!confirm("清空這張圖的所有地格藍圖？（可用 ⌘Z 復原）"))return;
-  snapshotTerrain(m); m.terrain=Array.from({length:GRIDN},()=>BASE.repeat(GRIDN)); renderPaint(); toast("已清空藍圖"); }
+function undoPaint(){ const m=curMap(); if(!m||!undoStack.length)return; const s=undoStack.pop(); ensureGrid(m,s.f); redoStack.push({f:s.f,g:m[s.f].slice()}); m[s.f]=s.g; renderPaint(); toast("復原"); }
+function redoPaint(){ const m=curMap(); if(!m||!redoStack.length)return; const s=redoStack.pop(); ensureGrid(m,s.f); undoStack.push({f:s.f,g:m[s.f].slice()}); m[s.f]=s.g; renderPaint(); toast("重做"); }
+function clearTerrain(){ const m=curMap(); if(!m)return; const f=activeField();
+  if(!confirm("清空這張圖的"+(f==="entrances"?"出入口標記":"地格藍圖")+"？（可 ⌘Z 復原）"))return;
+  snapshotLayer(m); m[f]=Array.from({length:GRIDN},()=>BASE.repeat(GRIDN)); renderPaint(); toast("已清空"); }
+const BP_OUTSIDE_FILL="#3a3a3a";                             // 匯出：空格＝圖外背景深灰（對齊畫面規格；全幅圖被地形蓋滿）
+function exportBlueprint(){                                   // 匯出 1280×1280 結構參考圖 PNG（給下一階段產圖）
+  const reg=curRegion(), m=curMap();
+  if(!m){ toast("先點一張地圖"); return; }
+  if(!Array.isArray(m.terrain)){ toast("這張圖還沒畫藍圖"); return; }
+  const W=GRIDN*TILE, H=GRIDN*TILE;
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=H;
+  const ctx=cv.getContext("2d");
+  ctx.fillStyle=BP_OUTSIDE_FILL; ctx.fillRect(0,0,W,H);      // 底＝圖外深灰；有畫的格覆蓋上去
+  for(let r=0;r<GRIDN;r++){ const row=String(m.terrain[r]||"");
+    for(let c=0;c<GRIDN;c++){ const code=row[c]||BASE; if(code===BASE)continue;
+      const p=PAL_BY[code]; if(!p||!p.color)continue;
+      ctx.fillStyle=p.color; ctx.fillRect(c*TILE,r*TILE,TILE,TILE); }}
+  const fn=(reg.file_prefix?reg.file_prefix+"_"+S.sel:S.region+"_"+S.sel)+"_blueprint.png";
+  const a=document.createElement("a"); a.download=fn; a.href=cv.toDataURL("image/png");
+  document.body.appendChild(a); a.click(); a.remove();
+  toast("已匯出 "+fn);
+}
 function terrainPreviewSvg(reg,key,m,size){
   const W=GRIDN*TILE,H=GRIDN*TILE, src=pngSrc(reg,key,m);
   let s='<svg viewBox="0 0 '+W+' '+H+'" width="'+size+'" height="'+size+'">';
   s+= src?'<image href="'+src+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" onerror="this.remove()"/>':'<rect width="'+W+'" height="'+H+'" fill="#2a2f3d"/>';
-  s+=cellsSvg(m,"0.62");
+  s+=cellsSvg(m,"0.62")+gridCellsSvg(m,"entrances","0.75");
   return s+'</svg>';
 }
 function blueprintMini(reg,key,m,x,y,size){                   // 總覽節點用的地格藍圖縮圖（巢狀 svg、不吃事件）
   const W=GRIDN*TILE,H=GRIDN*TILE, src=pngSrc(reg,key,m);
   let inner=src?'<image href="'+src+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" opacity="0.3" onerror="this.remove()"/>':'<rect width="'+W+'" height="'+H+'" fill="#2a2f3d"/>';
-  inner+=cellsSvg(m,"0.9");
+  inner+=cellsSvg(m,"0.9")+gridCellsSvg(m,"entrances","0.9");
   return '<svg x="'+x+'" y="'+y+'" width="'+size+'" height="'+size+'" viewBox="0 0 '+W+' '+H+'" style="pointer-events:none">'+inner+'</svg>';
 }
 function openImport(){
@@ -556,9 +607,10 @@ function openImport(){
   $("#impCancel").onclick=()=>{$("#importModal").style.display="none";};
   $("#impOk").onclick=()=>{ const rg=S.data.regions[rsel.value], mm=rg&&rg.maps[msel.value], m=curMap();
     if(!m){$("#importModal").style.display="none";return;}
-    snapshotTerrain(m);
+    snapshotLayer(m);
     m.terrain=Array.isArray(mm&&mm.terrain)?mm.terrain.slice():Array.from({length:GRIDN},()=>BASE.repeat(GRIDN));
-    ensureTerrain(m);                                         // 正規化長度、脫離來源引用
+    m.entrances=Array.isArray(mm&&mm.entrances)?mm.entrances.slice():Array.from({length:GRIDN},()=>BASE.repeat(GRIDN));
+    ensureGrid(m,"terrain"); ensureGrid(m,"entrances");      // 正規化長度、脫離來源引用（含出入口層）
     $("#importModal").style.display="none"; renderPaint(); toast("已載入 "+rsel.value+":"+msel.value.toUpperCase()+" 的藍圖"); };
 }
 
@@ -843,7 +895,7 @@ window.addEventListener("keydown",e=>{
   if(ti>=0&&TOOLS[ti]){ S.tool=TOOLS[ti].k; renderPaintBar(); return; }             // q/w/e/r 切工具
   if(e.key==="-"){ S.brush=BASE; renderPaintBar(); return; }                        // - 選空（留白）
   const n=parseInt(e.key,10);
-  if(n>=1&&n<=9&&PALETTE[n-1]){ S.brush=PALETTE[n-1].code; renderPaintBar(); }     // 數字鍵 1–9 選地格
+  if(n>=1&&n<=9&&PALETTE[n-1]&&PALETTE[n-1].role!=="base"){ S.brush=PALETTE[n-1].code; renderPaintBar(); }   // 1–8 選地格
 });
 $("#btnJson").onclick=()=>{$("#jsonBody").textContent=JSON.stringify(S.data,null,2);$("#jsonModal").style.display="block";};
 $("#jsonClose").onclick=()=>{$("#jsonModal").style.display="none";};

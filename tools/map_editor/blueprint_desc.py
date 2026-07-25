@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""blueprint_desc.py — 把某張地圖的 40×40 地格藍圖轉成中文結構描述（Layout / Exits 兩行）。
+"""blueprint_desc.py — 把某張地圖的 40×40 地格藍圖轉成中文產圖結構約束。
 
-供 gen-map-prompt 組「手繪畫面地圖」產圖 prompt 時，貼進附加段的 Layout:/Exits:
-（該圖若已有藍圖，就用這裡的輸出取代人工描述空間骨架與出入口）。
+供 gen-map-prompt 組「手繪畫面地圖」產圖 prompt 時，連同藍圖預覽圖貼入。
+輸出鎖定全幅畫布、道路／障礙輪廓與精確出入口；AI 只可改美術，不可改結構。
 
 用法：python3 tools/map_editor/blueprint_desc.py <region> <map>
   例：python3 tools/map_editor/blueprint_desc.py M5 a
@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MAP_DEF = ROOT / "assets-source" / "map" / "map-def.json"
 PALETTE = ROOT / "assets-source" / "map" / "terrain_palette.json"
 GRID = 40
+ENTRANCE = "E"                       # 出入口標記（在 map 的 entrances 屬性，非 terrain）
 
 SIDE_ZH = {"west": "西", "east": "東", "north": "北", "south": "南",
            "up": "上", "down": "下", "interior": "內部"}
@@ -81,6 +82,11 @@ def edge_openings(e_cells):
     return {s: (min(v), max(v)) for s, v in by.items()}
 
 
+def is_full_bleed(terrain, base):
+    """40×40 藍圖沒有 base 空格時，整張圖就是全幅地形。"""
+    return all(base not in str(row)[:GRID] for row in terrain[:GRID])
+
+
 def describe_to(to, regions, cur):
     if not to:
         return "（未接）"
@@ -123,6 +129,8 @@ def main():
         for c, ch in enumerate(str(row)[:GRID]):
             cells.setdefault(ch, []).append((c, r))
 
+    full_bleed = is_full_bleed(terrain, base)
+
     clauses = []
     for code, cs in cells.items():
         ci = info.get(code)
@@ -131,7 +139,10 @@ def main():
         clauses.append(describe(ci.get("label", code), cs, ci.get("walkable", True)))
     layout = "；".join(clauses) if clauses else "大致為開闊的可行走地面"
 
-    openings = edge_openings(cells.get(exit_code, []))
+    ent = m.get("entrances") or []
+    e_cells = [(c, r) for r, row in enumerate(ent[:GRID])
+               for c, ch in enumerate(str(row)[:GRID]) if ch == ENTRANCE]
+    openings = edge_openings(e_cells)
     side_count = {}
     for ex in m.get("exits", {}).values():
         s = ex.get("side", "")
@@ -148,8 +159,14 @@ def main():
             parts.append("%s側開口通往 %s" % (SIDE_ZH.get(side, side), tgt))
     exits = "；".join(parts) if parts else "無"
 
+    print("版圖鎖定：附圖是唯一結構藍圖；逐格保留地形區塊、道路彎折、障礙輪廓與出口位置。AI 只能替換美術，不可重畫、拉直、平滑或新增路線。")
+    if full_bleed:
+        print("畫布：全幅滿版；40×40 格皆為地圖地形，沒有圖外深灰、島嶼外框、邊框或留白。")
+    else:
+        print("畫布：依藍圖的空白格保留圖外背景；不得自行擴張或縮小地圖輪廓。")
+    print("道路與障礙：所有道路的彎折、寬度與連通關係，以及河流、山壁、森林等輪廓，必須逐格跟隨附圖。")
     print("Layout: %s。" % layout)
-    print("Exits: %s。" % exits)
+    print("Exits: %s；每個出口必須直接接觸畫布邊緣，位置與寬度不可改。" % exits)
 
 
 if __name__ == "__main__":

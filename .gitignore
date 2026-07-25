@@ -25,3 +25,4 @@ godot-project/resources/content/dialogue.json
 
 # 地圖維護工具（tools/map_editor）存檔前的自動備份，非真相源、不進版控
 *.json.bak
+*.premigrate.bak

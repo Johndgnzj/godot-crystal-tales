@@ -295,14 +295,14 @@ func _edge_spawn(side: String) -> Vector2:
 		_: return Vector2(HALF, HALF + 100.0)         # up/down/interior：無邊，落中央（現況 M2–M4 未用）
 
 
-## 讀藍圖 terrain 的 E（出入口）格，依「最近邊」分組，回傳 {side: {lo,hi}}。
-## west/east 的 lo,hi 是 row 範圍；north/south 是 col 範圍。無藍圖或無 E 格＝回空字典。
+## 讀 map 的 entrances 屬性（出入口專用層，獨立於 terrain）的 E 格，依「最近邊」分組，回傳 {side: {lo,hi}}。
+## west/east 的 lo,hi 是 row 範圍；north/south 是 col 範圍。無 entrances 或無 E 格＝回空字典。
 func _blueprint_openings(m: Dictionary) -> Dictionary:
-	var terrain: Variant = m.get("terrain", null)
-	if not (terrain is Array) or (terrain as Array).is_empty():
+	var ent: Variant = m.get("entrances", null)
+	if not (ent is Array) or (ent as Array).is_empty():
 		return {}
 	var by_side := {}
-	var rows: Array = terrain
+	var rows: Array = ent
 	for r in mini(rows.size(), GRID):
 		var row := str(rows[r])
 		for c in mini(row.length(), GRID):

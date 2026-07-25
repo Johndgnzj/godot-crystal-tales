@@ -106,7 +106,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   AI 生成素材（OpenAI Imagen，提示詞作者 John/協作 Agent，2026-07-17）；東之森深處 M4 手繪畫面地圖（a～n）。a 以 M3 `east-forest-g.png` 作視覺延續參考，b～f 再以 a 鎖定同區域的森林低霧、像素尺度與視覺語彙；全部正規化為 1280×1280。
   （原 `east-forest-depths-map.png` 總覽衍生圖依已退休的 `map-def.xlsx` 拼合、現已不在素材庫；總覽改用 map_editor 的連通視圖，`compose_map_overviews.py` 已標為過時。）
 - `assets/map/east_forest_depths/efd_m2.png`（素材源＝`assets-source/map/east_forest_depths/efd_m2.png`；**2026-07-21 已整合進專案**）：
-  AI 生成素材（ChatGPT 內建圖片生成，提示詞作者 John／協作 Agent，2026-07-20）；M4 東之森深處 m2 畫面——`j` 的 boss（`m`）擊破後開放的分支路線、通往 M7。
+  AI 生成素材（ChatGPT 內建圖片生成，提示詞作者 John／協作 Agent，2026-07-20）；M4 東之森深處 m2 畫面——`j` 的 boss（`m`）擊破後開放的分支路線、通往 M7。2026-07-25 經 John 驗收後，以 terrain 藍圖重繪為全幅苔蘚森林與東西向泥路，替換前版本保留於 `east_forest_depths/_backup/efd_m2_before_blueprint_repaint-2026-07-25.png`。
 - **[2026-07-21 尺寸統一]** `ef_a–i`、`efd_g–n`＋`efd_m2` 共 18 張原 1254 地圖圖批次縮放（sips）至 1280×1280，讓碰撞格 32／16 整除、消除遷就 1254 的 38；原 1254 版備份於各 dir 的 `_backup/orig_1254/`。屬機械縮放、無新授權變動。
 - `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。
 - `assets/props/ext_*.png`（六棟建築外觀，洋紅底原圖）：AI 生成素材（Gemini gemini-2.5-flash-image，
