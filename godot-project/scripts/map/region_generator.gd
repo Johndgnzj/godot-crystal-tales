@@ -220,6 +220,7 @@ func _build_map(m: MapDef, incoming: Array, id_to_scene: Dictionary, map_ids: Di
 			MapKit.carve_path(mb, start, t, MapKit.gid("dirt"))
 	if m.kind in ["forest", "grassland"]:
 		MapKit.place_forest_props(mb, _rng)
+		MapKit.place_ground_decor(mb, _rng)
 
 	# 連通性：start 到每個 spawn/exit/boss 都必須可達
 	var seen := MapKit.reachable(mb, start)

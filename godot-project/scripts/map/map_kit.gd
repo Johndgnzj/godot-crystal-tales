@@ -29,6 +29,11 @@ const FTREE_TEX: Array[String] = [
 const FDECO_TEX: Array[String] = [
 	"fst_deco_fern.png", "fst_deco_mush.png", "fst_deco_flower.png", "fst_deco_pebble.png",
 	"fst_deco_fern.png", "fst_deco_flower.png", "fst_deco_bush.png"]
+const GROUND_DECO_TEX: Array[String] = [
+	"world/nature/1x1/ground_decor_grass_pebble_a.png",
+	"world/nature/1x1/ground_decor_grass_pebble_b.png",
+	"world/nature/1x1/ground_decor_grass_pebble_c.png"]
+const GROUND_DECO_DIVISOR := 20
 
 ## 地形主題：kind → (根 base tile, tileset, atlas, floor)。抽成表＝主題可換的接縫。
 const THEME := {
@@ -379,6 +384,39 @@ static func place_forest_props(mb: MapGrid, rng: RandomNumberGenerator, tree_rat
 		for x in range(1, mb.mw - 1):
 			if not mb.blocked[y][x] and grass_like.has(mb.get_tile(x, y)) and rng.randf() < decor_rate:
 				mb.add_prop(choice(FDECO_TEX, rng), x * TS, y * TS + 6)
+
+
+static func place_ground_decor(mb: MapGrid, rng: RandomNumberGenerator) -> void:
+	## 在非碰撞格精確放置 1/20 的低矮草石；固定 RNG seed 可重現，並避開既有地面裝飾。
+	var occupied: Dictionary = {}
+	for prop in mb.props:
+		var tex_file := String(prop.get("tex", "")).get_file()
+		if FDECO_TEX.has(tex_file):
+			var px := int(prop.get("x", 0))
+			var py := int(prop.get("y", 0)) - 6
+			occupied[Vector2i(floori(float(px) / TS), floori(float(py) / TS))] = true
+
+	var non_collision_count := 0
+	var candidates: Array[Vector2i] = []
+	for y in mb.mh:
+		for x in mb.mw:
+			if mb.blocked[y][x]:
+				continue
+			non_collision_count += 1
+			var cell := Vector2i(x, y)
+			if not occupied.has(cell):
+				candidates.append(cell)
+
+	# Fisher–Yates 使用傳入的 seeded RNG；Array.shuffle() 會改用全域 RNG。
+	for i in range(candidates.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp := candidates[i]
+		candidates[i] = candidates[j]
+		candidates[j] = tmp
+	var target := mini(floori(float(non_collision_count) / GROUND_DECO_DIVISOR), candidates.size())
+	for i in target:
+		var cell := candidates[i]
+		mb.add_prop(choice(GROUND_DECO_TEX, rng), cell.x * TS, cell.y * TS)
 
 
 static func terrain_maze(mb: MapGrid, kind: String, complexity: String, floor: int, rng: RandomNumberGenerator) -> void:
