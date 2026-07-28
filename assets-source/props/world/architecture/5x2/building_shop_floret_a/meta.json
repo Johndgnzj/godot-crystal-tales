@@ -1,0 +1,15 @@
+{
+  "id": "building_shop_floret_a",
+  "type": "architecture",
+  "footprint": [
+    5,
+    2
+  ],
+  "canvas_px": [
+    256,
+    192
+  ],
+  "anchor": "bottom_center",
+  "occludes_player": true,
+  "entrance_edge": "bottom"
+}

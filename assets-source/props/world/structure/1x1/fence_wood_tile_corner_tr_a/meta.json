@@ -1,8 +1,14 @@
 {
   "id": "fence_wood_tile_corner_tr_a",
   "type": "structure",
-  "footprint": [1, 1],
-  "canvas_px": [96, 96],
+  "footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    32,
+    32
+  ],
   "anchor": "bottom_center",
   "occludes_player": true,
   "tile_set": "fence_wood_tile_set_a",

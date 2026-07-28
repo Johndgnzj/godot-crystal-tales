@@ -37,7 +37,18 @@
 
 ## Step 5 驗收與正規化
 
-依 `checklist.md` 檢查。將核可的 alpha 圖去背、裁切後放回同尺寸畫布，bottom-center 錨點固定；再最近鄰縮放至規格尺寸。
+依 `checklist.md` 檢查。將核可的 alpha 圖去背、裁切後放回同尺寸畫布，bottom-center 錨點固定；再縮放至規格尺寸。
+
+**縮放必須等比（單一 scale factor），寬高不可分別給值**（2026-07-28 釘死）。歷史事故：`street_lamp_iron_a`、`tree_pine_tall_a`、`scarecrow_field_a` 三張在此步被垂直拉長 1.39～1.63 倍（燈從 1:4.6 變 1:6.4、樹從 1:1.8 變 1:2.5），在地圖上看起來就是「被拉高」；後來由 `design_anchor_alpha.png` 等比重算修正。
+
+**內容必須貼齊畫布底邊**（不是置中）：`canvas_px` 的底邊就是 bottom-center anchor 的落點，底部留白會讓物件在地圖上浮空。
+
+驗收用這兩個數字自我核對，兩者相差超過 15% 就是縮放出錯：
+
+```
+錨點本體寬高比 = design_anchor_alpha.png 的 alpha bbox 高 / 寬
+final 本體寬高比 = final.png 的 alpha bbox 高 / 寬
+```
 
 ## Step 6 固定來源檔命名
 

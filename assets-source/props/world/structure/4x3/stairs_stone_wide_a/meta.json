@@ -1,1 +1,15 @@
-{"id":"stairs_stone_wide_a","type":"structure","footprint":[4,3],"canvas_px":[256,192],"anchor":"bottom_center","occludes_player":true}
+{
+  "id": "stairs_stone_wide_a",
+  "type": "structure",
+  "footprint": [
+    4,
+    3
+  ],
+  "canvas_px": [
+    256,
+    192
+  ],
+  "anchor": "bottom_center",
+  "occludes_player": true,
+  "walkable": true
+}

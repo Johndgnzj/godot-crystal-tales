@@ -11,9 +11,10 @@
 LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld-demo/CREDITS_素材授權.md；戰鬥怪物與道具為 GDevelop 商店 CC0（16x16 dungeon tileset、grafxkid、western fps 2d 等包）。
 
 - `assets/char/ludo_{Up,Left,Down,Right}_0..8.png`（2026-07-28 終版基準簡易版）：路德 64px overworld walk，由 OpenAI 內建 imagegen 依芳蕾鎮中央實機地圖 style seed 生成，經 John 逐方向驗收四向 `Idle / Step L / Step R`。所有幀完成 bottom-center、色調、手勢、解剖腳位與逐 pixel 去背殘色檢查；runtime 的 1..8 依 `L/R` 交替填入。來源 raw／alpha／64px frame 保留於 `assets-source/role/main/ludo/overworld_final/`。Right 步態由核可 Left 成對鏡射後鎖回獨立 Right Idle 並校色；提示詞作者 John／協作 Agent。此為簡易驗證版，後續仍會擴充正式 8 相位。
-- `assets/char/alan_{Up,Left,Down,Right}_0..8.png`（2026-07-27）：亞倫二頭身 overworld walk 簡易驗證版。OpenAI 內建 imagegen 依已驗收亞倫立繪與戰鬥 seed 參考生成；John 驗收 v2 後以螢光綠鍵去背、切圖、腳底錨點正規化。來源保留於 `assets-source/role/main/alan/overworld_walk_simple_v2_{raw,alpha}.png`；每方向兩張步態皆為左右腳明確交替，再交替填入既有 8 格 runtime 動畫。提示詞作者 John／協作 Agent。
+- `assets/char/alan_{Up,Left,Down,Right}_0..8.png`（2026-07-28 終版基準簡易版）：亞倫 64px overworld walk，由 OpenAI 內建 imagegen 沿用路德終版基準、亞倫正式立繪與芳蕾鎮實機地圖色盤生成。John 核可 `Down Idle` world style seed 後，再逐方向驗收四向 `Idle / Step L / Step R`；所有幀通過 bottom-center、方向、解剖腳位交換、材質色票與逐 pixel 去背殘色檢查。runtime `0=Idle`，1..8 依 `L/R` 交替填入，走路期間不插入 Idle；來源 raw／alpha／64px frame 與 review 保存於 `assets-source/role/main/alan/overworld_final/`。提示詞作者 John／協作 Agent。此為簡易驗證版，後續仍會擴充正式 8 相位。
 - `assets/char/marin_{Up,Left,Down,Right}_0..8.png`（2026-07-27）：瑪琳二頭身 overworld walk 簡易驗證版。OpenAI 內建 imagegen 依已驗收瑪琳立繪與戰鬥 seed 參考生成；John 驗收 v2 後以洋紅鍵去背、切圖與腳底錨點正規化。來源保留於 `assets-source/role/main/marin/overworld_walk_simple_v2_{raw,alpha}.png`；每方向兩張步態皆為左右腳明確交替，再交替填入既有 8 格 runtime 動畫。提示詞作者 John／協作 Agent。
 - 路德／羅瑟爾 overworld 終版 style seed（2026-07-28）：OpenAI 內建 imagegen 依芳蕾鎮中央實機地圖風格生成，經螢光綠鍵去背、bottom-center 正規化並合成回場景驗收。John 核可兩者的角色比例、色調、光向與獨立接地陰影方向；raw／alpha／64px `Down Idle` seed 分別保存於 `assets-source/role/main/ludo/overworld_final/` 與 `assets-source/role/npc/rossel/overworld_final/`。路德四方向 `Idle / Step L / Step R` 已全部核可並整合為 runtime 簡易版；來源與 64px frame 同存於其 `overworld_final/`。提示詞作者 John／協作 Agent。
+- 瑪琳 overworld 終版 style seed（2026-07-28）：OpenAI 內建 imagegen 沿用路德 64px 終版基準與芳蕾鎮中央實機地圖色盤生成；John 已核可螢光綠幕 `Down Idle`、四方向 Idle，以及 `Up`／`Left`／`Down` 的 `Step L / Step R`。`Up` 保留指定候選的色調與腿部步幅並補上反向手擺；`Left` 明確交換近／遠腿層級、亮暗及白袖／護具手擺動；`Down` 依正面解剖鎖定 `Step L＝畫面右腳向前`、`Step R＝畫面左腳向前` 並同步反向手擺。raw／alpha／bottom-center 正規化 64px source 保存於 `assets-source/role/main/marin/overworld_final/`，並通過方向、比例、逐 pixel 螢光鍵色與透明區 RGB residue 檢查。`Right` 尚待驗收。提示詞作者 John／協作 Agent。
 
 - ⚠️ **野狼（wolf）為佔位圖**：GDevelop 商店與 LPC 皆無四足野狼素材，`assets/battle/Wolf_Idle.png` 由 grafxkid 洞熊單幀（`Bear_Idle.png`，CC0）於 build 時去飽和＋冷灰調重生（衍生自 CC0，故無授權限制）。外形仍是熊剪影、僅以冷灰色與棕熊區隔——**待日後補上正式四足狼精靈再替換**（gen-art 不適用像素小圖）。
 
@@ -35,6 +36,11 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   - `assets/props/fst_tree_1..6.png`：6 種樹（針葉/闊葉，統一 96×120 底對齊）。
   - `assets/props/fst_deco_{bush,fern,mush,flower,pebble}.png`：森林地面非阻擋裝飾。
   - 以上由 `scripts/art_v14_forest.py` 從 `tools/anokolisa/` 重生（部分經裁切/縮放/微合成，屬允許的改作）。
+
+- `assets/props/world/nature/1x1/ground_decor_grass_pebble_{a,b,c}.png`（2026-07-29）：
+  芳蕾鎮草地風格的 1×1 非碰撞草石地面點綴。OpenAI 內建 imagegen 依 John 提供的地圖風格圖生成，
+  經 John 驗收後以色鍵去背並最近鄰正規化為 32×32；raw、alpha 與 final 保存於
+  `assets-source/props/world/nature/1x1/ground_decor_grass_pebble_{a,b,c}/`。提示詞作者 John／協作 Agent。
 
 ## 建築與洞窟（LPC Tile Atlas 1/2，2026-07-11 新增）
 - 來源：OpenGameArt「LPC Tile Atlas」（base_out_atlas.png，`tools/lpc-atlas1/`）與
@@ -117,27 +123,29 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   AI 生成素材（ChatGPT 內建圖片生成功能，提示詞作者 John/協作 Agent，2026-07-16）；北方礦山 a～f 手繪畫面地圖，f 為 boss 房。
   2026-07-17 依地圖連線調整 a、b、c、e 出入口構圖與路徑。
 - `assets/map/floret/floret_town.png`（素材源＝`assets-source/map/floret/floret_town.png`）：
-  AI 生成素材；M1 芳蕾鎮手繪畫面地圖。2026-07-20 已由 Godot runtime 的無箭頭版本回存為原圖；舊的含箭頭錯誤版本（1254）於 2026-07-21 統一命名時移至 `assets-source/map/floret/_backup/floret-town-1254-old.png`，不作為來源圖使用。
+  AI 生成素材；M1 芳蕾鎮手繪畫面地圖。2026-07-20 已由 Godot runtime 的無箭頭版本回存為原圖；舊的含箭頭錯誤版本（1254）於 2026-07-21 統一命名時移至 `assets-source/map/floret/_backup/floret-town-1254-old.png`，不作為來源圖使用。2026-07-29 依 `map-def.json` 的 `M1/floret_v2` 40×40 地形藍圖重製，以 John 驗收的明亮像素手繪風格整合北側柱狀岩壁、正式礦山入口與已核可橡樹／松樹物件的森林外觀；OpenAI 內建 imagegen 生成，提示詞作者 John／協作 Agent。
 - `assets/map/new_floret_road/nfr_a.png`（素材源＝`assets-source/map/new_floret_road/nfr_a.png`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5「通往大都市的路」a 的草原手繪背景。已依 John 確認的 M1 北口、NFR-b 東口、NFR-d 南口 Y 字路徑配置繪製；同日將不可通行河流固定於左側邊界，未加橋或可涉水處。替換前版本保留於 `assets-source/map/new_floret_road/_backup/nfr_a_before_river-2026-07-24.png`；正式圖已機械縮放為 1280×1280，以對齊 32px 格。
 - `assets/props/m5_tree.png`（素材源＝`assets-source/props/m5_tree/m5_tree_{raw,alpha}.png`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5-a 用的俯視手繪闊葉樹。John 驗收後以洋紅鍵去背，原始鍵圖與 alpha 版皆保留；正式場景以六個縮放／鏡像實例使用，碰撞只放在樹幹腳點，樹根節點直接位於 `YSort`，以腳點 y 座標決定角色遮擋。
-- `assets/props/world/architecture/6x4/building_inn_floret_a.png`（素材源＝`assets-source/props/world/architecture/6x4/building_inn_floret_a/`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用旅店高物件。經 John 驗收後以洋紅鍵去背、正規化為 336×224 RGBA PNG；6×4 footprint，正面平行地圖底邊、入口貼齊底邊，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
-- `assets/props/world/architecture/{6x4/building_guild_floret_a,4x4/building_shrine_floret_a,4x3/building_mayor_floret_a,4x3/building_shop_floret_a,5x3/building_smithy_floret_a}.png`（素材源＝對應 `assets-source/props/world/architecture/<footprint>/<id>/`）：
+- `assets/props/world/architecture/6x2/building_inn_floret_a.png`（素材源＝`assets-source/props/world/architecture/6x2/building_inn_floret_a/`）：
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用旅店高物件。經 John 驗收後以洋紅鍵去背、正規化為 336×224 RGBA PNG；6×2 footprint（2026-07-28 由 6×4 縮為只擋建築底部），正面平行地圖底邊、入口貼齊底邊，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
+- `assets/props/world/architecture/{6x2/building_guild_floret_a,3x2/building_shrine_floret_a,5x2/building_mayor_floret_a,5x2/building_shop_floret_a,5x2/building_smithy_floret_a}.png`（素材源＝對應 `assets-source/props/world/architecture/<footprint>/<id>/`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用公會、神殿、鎮長宅、道具店與鐵匠鋪。經 John 批次驗收後以洋紅／淺色棋盤鍵去背，正規化為透明 RGBA PNG；全部正面平行地圖底邊、入口貼齊底邊，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
-- `assets/props/world/architecture/2x2/house_cottage_floret_a.png`、`assets/props/world/landmark/4x3/landmark_mine_entrance_floret_a.png`（素材源＝對應 `assets-source/props/world/<type>/<footprint>/<id>/`）：
+- `assets/props/world/architecture/2x1/house_cottage_floret_a.png`、`assets/props/world/landmark/4x3/landmark_mine_entrance_floret_a.png`（素材源＝對應 `assets-source/props/world/<type>/<footprint>/<id>/`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用民宅與北方礦坑入口。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；入口貼齊底邊並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
 - `assets/props/world/structure/4x3/stairs_stone_wide_a.png`、`assets/props/world/street/1x1/{street_well_stone_a,street_lamp_iron_a}.png`、`assets/props/world/structure/{1x1/fence_wood_corner_a,1x2/fence_wood_straight_v_a,2x1/fence_wood_straight_a,2x1/fence_wood_gate_a}.png`（素材源＝對應 `assets-source/props/world/<type>/<footprint>/<id>/`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的石階、井、路燈與木柵欄系列。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；其中垂直直段由已驗收的水平直段旋轉產生，其餘為原始候選；全部以 bottom-center anchor 在 `YSort` 處理角色遮擋。
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的石階、井、路燈與木柵欄系列。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；其中垂直直段由已驗收的水平直段旋轉產生，其餘為原始候選；全部以 bottom-center anchor 在 `YSort` 處理角色遮擋。**2026-07-28：`street_lamp_iron_a` 素材源已由 `design_anchor_alpha.png` 等比重算為 22×101（原 96×192 的正規化把圖垂直拉長 1.39 倍，燈體從 1:4.6 變成 1:6.4；先縮到 3/5 高度、再修正比例），footprint 仍 1×1；專案端 PNG 已於 2026-07-29 隨芳蕾鎮 v2 場景整合同步並 reimport。**
 - `assets/props/world/structure/1x1/fence_wood_tile_{corner_tl,corner_tr,corner_bl,corner_br,straight_h,straight_v,gate_h_closed,gate_v_open}_a.png`（素材源＝`assets-source/props/world/structure/1x1/fence_wood_tile_set_a/` 與各對應素材目錄）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-27）；由 John 驗收的 3×3 木柵欄母圖精準切出八個可重用 1×1 自動拼接素材。以洋紅鍵轉為透明 RGBA PNG，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
-- `assets/props/world/nature/2x2/{tree_oak_round_a,tree_pine_tall_a}.png`（素材源＝對應 `assets-source/props/world/nature/2x2/<id>/`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的闊葉樹與松樹。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；皆以底部樹幹為 bottom-center anchor，在 `YSort` 處理角色遮擋。
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-27）；由 John 驗收的 3×3 木柵欄母圖精準切出八個可重用 1×1 自動拼接素材。以洋紅鍵轉為透明 RGBA PNG，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。**2026-07-28：素材源已等比縮為 32×32（原 96×96 在地圖上等於 3×3 格、與 1×1 footprint 不符），拼接對位不變；專案端 PNG 已於 2026-07-29 隨芳蕾鎮 v2 場景整合同步並 reimport。**
+- `assets/props/world/structure/1x1/fence_wood_tile_{straight_h_bottom,straight_v_right,gate_h_closed_top,gate_v_open_left}_a.png`（素材源＝對應 `assets-source/props/world/structure/1x1/<id>/`）：
+  同一組 3×3 母圖的衍生成員（2026-07-28）。母圖畫的是「右邊開門、下邊關門」的封閉矩形，只提供上邊橫桿、左邊縱桿、下邊關門與右邊開門，其餘邊差 15px／7px 對不上，故由已驗收成員純平移產生：`straight_v_a` 右移 15px、`straight_h_a` 下移 7px、`gate_h_closed_a` 上移 7px、`gate_v_open_a` 左移 15px（不旋轉不鏡像，像素內容與原圖完全相同）；外觀錨點沿用來源素材目錄，`meta.json` 以 `derived_from`／`transform` 記錄。素材源已建立，專案端 PNG 已於 2026-07-29 隨芳蕾鎮 v2 場景整合同步並 reimport。
+- `assets/props/world/nature/1x1/{tree_oak_round_a,tree_pine_tall_a}.png`（素材源＝對應 `assets-source/props/world/nature/1x1/<id>/`）：
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的闊葉樹與松樹。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；皆以底部樹幹為 bottom-center anchor，在 `YSort` 處理角色遮擋。**2026-07-28：`tree_pine_tall_a` 素材源已由錨點等比重算為 93×169（原正規化垂直拉長 1.39 倍，樹形從 1:1.8 變成 1:2.5）；`tree_oak_round_a` 比例正常未動。專案端 PNG 已於 2026-07-29 隨芳蕾鎮 v2 場景整合同步並 reimport。**
 - `assets/props/world/nature/4x4/crop_field_rows_a.png`（素材源＝`assets-source/props/world/nature/4x4/crop_field_rows_a/`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的低矮農作列地面。經 John 驗收後正規化為 256×256 PNG；放在 `Ground`，不產生角色遮擋或高物件碰撞。
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的低矮農作列地面。經 John 驗收後正規化為 256×256 PNG；放在 `Ground`，不產生角色遮擋或高物件碰撞。**2026-07-28：素材源已等比縮為 128×128（原 256×256 在地圖上等於 8×8 格、與 4×4 footprint 不符），可拼接特性不變；專案端 PNG 已於 2026-07-29 隨芳蕾鎮 v2 場景整合同步並 reimport。**
 - `assets/props/world/nature/1x1/{haystack_small_a,scarecrow_field_a}.png`（素材源＝對應 `assets-source/props/world/nature/1x1/<id>/`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的稻草堆與稻草人。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；皆以 bottom-center anchor 在 `YSort` 處理角色遮擋。
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮與後續城市可重用的稻草堆與稻草人。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；皆以 bottom-center anchor 在 `YSort` 處理角色遮擋。**2026-07-28：`scarecrow_field_a` 素材源已由錨點等比重算為 65×96（原正規化垂直拉長 1.63 倍，先修正比例為 87×128、再依 John 指示等比縮到 3 格高）；`haystack_small_a` 比例正常未動。專案端 PNG 已於 2026-07-29 隨芳蕾鎮 v2 場景整合同步並 reimport。**
 - `assets/map/east_forest/ef_a.png`（素材源＝`assets-source/map/east_forest/ef_a.png`，2026-07-21 統一命名）：
   AI 生成素材（OpenAI 內建 imagegen，提示詞作者 John／協作 Agent，2026-07-20）；M3 東之森 a 畫面。已依地圖產圖規格移除箭頭、寶箱、告示牌、木箱與木桶等互動物件，保留原有地形與出入口。
 - `assets/map/east_forest/ef_{b,c,d}.png`（素材源＝`assets-source/map/east_forest/ef_{b,c,d}.png`，2026-07-21 統一命名；清理前版本存於 `east_forest/_backup/east-forest-{b,c,d-boss-room}-before-cleanup-2026-07-20.png`）：

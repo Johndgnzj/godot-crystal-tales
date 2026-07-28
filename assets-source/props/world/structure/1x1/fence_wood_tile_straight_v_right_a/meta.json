@@ -1,0 +1,18 @@
+{
+  "id": "fence_wood_tile_straight_v_right_a",
+  "type": "structure",
+  "footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    32,
+    32
+  ],
+  "anchor": "bottom_center",
+  "occludes_player": true,
+  "tile_set": "fence_wood_tile_set_a",
+  "tile_role": "straight_vertical_right",
+  "derived_from": "fence_wood_tile_straight_v_a",
+  "transform": "shift_x_+15"
+}

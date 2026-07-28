@@ -1,1 +1,14 @@
-{"id":"street_lamp_iron_a","type":"street","footprint":[1,1],"canvas_px":[96,192],"anchor":"bottom_center","occludes_player":true}
+{
+  "id": "street_lamp_iron_a",
+  "type": "street",
+  "footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    22,
+    101
+  ],
+  "anchor": "bottom_center",
+  "occludes_player": true
+}

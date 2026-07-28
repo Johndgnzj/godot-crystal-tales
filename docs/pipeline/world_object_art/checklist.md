@@ -6,6 +6,8 @@
 - [ ] 已有獨立、已驗收的 `design_anchor`；它不是任何狀態圖。
 - [ ] 每個狀態都實際附上 `design_anchor_alpha.png` 作 reference。
 - [ ] 同一外觀族的畫布尺寸、bottom-center 錨點、視角與光向一致。
+- [ ] **比例未失真**：`final.png` 的 alpha bbox 寬高比與 `design_anchor_alpha.png` 相差在 15% 內（縮放必須等比，見 `workflow.md` Step 5）。
+- [ ] **內容貼齊畫布底邊**：`final.png` 的 alpha bbox 底邊＝畫布底邊，底部沒有留白（否則物件在地圖上浮空）。
 - [ ] 有入口的物件，門口／洞口直接接觸素材底邊；位置可偏左、偏右或置中，不因 `bottom_center` 而被強制置中。
 - [ ] 建築與可進入結構正面平行於素材底邊；沒有側向 45°、斜跨地格或朝側邊的入口。
 - [ ] 沒有地板、草、牆、場景投影、角色、文字、UI 或背景。

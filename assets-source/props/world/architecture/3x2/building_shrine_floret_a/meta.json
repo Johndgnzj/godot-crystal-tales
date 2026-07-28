@@ -1,0 +1,15 @@
+{
+  "id": "building_shrine_floret_a",
+  "type": "architecture",
+  "footprint": [
+    3,
+    2
+  ],
+  "canvas_px": [
+    224,
+    224
+  ],
+  "anchor": "bottom_center",
+  "occludes_player": true,
+  "entrance_edge": "bottom"
+}

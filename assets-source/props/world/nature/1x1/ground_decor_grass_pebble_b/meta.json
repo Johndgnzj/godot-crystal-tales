@@ -1,0 +1,8 @@
+{
+  "id": "ground_decor_grass_pebble_b",
+  "type": "nature",
+  "footprint": [1, 1],
+  "canvas_px": [32, 32],
+  "anchor": "bottom_center",
+  "occludes_player": false
+}
