@@ -185,6 +185,7 @@ func _init_battle() -> void:
 			"exp": ed.exp,
 			"gold": ed.gold,
 			"big": ed.big,
+			"battle_scale": ed.battle_scale,   # 戰鬥圖顯示倍率（EnemyDef 定義，只影響大小）
 			"healer": ed.healer,
 			"allAttack": ed.all_attack,
 			"foeSkills": ed.foe_skills,
@@ -688,15 +689,17 @@ func _shake_offset_for(u: Variant) -> Vector2:
 	return Vector2(cos(_shake_t * 90.0) * SHAKE_AMP * (_shake_t / SHAKE_DUR), 0.0)
 
 
-## 普攻位移目標點：目標單位的右前方（我方在右）。找不到目標則回退。
+## 普攻位移目標點：目標單位的右前方（我方在右），但**y 維持攻擊者自己那一排**。
+## 站位用 y 造假深度，若直接跟到目標的 y，打後排敵人時角色會在 0.18s 內垂直上飄 36~128px
+## （2D 沒有透視縮放，看起來像浮空，John 2026-07-28 回報）。只取目標的 x。
 func _lunge_target_front(fallback_base: Vector2) -> Vector2:
 	if _lunge_target == null:
 		return fallback_base
 	var tn = _foe_node_of(_lunge_target)
 	if tn == null:
-		return ATTACK_POS
+		return Vector2(ATTACK_POS.x, fallback_base.y)
 	var tb: Vector2 = tn["base"]
-	return tb + Vector2(ATTACK_FRONT_GAP, 0.0)
+	return Vector2(tb.x + ATTACK_FRONT_GAP, fallback_base.y)
 
 
 ## 該單位是否正在被攻擊震動中（用來切到 hurt 圖）。
@@ -1362,8 +1365,10 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 			hurt_tex = load(hpath)
 		if ResourceLoader.exists(dpath):
 			death_tex = load(dpath)
+	# 敵人高度＝（big 用 BOSS_H、其餘 FOE_H）× EnemyDef.battle_scale（劇情 boss 的壓迫感由資料調，見 enemy_def.gd）
 	var default_foe_h: float = BOSS_H if bool(u.get("big", false)) else FOE_H
-	var h: float = HERO_H if is_hero else float(u.get("battle_height", default_foe_h))
+	var foe_h: float = float(u.get("battle_height", default_foe_h)) * maxf(0.1, float(u.get("battle_scale", 1.0)))
+	var h: float = HERO_H if is_hero else foe_h
 	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
 	var w := h * ratio
 

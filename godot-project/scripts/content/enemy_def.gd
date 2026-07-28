@@ -12,7 +12,9 @@ extends Resource
 @export var luck: float = 0.0           ## v4.0 幸運：敵方會心/抗爆/閃避加成（see specs/BATTLE_FORMULAS.md F-1/F-3/F-4）。預設 0＝一般怪不受影響
 @export var exp: int = 0
 @export var gold: int = 0
-@export var big: bool = false           ## boss/大型敵人旗標
+@export var big: bool = false           ## boss/大型敵人旗標（戰鬥圖基準高度改用 BOSS_H）
+@export var battle_scale: float = 1.0   ## 戰鬥畫面顯示倍率（1.0＝基準高度；劇情 boss 想更有壓迫感就調 1.5 之類）
+                                        ## 只影響戰鬥立繪大小，不動任何數值/公式。見 battle_state_machine.gd _build_unit()
 @export var all_attack: bool = false    ## 來源 JSON key: "allAttack"
 @export var healer: bool = false
 @export var drops: Array = []           ## Array[Dictionary]，每個元素 {id, rate}；rate 是「加成倍率」，
@@ -34,6 +36,7 @@ static func from_dict(d: Dictionary) -> EnemyDef:
 	result.exp = int(d.get("exp", 0))
 	result.gold = int(d.get("gold", 0))
 	result.big = bool(d.get("big", false))
+	result.battle_scale = float(d.get("battleScale", 1.0))   # 種子 JSON 沒這個 key → 預設 1.0
 	result.all_attack = bool(d.get("allAttack", false))
 	result.healer = bool(d.get("healer", false))
 	result.drops = d.get("drops", [])
