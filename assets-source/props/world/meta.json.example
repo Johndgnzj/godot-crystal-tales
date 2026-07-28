@@ -1,0 +1,8 @@
+{
+  "id": "building_inn_floret_a",
+  "type": "architecture",
+  "footprint": [6, 4],
+  "canvas_px": [256, 224],
+  "anchor": "bottom_center",
+  "occludes_player": true
+}

@@ -1,0 +1,10 @@
+{
+  "id": "fence_wood_tile_gate_h_closed_a",
+  "type": "structure",
+  "footprint": [1, 1],
+  "canvas_px": [96, 96],
+  "anchor": "bottom_center",
+  "occludes_player": true,
+  "tile_set": "fence_wood_tile_set_a",
+  "tile_role": "gate_horizontal_closed"
+}
