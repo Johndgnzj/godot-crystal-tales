@@ -58,6 +58,7 @@ GODOT_ROOT = SCRIPT_DIR.parents[1]                            # .../godot-projec
 REPO_ROOT = GODOT_ROOT.parent                                 # .../godot-crystal-tales
 CONTENT_PATH = REPO_ROOT / "reference" / "gdevelop" / "CONTENT.json"
 BUILD_CQ2_PATH = REPO_ROOT / "reference" / "gdevelop" / "build_cq2.py"
+EXP_TABLE_PATH = GODOT_ROOT / "resources" / "content" / "exp_table.json"
 
 FAILURES: list[str] = []
 
@@ -147,10 +148,29 @@ def py_derive(member: dict, content: dict) -> dict:
     return m
 
 
-def py_exp_need(lv: int, content: dict) -> int:
-    """exp_need.gd `ExpNeed.exp_need()` 的逐行翻譯，對應 build_cq2.py `expNeed(lv)`（L1325/L2662）。"""
+def py_exp_need_legacy(lv: int, content: dict) -> int:
+    """exp_need.gd **fallback 分支**的逐行翻譯，對應 build_cq2.py `expNeed(lv)`（L1325/L2662）。
+
+    2026-07-28（spec v5.0）起這條不是正常路徑——正常路徑是查 `resources/content/exp_table.json`
+    （見 `py_exp_need()`）；這個公式只在經驗表讀不到時才會被用到，所以 parity 測試保留。
+    """
     d = content["derived"]
     return int(d["expBase"] + js_round(d["expCoef"] * math.pow(float(lv), d["expPow"])))
+
+
+def load_exp_table() -> dict:
+    """經驗表真相源 resources/content/exp_table.json（spec v5.0 F-2）。"""
+    return json.loads(EXP_TABLE_PATH.read_text(encoding="utf-8"))
+
+
+def py_exp_need(lv: int, table: dict) -> int:
+    """exp_need.gd `ExpNeed.exp_need()` 現行主路徑的鏡像：查表，超出表範圍（滿級）回 0。"""
+    rows = table["levels"]
+    if lv < 1:
+        lv = 1
+    if lv > len(rows):
+        return 0
+    return int(rows[lv - 1]["required_exp"])
 
 
 # =========================================================================
@@ -286,13 +306,59 @@ def run_frozen_fixture_check(content: dict) -> None:
             ok(f"{key}: critV={result['critV']}（WORLD 版）明確不同於 BATTLE 版技術債結果 {battle_v}"
                f"，證明 derive.gd 確實套用了 F-1 的取一位小數修正")
 
-    print("\n=== exp_need.gd (py_exp_need 鏡像) vs 凍結 fixture ===")
+    print("\n=== exp_need.gd fallback 分支 (py_exp_need_legacy 鏡像) vs 凍結 fixture ===")
     for lv, expected in EXPECTED_EXP_NEED.items():
-        got = py_exp_need(lv, content)
+        got = py_exp_need_legacy(lv, content)
         if got != expected:
-            fail(f"exp_need(lv={lv}): got={got} expected={expected}")
+            fail(f"exp_need_legacy(lv={lv}): got={got} expected={expected}")
         else:
-            ok(f"exp_need(lv={lv}) = {got}")
+            ok(f"exp_need_legacy(lv={lv}) = {got}")
+
+
+def run_exp_table_check() -> None:
+    """F-2 現行主路徑：經驗表本身的自洽性（spec v5.0）。
+
+    表是資料、不是公式，所以這裡驗的是「表能不能被 exp_need.gd 安全地查」：等級連續、required_exp
+    遞增（滿級為 0）、total_exp 等於較低等級 required_exp 的累加。
+    """
+    print("\n=== exp_table.json（F-2 真相源）自洽性 ===")
+    if not EXP_TABLE_PATH.exists():
+        fail(f"找不到經驗表: {EXP_TABLE_PATH}")
+        return
+    table = load_exp_table()
+    rows = table.get("levels", [])
+    max_level = int(table.get("meta", {}).get("max_level", 0))
+    if len(rows) != max_level or max_level <= 0:
+        fail(f"levels 筆數 {len(rows)} 與 meta.max_level {max_level} 不一致")
+        return
+    ok(f"等級數 = meta.max_level = {max_level}")
+
+    levels_ok = all(int(r["level"]) == i + 1 for i, r in enumerate(rows))
+    ok("等級 1..N 連續") if levels_ok else fail("等級不連續或缺級")
+
+    if int(rows[-1]["required_exp"]) != 0:
+        fail(f"滿級 required_exp 應為 0（得到 {rows[-1]['required_exp']}）")
+    else:
+        ok("滿級 required_exp = 0（exp_need.gd 以 0 當升級迴圈終止條件）")
+
+    rising = all(int(rows[i]["required_exp"]) < int(rows[i + 1]["required_exp"])
+                 for i in range(len(rows) - 2))
+    ok("required_exp 逐級遞增") if rising else fail("required_exp 沒有逐級遞增")
+
+    acc = 0
+    bad = []
+    for r in rows:
+        if int(r["total_exp"]) != acc:
+            bad.append(f"Lv{r['level']}: total_exp={r['total_exp']} 期望 {acc}")
+        acc += int(r["required_exp"])
+    if bad:
+        fail("total_exp 不等於較低等級 required_exp 累加 -> " + "；".join(bad[:5]))
+    else:
+        ok("total_exp = 較低等級 required_exp 累加（全表）")
+
+    for lv in (1, 2, 10, 50, max_level):
+        ok(f"exp_need(lv={lv}) = {py_exp_need(lv, table)}")
+    ok(f"exp_need(lv={max_level + 1}) = {py_exp_need(max_level + 1, table)}（超出表範圍＝滿級）")
 
 
 _REGEN_NOTE = """
@@ -381,6 +447,7 @@ def main() -> int:
     content = json.loads(CONTENT_PATH.read_text(encoding="utf-8"))
 
     run_frozen_fixture_check(content)
+    run_exp_table_check()
     if "--regen" in sys.argv:
         run_regen_check(content)
 

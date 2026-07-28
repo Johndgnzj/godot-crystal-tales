@@ -1,0 +1,517 @@
+{
+  "meta": {
+    "formula": "required_exp = round(100 * level^1.7)",
+    "rounding": "四捨五入到整數（Godot roundf 同語意）",
+    "max_level": 100,
+    "required_exp": "該等級升到下一級所需 EXP；level=100 為滿級固定 0",
+    "total_exp": "升到該等級所需的累積 EXP（＝所有較低等級 required_exp 之和），level=1 為 0",
+    "generated": "2026-07-28 由公式產生，之後以本檔手動微調為準（改了值不用回頭改公式）",
+    "design_targets": [
+      "Lv1~10 快速成長（教學期）",
+      "Lv10~50 正常 JRPG 節奏",
+      "Lv50~100 長期養成"
+    ]
+  },
+  "levels": [
+    {
+      "level": 1,
+      "required_exp": 100,
+      "total_exp": 0
+    },
+    {
+      "level": 2,
+      "required_exp": 325,
+      "total_exp": 100
+    },
+    {
+      "level": 3,
+      "required_exp": 647,
+      "total_exp": 425
+    },
+    {
+      "level": 4,
+      "required_exp": 1056,
+      "total_exp": 1072
+    },
+    {
+      "level": 5,
+      "required_exp": 1543,
+      "total_exp": 2128
+    },
+    {
+      "level": 6,
+      "required_exp": 2103,
+      "total_exp": 3671
+    },
+    {
+      "level": 7,
+      "required_exp": 2733,
+      "total_exp": 5774
+    },
+    {
+      "level": 8,
+      "required_exp": 3430,
+      "total_exp": 8507
+    },
+    {
+      "level": 9,
+      "required_exp": 4190,
+      "total_exp": 11937
+    },
+    {
+      "level": 10,
+      "required_exp": 5012,
+      "total_exp": 16127
+    },
+    {
+      "level": 11,
+      "required_exp": 5893,
+      "total_exp": 21139
+    },
+    {
+      "level": 12,
+      "required_exp": 6833,
+      "total_exp": 27032
+    },
+    {
+      "level": 13,
+      "required_exp": 7829,
+      "total_exp": 33865
+    },
+    {
+      "level": 14,
+      "required_exp": 8880,
+      "total_exp": 41694
+    },
+    {
+      "level": 15,
+      "required_exp": 9985,
+      "total_exp": 50574
+    },
+    {
+      "level": 16,
+      "required_exp": 11143,
+      "total_exp": 60559
+    },
+    {
+      "level": 17,
+      "required_exp": 12353,
+      "total_exp": 71702
+    },
+    {
+      "level": 18,
+      "required_exp": 13613,
+      "total_exp": 84055
+    },
+    {
+      "level": 19,
+      "required_exp": 14924,
+      "total_exp": 97668
+    },
+    {
+      "level": 20,
+      "required_exp": 16284,
+      "total_exp": 112592
+    },
+    {
+      "level": 21,
+      "required_exp": 17692,
+      "total_exp": 128876
+    },
+    {
+      "level": 22,
+      "required_exp": 19148,
+      "total_exp": 146568
+    },
+    {
+      "level": 23,
+      "required_exp": 20651,
+      "total_exp": 165716
+    },
+    {
+      "level": 24,
+      "required_exp": 22200,
+      "total_exp": 186367
+    },
+    {
+      "level": 25,
+      "required_exp": 23796,
+      "total_exp": 208567
+    },
+    {
+      "level": 26,
+      "required_exp": 25436,
+      "total_exp": 232363
+    },
+    {
+      "level": 27,
+      "required_exp": 27122,
+      "total_exp": 257799
+    },
+    {
+      "level": 28,
+      "required_exp": 28852,
+      "total_exp": 284921
+    },
+    {
+      "level": 29,
+      "required_exp": 30625,
+      "total_exp": 313773
+    },
+    {
+      "level": 30,
+      "required_exp": 32442,
+      "total_exp": 344398
+    },
+    {
+      "level": 31,
+      "required_exp": 34302,
+      "total_exp": 376840
+    },
+    {
+      "level": 32,
+      "required_exp": 36204,
+      "total_exp": 411142
+    },
+    {
+      "level": 33,
+      "required_exp": 38148,
+      "total_exp": 447346
+    },
+    {
+      "level": 34,
+      "required_exp": 40134,
+      "total_exp": 485494
+    },
+    {
+      "level": 35,
+      "required_exp": 42161,
+      "total_exp": 525628
+    },
+    {
+      "level": 36,
+      "required_exp": 44230,
+      "total_exp": 567789
+    },
+    {
+      "level": 37,
+      "required_exp": 46339,
+      "total_exp": 612019
+    },
+    {
+      "level": 38,
+      "required_exp": 48488,
+      "total_exp": 658358
+    },
+    {
+      "level": 39,
+      "required_exp": 50677,
+      "total_exp": 706846
+    },
+    {
+      "level": 40,
+      "required_exp": 52906,
+      "total_exp": 757523
+    },
+    {
+      "level": 41,
+      "required_exp": 55174,
+      "total_exp": 810429
+    },
+    {
+      "level": 42,
+      "required_exp": 57481,
+      "total_exp": 865603
+    },
+    {
+      "level": 43,
+      "required_exp": 59827,
+      "total_exp": 923084
+    },
+    {
+      "level": 44,
+      "required_exp": 62211,
+      "total_exp": 982911
+    },
+    {
+      "level": 45,
+      "required_exp": 64634,
+      "total_exp": 1045122
+    },
+    {
+      "level": 46,
+      "required_exp": 67095,
+      "total_exp": 1109756
+    },
+    {
+      "level": 47,
+      "required_exp": 69593,
+      "total_exp": 1176851
+    },
+    {
+      "level": 48,
+      "required_exp": 72129,
+      "total_exp": 1246444
+    },
+    {
+      "level": 49,
+      "required_exp": 74702,
+      "total_exp": 1318573
+    },
+    {
+      "level": 50,
+      "required_exp": 77312,
+      "total_exp": 1393275
+    },
+    {
+      "level": 51,
+      "required_exp": 79959,
+      "total_exp": 1470587
+    },
+    {
+      "level": 52,
+      "required_exp": 82643,
+      "total_exp": 1550546
+    },
+    {
+      "level": 53,
+      "required_exp": 85363,
+      "total_exp": 1633189
+    },
+    {
+      "level": 54,
+      "required_exp": 88119,
+      "total_exp": 1718552
+    },
+    {
+      "level": 55,
+      "required_exp": 90911,
+      "total_exp": 1806671
+    },
+    {
+      "level": 56,
+      "required_exp": 93739,
+      "total_exp": 1897582
+    },
+    {
+      "level": 57,
+      "required_exp": 96602,
+      "total_exp": 1991321
+    },
+    {
+      "level": 58,
+      "required_exp": 99501,
+      "total_exp": 2087923
+    },
+    {
+      "level": 59,
+      "required_exp": 102435,
+      "total_exp": 2187424
+    },
+    {
+      "level": 60,
+      "required_exp": 105404,
+      "total_exp": 2289859
+    },
+    {
+      "level": 61,
+      "required_exp": 108408,
+      "total_exp": 2395263
+    },
+    {
+      "level": 62,
+      "required_exp": 111446,
+      "total_exp": 2503671
+    },
+    {
+      "level": 63,
+      "required_exp": 114519,
+      "total_exp": 2615117
+    },
+    {
+      "level": 64,
+      "required_exp": 117627,
+      "total_exp": 2729636
+    },
+    {
+      "level": 65,
+      "required_exp": 120768,
+      "total_exp": 2847263
+    },
+    {
+      "level": 66,
+      "required_exp": 123944,
+      "total_exp": 2968031
+    },
+    {
+      "level": 67,
+      "required_exp": 127153,
+      "total_exp": 3091975
+    },
+    {
+      "level": 68,
+      "required_exp": 130396,
+      "total_exp": 3219128
+    },
+    {
+      "level": 69,
+      "required_exp": 133673,
+      "total_exp": 3349524
+    },
+    {
+      "level": 70,
+      "required_exp": 136983,
+      "total_exp": 3483197
+    },
+    {
+      "level": 71,
+      "required_exp": 140326,
+      "total_exp": 3620180
+    },
+    {
+      "level": 72,
+      "required_exp": 143703,
+      "total_exp": 3760506
+    },
+    {
+      "level": 73,
+      "required_exp": 147112,
+      "total_exp": 3904209
+    },
+    {
+      "level": 74,
+      "required_exp": 150555,
+      "total_exp": 4051321
+    },
+    {
+      "level": 75,
+      "required_exp": 154030,
+      "total_exp": 4201876
+    },
+    {
+      "level": 76,
+      "required_exp": 157537,
+      "total_exp": 4355906
+    },
+    {
+      "level": 77,
+      "required_exp": 161077,
+      "total_exp": 4513443
+    },
+    {
+      "level": 78,
+      "required_exp": 164650,
+      "total_exp": 4674520
+    },
+    {
+      "level": 79,
+      "required_exp": 168254,
+      "total_exp": 4839170
+    },
+    {
+      "level": 80,
+      "required_exp": 171891,
+      "total_exp": 5007424
+    },
+    {
+      "level": 81,
+      "required_exp": 175560,
+      "total_exp": 5179315
+    },
+    {
+      "level": 82,
+      "required_exp": 179260,
+      "total_exp": 5354875
+    },
+    {
+      "level": 83,
+      "required_exp": 182992,
+      "total_exp": 5534135
+    },
+    {
+      "level": 84,
+      "required_exp": 186756,
+      "total_exp": 5717127
+    },
+    {
+      "level": 85,
+      "required_exp": 190551,
+      "total_exp": 5903883
+    },
+    {
+      "level": 86,
+      "required_exp": 194378,
+      "total_exp": 6094434
+    },
+    {
+      "level": 87,
+      "required_exp": 198236,
+      "total_exp": 6288812
+    },
+    {
+      "level": 88,
+      "required_exp": 202125,
+      "total_exp": 6487048
+    },
+    {
+      "level": 89,
+      "required_exp": 206045,
+      "total_exp": 6689173
+    },
+    {
+      "level": 90,
+      "required_exp": 209997,
+      "total_exp": 6895218
+    },
+    {
+      "level": 91,
+      "required_exp": 213979,
+      "total_exp": 7105215
+    },
+    {
+      "level": 92,
+      "required_exp": 217991,
+      "total_exp": 7319194
+    },
+    {
+      "level": 93,
+      "required_exp": 222035,
+      "total_exp": 7537185
+    },
+    {
+      "level": 94,
+      "required_exp": 226109,
+      "total_exp": 7759220
+    },
+    {
+      "level": 95,
+      "required_exp": 230213,
+      "total_exp": 7985329
+    },
+    {
+      "level": 96,
+      "required_exp": 234348,
+      "total_exp": 8215542
+    },
+    {
+      "level": 97,
+      "required_exp": 238513,
+      "total_exp": 8449890
+    },
+    {
+      "level": 98,
+      "required_exp": 242708,
+      "total_exp": 8688403
+    },
+    {
+      "level": 99,
+      "required_exp": 246933,
+      "total_exp": 8931111
+    },
+    {
+      "level": 100,
+      "required_exp": 0,
+      "total_exp": 9178044
+    }
+  ]
+}

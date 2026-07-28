@@ -1,13 +1,22 @@
 # 規格：衍生屬性與戰鬥公式
 
-- Spec 版本: v4.1
+- Spec 版本: v5.0
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py`（WORLD 版 `derive()` L1326-1345；BATTLE 版 `derive()`
   L2641-2661 為同一份公式的重複實作——**已知技術債，DEV_開發指南.md L63 有提及「改公式要同步兩處」**）
-- 狀態: 定案（F-1~F-9 原始抄錄自現行程式碼；**F-10/F-11 為 Godot 端刻意新增；v4.0 屬性系統擴充進一步刻意偏離 GDevelop，見版本紀錄**）
+- 狀態: 定案（F-1~F-8 原始抄錄自現行程式碼、**F-9 已於 v4.2 移除**；**F-10/F-11 為 Godot 端刻意新增；v4.0 屬性系統擴充進一步刻意偏離 GDevelop，見版本紀錄**）
 - 用途: MOD-F（衍生屬性/戰鬥公式）、MOD-E（ATB 戰鬥系統）實作依據；屬性系統擴充見 [TASKS/14](../TASKS/14_屬性系統擴充.md)、`docs/design/屬性戰鬥設計.md`
 
 ## 版本紀錄
 
+- **v5.0（2026-07-28，經驗改查表；John 指示）**：**破壞性變動——F-2 升級所需經驗由公式改為 100 級
+  經驗表** `godot-project/resources/content/exp_table.json`（`required_exp = round(100 × lv^1.7)` 產出，
+  **之後以表內數值為準**，微調曲線直接改 JSON）。滿級 Lv100 的 `required_exp = 0`＝不再升級；
+  `battle_state_machine._settle_win()` 的升級迴圈以 `need > 0` 為終止條件。`derived.tres` 的
+  `exp_base`/`exp_coef`/`exp_pow` 降為「經驗表讀不到時的 fallback」，不再是正常路徑。
+- **v4.2（2026-07-28，移除 EXP 縮放；John 指示）**：**破壞性變動——F-9 EXPSCALE 整條移除**，實得 EXP
+  ＝敵人資料表 `exp` 總和，與設定集 codex 標示一致（原本係數 0.15~0.57 使實測值遠低於設定集）。刪除
+  `scripts/battle/exp_scale.gd`，`battle_state_machine._settle_win()` 不再縮放；EXP 隊員平分行為不變。
+  升級速度回升（各圖 ×1.8~×6.8），`pacing.tres` 的 entry/target/battles 降為文件性質參考值。
 - **v4.1（2026-07-20，第一章 Phase 3 地基）**：F-11 新增 `scripted_survive`（劇情/必敗戰資料驅動）＋
   `story_cut`/`win_cut`（戰後過場資料驅動），取代 `battle_state_machine` 原本寫死的 `enc=="prologue_demon"`。
   純新增，不動 F-1~F-10 數值。
@@ -90,11 +99,29 @@ spd      = AGI + eqStat(m,"spd")                                # v4.0：裝備�
   Lv1（`sk[id]=1`）。
 - `spts`（技能點）：未定義則設 0。
 
-## F-2　升級所需經驗 `expNeed(lv)`（L1325 / L2662）
+## F-2　升級所需經驗 `expNeed(lv)`（v5.0 起改查表）
+
+**真相源＝`godot-project/resources/content/exp_table.json`**（100 級表；實作
+`scripts/content/exp_need.gd`）：
 
 ```
-expNeed(lv) = d.expBase + round(d.expCoef * lv^d.expPow)
+expNeed(lv) = exp_table.levels[lv-1].required_exp     # lv 超出表範圍（滿級）→ 0
 ```
+
+| 欄位 | 意義 |
+|---|---|
+| `level` | 等級（1..`meta.max_level`，目前 100）|
+| `required_exp` | 該級升到下一級所需 EXP；**滿級固定 0＝不再升級** |
+| `total_exp` | 升到該級的累積 EXP（＝所有較低等級 `required_exp` 之和），Lv1 為 0 |
+
+- 表由 `required_exp = round(100 × lv^1.7)` 產出（`meta.formula`），**之後以表內數值為準**——調曲線
+  直接改 JSON，不用回頭改公式。設計意圖（`meta.design_targets`）：Lv1~10 教學期快速成長、Lv10~50
+  正常 JRPG 節奏、Lv50~100 長期養成。
+- **升級迴圈必須以 `need > 0` 為終止條件**（`while need > 0 and exp >= need`），否則滿級時
+  `required_exp = 0` 會無限迴圈。見 `scripts/battle/battle_state_machine.gd` `_settle_win()`。
+- 舊公式 `expNeed(lv) = d.expBase + round(d.expCoef * lv^d.expPow)`（build_cq2.py L1325 / L2662，
+  `derived.tres` 的 `exp_base=10 / exp_coef=8 / exp_pow=1.4`）自 v5.0 起**只剩 fallback 用途**：
+  經驗表讀不到時 `exp_need.gd` 退回這條並 `push_error`。
 
 ## F-3　普攻傷害 `phys(att, defn)`（L2945-2953；v4.0 加入抗爆與可變爆傷）
 
@@ -283,12 +310,23 @@ a.atb = 0   # 無條件，回合一開始就重置（L3020）
   同樣沒有血量數字，只有名字（受擊或被選取時短暫顯示）＋小血條（L3211-3219）——這是 UI 呈現規則，數值
   歸屬 MOD-D，MOD-E 只需要保證 `hp`/`maxhp` 是正確算好的即可。
 
-## F-9　EXP 縮放
+## F-9　EXP 縮放（**v4.2 起移除，保留條號當歷史紀錄**）
 
 ```
-EXP 實際獲得 = 敵人資料表原始值總和 × EXPSCALE[b.enc]（若 b.enc 不在 EXPSCALE 表內則不縮放，即係數視同 1）
-最終取整：exp = Math.max(1, Math.round(rawExpSum * scale))   # L3092
+EXP 實際獲得 = 敵人資料表原始值總和（不縮放）
+最終取整：exp = max(1, rawExpSum)
 ```
+
+**2026-07-28（v4.2，John 指示）移除**：原本抄自 GDevelop 的 `EXPSCALE` 係數（下方歷史算式）會把實得 EXP
+壓到 0.15~0.57 倍，導致遊戲內獲得的經驗值與**設定集 codex 標示的敵人 EXP 對不上**（設定集印的是資料表原始
+值）。現在戰鬥結算直接用敵人 `exp` 總和，`battle_state_machine._settle_win()` 不再乘任何係數，
+`scripts/battle/exp_scale.gd` 已刪除。EXP **在隊員間平均分配**的行為不變（`each = ceil(exp / 非客座隊員數)`）。
+**平衡影響**：各圖升級速度變成原本的 1/係數倍（森林 ×6.7、森林2 ×6.8、礦坑 ×3.9、洞窟 ×2.7、
+東森林 1-3 ×2.4~2.6、教學 ×1.8）；`pacing.tres` 的 `entryLv`/`targetLv`/`battles` 從此**只是文件性質的
+節奏參考**，不再影響實際數值。
+
+<details>
+<summary>歷史算式（GDevelop `EXPSCALE`，已不再實作）</summary>
 
 `EXPSCALE` 的精確計算（`build_cq2.py` L3304-3317，Python 端 build-time 計算後用字串替換內嵌進 JS，
 **不是** CONTENT.json 的欄位，也不是執行期公式）：
@@ -304,22 +342,10 @@ for map_id, cfg in CONTENT.pacing.maps.items():
 # CONTENT.pacing.maps 裡的特殊戰鬥，EXPSCALE 沒有對應項，效果等同係數 1（不縮放，用原始 exp 總和）。
 ```
 
-**MOD-E 實作現況（記錄於此，供之後 CORE-2 若要補齊轉存欄位時參考）**：檢查過
-`godot-project/resources/content/content.json`（CORE-2 轉存結果）與 `sync_content.py`，**目前沒有
-任何欄位存放 EXPSCALE**——這張表在 GDevelop 端是 build_cq2.py 自己用 Python 算出來、字串替換進 JS 常數，
-從未進過 `CONTENT.json` 本體，所以 CORE-2 轉存時自然也沒有轉存到。本規格原文（v1.0）「Godot 端等同做法：
-在 CORE-2 轉存 CONTENT.json 時，把 EXPSCALE 一併算出存進轉存結果」這句話目前尚未成立。MOD-E 的變通做法：
-在自己擁有的 `godot-project/scripts/battle/exp_scale.gd` 內用上面的公式，**唯讀**呼叫
-`ContentDB.get_pacing()`/`get_encounter()`/`get_enemy()`/`ExpNeed.exp_need()` 現場算出等價值（純函式，
-不寫回任何 ContentDB 內部狀態，不算「MOD 任務自己重算 derive()」那類被禁止的行為，只是把 build-time 常數
-表換成 run-time 等價計算）。若之後 CORE-2 任務負責者想把這個表移到轉存階段預先算好（跟原始碼設計更一致、
-啟動時省一點計算），`exp_scale.gd` 的公式可以直接搬過去，`ContentDB` 加一個 `get_exp_scale(map_id)`
-查詢介面，MOD-E 這邊改成呼叫該介面即可，不影響呼叫端（`battle_state_machine.gd`）簽名。
+Godot 端曾在 `scripts/battle/exp_scale.gd` 用同一條公式現場計算（v3.0 起 `avg` 改為依 `weight` 加權的
+期望 EXP，配合 F-11 的編組結構）。v4.2 連同該檔一起移除。
 
-**Godot v3.0 演進（隨 F-11 遭遇結構升級）**：`formations` 改為帶數量範圍/權重的編組後，上式的 `avg`
-（每組總 exp 的平均）在 `exp_scale.gd` 改算為——每組期望 EXP =`Σ member(期望隻數 × 單隻 exp)`（期望隻數
-=`(min+max)/2`），各組再依 `weight` 加權平均。當 member 全填 `min=max`、`weight` 省略時，與上式算術平均
-完全等價（向下相容）；其餘 need/party/battles 部分不變。
+</details>
 
 ## F-10　掉落機率（Godot 端設計，非 GDevelop 抄錄）
 
@@ -392,5 +418,6 @@ chance    = clamp(baseRate * mult + luckBonus, 0, 1)
 - WORLD/BATTLE 兩份 `derive()` 在 `critV` 是否取一位小數上不一致（見 F-1 註記），Godot 版統一用 WORLD
   版寫法（取一位小數），此為刻意修正技術債，不是誤譯——MOD-F 實作時若發現任何實測數值跟 GDevelop 版對不上，
   優先檢查是不是踩到這個已知差異點。
-- F-9 EXPSCALE 目前由 MOD-E 在 `exp_scale.gd` 現場計算（見上方 F-9「MOD-E 實作現況」），還沒有搬進
-  CORE-2 的轉存階段；若之後要移過去，介面收斂方式已經在該節記錄。
+- ~~F-9 EXPSCALE 要不要搬進 CORE-2 轉存階段預先算好~~——**已無此問題**，F-9 於 v4.2 整條移除（見上方 F-9）。
+- `pacing.tres` 在 F-9 移除後不再有任何數值作用（只剩節奏文件參考）；若要重新做「升級節奏控制」，
+  應改為調整 `enemies/*.tres` 的 `exp` 與 F-2 `expNeed` 係數，不要再引入隱藏縮放係數。

@@ -786,15 +786,13 @@ func _check_end() -> bool:
 
 
 func _settle_win() -> void:
-	var raw_exp := 0
+	# F-9 EXPSCALE 已於 spec v4.2 移除：實得 EXP＝敵人資料表原始值總和，與設定集標示一致。
+	var exp := 0
 	var gold := 0
 	for f in foes:
-		raw_exp += int(f.get("exp", 0))
+		exp += int(f.get("exp", 0))
 		gold += int(f.get("gold", 0))
-
-	# see specs/BATTLE_FORMULAS.md F-9（EXPSCALE 現場計算，見 exp_scale.gd 檔頭說明）
-	var scale := ExpScale.compute(enc)
-	var exp := maxi(1, int(roundf(float(raw_exp) * scale)))
+	exp = maxi(1, exp)
 
 	GameState.gold += gold
 
@@ -809,7 +807,8 @@ func _settle_win() -> void:
 		m["exp"] = int(m.get("exp", 0)) + each
 		var ups := 0
 		var learned: Array = []
-		while int(m["exp"]) >= ExpNeed.exp_need(int(m.get("lv", 1))):
+		# need == 0 ＝ 已達經驗表的滿級（see specs/BATTLE_FORMULAS.md F-2）；沒有這個條件會無限迴圈。
+		while ExpNeed.exp_need(int(m.get("lv", 1))) > 0 and int(m["exp"]) >= ExpNeed.exp_need(int(m.get("lv", 1))):
 			m["exp"] = int(m["exp"]) - ExpNeed.exp_need(int(m.get("lv", 1)))
 			m["lv"] = int(m.get("lv", 1)) + 1
 			ups += 1

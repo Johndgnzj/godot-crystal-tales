@@ -41,7 +41,7 @@ UI 場景 menu/shop/hud 未涵蓋）、實際玩法（存讀檔/戰鬥/移動）
 | MOD-B 撿取觸發 | `scripts/world/{trigger,exit,pickup}_zone.gd`, `boss_mark.gd`, `flag_matcher.gd` | L2 | —（純邏輯交叉驗證未留 repo） | `--check-only`；Area2D 碰撞觸發 + pickup 存檔 |
 | MOD-C 移動碰撞 | `scripts/world/world_scene_state.gd` 等 | L1 | — | `--check-only`；玩家移動/碰撞/室內進出實機 |
 | MOD-D 選單 UI | （TASKS/04，本 worktree 草稿；另一 agent 於 mod-d 分支平行進行） | L0 | — | 待該任務完成後補 |
-| MOD-E 戰鬥 ATB | `scripts/battle/{battle_state_machine,atb,damage_calc,exp_scale,auto_battle}.gd` | **L3** | `test_battle_formulas.py` | `--check-only`；戰鬥自動打法實機（見 README E2E-3） |
+| MOD-E 戰鬥 ATB | `scripts/battle/{battle_state_machine,atb,damage_calc,auto_battle}.gd` | **L3** | `test_battle_formulas.py` | `--check-only`；戰鬥自動打法實機（見 README E2E-3） |
 | MOD-F 衍生公式 | `scripts/content/{derive,exp_need}.gd` | **L3** | `test_derive.py` | `--check-only`；`Derive.derive()` 引擎內回傳對齊 fixture |
 | MOD-G 遭遇系統 | `scripts/world/encounter_tracker.gd` | **L3** | `test_encounter_tracker.py` | `--check-only`；實機走 ENC 地形觸發間距 |
 | MOD-H 地圖管線 | `scripts/world/world_scene.gd`, 五張 `scenes/world/*.tscn`（凍結 authored）；新地區生成見 MOD-H2 `scripts/map/region_generator.gd` | L1（生成器逐格比對，gen_maps.py 已於 MOD-H2 移除） | —（生成器非 python test，region_generator 走 Godot headless） | `--check-only`；五張場景實機載入、TileMapLayer/碰撞正確 |

@@ -1,10 +1,10 @@
 # MOD-E　戰鬥系統（ATB）
 
-- Task 版本: v1.2
+- Task 版本: v1.3
 - 狀態: 實作中
 - 對應 GDevelop 系統: BATTLE_JS 全部（DEV_開發指南.md L56-59）
-- 規格來源: `specs/BATTLE_FORMULAS.md` F-3~F-9、F-11（本模組是 spec 的主要消費者，需要 MOD-F 的 `derive()`
-  等價物已就緒才能算出角色戰鬥數值）
+- 規格來源: `specs/BATTLE_FORMULAS.md` F-3~F-8、F-11（F-9 EXP 縮放已於 spec v4.2 移除）；本模組是 spec 的
+  主要消費者，需要 MOD-F 的 `derive()` 等價物已就緒才能算出角色戰鬥數值
 
 ## 目標
 
@@ -22,15 +22,15 @@
   Tweaks 定案值，不是可隨意調的臨時參數）
 - `godot-project/scripts/battle/damage_calc.gd`（F-3~F-6、F-8，普攻/技能/道具/敵人技能傷害與治療，全部
   引用 `specs/BATTLE_FORMULAS.md` 條目編號作為程式碼註解錨點）
-- `godot-project/scripts/battle/exp_scale.gd`（F-9 EXPSCALE 現場計算，見下方「與規格書差異」）
+- ~~`godot-project/scripts/battle/exp_scale.gd`（F-9 EXPSCALE 現場計算）~~——**2026-07-28 刪除**，見下方第 6 點
 - **遭遇抽選（v1.2，2026-07-19，遭遇系統重製）**：`_init_battle()` 改呼叫 `EncounterDef.roll()`（加權抽組
   ＋數量範圍展開＋洗牌＋上限 5＋保底 1 隻，見 F-11）；戰場敵人數上限由 4 提到 5（`FOE_SLOTS` 擴到 5 槽、
-  取模改用 `slots.size()`；第 5 槽座標為估值待實機微調）。`exp_scale.gd` 每組平均 EXP 同步改為加權期望（F-9 v3.0 註記）。
+  取模改用 `slots.size()`；第 5 槽座標為估值待實機微調）。
 - `godot-project/scripts/battle/auto_battle.gd`（`GameState.auto_battle` 對應邏輯）
 - 勝敗結算（`battle_state_machine.gd` 的 `_settle_win()`/`_settle_lose()`/`_sync_party_to_game_state()`）：
-  EXP（含 EXPSCALE，見 F-9）、升級/技能解鎖、掉落物寫入 `GameState.item_inv`/`gold`、
+  EXP（**不縮放**，＝敵人資料表 exp 總和，見 F-9）、升級/技能解鎖、掉落物寫入 `GameState.item_inv`/`gold`、
   Boss 專屬「☠ 名稱不露數字」血條顯示規則、勝負呼叫 `SceneRouter.battle_result()`。
-- `godot-project/scripts/battle/test_battle_formulas.py`：F-3~F-9 的 Python 交叉驗證測試（見下方
+- `godot-project/scripts/battle/test_battle_formulas.py`：F-3~F-8 的 Python 交叉驗證測試（見下方
   「驗證現況」）。
 
 ## 前置依賴
@@ -42,12 +42,12 @@ CORE-1~CORE-6、MOD-F（衍生屬性公式必須先有等價實作）。**MOD-D 
 
 ## 驗收標準
 
-- 逐條核對 `specs/BATTLE_FORMULAS.md` F-3~F-9，寫單元測試釘住每條公式的輸出（相同輸入、允許隨機項的
+- 逐條核對 `specs/BATTLE_FORMULAS.md` F-3~F-8，寫單元測試釘住每條公式的輸出（相同輸入、允許隨機項的
   期望值範圍）。**已完成**：`test_battle_formulas.py` 涵蓋 F-3（phys，含確定性算例＋統計會心率/傷害
   範圍）、F-4（dodge_chance 含上下限 clamp＋統計命中率）、F-5（skPow/skBase/skDef/skill_damage/
   skill_heal，含 str/int 兩種 attr 分支、角色/敵人兩種 skBase 分支）、F-6（item_usable_in_battle）、
-  F-8（foe_named_skill_damage 確定性算例、foe_heal_amount 範圍統計、決策樹組合機率統計）、F-9
-  （EXPSCALE 五張真實地圖 + 三場特殊戰役 fallback=1.0）。
+  F-8（foe_named_skill_damage 確定性算例、foe_heal_amount 範圍統計、決策樹組合機率統計）。
+  （原 F-9 EXPSCALE 的五張地圖係數測試隨該公式於 2026-07-28 一併移除。）
 - 現有已知敵人（含 `bear_dire` 狂暴洞熊、`wolf`、`goblin_chief` 等）的技能/掉落行為與 CONTENT.json
   一致——測試資料直接讀真實 CONTENT.json。
 - 敵人技能 40% 觸發機率、`healer`/`allAttack` 旗標並存邏輯已在 MOD-E 實作時回 `foeAct` 函式補完精確
@@ -62,7 +62,7 @@ CORE-1~CORE-6、MOD-F（衍生屬性公式必須先有等價實作）。**MOD-D 
 2. **F-7 原文有一處抄錄錯誤，已修正**：v1.0 寫「敵人初始 ATB `random()*40`、英雄無初值」，實際上
    L2852 的 `random()*40` 是**英雄**的初值，敵人是 L2862 的 `random()*30`——兩者都寫反了。已在
    `specs/BATTLE_FORMULAS.md` v1.1 更正並記錄在版本紀錄。
-3. **F-9 EXPSCALE 目前沒有被 CORE-2 轉存進 `content.json`**：規格書 v1.0 原文假設「CORE-2 轉存時
+3. ~~**F-9 EXPSCALE 目前沒有被 CORE-2 轉存進 `content.json`**~~（**2026-07-28 作廢，見第 6 點**）：規格書 v1.0 原文假設「CORE-2 轉存時
    把 EXPSCALE 算好存進去」，但實際檢查 `sync_content.py`/`content_db.gd`/
    `resources/content/content.json` 後發現這張表從未被轉存過（它在 GDevelop 端只是 build-time
    Python 算出來字串替換進 JS，從未進過 CONTENT.json 本體）。**變通做法**：`exp_scale.gd` 用
@@ -75,6 +75,10 @@ CORE-1~CORE-6、MOD-F（衍生屬性公式必須先有等價實作）。**MOD-D 
 5. **`scripted`（序章強制戰 `prologue_demon`）與 boss 專屬結算（`ch1_boss`/`ch2_bear` 的固定裝備/
    旗標獎勵）已一併實作**，雖然任務檔「目標」段落沒有逐字列出，但這些都是 `foeAct()`/`checkEnd()`
    的既有行為，`initB()`/`_check_end()` 沒有實作這兩塊會導致序章戰鬥/兩場劇情 boss 戰結算不正確。
+6. **F-9 EXPSCALE 已於 2026-07-28 整條移除（John 指示，spec v4.2）**：該係數把實得 EXP 壓到
+   0.15~0.57 倍，跟設定集 codex 標示的敵人 EXP 對不上。現在 `_settle_win()` 直接用敵人 `exp` 總和，
+   `exp_scale.gd` 與其測試一併刪除；上方第 3 點（EXPSCALE 沒被轉存進 `content.json` 的變通做法）自此
+   作廢，不需要再補轉存欄位。
 
 ## 驗收現況（2026-07-14 收尾驗證）
 

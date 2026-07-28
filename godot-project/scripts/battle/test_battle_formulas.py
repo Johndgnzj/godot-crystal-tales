@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MOD-E 驗收腳本：atb.gd / damage_calc.gd / exp_scale.gd 的純 Python 單元測試，不依賴 Godot 執行檔。
+"""MOD-E 驗收腳本：atb.gd / damage_calc.gd 的純 Python 單元測試，不依賴 Godot 執行檔。
 
 ⚠️ v4.0 屬性系統擴充（2026-07-19，see specs/BATTLE_FORMULAS.md v4.0 / TASKS/14）後，本檔的 F-3/F-4
    期望值已過時、尚未重寫：爆擊倍率由寫死 1.5 改為 critdmg(1.4+裝備)、會心納入抗爆(critChance)、命中值
@@ -11,7 +11,7 @@
 跟 scripts/content/test_derive.py（MOD-F）同樣的環境限制：這個環境沒有 Godot 執行檔，沒辦法真的執行
 .gd 檔案。這支腳本用兩層交叉驗證逼近「跑過 .gd 再核對」的效果：
 
-  1. `py_*()` 系列：damage_calc.gd/atb.gd/exp_scale.gd 每個函式的逐行 Python 翻譯，附 .gd 行號/
+  1. `py_*()` 系列：damage_calc.gd/atb.gd 每個函式的逐行 Python 翻譯，附 .gd 行號/
      specs/BATTLE_FORMULAS.md 條目編號註解，方便肉眼逐行比對。
 
   2. **Node.js 交叉驗證**（`--regen`，預設也會嘗試跑，找不到 Node 才略過）：對「非隨機」部分（dodge
@@ -26,10 +26,6 @@
 
   4. F-8 敵人技能決策樹（healer/foeSkills 40%/allAttack 30%/fallback 的優先序）用 `bear_dire`
      （CONTENT.json 真實資料，同時有 allAttack+foeSkills）做組合機率的 Monte Carlo 驗證。
-
-  5. F-9 EXPSCALE 用 CONTENT.json 真實 pacing/encounters/enemies 資料，核對
-     forest/forest2/mine/cave/tutorial 五張地圖算出的係數，以及 ch1_boss/ch2_bear/prologue_demon
-     （不在 pacing.maps 裡）退回係數 1.0。
 
 **誠實記錄**：這個環境沒有 Godot 執行檔，`.gd` 檔案本身從未被真的執行過；本腳本驗證的是「Python 鏡像
 與 build_cq2.py 原始碼字面邏輯一致」+「.gd 檔案逐行對照 Python 鏡像/spec 條目編號人工核對過」，不是
@@ -73,7 +69,7 @@ def js_round(x: float) -> float:
 
 
 # =========================================================================
-# py_*()：damage_calc.gd / atb.gd / exp_scale.gd 的逐行 Python 翻譯
+# py_*()：damage_calc.gd / atb.gd 的逐行 Python 翻譯
 # =========================================================================
 
 def is_hero(u: dict) -> bool:
@@ -160,36 +156,6 @@ def py_foe_named_skill_damage(att: dict, defn: dict, mult: float, d: dict, r_cri
 def py_foe_heal_amount(r: float) -> int:
     # see damage_calc.gd foe_heal_amount() / F-8：20 + round(random()*10)
     return 20 + int(js_round(r * 10.0))
-
-
-def py_exp_scale(map_id: str, content: dict) -> float:
-    # see exp_scale.gd compute() / F-9
-    pacing = content.get("pacing", {})
-    cfg = pacing.get("maps", {}).get(map_id)
-    if not cfg:
-        return 1.0
-    groups = content.get("encounters", {}).get(map_id, [])
-    if not groups:
-        return 1.0
-    enemies_by_id = {e["id"]: e for e in content["enemies"]}
-    total = 0.0
-    for group in groups:
-        total += sum(enemies_by_id[eid]["exp"] for eid in group if eid in enemies_by_id)
-    avg = total / len(groups)
-    if avg <= 0:
-        return 1.0
-    d = content["derived"]
-
-    def exp_need(lv: int) -> int:
-        return int(d["expBase"] + js_round(d["expCoef"] * math.pow(lv, d["expPow"])))
-
-    need = sum(exp_need(lv) for lv in range(cfg["entryLv"], cfg["targetLv"]))
-    party = cfg.get("party", pacing.get("partySize", 2))
-    battles = cfg.get("battles", 1)
-    if battles <= 0:
-        return 1.0
-    raw = party * need / (battles * avg)
-    return js_round(raw * 1000.0) / 1000.0
 
 
 ATB_K = 1.05
@@ -375,20 +341,6 @@ def run_deterministic_checks(content: dict) -> None:
         ok(f"foe_named_skill_damage(bear_dire 狂亂撕咬 -> HERO_A) = {r5}（預期 dmg=97）")
     else:
         fail(f"foe_named_skill_damage = {r5}，預期 dmg=97")
-
-    print("\n=== F-9 EXPSCALE（真實 pacing/encounters/enemies 資料）===")
-    for map_id in ("forest", "forest2", "mine", "cave", "tutorial"):
-        scale = py_exp_scale(map_id, content)
-        if scale > 0:
-            ok(f"exp_scale({map_id}) = {scale}")
-        else:
-            fail(f"exp_scale({map_id}) = {scale}，應該是正數")
-    for special in ("ch1_boss", "ch2_bear", "prologue_demon", "no_such_map"):
-        scale = py_exp_scale(special, content)
-        if scale == 1.0:
-            ok(f"exp_scale({special}) = 1.0（不在 pacing.maps，退回不縮放）")
-        else:
-            fail(f"exp_scale({special}) = {scale}，預期 1.0")
 
     print("\n=== EXP 分配公式（settle_win 的 each = ceil(exp/max(1,members))）===")
     for exp_total, n_members, expected_each in [(140, 2, 70), (181, 2, 91), (16, 1, 16), (100, 3, 34)]:
@@ -635,7 +587,7 @@ def main() -> int:
     if FAILURES:
         print("驗收未通過，詳見上方 [FAIL] 項目。")
         return 1
-    print("驗收通過（純 Python 鏡像 damage_calc.gd/atb.gd/exp_scale.gd 邏輯 + 統計檢定 + Node 交叉驗證，"
+    print("驗收通過（純 Python 鏡像 damage_calc.gd/atb.gd 邏輯 + 統計檢定 + Node 交叉驗證，"
           "未實機跑過 Godot，見腳本檔頭說明）。")
     return 0
 

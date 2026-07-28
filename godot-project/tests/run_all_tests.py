@@ -23,7 +23,7 @@ resources/。tests/ 目錄本身也排除（避免把這支 runner 或未來的�
 被收集到的測試（截至 CORE-7 撰寫時，全部 exit 0 = 綠）：
     scripts/content/validate_content.py     (CORE-2) ContentDB 轉存 vs CONTENT.json 一致性
     scripts/content/test_derive.py          (MOD-F)  derive.gd/exp_need.gd 對照 build_cq2 實測 fixture
-    scripts/battle/test_battle_formulas.py  (MOD-E)  damage/atb/exp_scale 公式 + Node.js 交叉驗證
+    scripts/battle/test_battle_formulas.py  (MOD-E)  damage/atb 公式 + Node.js 交叉驗證
     scripts/world/test_encounter_tracker.py (MOD-G)  遭遇距離累積/grace 邏輯
     scripts/dialogue/verify_dialogue.py     (MOD-A)  對話抽取筆數/action 覆蓋率/matchWhen 分支
 

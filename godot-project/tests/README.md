@@ -127,7 +127,7 @@ autoload 當「單一除錯查詢點」。自動化測試拿到 SceneTree 後透
 | E2E-7 | **商店買賣**：買藥水/賣素材/金幣變動（ROADMAP D 驗證） | 商店/背包/gold | 待建 `tests/gut/test_shop.gd` | 待建 |
 | E2E-8 | **觸控 E2E**：搖桿右移實測位移、BtnMenu 開關選單、PadR 切分頁（ROADMAP B 驗證） | InputBridge/觸控合成鍵 | 待建 `tests/gut/test_touch_input.gd`（`InputBridge.simulate_action_*`） | 待建 |
 | E2E-9 | **出入口碰撞**：碰撞不擋主線動線（ROADMAP C/H 驗證） | 世界場景碰撞/exit_zone | 待建 `tests/gut/test_exits.gd` | 待建 |
-| E2E-10 | **戰鬥公式回歸**：F-1~F-9（`specs/BATTLE_FORMULAS.md`） | 傷害/衍生/EXP 公式 | ✅ 已有 Python：`test_battle_formulas.py` + `test_derive.py`；未來搬進 GUT 做 `.gd` 執行期版 | Python 層已綠 |
+| E2E-10 | **戰鬥公式回歸**：F-1~F-8（`specs/BATTLE_FORMULAS.md`；F-9 已移除） | 傷害/衍生/EXP 公式 | ✅ 已有 Python：`test_battle_formulas.py` + `test_derive.py`；未來搬進 GUT 做 `.gd` 執行期版 | Python 層已綠 |
 
 > 補測試的制度性約束（`TASKS/11_並行協作規則.md`）：每個 MOD 任務驗收時，都要在此表補上對應那一列的
 > Godot 測試，避免「先做功能、測試之後補」導致回歸範圍長期缺口。
