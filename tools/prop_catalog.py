@@ -25,6 +25,9 @@ def prop_catalog(assets_root: Path):
                 preview = meta_file.parent / "final.png"
             if not preview.is_file():
                 continue
+            render = meta_file.parent / "final.png"   # 實尺寸疊圖用：final.png 像素尺寸＝canvas_px
+            if not render.is_file():
+                render = preview
             items.append({
                 "id": item_id,
                 "type": item_type,
@@ -32,6 +35,7 @@ def prop_catalog(assets_root: Path):
                 "canvas_px": canvas_px,
                 "anchor": meta.get("anchor", "bottom_center"),
                 "preview": str(preview.relative_to(assets_root)).replace("\\", "/"),
+                "render": str(render.relative_to(assets_root)).replace("\\", "/"),
             })
         except (OSError, ValueError, KeyError, TypeError):
             continue

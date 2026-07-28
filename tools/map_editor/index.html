@@ -79,6 +79,7 @@ aside .hint{color:var(--muted);font-size:12px;line-height:1.7}
 .exit .id{font-weight:500}
 .exit .row select,.exit .row input[type=text]{flex:1;min-width:0}
 .exit .del{margin-left:auto;color:var(--danger);border-color:transparent;background:transparent;padding:2px 6px}
+.exit.propsel{border-color:#ffe066;box-shadow:0 0 0 1px #ffe066}
 .floorbar{display:flex;gap:4px;padding:6px 12px;background:var(--panel);border-bottom:1px solid var(--line)}
 #status{padding:6px 12px;background:var(--panel);border-top:1px solid var(--line);
   font-size:12px;max-height:120px;overflow-y:auto}
@@ -197,12 +198,11 @@ const KIND_COLORS={town:"#5f6b7a",mine:"#a5732b",forest:"#3f8f5a",cave:"#556289"
 const KINDS=["town","mine","forest","cave","tower","grassland","other"];
 const PROP_TYPES=["architecture","nature","street","structure","landmark"];
 const PROP_TYPE_LABEL={architecture:"建築",nature:"自然",street:"街道設施",structure:"結構",landmark:"地標"};
-const PROP_SIZES={architecture:[[2,2],[4,3],[4,4],[5,3],[6,4]],nature:[[1,1],[2,2],[3,3],[4,4]],street:[[1,1],[2,2]],structure:[[1,1],[2,1],[4,3]],landmark:[[4,3],[6,6]]};
 const SIDES=["east","west","north","south","up","down","interior"];
 const OPP={east:"west",west:"east",north:"south",south:"north",up:"down",down:"up",interior:"interior"};
 const DIR={east:[1,0],west:[-1,0],north:[0,-1],south:[0,1],up:[.7,-.7],down:[.7,.7],interior:[0,1]};
 
-const S={data:null, region:null, floor:null, sel:null, link:false, bidir:false, linkFrom:null, linkSide:null, thumbs:true, zoom:1, baseW:0, baseH:0, paint:false, brush:".", tool:"brush", neighbors:true, ovBlueprint:false, entranceMode:false};
+const S={data:null, region:null, floor:null, sel:null, link:false, bidir:false, linkFrom:null, linkSide:null, thumbs:true, zoom:1, baseW:0, baseH:0, paint:false, brush:".", tool:"brush", neighbors:true, ovBlueprint:false, entranceMode:false, propSel:null};
 const GRIDN=40, TILE=32;                         // 藍圖：40×40 格、每格 32px（＝1280 圖）
 const ENTRANCE="E", ENTRANCE_COLOR="#ff4136", SVGNS="http://www.w3.org/2000/svg";  // 出入口＝獨立層（非地形），紅框、不填滿
 const ENT_ATTR='fill="none" stroke="'+ENTRANCE_COLOR+'" stroke-width="2" vector-effect="non-scaling-stroke"';  // 出入口格＝紅外框（底下地格看得到）
@@ -427,7 +427,7 @@ function renderPaintBar(){
     '<span style="flex:1"></span>'+
     '<button class="ptool'+(S.neighbors?" on":"")+'" id="pbNeighbors" title="顯示鄰接地圖(唯讀)供對接開口">🧭 鄰圖</button>'+
     '<button id="pbImport" title="從其它地圖複製藍圖（含出入口）">📋 匯入</button>'+
-    '<button id="pbExport" title="匯出這張藍圖成 1280×1280 結構參考圖 PNG（下一階段產圖用）">⬇️ 匯出</button>'+
+    '<button id="pbExport" title="匯出這張藍圖成 1280×1280 結構參考圖 PNG（下一階段產圖用）；有高物件時會問要不要一併畫進去">⬇️ 匯出</button>'+
     '<button id="pbClear" title="清空目前層（地格或出入口）" style="color:var(--danger)">🗑️ 清空</button>'+
     '<span class="badge" style="align-self:center">左鍵畫・右鍵擦・qwer工具・1–8地格・🚪出入口・⌘Z復原・⌘S存檔</span>';
   bar.querySelectorAll(".ptool[data-tool]").forEach(b=>b.onclick=()=>{S.tool=b.dataset.tool;renderPaintBar();});
@@ -454,14 +454,21 @@ function propsSvg(m){                                          // 高物件配�
   let s="";
   m.props.forEach((p,i)=>{const cell=Array.isArray(p.cell)?p.cell:[0,0], fp=Array.isArray(p.footprint)?p.footprint:[1,1];
     const c=Math.max(0,parseInt(cell[0])||0),r=Math.max(0,parseInt(cell[1])||0),w=Math.max(1,parseInt(fp[0])||1),h=Math.max(1,parseInt(fp[1])||1);
-    s+='<g class="pprop"><rect x="'+(c*TILE+2)+'" y="'+(r*TILE+2)+'" width="'+(w*TILE-4)+'" height="'+(h*TILE-4)+'" rx="4" fill="#a96eea" fill-opacity=".18" stroke="#d5a8ff" stroke-width="2" vector-effect="non-scaling-stroke"/><text x="'+((c+w/2)*TILE)+'" y="'+((r+h/2)*TILE)+'" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="12" stroke="#3d2357" stroke-width="3" paint-order="stroke">'+esc(p.id||("#"+(i+1)))+'</text></g>';});
+    // 實圖：原生 canvas_px、bottom-center 錨在 footprint 底邊中央＝遊戲內擺法（build_scenes.gd _add_world_props）
+    const item=catalogItemForProp(p); let img="";
+    if(item&&Array.isArray(item.canvas_px)){const cw=item.canvas_px[0],ch=item.canvas_px[1];
+      img='<image href="/assets/'+(item.render||item.preview)+'" x="'+((c+w/2)*TILE-cw/2)+'" y="'+((r+h)*TILE-ch)+'" width="'+cw+'" height="'+ch+'" opacity=".75" preserveAspectRatio="xMidYMax meet"/>';}
+    const on=(i===S.propSel);
+    const tiny=(w*h<=2);                                        // 小物件：編號縮小並壓在格底，別蓋住物件本體
+    s+='<g class="pprop">'+img+'<rect x="'+(c*TILE+2)+'" y="'+(r*TILE+2)+'" width="'+(w*TILE-4)+'" height="'+(h*TILE-4)+'" rx="4" fill="#a96eea" fill-opacity="'+(on?".3":".18")+'" stroke="'+(on?"#ffe066":"#d5a8ff")+'" stroke-width="'+(on?3:2)+'" vector-effect="non-scaling-stroke"/><text x="'+((c+w/2)*TILE)+'" y="'+(tiny?(r+h)*TILE-3:(r+h/2)*TILE)+'" text-anchor="middle" dominant-baseline="'+(tiny?"auto":"middle")+'" fill="#fff" font-size="'+(tiny?9:12)+'" stroke="#3d2357" stroke-width="3" paint-order="stroke">#'+(i+1)+(on?" "+esc(p.id||""):"")+'</text></g>';});   // 密集小物件只標編號，全名留給選取中的那個
   return s;
 }
 function propSizeText(v){return v[0]+"x"+v[1]+" 格";}
 function propItems(type,size){return PROP_CATALOG.filter(p=>p.type===type&&(!size||p.footprint.join("x")===size));}
 function propSizes(type){return [...new Set(propItems(type).map(p=>p.footprint.join("x")))];}
 function propById(type,size,id){return propItems(type,size).find(p=>p.id===id)||null;}
-function catalogItemForProp(p){const fp=Array.isArray(p.footprint)?p.footprint.join("x"):"";return propById(p.type,fp,p.id);}
+function catalogItemForProp(p){const fp=Array.isArray(p.footprint)?p.footprint.join("x"):"";
+  return propById(p.type,fp,p.id)||PROP_CATALOG.find(x=>x.id===p.id)||null;}   // footprint 與素材庫不一致時仍靠 id 找到圖，不要靜靜消失
 function propPreviewSrc(p){return p?"/assets/"+p.preview:"";}
 function renderPropPicker(m){
   const box=$("#propPicker"); if(!S.paint||!m){box.style.display="none";return;}
@@ -485,11 +492,11 @@ function cellForProp(svg,cx,cy,w,h){const [c,r]=paintCellOf(svg,cx,cy);return [M
 function beginNewPropDrag(e,m,item){
   if(e.button!==0)return;e.preventDefault();const svg=$("#canvas"),[w,h]=item.footprint;
   const move=ev=>{const [c,r]=cellForProp(svg,ev.clientX,ev.clientY,w,h);previewProp(svg,c,r,w,h,item.id);};
-  const up=ev=>{document.removeEventListener("mousemove",move);document.removeEventListener("mouseup",up);const rect=svg.getBoundingClientRect();const inside=ev.clientX>=rect.left&&ev.clientX<=rect.right&&ev.clientY>=rect.top&&ev.clientY<=rect.bottom; if(!inside){const g=svg.querySelector("#ppreview");if(g)g.remove();return;}const [c,r]=cellForProp(svg,ev.clientX,ev.clientY,w,h);snapshotProps(m);m.props=Array.isArray(m.props)?m.props:[];m.props.push({id:item.id,type:item.type,cell:[c,r],footprint:[w,h],anchor:item.anchor||"bottom_center"});renderPaint();renderInspector();validate();toast("已放置 "+item.id);};
+  const up=ev=>{document.removeEventListener("mousemove",move);document.removeEventListener("mouseup",up);const rect=svg.getBoundingClientRect();const inside=ev.clientX>=rect.left&&ev.clientX<=rect.right&&ev.clientY>=rect.top&&ev.clientY<=rect.bottom; if(!inside){const g=svg.querySelector("#ppreview");if(g)g.remove();return;}const [c,r]=cellForProp(svg,ev.clientX,ev.clientY,w,h);snapshotProps(m);m.props=Array.isArray(m.props)?m.props:[];m.props.push({id:item.id,type:item.type,cell:[c,r],footprint:[w,h],anchor:item.anchor||"bottom_center"});S.propSel=m.props.length-1;renderPaint();renderInspector();validate();toast("已放置 "+item.id);};
   document.addEventListener("mousemove",move);document.addEventListener("mouseup",up);move(e);
 }
 function renderPaint(){
-  if(undoFor!==S.sel){ resetUndo(); undoFor=S.sel; }             // 切到別張圖 → 重置復原堆疊
+  if(undoFor!==S.sel){ resetUndo(); undoFor=S.sel; S.propSel=null; }   // 切到別張圖 → 重置復原堆疊與物件選取
   const svg=$("#canvas"), reg=curRegion(), m=reg.maps[S.sel];
   const W=GRIDN*TILE, H=GRIDN*TILE, src=pngSrc(reg,S.sel,m), BAND=10*TILE;
   const bg=src?'<image href="'+src+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="none" onerror="this.remove()"/>'
@@ -593,7 +600,9 @@ function bindPaint(svg,m){
   });
 }
 function startExistingPropDrag(e,svg,m,index,sc,sr){
-  e.preventDefault();const prop=m.props[index],cell=prop.cell,fp=prop.footprint,w=fp[0],h=fp[1],offC=sc-cell[0],offR=sr-cell[1];
+  e.preventDefault();
+  if(S.propSel!==index){S.propSel=index;renderPaint();renderInspector();}   // 點選即同步右欄選取
+  const prop=m.props[index],cell=prop.cell,fp=prop.footprint,w=fp[0],h=fp[1],offC=sc-cell[0],offR=sr-cell[1];
   const next=ev=>{const [cc,rr]=paintCellOf(svg,ev.clientX,ev.clientY);return [Math.max(0,Math.min(GRIDN-w,cc-offC)),Math.max(0,Math.min(GRIDN-h,rr-offR))];};
   const move=ev=>{const [c,r]=next(ev);previewProp(svg,c,r,w,h,prop.id);};
   const up=ev=>{document.removeEventListener("mousemove",move);document.removeEventListener("mouseup",up);const rect=svg.getBoundingClientRect();if(ev.clientX<rect.left||ev.clientX>rect.right||ev.clientY<rect.top||ev.clientY>rect.bottom){renderPaint();return;}const [c,r]=next(ev);snapshotProps(m);prop.cell=[c,r];renderPaint();renderInspector();validate();toast("已移動 "+prop.id);};
@@ -632,10 +641,27 @@ function clearTerrain(){ const m=curMap(); if(!m)return; const f=activeField();
   if(!confirm("清空這張圖的"+(f==="entrances"?"出入口標記":"地格藍圖")+"？（可 ⌘Z 復原）"))return;
   snapshotLayer(m); m[f]=Array.from({length:GRIDN},()=>BASE.repeat(GRIDN)); renderPaint(); toast("已清空"); }
 const BP_OUTSIDE_FILL="#3a3a3a";                             // 匯出：空格＝圖外背景深灰（對齊畫面規格；全幅圖被地形蓋滿）
-function exportBlueprint(){                                   // 匯出 1280×1280 結構參考圖 PNG（給下一階段產圖）
-  const reg=curRegion(), m=curMap();
-  if(!m){ toast("先點一張地圖"); return; }
-  if(!Array.isArray(m.terrain)){ toast("這張圖還沒畫藍圖"); return; }
+function loadImg(src){                                        // 匯出疊圖用；失敗不擋整張匯出
+  return new Promise(res=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>res(null);im.src=src;});
+}
+async function drawPropsOnto(ctx,m){                          // 依 YSort（底邊 y 由小到大）疊上高物件實圖，位置算法與藍圖畫面一致
+  const list=(m.props||[]).map((p,i)=>{
+    const cell=Array.isArray(p.cell)?p.cell:[0,0], fp=Array.isArray(p.footprint)?p.footprint:[1,1];
+    const c=Math.max(0,parseInt(cell[0])||0), r=Math.max(0,parseInt(cell[1])||0);
+    const w=Math.max(1,parseInt(fp[0])||1), h=Math.max(1,parseInt(fp[1])||1);
+    return {p,i,item:catalogItemForProp(p),cx:(c+w/2)*TILE,by:(r+h)*TILE};
+  }).sort((a,b)=>a.by-b.by||a.i-b.i);
+  let drawn=0, missing=[];
+  for(const e of list){
+    const cp=e.item&&Array.isArray(e.item.canvas_px)?e.item.canvas_px:null;
+    const im=cp?await loadImg("/assets/"+(e.item.render||e.item.preview)):null;
+    if(!im){ missing.push(e.p.id||("#"+(e.i+1))); continue; }
+    ctx.drawImage(im,Math.round(e.cx-cp[0]/2),Math.round(e.by-cp[1]),cp[0],cp[1]);
+    drawn++;
+  }
+  return {drawn,missing};
+}
+async function buildBlueprintCanvas(m,withProps){              // 只負責畫布：地形色塊＋（可選）高物件實圖
   const W=GRIDN*TILE, H=GRIDN*TILE;
   const cv=document.createElement("canvas"); cv.width=W; cv.height=H;
   const ctx=cv.getContext("2d");
@@ -644,10 +670,26 @@ function exportBlueprint(){                                   // 匯出 1280×12
     for(let c=0;c<GRIDN;c++){ const code=row[c]||BASE; if(code===BASE)continue;
       const p=PAL_BY[code]; if(!p||!p.color)continue;
       ctx.fillStyle=p.color; ctx.fillRect(c*TILE,r*TILE,TILE,TILE); }}
-  const fn=(reg.file_prefix?reg.file_prefix+"_"+S.sel:S.region+"_"+S.sel)+"_blueprint.png";
+  const stat=withProps?await drawPropsOnto(ctx,m):{drawn:0,missing:[]};
+  return {cv,stat};
+}
+async function exportBlueprint(){                             // 匯出 1280×1280 結構參考圖 PNG（給下一階段產圖）
+  const reg=curRegion(), m=curMap();
+  if(!m){ toast("先點一張地圖"); return; }
+  if(!Array.isArray(m.terrain)){ toast("這張圖還沒畫藍圖"); return; }
+  const n=(m.props||[]).length;
+  let withProps=false;
+  if(n>0) withProps=confirm("這張圖有 "+n+" 個高物件（建築／樹／柵欄…）。\n\n要一併把物件實圖畫進匯出圖嗎？\n\n確定＝含物件（檔名加 _props；地面產圖時記得在 prompt 說明物件是另外疊上、地面只留柔和落影）\n取消＝只匯出地形藍圖");
+  const {cv,stat}=await buildBlueprintCanvas(m,withProps);
+  let note="";
+  if(withProps){
+    note="，含 "+stat.drawn+" 個高物件";
+    if(stat.missing.length) note+="（"+stat.missing.length+" 個缺素材已略過："+stat.missing.slice(0,3).join("、")+(stat.missing.length>3?"…":"")+"）";
+  }
+  const fn=(reg.file_prefix?reg.file_prefix+"_"+S.sel:S.region+"_"+S.sel)+"_blueprint"+(withProps?"_props":"")+".png";
   const a=document.createElement("a"); a.download=fn; a.href=cv.toDataURL("image/png");
   document.body.appendChild(a); a.click(); a.remove();
-  toast("已匯出 "+fn);
+  toast("已匯出 "+fn+note);
 }
 function terrainPreviewSvg(reg,key,m,size){
   const W=GRIDN*TILE,H=GRIDN*TILE, src=pngSrc(reg,key,m);
@@ -843,7 +885,7 @@ function renderInspector(){
   const props=Array.isArray(m.props)?m.props:[];
   h+='<h3 style="margin-top:14px">高物件配置 <span class="badge">'+props.length+'</span></h3><p class="hint" style="margin:2px 0 7px">cell＝footprint 左上格；碰撞會自動由 footprint 產生。物件以 bottom-center anchor 放進 YSort。</p><div class="exits">';
   props.forEach((p,i)=>{const cell=Array.isArray(p.cell)?p.cell:[0,0], fp=Array.isArray(p.footprint)?p.footprint:[1,1], item=catalogItemForProp(p), thumb=item?'<img src="'+propPreviewSrc(item)+'" alt="" style="width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-right:7px">':"";
-    h+='<div class="exit"><div class="row"><span class="id">#'+(i+1)+'</span><button class="del" data-prop-del="'+i+'">刪除</button></div>'+
+    h+='<div class="exit'+(i===S.propSel?" propsel":"")+'" data-prop-row="'+i+'"><div class="row"><span class="id">#'+(i+1)+'</span><button class="del" data-prop-del="'+i+'">刪除</button></div>'+
       '<div class="row" style="align-items:center">'+thumb+'<span><b>'+esc(p.id||"未辨識素材")+'</b><br><small>'+esc(PROP_TYPE_LABEL[p.type]||p.type)+'｜固定 footprint '+fp[0]+' × '+fp[1]+' 格</small></span></div>'+
       '<div class="row"><label>cell</label><input type="number" min="0" max="39" data-prop-x="'+i+'" value="'+(parseInt(cell[0])||0)+'"> <span>×</span> <input type="number" min="0" max="39" data-prop-y="'+i+'" value="'+(parseInt(cell[1])||0)+'"></div></div>';});
   h+='</div><button id="addProp">＋ 新增高物件</button>';
@@ -862,6 +904,7 @@ function renderInspector(){
   h+='<div style="margin-top:16px;border-top:1px solid var(--line);padding-top:10px"><button id="delMap" style="color:var(--danger)">刪除此地圖</button></div>';
   box.innerHTML=h;
   bindInspector(m);
+  const selRow=box.querySelector(".exit.propsel"); if(selRow)selRow.scrollIntoView({block:"nearest"});
 }
 function field(l,inner){return '<div class="field"><label>'+l+'</label>'+inner+'</div>';}
 function selHtml(id,opts,val){return '<select id="'+id+'">'+opts.map(o=>'<option'+(o===val?" selected":"")+'>'+o+'</option>').join("")+'</select>';}
@@ -897,7 +940,9 @@ function bindInspector(m){
   lb0.onchange=setLb;lb1.onchange=setLb;
   const props=()=>{if(!Array.isArray(m.props))m.props=[];return m.props;};
   const propAt=i=>props()[parseInt(i)];
-  document.querySelectorAll("[data-prop-del]").forEach(b=>b.onclick=()=>{props().splice(parseInt(b.dataset.propDel),1);renderInspector();renderCanvas();});
+  document.querySelectorAll("[data-prop-del]").forEach(b=>b.onclick=()=>{const di=parseInt(b.dataset.propDel);snapshotProps(m);props().splice(di,1);
+    if(S.propSel===di)S.propSel=null; else if(S.propSel!==null&&S.propSel>di)S.propSel--;   // 刪除後選取索引跟著位移
+    renderInspector();renderCanvas();});
   const updatePropNum=(attr,key,min,max)=>document.querySelectorAll("[data-prop-"+attr+"]").forEach(i=>i.onchange=()=>{const p=propAt(i.dataset["prop"+key]);if(!p)return;const v=Math.max(min,Math.min(max,parseInt(i.value)||min));i.value=v;const a=attr==="x"||attr==="y"?"cell":"footprint",n=attr==="x"||attr==="w"?0:1;p[a]=Array.isArray(p[a])?p[a]:[a==="cell"?0:1,a==="cell"?0:1];p[a][n]=v;renderCanvas();});
   updatePropNum("x","X",0,39); updatePropNum("y","Y",0,39);
   $("#addProp").onclick=()=>{if(!S.paint){S.paint=true;$("#btnPaint").classList.add("on");renderAll();}else renderPropPicker(m);};

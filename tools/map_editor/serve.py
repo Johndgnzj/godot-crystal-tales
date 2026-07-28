@@ -33,6 +33,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_response(code)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(data)))
+        self.send_header("Cache-Control", "no-store")   # 素材重產後重整即生效，不吃瀏覽器快取
         self.end_headers()
         self.wfile.write(data)
 
