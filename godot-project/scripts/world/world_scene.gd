@@ -46,8 +46,8 @@ const CHAR_DIR := "res://assets/char"
 const FOLLOWER_SPRITES := ["marin", "alan"]
 const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
 const PIXEL_WALK_FEET_OFFSET := Vector2(0.0, -32.0)
-## overworld 走路圖（二頭身 96px）在地圖上與物件相比過大，統一縮小 1/3（→ 2/3＝0.667，對回 64px 地圖尺度）。
-## 幀為 centered，縮放時 feet offset 一併 ×scale，維持腳點落地位置不變。玩家與跟隨者共用。
+## 路德終版基準 walk 使用原生 64px cell；跟隨者仍是過渡期 96px walk，縮小 1/3 對回地圖尺度。
+const LUDO_SPRITE_SCALE := 1.0
 const PLAYER_SPRITE_SCALE := 2.0 / 3.0
 
 @export var scene_id: String = ""            ## CFG.SCENE 邏輯名稱（"Town"…），交給 SceneRouter 用。
@@ -332,8 +332,8 @@ func _setup_player_visual() -> void:
 		return
 	_player_anim = AnimatedSprite2D.new()
 	_player_anim.sprite_frames = frames
-	_player_anim.scale = Vector2(PLAYER_SPRITE_SCALE, PLAYER_SPRITE_SCALE)
-	_player_anim.position = PIXEL_WALK_FEET_OFFSET * PLAYER_SPRITE_SCALE
+	_player_anim.scale = Vector2(LUDO_SPRITE_SCALE, LUDO_SPRITE_SCALE)
+	_player_anim.position = PIXEL_WALK_FEET_OFFSET * LUDO_SPRITE_SCALE
 	_player_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_player.add_child(_player_anim)
 	if frames.has_animation("IdleDown"):

@@ -60,6 +60,7 @@
 | [`../MIGRATION_OVERVIEW.md`](../MIGRATION_OVERVIEW.md) | 可複用 vs 需重寫盤點表 |
 | `../specs/` | 從 GDevelop 凍結抄錄的權威規格：SAVE_SCHEMA / BATTLE_FORMULAS / DIALOGUE_SPEC |
 | `../TASKS/` | 可執行任務清單（CORE-* / MOD-*）|
+| [`../TASK/v2/00_世界美術終版.md`](../TASK/v2/00_世界美術終版.md) | v2 世界美術終版執行追蹤：芳蕾鎮垂直切片、角色／NPC、32 張場景、28 個物件與 QA |
 | `../reference/gdevelop/` | 原 GDevelop 專案凍結快照（唯讀）|
 | `../reference/legacy_art/` | 封存舊美術文件（LPC製作流程；唯讀、AI 不參考）|
 

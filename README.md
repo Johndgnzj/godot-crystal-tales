@@ -17,6 +17,7 @@
 | `docs/pipeline/設計員指南.md` | **給遊戲設計員（不需寫程式）**：怎麼加/改角色·道具·武器數值、美術、地圖 |
 | `docs/pipeline/world_object_art/遮擋物件資產架構.md` | 滿版地圖的透明高物件資產架構：`YSort` 遮擋、類型→footprint 歸檔、terrain 單一碰撞真相 |
 | `TASKS/` | 可執行任務清單，核心 CORE-* ＋ 模組 MOD-* |
+| `TASK/v2/` | v2 後續製作追蹤；目前入口為世界美術終版與芳蕾鎮垂直切片 |
 | `specs/` | 從 `build_cq2.py` 凍結抄錄的權威規格：存檔 schema、戰鬥公式、對話格式 |
 | `reference/gdevelop/` | 原 GDevelop 專案的凍結快照（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`），唯讀 |
 | `MIGRATION_OVERVIEW.md` | 可複用 vs 需重寫的盤點總表 |
