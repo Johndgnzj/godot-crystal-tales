@@ -46,8 +46,9 @@ const CHAR_DIR := "res://assets/char"
 const FOLLOWER_SPRITES := ["marin", "alan"]
 const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
 const PIXEL_WALK_FEET_OFFSET := Vector2(0.0, -32.0)
-## 路德終版基準 walk 使用原生 64px cell；跟隨者仍是過渡期 96px walk，縮小 1/3 對回地圖尺度。
+## 路德／亞倫終版基準 walk 使用原生 64px cell；瑪琳仍是過渡期 96px walk，縮小 1/3 對回地圖尺度。
 const LUDO_SPRITE_SCALE := 1.0
+const ALAN_SPRITE_SCALE := 1.0
 const PLAYER_SPRITE_SCALE := 2.0 / 3.0
 
 @export var scene_id: String = ""            ## CFG.SCENE 邏輯名稱（"Town"…），交給 SceneRouter 用。
@@ -397,7 +398,9 @@ func _update_followers(walking: bool) -> void:
 		node.position = pt["pos"]
 		var anim: AnimatedSprite2D = f["anim"]
 		if anim != null:
-			anim.position = (PIXEL_WALK_FEET_OFFSET if spr_name in ["alan", "marin"] else SPRITE_FEET_OFFSET) * PLAYER_SPRITE_SCALE
+			var sprite_scale := ALAN_SPRITE_SCALE if spr_name == "alan" else PLAYER_SPRITE_SCALE
+			anim.scale = Vector2(sprite_scale, sprite_scale)
+			anim.position = (PIXEL_WALK_FEET_OFFSET if spr_name in ["alan", "marin"] else SPRITE_FEET_OFFSET) * sprite_scale
 			var anim_name := "%s_%s%s" % [spr_name, "Walk" if walking else "Idle", pt["facing"]]
 			if anim.sprite_frames.has_animation(anim_name) and anim.animation != anim_name:
 				anim.play(anim_name)
