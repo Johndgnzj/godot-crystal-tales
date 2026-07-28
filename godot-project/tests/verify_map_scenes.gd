@@ -21,6 +21,7 @@ func _run() -> void:
 	_load_scenes()
 	_check_exits_vs_mapdef()
 	_check_spawn_targets()
+	_check_spawn_clearance()
 	_check_bfs()
 	_print()
 	quit(1 if not _errors.is_empty() else 0)
@@ -63,6 +64,8 @@ func _load_one(path: String) -> void:
 	var exits := []
 	var has_player := false
 	var has_bg := false
+	var player_box := Rect2()
+	var shapes := {}                    # 節點路徑字串 -> {pos, size}（CollisionShape2D）
 	for i in st.get_node_count():
 		var nm := st.get_node_name(i)
 		var props := {}
@@ -75,11 +78,28 @@ func _load_one(path: String) -> void:
 			exits.append({
 				"name": nm, "to_scene": str(props.get("to_scene", "")),
 				"spawn_id": str(props.get("spawn_id", "")), "enabled": bool(props.get("enabled", true)),
+				"pos": props.get("position", Vector2.ZERO), "rect": null,
 			})
+		var shape: Variant = props.get("shape", null)
+		if shape is RectangleShape2D:
+			var owner_path := str(st.get_node_path(i, true))   # true＝取父節點路徑
+			shapes[owner_path] = {
+				"pos": props.get("position", Vector2.ZERO) as Vector2,
+				"size": (shape as RectangleShape2D).size,
+			}
 		if nm == "Player":
 			has_player = true
+			player_box = Rect2(props.get("position", Vector2.ZERO), Vector2.ZERO)
 		if nm == "Background":
 			has_bg = true
+	# 把 CollisionShape2D 的矩形接回它的父 Area2D／Player
+	for ex in exits:
+		var s: Variant = shapes.get("./Zones/" + str(ex["name"]), null)
+		if s != null:
+			ex["rect"] = _centered(ex["pos"] + s["pos"], s["size"])
+	var pshape: Variant = shapes.get("./YSort/Player", null)
+	if pshape != null:
+		player_box = _centered(pshape["pos"], pshape["size"])   # 相對玩家腳點的碰撞盒
 	if sid == "":
 		_errors.append("讀不到 scene_id（root name）：" + path)
 		return
@@ -87,7 +107,9 @@ func _load_one(path: String) -> void:
 		_errors.append("%s 缺 Player 節點" % sid)
 	if not has_bg:
 		_errors.append("%s 缺 Background 節點" % sid)
-	_scenes[sid] = {"spawns": spawns, "exits": exits, "path": path}
+	_scenes[sid] = {
+		"spawns": spawns, "exits": exits, "path": path, "player_box": player_box,
+	}
 	_ok += 1
 
 
@@ -137,6 +159,42 @@ func _check_spawn_targets() -> void:
 			if sp != "" and not (_scenes[tgt]["spawns"] as Dictionary).has(sp):
 				_errors.append("%s.%s → %s 缺落點 '%s'（該場景落點：%s）"
 					% [sid, ex["name"], tgt, sp, ", ".join((_scenes[tgt]["spawns"] as Dictionary).keys())])
+
+
+# ---- 落點與出口帶要留夠淨距 ----
+# 手繪圖的出口帶常被手工往內拖去對齊路口，一旦吃掉落地點的緩衝，玩家一進場稍微往回碰就被彈回上一張。
+# 生成器（scripts/map/build_scenes.gd）的預設淨距是 65px；低於 MIN_SPAWN_CLEARANCE 就當錯誤擋下來。
+const MIN_SPAWN_CLEARANCE := 40.0
+
+func _check_spawn_clearance() -> void:
+	for sid: String in _scenes:
+		var sc: Dictionary = _scenes[sid]
+		var pbox: Rect2 = sc["player_box"]
+		if pbox.size == Vector2.ZERO:
+			continue
+		for sp: String in sc["spawns"]:
+			if sp == "start":
+				continue          # 只在直接執行場景時用得到，不是正式入口
+			var feet: Vector2 = sc["spawns"][sp]
+			var pr := Rect2(pbox.position + feet, pbox.size)
+			for ex in sc["exits"]:
+				if ex["rect"] == null:
+					continue
+				var gap := _gap(pr, ex["rect"])
+				if gap < MIN_SPAWN_CLEARANCE:
+					_errors.append("%s 落點 '%s' 離出口 '%s' 只有 %.0fpx（需 >= %.0f）——玩家一進場往回碰一下就會被彈回去"
+						% [sid, sp, ex["name"], gap, MIN_SPAWN_CLEARANCE])
+
+
+# 兩個矩形的分離距離：> 0＝相距這麼多，<= 0＝重疊
+func _gap(a: Rect2, b: Rect2) -> float:
+	return maxf(
+		maxf(b.position.x - a.end.x, a.position.x - b.end.x),
+		maxf(b.position.y - a.end.y, a.position.y - b.end.y))
+
+
+func _centered(center: Vector2, size: Vector2) -> Rect2:
+	return Rect2(center - size * 0.5, size)
 
 
 # ---- 從 start（M1 town）BFS，確認可走到所有已生成場景 ----

@@ -25,6 +25,8 @@ from pathlib import Path
 HUB_DIR = Path(__file__).resolve().parent           # tools/hub
 TOOLS_DIR = HUB_DIR.parent                           # tools
 REPO_ROOT = TOOLS_DIR.parent                         # repo 根
+sys.path.insert(0, str(TOOLS_DIR))
+from prop_catalog import prop_catalog
 
 # 前綴 → 該工具前端目錄（同源 iframe 從這裡載入）
 TOOL_FRONTENDS = {
@@ -100,6 +102,9 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(200, json.dumps({"version": 1, "regions": {}}))
             except OSError as e:
                 self._json(500, {"error": str(e)})
+            return
+        if path == "/api/prop-catalog":
+            self._json(200, {"items": prop_catalog(ASSETS)})
             return
         # 目前載入的 map-def 是哪份（給前端顯示）
         if path == "/api/map-def-info":

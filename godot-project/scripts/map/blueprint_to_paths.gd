@@ -8,6 +8,8 @@ extends SceneTree
 ## 地格語意讀 assets-source/map/terrain_palette.json：walkable=false 的 code（河/牆/山壁/森林/空）＝擋、不刷；
 ## 其餘 code 當可走地面 → 刷 PathPaint32。**空（.）＝圖外/未畫＝擋**（要可走就得畫地格）。
 ## **出入口另讀 map 的 entrances 屬性**（獨立於 terrain）：entrances 的 E 格一律當可走開口（刷 PathPaint，覆蓋 terrain 的擋）。
+## **高物件另讀 map 的 props 陣列**：每筆 `{cell:[x,y], footprint:[w,h]}` 的 footprint 一律擋，
+## 由物件配置與碰撞共用同一份資料；出入口格仍優先可走。
 ##
 ## 執行：Godot --headless -s res://scripts/map/blueprint_to_paths.gd --path <proj> -- [場景名...]
 ##   不給名＝處理 map-def 內所有「有 terrain 藍圖」的圖。給名（如 nfr_a）＝只做那幾張。
@@ -47,14 +49,16 @@ func _run() -> void:
 			var scene_name := "%s_%s" % [prefix, k]
 			if not only.is_empty() and not only.has(scene_name):
 				continue
-			var entrances: Variant = (maps[k] as Dictionary).get("entrances", null)
-			if _apply(scene_name, terrain, entrances, blocked):
+			var map: Dictionary = maps[k]
+			var entrances: Variant = map.get("entrances", null)
+			var props: Variant = map.get("props", [])
+			if _apply(scene_name, terrain, entrances, props, blocked):
 				count += 1
 	print("\nblueprint_to_paths 完成：寫入 PathPaint32 的圖 = %d。接著跑 invert_paths.gd 產碰撞。" % count)
 	quit(0)
 
 
-func _apply(scene_name: String, terrain: Array, entrances: Variant, blocked: Dictionary) -> bool:
+func _apply(scene_name: String, terrain: Array, entrances: Variant, props: Variant, blocked: Dictionary) -> bool:
 	var path := OUT_DIR + scene_name + ".tscn"
 	if not ResourceLoader.exists(path):
 		push_warning("找不到場景（先跑 build_scenes？）：" + path)
@@ -67,6 +71,7 @@ func _apply(scene_name: String, terrain: Array, entrances: Variant, blocked: Dic
 		return false
 	p32.clear()                                             # 藍圖為可走區的新真相源，重寫整層
 	var has_ent: bool = entrances is Array
+	var prop_blocks := _prop_blocks(props)
 	var walk := 0
 	var block := 0
 	for r in mini(terrain.size(), N32):
@@ -76,7 +81,7 @@ func _apply(scene_name: String, terrain: Array, entrances: Variant, blocked: Dic
 			erow = str((entrances as Array)[r])
 		for c in mini(row.length(), N32):
 			var is_ent: bool = c < erow.length() and erow[c] == "E"   # 出入口格＝一律可走開口（覆蓋 terrain 的擋）
-			if not is_ent and blocked.has(row[c]):
+			if not is_ent and (blocked.has(row[c]) or prop_blocks.has(Vector2i(c, r))):
 				block += 1
 				continue
 			p32.set_cell(Vector2i(c, r), PATH_SRC, PATH_ATLAS)   # 可走(或出入口) → 刷 PathPaint32
@@ -84,9 +89,33 @@ func _apply(scene_name: String, terrain: Array, entrances: Variant, blocked: Dic
 	var packed := PackedScene.new()
 	if packed.pack(root) == OK:
 		ResourceSaver.save(packed, path)
-	print("=== %s ===  可走 %d 格 / 擋 %d 格 → 已寫 PathPaint32" % [scene_name, walk, block])
+	print("=== %s ===  可走 %d 格 / 擋 %d 格（高物件 %d）→ 已寫 PathPaint32" % [scene_name, walk, block, prop_blocks.size()])
 	root.free()
 	return true
+
+
+func _prop_blocks(props: Variant) -> Dictionary:
+	var out := {}
+	if not (props is Array):
+		return out
+	for raw: Variant in props:
+		if not (raw is Dictionary):
+			continue
+		var prop: Dictionary = raw
+		var cell: Variant = prop.get("cell", [])
+		var footprint: Variant = prop.get("footprint", [])
+		if not (cell is Array) or not (footprint is Array) or cell.size() < 2 or footprint.size() < 2:
+			push_warning("props 格式錯誤，略過：" + str(prop.get("id", "(未命名)")))
+			continue
+		var x := int(cell[0])
+		var y := int(cell[1])
+		var w := maxi(1, int(footprint[0]))
+		var h := maxi(1, int(footprint[1]))
+		for r in range(y, y + h):
+			for c in range(x, x + w):
+				if c >= 0 and c < N32 and r >= 0 and r < N32:
+					out[Vector2i(c, r)] = true
+	return out
 
 
 func _blocked_codes() -> Dictionary:

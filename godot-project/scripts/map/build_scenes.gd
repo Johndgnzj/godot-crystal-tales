@@ -16,6 +16,7 @@ extends SceneTree
 ##   - 落點：對每張圖，蒐集所有「指向我」的出口，在其相對邊建 from_<來源> 落點；既有手調座標優先保留。
 ##   - 待接整區（裸 Mx）或目標圖未就緒 → 該出口建成 disabled placeholder（enabled=false、無 to_scene）。
 ##   - 受保護場景（Town：含 NPC／門／過場／實例、且已符合 map-def）與既有含實例/Trigger/NPC/門的場景 → 完全不動。
+##   - map 的 props 陣列可建立透明高物件：位置與 footprint 由同一筆資料定義；碰撞由 blueprint_to_paths.gd 消費。
 ##   - 既有場景的 enc_group／cut_on_enter／落點座標／跨區落點名 → 用 SceneState 讀出保留（不硬編碼、不脫勾）。
 ##
 ## 執行：/Applications/Godot.app/Contents/MacOS/Godot --headless -s res://scripts/map/build_scenes.gd --path <godot-project>
@@ -46,7 +47,7 @@ var _all_maps: Array = []               # 每個 region×map 一筆 entry（見 
 var _generated_set: Dictionary = {}     # 已（重）生成的 scene_id
 var _only_scene_id := ""                # 可選：只生成一張，避免新素材同步時碰到其他地圖
 var _report := {
-	"generated": [], "preserved": [], "pending": [], "placeholders": [], "empty_regions": [],
+	"generated": [], "preserved": [], "pending": [], "placeholders": [], "empty_regions": [], "props": [],
 	"resync": [], "cleared": [], "blueprint": [],
 }
 
@@ -491,6 +492,7 @@ func _build_scene(e: Dictionary) -> void:
 	ysort.name = "YSort"
 	ysort.y_sort_enabled = true
 	_add(root, ysort, root)
+	_add_world_props(root, ysort, e["map"].get("props", []))
 
 	var player := CharacterBody2D.new()
 	player.name = "Player"
@@ -519,6 +521,53 @@ func _build_scene(e: Dictionary) -> void:
 	else:
 		push_error("儲存失敗 %s err=%s" % [sid, err])
 	root.free()
+
+
+func _add_world_props(root: Node, ysort: Node, raw_props: Variant) -> void:
+	if not (raw_props is Array):
+		return
+	for i in (raw_props as Array).size():
+		var raw: Variant = raw_props[i]
+		if not (raw is Dictionary):
+			push_warning("props[%d] 不是物件，略過" % i)
+			continue
+		var prop: Dictionary = raw
+		var cell: Variant = prop.get("cell", [])
+		var footprint: Variant = prop.get("footprint", [])
+		if not (cell is Array) or not (footprint is Array) or cell.size() < 2 or footprint.size() < 2:
+			push_warning("props[%d] 缺 cell 或 footprint，略過" % i)
+			continue
+		var w := maxi(1, int(footprint[0]))
+		var h := maxi(1, int(footprint[1]))
+		var asset_path := _prop_asset_path(prop, w, h)
+		var tex := load(asset_path) as Texture2D
+		if tex == null:
+			_report["props"].append("略過 %s（尚無素材 %s）" % [prop.get("id", "(未命名)"), asset_path])
+			continue
+		var holder := Node2D.new()
+		holder.name = "Prop_%s_%d" % [_node_safe_name(str(prop.get("id", "world"))), i]
+		holder.position = Vector2((float(cell[0]) + float(w) * 0.5) * 32.0, (float(cell[1]) + float(h)) * 32.0)
+		_add(root, holder, ysort)
+		var sprite := Sprite2D.new()
+		sprite.name = "Sprite"
+		sprite.texture = tex
+		sprite.position = Vector2(0.0, -float(tex.get_height()) * 0.5)
+		_add(root, sprite, holder)
+		_report["props"].append("%s @ [%d,%d] %dx%d" % [prop.get("id", "(未命名)"), int(cell[0]), int(cell[1]), w, h])
+
+
+func _prop_asset_path(prop: Dictionary, w: int, h: int) -> String:
+	var override := str(prop.get("asset", ""))
+	if override != "":
+		return override if override.begins_with("res://") else "res://assets/props/world/" + override
+	return "res://assets/props/world/%s/%dx%d/%s.png" % [str(prop.get("type", "structure")), w, h, str(prop.get("id", ""))]
+
+
+func _node_safe_name(value: String) -> String:
+	var out := ""
+	for ch in value:
+		out += ch if ch.is_valid_identifier() else "_"
+	return out if out != "" else "world"
 
 
 ## 全域蒐集待接/跨區未就緒出口（含保留場景未建的），供人工追蹤。
@@ -586,6 +635,9 @@ func _print_report() -> void:
 	print("藍圖出入口 %d：" % _report["blueprint"].size())
 	for b in _report["blueprint"]:
 		print("   ", b)
+	print("世界物件 %d：" % _report["props"].size())
+	for p in _report["props"]:
+		print("   ", p)
 	print("SCENE_PATHS 需登錄（新場景）：")
 	for e in _all_maps:
 		if _report["generated"].has(e["scene_id"]) and not _existing.has(e["scene_id"]):

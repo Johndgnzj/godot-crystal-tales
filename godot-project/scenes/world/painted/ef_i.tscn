@@ -1,16 +1,22 @@
-[gd_scene format=4]
+[gd_scene format=4 uid="uid://d0dl4w35l2o4t"]
 
-[ext_resource type="Script" path="res://scripts/world/world_scene.gd" id="1_58vyb"]
-[ext_resource type="Texture2D" path="res://assets/map/east_forest/ef_i.png" id="2_s11gc"]
-[ext_resource type="TileSet" path="res://resources/map/collision_tileset_32.tres" id="3_hj4cx"]
-[ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_5xhd0"]
-[ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_urybj"]
-[ext_resource type="TileSet" path="res://resources/map/path_tileset_32.tres" id="6_pth32"]
-[ext_resource type="TileSet" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
-[ext_resource type="TileSet" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
+[ext_resource type="Script" uid="uid://cwis7b2m541rq" path="res://scripts/world/world_scene.gd" id="1_58vyb"]
+[ext_resource type="Texture2D" uid="uid://dhq2q0dg1f43j" path="res://assets/map/east_forest/ef_i.png" id="2_s11gc"]
+[ext_resource type="TileSet" uid="uid://6ed70bfxyapt" path="res://resources/map/collision_tileset_32.tres" id="3_hj4cx"]
+[ext_resource type="Script" uid="uid://bkjq7y275b06f" path="res://scripts/world/exit_zone.gd" id="4_5xhd0"]
+[ext_resource type="Script" uid="uid://bawlbgce7gq88" path="res://scripts/world/player_controller.gd" id="5_urybj"]
+[ext_resource type="TileSet" uid="uid://b2wjb3a77ee5y" path="res://resources/map/path_tileset_32.tres" id="6_pth32"]
+[ext_resource type="TileSet" uid="uid://bxtocmtgda8yn" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
+[ext_resource type="TileSet" uid="uid://tffllkuxmw7m" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
+[ext_resource type="Script" uid="uid://byfw8y40gornh" path="res://scripts/world/trigger_zone.gd" id="9_tz"]
+[ext_resource type="Script" uid="uid://culc52cmemhia" path="res://scripts/world/gated_sprite.gd" id="10_gs"]
+[ext_resource type="Texture2D" uid="uid://b67s1nbev8cqe" path="res://assets/battle/foe_bear_0.png" id="11_bear"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_58vyb"]
 size = Vector2(157, 54)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trig"]
+size = Vector2(110, 110)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s11gc"]
 size = Vector2(22, 14)
@@ -24,10 +30,11 @@ ground_tiles = PackedInt32Array()
 blk_rows = PackedStringArray()
 enc_rows = PackedStringArray("1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111")
 spawns = {
-"from_h": Vector2(640, 1160),
+"from_h": Vector2(640, 1104),
 "start": Vector2(640, 740)
 }
 enc_group = "forest2"
+bgm = "bgm_ef.mp3"
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1225930940]
 texture = ExtResource("2_s11gc")
@@ -64,6 +71,26 @@ spawn_id = "from_i"
 [node name="Shape" type="CollisionShape2D" parent="Zones/south" unique_id=1486129181]
 position = Vector2(3.5, 3)
 shape = SubResource("RectangleShape2D_58vyb")
+
+[node name="TriggerBear" type="Area2D" parent="Zones" unique_id=1669991395]
+position = Vector2(640, 500)
+script = ExtResource("9_tz")
+cut_id = "s5_bear_pre"
+cut_once_flag = "c_s5_bear"
+has_step = true
+step = 10
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/TriggerBear" unique_id=2077516713]
+shape = SubResource("RectangleShape2D_trig")
+
+[node name="BearField" type="Sprite2D" parent="." unique_id=776025454]
+texture_filter = 1
+position = Vector2(640, 505)
+scale = Vector2(1.3888887, 1.3888887)
+texture = ExtResource("11_bear")
+script = ExtResource("10_gs")
+show_when = "ch1_step>=10"
+hide_flag = "c_s5_bear"
 
 [node name="YSort" type="Node2D" parent="." unique_id=1727676613]
 y_sort_enabled = true

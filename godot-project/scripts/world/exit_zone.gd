@@ -14,7 +14,7 @@ class_name ExitZone
 ## 訊號重現同樣的行為。
 
 @export var to_scene: String = ""    ## 目標場景識別碼／路徑，格式跟 SceneRouter.go_to() 的
-                                      ## scene_path 參數一致（實際格式待 CORE-5/MOD-H 場景檔定案）。
+									  ## scene_path 參數一致（實際格式待 CORE-5/MOD-H 場景檔定案）。
 @export var spawn_id: String = ""    ## 目標場景的出生點 id。
 
 @export var has_min_step: bool = false

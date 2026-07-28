@@ -1,16 +1,21 @@
-[gd_scene format=4]
+[gd_scene format=4 uid="uid://cejyjfmwj514k"]
 
-[ext_resource type="Script" path="res://scripts/world/world_scene.gd" id="1_ymou6"]
-[ext_resource type="Texture2D" path="res://assets/map/east_forest/ef_d.png" id="2_n5m2g"]
-[ext_resource type="TileSet" path="res://resources/map/collision_tileset_32.tres" id="3_271gh"]
-[ext_resource type="Script" path="res://scripts/world/exit_zone.gd" id="4_1uog1"]
-[ext_resource type="Script" path="res://scripts/world/player_controller.gd" id="5_wqlid"]
-[ext_resource type="TileSet" path="res://resources/map/path_tileset_32.tres" id="6_pth32"]
-[ext_resource type="TileSet" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
-[ext_resource type="TileSet" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
+[ext_resource type="Script" uid="uid://cwis7b2m541rq" path="res://scripts/world/world_scene.gd" id="1_ymou6"]
+[ext_resource type="Texture2D" uid="uid://8jrrinmt01la" path="res://assets/map/east_forest/ef_d.png" id="2_n5m2g"]
+[ext_resource type="TileSet" uid="uid://6ed70bfxyapt" path="res://resources/map/collision_tileset_32.tres" id="3_271gh"]
+[ext_resource type="Script" uid="uid://bkjq7y275b06f" path="res://scripts/world/exit_zone.gd" id="4_1uog1"]
+[ext_resource type="Script" uid="uid://bawlbgce7gq88" path="res://scripts/world/player_controller.gd" id="5_wqlid"]
+[ext_resource type="TileSet" uid="uid://b2wjb3a77ee5y" path="res://resources/map/path_tileset_32.tres" id="6_pth32"]
+[ext_resource type="TileSet" uid="uid://bxtocmtgda8yn" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
+[ext_resource type="TileSet" uid="uid://tffllkuxmw7m" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
+[ext_resource type="Script" uid="uid://cy1k6rhtljftb" path="res://scripts/world/pickup_zone.gd" id="9_pz"]
+[ext_resource type="Texture2D" uid="uid://cvx5h0rbrcmdm" path="res://assets/props/herb.png" id="10_herb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ymou6"]
 size = Vector2(111, 45)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_herb"]
+size = Vector2(28, 28)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n5m2g"]
 size = Vector2(22, 14)
@@ -24,14 +29,11 @@ ground_tiles = PackedInt32Array()
 blk_rows = PackedStringArray()
 enc_rows = PackedStringArray("1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111", "1111111111111111111111111111111111111111")
 spawns = {
-"from_c": Vector2(640, 120),
+"from_c": Vector2(640, 204),
 "start": Vector2(640, 740)
 }
 enc_group = "forest2"
-cut_on_enter = [{
-"cut": "s1_bear_pre",
-"step": 1
-}]
+bgm = "bgm_ef.mp3"
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1401052498]
 texture = ExtResource("2_n5m2g")
@@ -68,6 +70,23 @@ spawn_id = "from_d"
 [node name="Shape" type="CollisionShape2D" parent="Zones/north" unique_id=843442836]
 position = Vector2(3.5, 2.5)
 shape = SubResource("RectangleShape2D_ymou6")
+
+[node name="PickupHerb" type="Area2D" parent="Zones" unique_id=21585050]
+position = Vector2(1008, 655)
+script = ExtResource("9_pz")
+show_when = "mira2==1"
+once_flag = "herb_p2"
+flag_name = "herb"
+msg = "（採到一株發光的鏡草！）"
+sfx_name = "learn.mp3"
+metadata/tex = "res://assets/props/herb.png"
+
+[node name="Shape" type="CollisionShape2D" parent="Zones/PickupHerb" unique_id=968182637]
+shape = SubResource("RectangleShape2D_herb")
+
+[node name="Sprite" type="Sprite2D" parent="Zones/PickupHerb" unique_id=363776946]
+texture_filter = 1
+texture = ExtResource("10_herb")
 
 [node name="YSort" type="Node2D" parent="." unique_id=626110937]
 y_sort_enabled = true

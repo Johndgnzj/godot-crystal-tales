@@ -6,6 +6,7 @@
 只用 Python 標準庫。提供：
   GET  /                → 編輯器前端 index.html
   GET  /api/map-def     → 讀 assets-source/map/map-def.json
+  GET  /api/prop-catalog → 掃描已核可的高物件 meta.json 與預覽圖
   POST /api/map-def     → 覆寫 map-def.json（存檔前先驗證 JSON，並備份成 .json.bak）
   GET  /assets/<path>   → 唯讀提供 assets-source/ 下的地圖縮圖（設計工具以素材源為準，僅 png）
 """
@@ -13,11 +14,14 @@ import http.server
 import json
 import shutil
 import socketserver
+import sys
 import urllib.parse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]                     # repo 根目錄
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent))
+from prop_catalog import prop_catalog
 MAP_DEF = ROOT / "assets-source" / "map" / "map-def.json"
 ASSETS = (ROOT / "assets-source").resolve()                    # 設計工具以素材源為準，不讀專案產物
 PORT = 8770
@@ -47,6 +51,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 self._send(200, json.dumps({"version": 1, "regions": {}}))
             except OSError as e:
                 self._send(500, json.dumps({"error": str(e)}))
+            return
+        if path == "/api/prop-catalog":
+            self._send(200, json.dumps({"items": prop_catalog(ASSETS)}, ensure_ascii=False))
             return
         if path.startswith("/assets/"):
             rel = urllib.parse.unquote(path[len("/assets/"):])

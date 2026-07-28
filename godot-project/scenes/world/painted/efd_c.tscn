@@ -35,6 +35,7 @@ spawns = {
 "from_f": Vector2(1160, 640),
 "start": Vector2(640, 740)
 }
+bgm = "bgm_ef.mp3"
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1382667510]
 texture = ExtResource("2_eyifq")
