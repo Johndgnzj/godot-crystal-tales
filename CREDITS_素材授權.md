@@ -10,6 +10,10 @@
 ## 角色
 LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld-demo/CREDITS_素材授權.md；戰鬥怪物與道具為 GDevelop 商店 CC0（16x16 dungeon tileset、grafxkid、western fps 2d 等包）。
 
+- `assets/char/ludo_{Up,Left,Down,Right}_0..8.png`（2026-07-27）：路德二頭身 overworld walk 簡易驗證版。OpenAI 內建 imagegen 依已驗收路德立繪參考生成；John 驗收後以螢光綠鍵去背、切圖、腳底錨點正規化。原始鍵圖與 alpha sheet 保留於 `assets-source/role/main/ludo/overworld_walk_simple_{raw,alpha}.png`；兩張步態交替填入既有 8 格 runtime 動畫。提示詞作者 John／協作 Agent。
+- `assets/char/alan_{Up,Left,Down,Right}_0..8.png`（2026-07-27）：亞倫二頭身 overworld walk 簡易驗證版。OpenAI 內建 imagegen 依已驗收亞倫立繪與戰鬥 seed 參考生成；John 驗收 v2 後以螢光綠鍵去背、切圖、腳底錨點正規化。來源保留於 `assets-source/role/main/alan/overworld_walk_simple_v2_{raw,alpha}.png`；每方向兩張步態皆為左右腳明確交替，再交替填入既有 8 格 runtime 動畫。提示詞作者 John／協作 Agent。
+- `assets/char/marin_{Up,Left,Down,Right}_0..8.png`（2026-07-27）：瑪琳二頭身 overworld walk 簡易驗證版。OpenAI 內建 imagegen 依已驗收瑪琳立繪與戰鬥 seed 參考生成；John 驗收 v2 後以洋紅鍵去背、切圖與腳底錨點正規化。來源保留於 `assets-source/role/main/marin/overworld_walk_simple_v2_{raw,alpha}.png`；每方向兩張步態皆為左右腳明確交替，再交替填入既有 8 格 runtime 動畫。提示詞作者 John／協作 Agent。
+
 - ⚠️ **野狼（wolf）為佔位圖**：GDevelop 商店與 LPC 皆無四足野狼素材，`assets/battle/Wolf_Idle.png` 由 grafxkid 洞熊單幀（`Bear_Idle.png`，CC0）於 build 時去飽和＋冷灰調重生（衍生自 CC0，故無授權限制）。外形仍是熊剪影、僅以冷灰色與棕熊區隔——**待日後補上正式四足狼精靈再替換**（gen-art 不適用像素小圖）。
 
 ## 地形圖磚（LPC Terrain）

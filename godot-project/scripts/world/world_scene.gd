@@ -45,6 +45,10 @@ const CHAR_DIR := "res://assets/char"
 ## 跟隨者可用的行走圖白名單，對應 WORLD_JS `FSPRITES={marin:1,aaron:1}`（L2282；aaron 本專案已改名 alan）。
 const FOLLOWER_SPRITES := ["marin", "alan"]
 const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
+const PIXEL_WALK_FEET_OFFSET := Vector2(0.0, -32.0)
+## overworld 走路圖（二頭身 96px）在地圖上與物件相比過大，統一縮小 1/3（→ 2/3＝0.667，對回 64px 地圖尺度）。
+## 幀為 centered，縮放時 feet offset 一併 ×scale，維持腳點落地位置不變。玩家與跟隨者共用。
+const PLAYER_SPRITE_SCALE := 2.0 / 3.0
 
 @export var scene_id: String = ""            ## CFG.SCENE 邏輯名稱（"Town"…），交給 SceneRouter 用。
 @export var map_w: int = 0
@@ -328,7 +332,9 @@ func _setup_player_visual() -> void:
 		return
 	_player_anim = AnimatedSprite2D.new()
 	_player_anim.sprite_frames = frames
-	_player_anim.position = SPRITE_FEET_OFFSET
+	_player_anim.scale = Vector2(PLAYER_SPRITE_SCALE, PLAYER_SPRITE_SCALE)
+	_player_anim.position = PIXEL_WALK_FEET_OFFSET * PLAYER_SPRITE_SCALE
+	_player_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_player.add_child(_player_anim)
 	if frames.has_animation("IdleDown"):
 		_player_anim.play("IdleDown")
@@ -343,7 +349,9 @@ func _setup_followers() -> void:
 		if frames != null:
 			anim = AnimatedSprite2D.new()
 			anim.sprite_frames = frames
-			anim.position = SPRITE_FEET_OFFSET
+			anim.scale = Vector2(PLAYER_SPRITE_SCALE, PLAYER_SPRITE_SCALE)
+			anim.position = SPRITE_FEET_OFFSET * PLAYER_SPRITE_SCALE
+			anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			node.add_child(anim)
 		$YSort.add_child(node)
 		_followers.append({"node": node, "anim": anim})
@@ -389,6 +397,7 @@ func _update_followers(walking: bool) -> void:
 		node.position = pt["pos"]
 		var anim: AnimatedSprite2D = f["anim"]
 		if anim != null:
+			anim.position = (PIXEL_WALK_FEET_OFFSET if spr_name in ["alan", "marin"] else SPRITE_FEET_OFFSET) * PLAYER_SPRITE_SCALE
 			var anim_name := "%s_%s%s" % [spr_name, "Walk" if walking else "Idle", pt["facing"]]
 			if anim.sprite_frames.has_animation(anim_name) and anim.animation != anim_name:
 				anim.play(anim_name)
