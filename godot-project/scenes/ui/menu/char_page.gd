@@ -14,6 +14,10 @@ const ST_EQUIP := 1
 const ST_SKILL := 2
 const ST_STORY := 3
 const SUBTABS := ["屬性", "裝備", "技能", "故事"]
+const CELL_COLUMNS := 6        # 屬性/熟練/加護格：一律每列 6 格
+const CELL_MIN_W := 104.0      # 格子統一最小寬（各區塊寬度一致，不再跟著字數變）
+const CELL_TITLE := 15         # 格子標題字級（原 13，John 要求 +2px）
+const SCROLL_GUTTER := 16      # 右側捲軸預留寬（避免捲軸壓在內容上）
 
 var _level := 0
 var _member := 0
@@ -283,12 +287,19 @@ func _build_portrait(m: Dictionary) -> Control:
 	var panel := Panel.new()
 	panel.custom_minimum_size = Vector2(360, 0)
 	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	var st := PixelUI.panel_style(Color(0.196, 0.212, 0.243, 1.0), 3, PixelUI.SEL if _level == 0 else PixelUI.OUTLINE)
+	# 底板改成漸層＋中央柔光（對照設定集 codex 立繪展示台），實色底會讓暗色立繪沉進背景
+	var st := PixelUI.panel_style(Color(0.086, 0.114, 0.220, 1.0), 3, PixelUI.SEL if _level == 0 else PixelUI.OUTLINE)
 	st.content_margin_left = 0
 	st.content_margin_right = 0
 	st.content_margin_top = 0
 	st.content_margin_bottom = 0
 	panel.add_theme_stylebox_override("panel", st)
+	panel.add_child(_stage_backdrop())
+	panel.add_child(_stage_keylight())
+
+	var tex := _portrait_texture(String(m.get("id", "")))
+	if tex != null:
+		panel.add_child(_portrait_glow(tex))   # 立繪副本：只畫輪廓光暈，疊在正片後方
 
 	var art := TextureRect.new()
 	art.anchor_right = 1.0
@@ -297,7 +308,6 @@ func _build_portrait(m: Dictionary) -> Control:
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var tex := _portrait_texture(String(m.get("id", "")))
 	if tex != null:
 		art.texture = tex
 	panel.add_child(art)
@@ -335,11 +345,77 @@ func _build_portrait(m: Dictionary) -> Control:
 	panel.add_child(fv)
 	var namerow := HBoxContainer.new()
 	namerow.add_theme_constant_override("separation", 8)
+	namerow.alignment = BoxContainer.ALIGNMENT_BEGIN
 	namerow.add_child(PixelUI.label(String(m.get("name", "")), 28, PixelUI.GOLD, 4))
-	namerow.add_child(PixelUI.label("Lv" + str(m.get("lv", 1)), 15, PixelUI.WHITE, 3))
+	# 等級：一律整數（lv 可能是 float，str() 會印成 3.0）＋放大強調
+	var lvrow := HBoxContainer.new()
+	lvrow.add_theme_constant_override("separation", 2)
+	lvrow.alignment = BoxContainer.ALIGNMENT_END
+	var lv_tag := PixelUI.label("Lv", 15, PixelUI.SUBTLE, 3)
+	lv_tag.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	lv_tag.size_flags_vertical = Control.SIZE_SHRINK_END
+	lvrow.add_child(lv_tag)
+	lvrow.add_child(PixelUI.label(str(int(m.get("lv", 1))), 30, PixelUI.SEL, 5))
+	namerow.add_child(lvrow)
 	fv.add_child(namerow)
 	fv.add_child(PixelUI.label("職業：" + MenuLogic.cls_name(m), 16, PixelUI.WHITE, 3))
 	return panel
+
+
+## 展示台底板：165° 深藍漸層（codex `linear-gradient(165deg,#232c4e,#161d38)`）。
+func _stage_backdrop() -> TextureRect:
+	var g := Gradient.new()
+	g.offsets = PackedFloat32Array([0.0, 1.0])
+	g.colors = PackedColorArray([Color("232c4e"), Color("161d38")])
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.width = 64
+	gt.height = 64
+	gt.fill_from = Vector2(0.0, 0.0)
+	gt.fill_to = Vector2(0.26, 1.0)   # ≈165°
+	return _fill_rect(gt, TextureRect.STRETCH_SCALE)
+
+
+## 展示台柔光：中央偏上的橢圓光暈（codex `radial-gradient(78% 82% at 50% 42%, …)`）。
+func _stage_keylight() -> TextureRect:
+	var g := Gradient.new()
+	g.offsets = PackedFloat32Array([0.0, 0.55, 0.8])
+	g.colors = PackedColorArray([
+		Color(0.580, 0.659, 0.839, 0.30),
+		Color(0.580, 0.659, 0.839, 0.10),
+		Color(0.580, 0.659, 0.839, 0.0),
+	])
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.width = 96
+	gt.height = 96
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.42)
+	gt.fill_to = Vector2(0.5 + 0.78, 0.42)
+	return _fill_rect(gt, TextureRect.STRETCH_SCALE)
+
+
+## 立繪輪廓背光：同一張圖的副本套 portrait_glow.gdshader，只輸出光暈。
+func _portrait_glow(tex: Texture2D) -> TextureRect:
+	var r := _fill_rect(tex, TextureRect.STRETCH_KEEP_ASPECT_COVERED)
+	var sh := load("res://resources/shaders/portrait_glow.gdshader")
+	if sh != null:
+		var mat := ShaderMaterial.new()
+		mat.shader = sh
+		r.material = mat
+	return r
+
+
+## 鋪滿父面板的 TextureRect（底板/柔光/光暈共用）。
+func _fill_rect(tex: Texture2D, stretch: int) -> TextureRect:
+	var r := TextureRect.new()
+	r.texture = tex
+	r.anchor_right = 1.0
+	r.anchor_bottom = 1.0
+	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	r.stretch_mode = stretch
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return r
 
 
 func _portrait_texture(id: String) -> Texture2D:
@@ -376,10 +452,16 @@ func _build_right(m: Dictionary) -> Control:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(scroll)
+	# 右側預留捲軸寬度（內容一多就出現垂直捲軸，否則會壓在最右邊的格子上）
+	var gutter := MarginContainer.new()
+	gutter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	gutter.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	gutter.add_theme_constant_override("margin_right", SCROLL_GUTTER)
+	scroll.add_child(gutter)
 	var inner := VBoxContainer.new()
 	inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	inner.add_theme_constant_override("separation", 12)
-	scroll.add_child(inner)
+	gutter.add_child(inner)
 
 	match _subtab:
 		ST_ATTR:
@@ -403,9 +485,13 @@ func _build_attr(box: VBoxContainer, m: Dictionary) -> void:
 	hpmp.add_child(_stat_bar("MP", m.get("mp", 0), m.get("maxmp", 0), PixelUI.MP))
 	box.add_child(hpmp)
 
+	# 經驗值（HP 下方獨立整行）
+	box.add_child(_exp_row(m))
+
 	# 衍生 6 格
 	var grid := GridContainer.new()
-	grid.columns = 6
+	grid.columns = CELL_COLUMNS
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_theme_constant_override("h_separation", 7)
 	grid.add_theme_constant_override("v_separation", 7)
 	for pair in MenuLogic.DERIVED6:
@@ -477,12 +563,42 @@ func _stat_bar(name_: String, cur: Variant, mx: Variant, color: Color) -> Contro
 	return wrap
 
 
+## 經驗值列（整行）：目前經驗／本級所需，附「還需 N 點升級」。see specs/BATTLE_FORMULAS.md F-2
+func _exp_row(m: Dictionary) -> Control:
+	var lv := int(m.get("lv", 1))
+	var cur := int(m.get("exp", 0))
+	var need := ExpNeed.exp_need(lv) if ContentDB.is_loaded else 0
+	var left := maxi(0, need - cur)
+	var wrap := VBoxContainer.new()
+	wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	wrap.add_theme_constant_override("separation", 4)
+	var top := HBoxContainer.new()
+	top.add_child(PixelUI.label("經驗值", 16, PixelUI.WHITE, 3))
+	var sp := Control.new(); sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL; top.add_child(sp)
+	if need <= 0:
+		# need==0＝經驗表滿級（F-2；目前 Lv100），條也拉滿。
+		top.add_child(PixelUI.label("%d（滿級）" % cur, 16, PixelUI.WHITE, 3))
+		top.add_child(PixelUI.label("　MAX", 16, PixelUI.SEL, 3))
+	else:
+		top.add_child(PixelUI.label("%d/%d" % [cur, need], 16, PixelUI.WHITE, 3))
+		top.add_child(PixelUI.label("　還需 %d 升級" % left, 16, PixelUI.SEL, 3))
+	wrap.add_child(top)
+	var pb := PixelUI.progress(PixelUI.GOLD, 120)
+	pb.max_value = maxf(1.0, float(need))
+	pb.value = pb.max_value if need <= 0 else float(clampi(cur, 0, need))
+	pb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	wrap.add_child(pb)
+	return wrap
+
+
 func _derived_cell(name_: String, value: String) -> Control:
 	var p := PixelUI.panel(Color(0.117, 0.133, 0.211, 0.8), 2, PixelUI.OUTLINE)
+	p.custom_minimum_size = Vector2(CELL_MIN_W, 0)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var v := VBoxContainer.new()
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	p.add_child(v)
-	var n := PixelUI.label(name_, 13, PixelUI.SUBTLE, 2)
+	var n := PixelUI.label(name_, CELL_TITLE, PixelUI.SUBTLE, 2)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var val := PixelUI.label(value, 22, PixelUI.CYAN, 3)
 	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -521,16 +637,21 @@ func _alloc_block(nm: String, key: String, value: int, can_add: bool, focused: b
 	return p
 
 
+## 佔位格（武器熟練／屬性加護）：與衍生格同寬、同樣每列 6 格。
 func _placeholder_grid(names: Array) -> Control:
-	var g := HBoxContainer.new()
-	g.add_theme_constant_override("separation", 5)
+	var g := GridContainer.new()
+	g.columns = CELL_COLUMNS
+	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	g.add_theme_constant_override("h_separation", 7)
+	g.add_theme_constant_override("v_separation", 7)
 	for nm in names:
 		var p := PixelUI.panel(Color(0.039, 0.039, 0.078, 0.4), 2, PixelUI.OUTLINE)
+		p.custom_minimum_size = Vector2(CELL_MIN_W, 0)
 		p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var v := VBoxContainer.new()
 		v.alignment = BoxContainer.ALIGNMENT_CENTER
 		p.add_child(v)
-		var n := PixelUI.label(String(nm), 13, PixelUI.SUBTLE, 2)
+		var n := PixelUI.label(String(nm), CELL_TITLE, PixelUI.SUBTLE, 2)
 		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var z := PixelUI.label("—", 15, PixelUI.DIM, 2)
 		z.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
