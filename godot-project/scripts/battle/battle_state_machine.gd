@@ -1,5 +1,5 @@
 extends Node2D
-## MOD-E　戰鬥系統主狀態機（specs/BATTLE_FORMULAS.md F-3~F-9、TASKS/05_戰鬥ATB.md）。
+## MOD-E　戰鬥系統主狀態機（specs/BATTLE_FORMULAS.md F-3~F-8、TASKS/05_戰鬥ATB.md）。
 ##
 ## 對應 build_cq2.py BATTLE_JS 全段的 ATB 主狀態機（L2708 起）＋ `initB()`（L2842）／`openCmd()`
 ## （L2829）／`applyOne()`（L2961）／`applyAll()`（L3002）／`foeAct()`（L3019）／`checkEnd()`
@@ -22,7 +22,7 @@ extends Node2D
 ##
 ## 我方戰鬥數值一律用 MOD-F 的 `Derive.derive()` 算（不自己重算，見 `_init_battle()`）。
 ## 傷害/治療/機率算式全部委派給 `damage_calc.gd`（F-3~F-6、F-8）／`atb.gd`（F-7）／
-## `exp_scale.gd`（F-9）／`auto_battle.gd`（自動戰鬥）。
+## `auto_battle.gd`（自動戰鬥）。
 ##
 ## ## 資料形狀
 ##
@@ -85,7 +85,8 @@ var _foe_rows: Array = []
 
 
 func _ready() -> void:
-	AudioManager.play_bgm("bgm_battle.mp3")   # 對應 build_cq2.py L2870
+	AudioManager.play_bgm("bgm_battle.mp3", true)   # 對應 build_cq2.py L2870（戰鬥循環）；transient＝不覆蓋場景循環曲記憶
+	AudioManager.play_bgm_overlay("bgm_battle_opening.mp3")   # 開場層：非 loop，疊在戰鬥循環上一次性播放
 	_init_battle()
 
 
@@ -93,11 +94,12 @@ func _process(delta: float) -> void:
 	_view_time += delta
 	if _lunge_unit != null:
 		_lunge_t += delta
-		if not _lunge_sfx_done and _lunge_t >= LUNGE_DUR * IMPACT_FRAC:
+		if not _lunge_sfx_done and _lunge_t >= _lunge_impact:
 			for _s in _lunge_sfx:
 				AudioManager.sfx(_s)
 			_lunge_sfx_done = true
-		if _lunge_t >= LUNGE_DUR:
+		_tick_fx_queue()
+		if _lunge_t >= _lunge_dur:
 			_lunge_unit = null
 	if not _pending_hits.is_empty():
 		_pending_hit_timer -= delta
@@ -105,6 +107,7 @@ func _process(delta: float) -> void:
 			_apply_pending_hits()   # 音效播完 → 扣血＋被打聲＋死亡判定
 	if _shake_t > 0.0:
 		_shake_t -= delta
+	_tick_screen_shake(delta)
 	_handle_auto_toggle()
 	match state:
 		"run":
@@ -141,6 +144,9 @@ func _init_battle() -> void:
 	var group: Array = []
 	if encounter_def != null and not encounter_def.formations.is_empty():
 		group = encounter_def.roll()   # 加權抽組＋數量展開＋上限截斷，see EncounterDef / F-11
+	# 小節1（ch1_step<=2，路德單人/低等）：隨機遭遇最多 2 隻，避免走到熊之前就被群毆掛掉（John 2026-07-27）。
+	if int(GameState.flag_get("ch1_step")) <= 2 and group.size() > 2:
+		group.resize(2)
 
 	scripted = encounter_def != null and encounter_def.scripted_survive > 0
 	survive_acts = encounter_def.scripted_survive if scripted else 3
@@ -477,26 +483,44 @@ func _apply_one(ts: Array) -> void:
 	var sfx: Array = []
 	var anim := ""
 
+	# 本次我方 lunge 時序：普攻分階段位移（移動→停 0.2s→攻擊→返回）；技能/道具原位。
+	# 須在 _defer_hits 之前設定（_pending_hit_timer 依 _lunge_impact 計）。
+	if String(a.get("side", "")) == "hero":
+		_fx_queue.clear()
+		if pd["t"] == "atk":
+			_lunge_dur = LM_APPROACH + LM_WAIT + LM_ATTACK + LM_RETURN
+			_lunge_impact = LM_APPROACH + LM_WAIT + LM_SWING
+		else:
+			_lunge_dur = SKILL_LUNGE_DUR
+			_lunge_impact = SKILL_IMPACT
+
 	if pd["t"] == "atk":
-		var wt := _weapon_type(a)
-		anim = WTYPE_ANIM.get(wt, "slash")
+		anim = "attack"   # 作法 B：通用 attack 動畫（音效改由 _atk_sfx() 決定）
 		if DamageCalc.is_dodge(a, t):
 			msg_out = String(t.get("name", "")) + " 靈巧地閃開了！"
-			sfx.append(_sfx_or("att_miss.mp3", "select.mp3"))   # 閃避/揮空音效（缺檔 fallback select.mp3）
+			var msfx := _sfx_or("att_miss.mp3", "select.mp3")   # 閃避/揮空音效（缺檔 fallback select.mp3）
+			sfx.append(msfx)
+			if String(a.get("side", "")) == "hero":
+				_defer_hits([{"t": t, "miss": true}], msfx)   # Miss 飄字也等揮空音效播完才出
+			else:
+				_popup_miss(t)
 		else:
 			var r := DamageCalc.phys_damage(a, t)
 			msg_out = String(a.get("name", "")) + " 攻擊 " + String(t.get("name", "")) + "，造成 " \
 				+ str(r["dmg"]) + " 傷害" + ("（會心！）" if r["crit"] else "")
 			if String(a.get("side", "")) == "hero":
-				# 我方普攻：只先播武器音效（新音效有 lead-in）；扣血＋被打聲＋死亡判定延到音效播完
-				var wsfx := String(WTYPE_SFX.get(wt, "att_sword.mp3"))
+				# 我方普攻：只先播攻擊音效（新音效有 lead-in）；扣血＋被打聲＋死亡判定延到音效播完
+				var wsfx := _atk_sfx(a)
 				sfx.append(_sfx_or(wsfx, "att_sword.mp3"))
-				_defer_hits([{"t": t, "dmg": float(r["dmg"])}], wsfx)
+				_defer_hits([{"t": t, "dmg": float(r["dmg"]), "crit": bool(r["crit"])}], wsfx)
+				_queue_fx(t, _phys_fx(a), LM_APPROACH + LM_WAIT)   # 與 attack 動畫同時起
 			else:
 				# 敵方：立即扣血＋怪物揮擊聲＋被打聲（維持原時序）
 				t["hp"] = float(t.get("hp", 0)) - float(r["dmg"])
 				sfx.append("att_monster_punch.mp3")
 				sfx.append("hurt.wav")
+				_popup_damage(t, int(r["dmg"]), bool(r["crit"]))
+				_play_hit_fx(t, _phys_fx(a))
 				_kill(t)
 
 	elif pd["t"] == "skill":
@@ -506,22 +530,25 @@ func _apply_one(ts: Array) -> void:
 		var slv: int = int(actor_sk.get(sk.id, 1))
 		var sk_tag := "「" + sk.display_name + (" Lv" + str(slv) if slv > 1 else "") + "」"
 		if sk.kind == "damage":
-			anim = ("spellcast" if sk.attr == "int" else ("thrust" if sk.attr == "agi" else "slash"))
+			anim = "attack"
 			var dmg := DamageCalc.skill_damage(a, t, sk)
 			msg_out = String(a.get("name", "")) + sk_tag + "！" + String(t.get("name", "")) \
 				+ " 受到 " + str(dmg) + " 傷害"
 			# 技能傷害同普攻：只先播技能音效，扣血＋被打聲＋死亡判定延到音效播完
-			var sksfx := String(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"))
+			var sksfx := _skill_sfx(a, sk)
 			sfx.append(_sfx_or(sksfx, "att_magic.mp3"))
-			_defer_hits([{"t": t, "dmg": float(dmg)}], sksfx)
+			_defer_hits([{"t": t, "dmg": float(dmg), "crit": false}], sksfx)
+			_queue_fx(t, ("magic" if sk.attr == "int" else "burst"), 0.0)   # 與 attack 動畫同時起
 		else:
-			anim = "spellcast"
+			anim = "attack"
 			var heal := DamageCalc.skill_heal(a, sk)
 			var before: float = float(t.get("hp", 0))
 			t["hp"] = minf(float(t.get("maxhp", 0)), before + heal)
 			msg_out = String(a.get("name", "")) + sk_tag + "！" + String(t.get("name", "")) \
 				+ " 恢復 " + str(int(t["hp"] - before)) + " HP"
 			sfx.append(_sfx_or(sk.sfx if sk.sfx != "" else "heal.wav", "heal.wav"))   # 補血技音效
+			_popup_heal(t, int(t["hp"] - before), "HP")
+			_play_hit_fx(t, "heal")
 
 	elif pd["t"] == "item":
 		var item_id: String = pd["item"]
@@ -541,16 +568,22 @@ func _apply_one(ts: Array) -> void:
 			t["mp"] = minf(float(t.get("maxmp", 0)), before_mp + power)
 			msg_out = String(a.get("name", "")) + " 使用" + item_name + "！" + String(t.get("name", "")) \
 				+ " 恢復 " + str(int(t["mp"] - before_mp)) + " MP"
+			_popup_heal(t, int(t["mp"] - before_mp), "MP")
+			_play_hit_fx(t, "heal")
 		else:
 			var before_hp: float = float(t.get("hp", 0))
 			t["hp"] = minf(float(t.get("maxhp", 0)), before_hp + power)
 			msg_out = String(a.get("name", "")) + " 使用" + item_name + "！" + String(t.get("name", "")) \
 				+ " 恢復 " + str(int(t["hp"] - before_hp)) + " HP"
+			_popup_heal(t, int(t["hp"] - before_hp), "HP")
+			_play_hit_fx(t, "heal")
 
 	if String(a.get("side", "")) == "hero":
 		_lunge_unit = a
 		_lunge_t = 0.0
 		_lunge_anim = anim
+		_lunge_move = (pd["t"] == "atk")          # 普攻才移動到目標；技能原位施放
+		_lunge_target = (t if pd["t"] == "atk" else null)
 		_lunge_sfx = sfx
 		_lunge_sfx_done = false
 	else:
@@ -568,22 +601,29 @@ func _apply_one(ts: Array) -> void:
 func _apply_all(sk: SkillDef) -> void:
 	var a: Dictionary = actor
 	a["mp"] = float(a.get("mp", 0)) - float(sk.mp)
+	_fx_queue.clear()
+	_lunge_dur = SKILL_LUNGE_DUR      # 全體技：原位施放時序
+	_lunge_impact = SKILL_IMPACT
 	var list: Array = foes.filter(func(u): return bool(u.get("alive", false)))
 	var tot := 0
 	var hits: Array = []
+	var fx_kind := "magic" if sk.attr == "int" else "burst"
 	for f in list:
 		var target: Dictionary = f
 		var dmg := DamageCalc.skill_damage(a, target, sk)
 		tot += dmg
-		hits.append({"t": target, "dmg": float(dmg)})
-	var anim := ("spellcast" if sk.attr == "int" else ("thrust" if sk.attr == "agi" else "slash"))
-	var sksfx := String(sk.sfx if sk.sfx != "" else ("att_magic.mp3" if sk.attr == "int" else "att_sword_skill.mp3"))
+		hits.append({"t": target, "dmg": float(dmg), "crit": false})
+		_queue_fx(target, fx_kind, 0.0)   # 與 attack 動畫同時起
+	var anim := "attack"
+	var sksfx := _skill_sfx(a, sk)
 	var sfx: Array = [_sfx_or(sksfx, "att_magic.mp3")]   # 全體技能音效（扣血＋被打聲延到音效播完）
 	_defer_hits(hits, sksfx)
 	if String(a.get("side", "")) == "hero":
 		_lunge_unit = a
 		_lunge_t = 0.0
 		_lunge_anim = anim
+		_lunge_move = false          # 全體技：原位施放
+		_lunge_target = null
 		_lunge_sfx = sfx
 		_lunge_sfx_done = false
 	else:
@@ -616,11 +656,15 @@ func _apply_pending_hits() -> void:
 		var t: Dictionary = h.get("t", {})
 		if t.is_empty():
 			continue
+		if bool(h.get("miss", false)):
+			_popup_miss(t)
+			continue
 		t["hp"] = float(t.get("hp", 0)) - float(h.get("dmg", 0))
+		_popup_damage(t, int(h.get("dmg", 0)), bool(h.get("crit", false)))
 		_kill(t)
 		last_t = t
-	AudioManager.sfx("hurt.wav")
 	if not last_t.is_empty():
+		AudioManager.sfx("hurt.wav")
 		_start_shake(last_t)   # 多體時震動最後命中者作代表
 	_refresh_ui()
 
@@ -628,7 +672,7 @@ func _apply_pending_hits() -> void:
 ## 設定延後傷害清單，並依 sound 長度算「音效播完」的時機（命中點＋音效長度）。
 func _defer_hits(hits: Array, sound: String) -> void:
 	_pending_hits = hits
-	_pending_hit_timer = LUNGE_DUR * IMPACT_FRAC + AudioManager.sfx_length(sound)
+	_pending_hit_timer = _lunge_impact + AudioManager.sfx_length(sound)
 
 
 ## 讓被攻擊對象震動一下（敵/我皆可）；渲染端由 _shake_offset_for() 套用位移。
@@ -644,6 +688,160 @@ func _shake_offset_for(u: Variant) -> Vector2:
 	return Vector2(cos(_shake_t * 90.0) * SHAKE_AMP * (_shake_t / SHAKE_DUR), 0.0)
 
 
+## 普攻位移目標點：目標單位的右前方（我方在右）。找不到目標則回退。
+func _lunge_target_front(fallback_base: Vector2) -> Vector2:
+	if _lunge_target == null:
+		return fallback_base
+	var tn = _foe_node_of(_lunge_target)
+	if tn == null:
+		return ATTACK_POS
+	var tb: Vector2 = tn["base"]
+	return tb + Vector2(ATTACK_FRONT_GAP, 0.0)
+
+
+## 該單位是否正在被攻擊震動中（用來切到 hurt 圖）。
+func _is_shaking(u: Variant) -> bool:
+	return _shake_unit != null and is_same(u, _shake_unit) and _shake_t > 0.0
+
+
+# =========================================================================
+# 傷害飄字／受擊特效／畫面震動（2026-07-28 John 驗收回饋）
+#
+# 飄字與特效都掛在被攻擊單位的「可見像素」座標上（node["head"]/node["mid"]，於 _build_unit 量測），
+# 不是畫布中心——立繪畫布留白不一致，用畫布中心會偏掉。生命週期交給 Tween，結束自行 queue_free。
+# =========================================================================
+
+## 取單位的顯示節點（敵/我皆可）。
+func _node_of(u: Variant) -> Variant:
+	var n = _hero_node_of(u)
+	return n if n != null else _foe_node_of(u)
+
+
+## 飄字本體。crit=true 走「彈出放大＋大字金色」的強調演出。
+func _popup(u: Variant, text: String, color: Color, size: int, crit: bool, y_off: float = 0.0) -> void:
+	if _root == null:
+		return
+	var node = _node_of(u)
+	if node == null:
+		return
+	var anchor: Vector2 = (node["wrap"] as Control).position + Vector2(node.get("head", Vector2.ZERO))
+	var lbl := PixelUI.label(text, size, color, 7 if crit else 5)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.size = Vector2(240, float(size) + 12.0)
+	lbl.pivot_offset = Vector2(120, (float(size) + 12.0) * 0.5)
+	lbl.position = anchor + Vector2(-120.0, -58.0 + y_off + randf_range(-6.0, 6.0))
+	_root.add_child(lbl)
+	var tw := create_tween()
+	if crit:
+		lbl.scale = Vector2(0.35, 0.35)
+		tw.tween_property(lbl, "scale", Vector2(1.4, 1.4), 0.13).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.tween_property(lbl, "scale", Vector2(1.1, 1.1), 0.1)
+	tw.tween_property(lbl, "position:y", lbl.position.y - POP_RISE, POP_DUR).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(lbl, "modulate:a", 0.0, POP_DUR * 0.55).set_delay(POP_DUR * 0.45)
+	tw.tween_callback(lbl.queue_free)
+
+
+## 傷害數字：一般＝紅白大字；會心＝金色特大字＋彈出放大＋畫面震動（不加「會心一擊！」字樣，John 2026-07-28）。
+func _popup_damage(u: Variant, dmg: int, crit: bool) -> void:
+	if crit:
+		_popup(u, str(dmg), PixelUI.GOLD, 54, true)
+		_shake_screen(CRIT_SHAKE_AMP, SCREEN_SHAKE_DUR)
+	else:
+		_popup(u, str(dmg), Color(1.0, 0.87, 0.85), 34, false)
+
+
+func _popup_heal(u: Variant, amount: int, kind: String) -> void:
+	if amount <= 0:
+		return
+	_popup(u, "+" + str(amount) + " " + kind, PixelUI.GOOD if kind == "HP" else PixelUI.MP, 30, false)
+
+
+func _popup_miss(u: Variant) -> void:
+	_popup(u, "Miss!!", Color(0.85, 0.92, 1.0), 32, false)
+
+
+## 普攻受擊特效種類：依攻擊者武器類別（有刃＝斬光、其餘＝白火花）。敵人沒有 weapon_type → 白火花。
+func _phys_fx(a: Dictionary) -> String:
+	return String(WTYPE_FX.get(_weapon_type(a), "blunt"))
+
+
+## 排入「跟攻擊動畫同時起」的受擊特效：at＝相對本次 lunge 起點的秒數（普攻＝動畫階段開始、技能＝0）。
+## 傷害數字/震動仍走 _apply_pending_hits（等音效的 lead-in 播完），兩者刻意分開。
+func _queue_fx(t: Dictionary, kind: String, at: float) -> void:
+	_fx_queue.append({"t": t, "kind": kind, "at": at})
+
+
+func _tick_fx_queue() -> void:
+	for i in range(_fx_queue.size() - 1, -1, -1):
+		var e: Dictionary = _fx_queue[i]
+		if _lunge_t >= float(e["at"]):
+			_play_hit_fx(e["t"], String(e["kind"]))
+			_fx_queue.remove_at(i)
+
+
+## 受擊特效：在目標身上播一組幀圖（kind 見 FX_FRAMES）。
+##
+## 方向：素材原方向＝我方打敵人，所以只有「打在我方身上」（＝敵人揮來）才水平翻轉。
+## 大小：斬光是斜掃的長條，要比單位大才看得出來（h×1.8）；放射狀的火花/爆/魔光用 h×1.3。
+## 幀數：多幀逐幀播；單幀改用縮放彈出＋淡出製造打擊感（素材只有一張也能有動態）。
+func _play_hit_fx(u: Variant, kind: String) -> void:
+	if _root == null:
+		return
+	var node = _node_of(u)
+	if node == null:
+		return
+	var frames: Array = []
+	for n in FX_FRAMES.get(kind, []):
+		var t := _tex("res://assets/battle/" + String(n))
+		if t != null:
+			frames.append(t)
+	if frames.is_empty():
+		return
+	var h := float(node["h"])
+	var s: float = clampf(h * 1.8, 120.0, 230.0) if kind == "slash" else clampf(h * 1.3, 130.0, 200.0)
+	var spr := TextureRect.new()
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # 手繪筆觸特效走平滑取樣（像素立繪仍各自 Nearest）
+	spr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	spr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	spr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	spr.flip_h = bool(node["is_hero"])
+	spr.size = Vector2(s, s)
+	spr.pivot_offset = Vector2(s * 0.5, s * 0.5)
+	spr.texture = frames[0]
+	spr.position = (node["wrap"] as Control).position + Vector2(node.get("mid", Vector2.ZERO)) - Vector2(s * 0.5, s * 0.5)
+	_root.add_child(spr)
+	var tw := create_tween()
+	if frames.size() >= 2:
+		for i in range(1, frames.size()):
+			var tex: Texture2D = frames[i]
+			tw.tween_callback(func(): spr.texture = tex).set_delay(FX_DT)
+		tw.tween_callback(spr.queue_free).set_delay(FX_DT)
+	else:
+		spr.scale = Vector2(0.6, 0.6)
+		tw.tween_property(spr, "scale", Vector2(1.15, 1.15), FX_PUNCH).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.tween_property(spr, "scale", Vector2(1.3, 1.3), FX_PUNCH * 1.4)
+		tw.parallel().tween_property(spr, "modulate:a", 0.0, FX_PUNCH * 1.4)
+		tw.tween_callback(spr.queue_free)
+
+
+## 畫面震動（會心一擊）：整個 Root 隨機抖動、隨剩餘時間衰減，結束歸位。
+func _shake_screen(amp: float, dur: float) -> void:
+	_screen_shake_amp = maxf(_screen_shake_amp, amp)
+	_screen_shake_t = maxf(_screen_shake_t, dur)
+
+
+func _tick_screen_shake(delta: float) -> void:
+	if _root == null or _screen_shake_t <= 0.0:
+		return
+	_screen_shake_t -= delta
+	if _screen_shake_t <= 0.0:
+		_root.position = _root_base
+		_screen_shake_amp = 0.0
+		return
+	var k := clampf(_screen_shake_t / SCREEN_SHAKE_DUR, 0.0, 1.0)
+	_root.position = _root_base + Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * _screen_shake_amp * k
+
+
 # =========================================================================
 # 敵人行動（對應 foeAct()，L3019-3068；精確算式見 specs/BATTLE_FORMULAS.md F-8 v1.1）
 # =========================================================================
@@ -656,6 +854,10 @@ func _foe_act(a: Dictionary) -> void:
 	_lunge_unit = a
 	_lunge_t = 0.0
 	_lunge_anim = ""
+	_lunge_move = false                       # 敵方走自己的 sin 位移（見 foe 渲染），不走分階段
+	_lunge_target = null
+	_lunge_dur = LUNGE_DUR                     # 敵方 lunge 沿用原時序
+	_lunge_impact = LUNGE_DUR * IMPACT_FRAC
 	_lunge_sfx = []
 	_lunge_sfx_done = true
 
@@ -671,6 +873,8 @@ func _foe_act(a: Dictionary) -> void:
 			var heal := DamageCalc.foe_heal_amount()
 			t2["hp"] = minf(float(t2.get("maxhp", 0)), float(t2.get("hp", 0)) + heal)
 			AudioManager.sfx("heal.wav")
+			_popup_heal(t2, heal, "HP")
+			_play_hit_fx(t2, "heal")
 			_banner(String(a.get("name", "")) + " 治療了 " + String(t2.get("name", "")) + "（+" + str(heal) + " HP）")
 			_finish_foe()
 			return
@@ -692,6 +896,8 @@ func _foe_act(a: Dictionary) -> void:
 				var r := DamageCalc.foe_named_skill_damage(a, hero, mult)
 				hero["hp"] = float(hero.get("hp", 0)) - float(r["dmg"])
 				tot += r["dmg"]
+				_popup_damage(hero, int(r["dmg"]), bool(r["crit"]))
+				_play_hit_fx(hero, "magic")
 				_kill(hero)
 			AudioManager.sfx("att_monster_punch.mp3")   # 對應 build_cq2.py L3222/L3239（敵方傷害）
 			AudioManager.sfx("hurt.wav")
@@ -701,11 +907,14 @@ func _foe_act(a: Dictionary) -> void:
 		else:
 			var t3: Dictionary = alive[randi() % alive.size()]
 			if DamageCalc.is_dodge(a, t3):
+				_popup_miss(t3)
 				_banner(String(t3.get("name", "")) + " 閃開了 " + String(a.get("name", "")) + " 的【" + String(fsk.get("name", "")) + "】！")
 				_finish_foe()
 				return
 			var r2 := DamageCalc.foe_named_skill_damage(a, t3, mult)
 			t3["hp"] = float(t3.get("hp", 0)) - float(r2["dmg"])
+			_popup_damage(t3, int(r2["dmg"]), bool(r2["crit"]))
+			_play_hit_fx(t3, "magic")
 			_kill(t3)
 			AudioManager.sfx("att_monster_punch.mp3")
 			AudioManager.sfx("hurt.wav")
@@ -722,6 +931,8 @@ func _foe_act(a: Dictionary) -> void:
 			var r3 := DamageCalc.phys_damage(a, hero2)
 			hero2["hp"] = float(hero2.get("hp", 0)) - float(r3["dmg"])
 			tot2 += r3["dmg"]
+			_popup_damage(hero2, int(r3["dmg"]), bool(r3["crit"]))
+			_play_hit_fx(hero2, _phys_fx(a))
 			_kill(hero2)
 		AudioManager.sfx("att_monster_punch.mp3")
 		AudioManager.sfx("hurt.wav")
@@ -732,11 +943,14 @@ func _foe_act(a: Dictionary) -> void:
 	# 第 4 段：一般單體攻擊（fallback）
 	var t: Dictionary = alive[randi() % alive.size()]
 	if DamageCalc.is_dodge(a, t):
+		_popup_miss(t)
 		_banner(String(t.get("name", "")) + " 靈巧地閃開了 " + String(a.get("name", "")) + " 的攻擊！")
 		_finish_foe()
 		return
 	var r4 := DamageCalc.phys_damage(a, t)
 	t["hp"] = float(t.get("hp", 0)) - float(r4["dmg"])
+	_popup_damage(t, int(r4["dmg"]), bool(r4["crit"]))
+	_play_hit_fx(t, _phys_fx(a))
 	_kill(t)
 	_start_shake(t)
 	AudioManager.sfx("att_monster_punch.mp3")
@@ -952,15 +1166,47 @@ func _process_end() -> void:
 
 const HERO_SLOTS := [Vector2(1074, 500), Vector2(1180, 464), Vector2(1044, 410), Vector2(1160, 372)]
 const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vector2(168, 372), Vector2(300, 336)]   # 第 5 槽為敵人數上限 5 新增（座標為估值，待實機微調）
-const HERO_H := 104.0   # 原 156 縮成 2/3（John 要求）
+const HERO_H := 208.0   # 我方戰鬥立繪：2026-07-27 John 要求放大成原本 2 倍（原 104）
 const FOE_H := 82.0     # 原 122 縮成 2/3
 const BOSS_H := 140.0   # 原 210 縮成 2/3
 const HERO_RATIO := {"ludo": 0.75, "marin": 0.58, "alan": 0.80}   # 由目前戰鬥幀的角色畫布比例換算；Ludo 已改用 HD Pixel idle 四幀
+## 攻擊/技能幀的**額外**放大倍率（藝術倍率）。基準倍率由 _build_unit() 自動算出：把該角色攻擊 strip
+## 「最高的那一幀」的可見高度對齊自己 idle 的可見高度——各角色攻擊幀的畫布比例／繪製比例都不同
+## （ludo 628×678、marin 900×850、alan 802×640，idle 都是 3:4），KEEP_ASPECT 會讓角色忽大忽小。
+## 基準倍率**整段動畫共用一個值**（不逐幀算，否則蹲低的幀會被放大成一呼一吸）。
+## ludo 1.40 ＝ John 2026-07-28 驗收的「總倍率 1.5」等效值；未列的角色＝只做自動對齊。
+const ATTACK_SCALE := {"ludo": 1.40}
+const ARROW_H := 32.0                 # marker_arrow 三角高＋間隙：箭頭尖端離頭頂的距離
+const POP_RISE := 46.0                # 飄字上升距離
+const POP_DUR := 0.8                  # 飄字停留時間
+const CRIT_SHAKE_AMP := 13.0          # 會心一擊畫面震動幅度（px）
+const SCREEN_SHAKE_DUR := 0.34        # 畫面震動時長
+## 受擊特效幀（素材規格見 docs/design/戰鬥立繪規格.md「六、受擊特效」）。多幀＝逐幀播；
+## 單幀＝縮放彈出＋淡出（見 _play_hit_fx()）。換圖只要覆蓋同名檔，這裡不用改。
+const FX_FRAMES := {
+	"slash": ["fx_slash_0.png", "fx_slash_1.png", "fx_slash_2.png", "fx_slash_3.png"],
+	"blunt": ["fx_blunt_0.png"],
+	"burst": ["fx_burst_0.png"],
+	"magic": ["fx_magic_0.png"],
+	"heal": ["fx_heal_0.png", "fx_heal_1.png", "fx_heal_2.png", "fx_heal_3.png"],
+}
+const WTYPE_FX := {"sword": "slash", "dagger": "slash", "claw": "slash"}   # 有刃武器＝斬光；其餘（杖/鈍器/徒手/敵人）＝白火花
+const FX_DT := 0.07                   # 受擊特效每幀秒數（多幀）
+const FX_PUNCH := 0.09                # 單幀特效每段秒數（縮放彈出）
 const FRAME_DT := 0.18
 # 我方發動攻擊時向前（敵方在左＝-x）踏步出招再回位。
 const LUNGE_DUR := 0.55
 const LUNGE_DIST := 120.0
 const ATTACK_POS := Vector2(820, 480)   # 攻擊時角色直接移到的「隊伍前出場位」（隊伍在右、敵在左）
+const ATTACK_FRONT_GAP := 150.0         # 普攻位移：停在目標右前方（我方在右）此距離處
+# 我方普攻分階段時序（2026-07-27 John 指定）：移動到目標前→停 0.2s→演攻擊動畫(配音效)→目標震動→返回原位。
+const LM_APPROACH := 0.18   # 移動到目標前方
+const LM_WAIT := 0.20       # 到位停頓
+const LM_ATTACK := 0.45     # 攻擊動畫演示
+const LM_SWING := 0.14      # 攻擊階段內「揮出命中」時點（相對 attack 起點，觸發音效/傷害/震動）
+const LM_RETURN := 0.20     # 返回原位
+const SKILL_LUNGE_DUR := 0.6   # 技能/道具：原位演示總時長
+const SKILL_IMPACT := 0.18     # 技能命中時點
 const IMPACT_FRAC := 0.7                 # 命中音效在動畫此比例處播（≈揮擊命中瞬間）
 const SHAKE_DUR := 0.25                   # 被攻擊對象震動時長（秒）
 const SHAKE_AMP := 7.0                    # 震動最大水平位移（px），隨時間衰減
@@ -976,17 +1222,28 @@ var _lunge_t: float = 0.0
 var _lunge_anim: String = ""     # 本次攻擊要播的動畫組："slash"/"thrust"/"spellcast"／""＝無（沿用滑步）
 var _lunge_sfx: Array = []       # 延到命中瞬間才播的音效（我方攻擊用）
 var _lunge_sfx_done: bool = false
+var _lunge_move: bool = false        # 本次 lunge 是否位移：普攻＝移動到目標前方再回位；技能＝原位施放
+var _lunge_target: Variant = null    # 普攻位移的目標單位（用來求其前方站位）
+var _lunge_dur: float = LUNGE_DUR             # 本次 lunge 總時長（依 普攻/技能/敵方 各異）
+var _lunge_impact: float = LUNGE_DUR * IMPACT_FRAC   # 本次 lunge 揮出命中時點（音效/傷害/震動）
+var _fx_queue: Array = []            # 依 _lunge_t 觸發的受擊特效 [{t, kind, at}]（特效跟攻擊動畫同時起，不等傷害結算）
 var _pending_hits: Array = []        # 我方攻擊/技能：延到音效播完才套用的傷害清單 [{t, dmg}, ...]
 var _pending_hit_timer: float = 0.0  # delta 倒數，歸零時套用 _pending_hit（音效先完、再扣血＋被打聲）
 var _shake_unit: Variant = null      # 被攻擊而震動中的對象（敵/我皆可）
 var _shake_t: float = 0.0            # 震動剩餘時間（delta 倒數）
 var _boss_disp_r: float = 1.0        # boss 血條顯示比例（漸減動畫用）
+var _screen_shake_t: float = 0.0     # 畫面震動剩餘時間
+var _screen_shake_amp: float = 0.0   # 畫面震動幅度
+var _root_base: Vector2 = Vector2.ZERO   # Root 原位（震動歸位用）
+static var _log_visible: bool = false    # 上方戰鬥訊息：預設不顯示（2026-07-28 John），同 session 記住玩家的切換
 var _root: Control
 var _bg: TextureRect
 var _boss_name: Label
 var _boss_bar_bg: ColorRect
 var _boss_bar_fill: ColorRect
 var _log_label: Label
+var _log_bg: PanelContainer
+var _log_btn: Button
 var _auto_btn: Button
 var _cmd_labels: Array = []
 var _skill_box: VBoxContainer
@@ -997,8 +1254,8 @@ var _portrait: TextureRect
 var _status_rows: Array = []
 var _foe_nodes: Array = []
 var _hero_nodes: Array = []
-var _cursor: TextureRect
-var _actor_arrow: Label
+var _cursor: Control
+var _actor_arrow: Control
 var _result_overlay: Control
 var _result_title: Label
 var _result_msg: Label
@@ -1008,6 +1265,7 @@ var _result_btn: Button
 
 func _build_view() -> void:
 	_root = $View/Root
+	_root_base = _root.position
 	for c in _root.get_children():
 		c.queue_free()
 	_foe_nodes.clear()
@@ -1036,26 +1294,34 @@ func _build_view() -> void:
 		_hero_nodes.append(_build_unit(h, true))
 
 	# --- 目標游標 + 行動者箭頭 ---
-	_cursor = TextureRect.new()
-	_cursor.texture = _tex("res://assets/ui/cursor.png")
-	_cursor.custom_minimum_size = Vector2(40, 40)
-	_cursor.size = Vector2(40, 40)
-	_cursor.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_cursor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var MarkerArrow := load("res://scripts/battle/marker_arrow.gd")
+	_cursor = MarkerArrow.new()          # 選取目標游標（向下三角）
 	_cursor.visible = false
 	_root.add_child(_cursor)
-	_actor_arrow = PixelUI.label("▼", 28, PixelUI.SEL, 4)
+	_actor_arrow = MarkerArrow.new()     # 行動者指示（同造型）
 	_actor_arrow.visible = false
 	_root.add_child(_actor_arrow)
 
-	# --- 上方：戰鬥訊息 ---
-	var logbg := PixelUI.panel(Color(0.047, 0.055, 0.102, 0.42), 2)
-	logbg.position = Vector2(30, 18)
-	logbg.custom_minimum_size = Vector2(700, 0)
+	# --- 上方：戰鬥訊息（預設隱藏，右上「訊息」鈕可開；傷害改用頭上飄字表達）---
+	_log_bg = PixelUI.panel(Color(0.047, 0.055, 0.102, 0.42), 2)
+	_log_bg.position = Vector2(30, 18)
+	_log_bg.custom_minimum_size = Vector2(700, 0)
+	_log_bg.visible = _log_visible
 	_log_label = PixelUI.label("", 19, Color(0.922, 0.922, 0.96), 3)
 	_log_label.custom_minimum_size = Vector2(672, 0)
-	logbg.add_child(_log_label)
-	_root.add_child(logbg)
+	_log_bg.add_child(_log_label)
+	_root.add_child(_log_bg)
+
+	# --- 上方右：訊息顯示切換鈕 ---
+	_log_btn = PixelUI.button("訊息　關", PixelUI.CYAN, 17)
+	_log_btn.anchor_left = 1.0
+	_log_btn.anchor_right = 1.0
+	_log_btn.offset_left = -300.0
+	_log_btn.offset_right = -166.0
+	_log_btn.offset_top = 18.0
+	_log_btn.offset_bottom = 56.0
+	_log_btn.pressed.connect(_on_log_pressed)
+	_root.add_child(_log_btn)
 
 	# --- 上方右：自動戰鬥鈕（滑鼠可點；A 鍵仍可切）---
 	_auto_btn = PixelUI.button("自動　關", PixelUI.CYAN, 17)
@@ -1085,6 +1351,17 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 
 	var frames := _load_frames(u, is_hero)
 	var anim_frames: Dictionary = _load_anim_frames(u) if is_hero else {}
+	# 我方受傷/死亡單張（hero_<id>_hurt/death.png；缺檔則沿用 idle＋既有處理）
+	var hurt_tex: Texture2D = null
+	var death_tex: Texture2D = null
+	if is_hero:
+		var sid := String(u.get("sprite", ""))
+		var hpath := "res://assets/battle/hero_%s_hurt.png" % sid
+		var dpath := "res://assets/battle/hero_%s_death.png" % sid
+		if ResourceLoader.exists(hpath):
+			hurt_tex = load(hpath)
+		if ResourceLoader.exists(dpath):
+			death_tex = load(dpath)
 	var default_foe_h: float = BOSS_H if bool(u.get("big", false)) else FOE_H
 	var h: float = HERO_H if is_hero else float(u.get("battle_height", default_foe_h))
 	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
@@ -1106,6 +1383,7 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	spr.flip_h = false   # 都不翻轉：素材我方本就面朝左、敵方面朝右（John 回饋我方原本翻反了）
 	spr.size = Vector2(w, h)
 	spr.position = Vector2(-w * 0.5, -h)
+	spr.pivot_offset = Vector2(w * 0.5, h)   # 腳底中心＝wrap 原點：選中放大時原地長大不位移
 	if not frames.is_empty():
 		spr.texture = frames[0]
 	wrap.add_child(spr)
@@ -1132,7 +1410,62 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 		hp_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		wrap.add_child(hp_fill)
 
-	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "is_hero": is_hero, "h": h, "base": wrap.position}
+	var anchors := _visible_anchors(frames, w, h)
+	# 攻擊動畫縮放基準：以 strip 中「可見最高」的一幀（≈站直的姿勢）對齊 idle 的可見高度，整段共用。
+	var idle_m := _frame_metrics(frames[0] if not frames.is_empty() else null, w, h)
+	var atk_fit := 1.0
+	var atk_off := 0.0
+	var ref_m := {}
+	for at in anim_frames.get("attack", []):
+		var m := _frame_metrics(at, w, h)
+		if ref_m.is_empty() or float(m["vis_h"]) > float(ref_m["vis_h"]):
+			ref_m = m
+	if not ref_m.is_empty():
+		atk_fit = float(idle_m["vis_h"]) / maxf(1.0, float(ref_m["vis_h"]))
+		var total := atk_fit * float(ATTACK_SCALE.get(String(u.get("sprite", "")), 1.0))
+		atk_off = float(idle_m["bottom"]) - float(ref_m["bottom"]) * total   # 腳踩回 idle 的地面線
+
+	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": -h, "head": anchors["head"], "mid": anchors["mid"], "atk_fit": atk_fit, "atk_off": atk_off}
+
+
+## 量一張貼圖在「w×h ＋ STRETCH_KEEP_ASPECT」框內的可見像素幾何。
+## vis_h＝可見部分的顯示高度（px）；bottom＝可見底邊相對「地面」（wrap 原點）的 y（負值＝在地面上方）。
+func _frame_metrics(tex: Texture2D, w: float, h: float) -> Dictionary:
+	if tex == null:
+		return {"vis_h": h, "bottom": 0.0}
+	var img: Image = tex.get_image()
+	if img == null or img.is_compressed():
+		return {"vis_h": h, "bottom": 0.0}
+	var used := img.get_used_rect()
+	if used.size.y <= 0:
+		return {"vis_h": h, "bottom": 0.0}
+	var tw := float(img.get_width())
+	var th := float(img.get_height())
+	var k: float = minf(w / tw, h / th)
+	var top := (h - th * k) * 0.5     # KEEP_ASPECT 置中留白
+	return {"vis_h": float(used.size.y) * k, "bottom": top + float(used.position.y + used.size.y) * k - h}
+
+
+## 量出立繪「實際可見像素」的頭頂與身體中心（相對 wrap 原點＝腳點），供箭頭/游標/飄字/特效定位。
+## 立繪畫布留白左右不對稱、角色也不一定貼齊畫布底（例：hero_ludo_idle_0 的可見框中心在畫布 61% 處），
+## 只用畫布中心會讓箭頭偏一邊、飄字浮在半空。缺圖或無法讀像素時退回畫布幾何中心。
+func _visible_anchors(frames: Array, w: float, h: float) -> Dictionary:
+	var head := Vector2(0.0, -h)
+	var mid := Vector2(0.0, -h * 0.5)
+	if not frames.is_empty():
+		var img: Image = (frames[0] as Texture2D).get_image()
+		if img != null and not img.is_compressed():
+			var used := img.get_used_rect()
+			if used.size.x > 0 and used.size.y > 0:
+				var tw := float(img.get_width())
+				var th := float(img.get_height())
+				var k: float = minf(w / tw, h / th)       # STRETCH_KEEP_ASPECT：等比縮到 rect 內、置中
+				var ox := -w * 0.5 + (w - tw * k) * 0.5
+				var oy := -h + (h - th * k) * 0.5
+				var cx: float = ox + (float(used.position.x) + float(used.size.x) * 0.5) * k
+				head = Vector2(cx, oy + float(used.position.y) * k)
+				mid = Vector2(cx, oy + (float(used.position.y) + float(used.size.y) * 0.5) * k)
+	return {"head": head, "mid": mid}
 
 
 func _load_frames(u: Dictionary, is_hero: bool) -> Array:
@@ -1140,7 +1473,7 @@ func _load_frames(u: Dictionary, is_hero: bool) -> Array:
 	var s := String(u.get("sprite", ""))
 	if is_hero:
 		for i in range(4):
-			var p := "res://assets/battle/hero_%s_f%d.png" % [s, i]
+			var p := "res://assets/battle/hero_%s_idle_%d.png" % [s, i]
 			if ResourceLoader.exists(p):
 				out.append(load(p))
 	else:
@@ -1169,17 +1502,31 @@ func _sfx_or(name: String, fallback: String) -> String:
 	return name if ResourceLoader.exists("res://assets/sfx/" + name) else fallback
 
 
+## 普攻音效。2026-07-28 John 要求「技能與攻擊音效互換」：普攻改播原本的技能音
+## （杖＝att_magic，其餘＝att_sword_skill），技能改播武器音（見 _skill_sfx()）。要換回舊配置就把這兩個函式互換。
+func _atk_sfx(a: Dictionary) -> String:
+	return "att_magic.mp3" if _weapon_type(a) == "staff" else "att_sword_skill.mp3"
+
+
+## 技能音效（與普攻互換後＝武器類別音效）。`sk.sfx` 有明確指定時仍以它為準。
+func _skill_sfx(a: Dictionary, sk: SkillDef) -> String:
+	if sk.sfx != "":
+		return sk.sfx
+	return String(WTYPE_SFX.get(_weapon_type(a), "att_sword.mp3"))
+
+
+## 作法 B（2026-07-27）：每角一套通用 attack 動畫（不再分 slash/thrust/spellcast）。
+## 素材命名 hero_<id>_attack_0..N（見 docs/pipeline/battle_art/ Step 8）；載入器掃連號。
 func _load_anim_frames(u: Dictionary) -> Dictionary:
 	var s := String(u.get("sprite", ""))
 	var out := {}
-	for anim in ["slash", "thrust", "spellcast"]:
-		var arr: Array = []
-		for i in range(16):
-			var p := "res://assets/battle/hero_%s_%s_%d.png" % [s, anim, i]
-			if ResourceLoader.exists(p):
-				arr.append(load(p))
-		if not arr.is_empty():
-			out[anim] = arr
+	var arr: Array = []
+	for i in range(16):
+		var p := "res://assets/battle/hero_%s_attack_%d.png" % [s, i]
+		if ResourceLoader.exists(p):
+			arr.append(load(p))
+	if not arr.is_empty():
+		out["attack"] = arr
 	return out
 
 
@@ -1405,6 +1752,31 @@ func _build_result_overlay() -> void:
 	_result_overlay.add_child(_result_btn)
 
 
+## 攻擊/技能幀縮放：倍率＝自動對齊 idle 可見高度的基準（atk_fit）× 藝術倍率（ATTACK_SCALE），整段動畫固定。
+## pivot 在框底中心，放大會原地長大；再套 atk_off 讓腳落在與 idle 同一條地面線（攻擊幀的畫布留白與 idle
+## 不同，不補的話角色一攻擊就往上浮）。
+func _apply_attack_scale(node: Dictionary) -> void:
+	var spr: TextureRect = node["sprite"]
+	var u: Dictionary = node["unit"]
+	var s := float(node.get("atk_fit", 1.0)) * float(ATTACK_SCALE.get(String(u.get("sprite", "")), 1.0))
+	spr.scale = Vector2(s, s)
+	spr.position.y = float(node["spr_y"]) + float(node.get("atk_off", 0.0))
+
+
+func _reset_sprite_scale(node: Dictionary) -> void:
+	var spr: TextureRect = node["sprite"]
+	if spr.scale != Vector2.ONE:
+		spr.scale = Vector2.ONE
+	spr.position.y = float(node["spr_y"])
+
+
+func _on_log_pressed() -> void:
+	_log_visible = not _log_visible
+	if _log_bg != null:
+		_log_bg.visible = _log_visible
+	AudioManager.sfx("select.mp3")
+
+
 func _on_auto_pressed() -> void:
 	if state == "win" or state == "lose":
 		return
@@ -1419,16 +1791,18 @@ func _on_result_confirm() -> void:
 		SceneRouter.battle_result(state)
 
 
+## 用 is_same()（同一個 Dictionary 實例）比對，不能用 ==：Godot 4 的 Dictionary == 是逐內容比較，
+## 兩隻數值相同的同種敵人會比中同一筆，飄字/特效就會跑到錯的那隻身上。
 func _hero_node_of(u: Variant) -> Variant:
 	for n in _hero_nodes:
-		if n["unit"] == u:
+		if is_same(n["unit"], u):
 			return n
 	return null
 
 
 func _foe_node_of(u: Variant) -> Variant:
 	for n in _foe_nodes:
-		if n["unit"] == u:
+		if is_same(n["unit"], u):
 			return n
 	return null
 
@@ -1436,10 +1810,18 @@ func _foe_node_of(u: Variant) -> Variant:
 func _refresh_ui() -> void:
 	if _root == null:
 		return
-	_log_label.text = msg
+	if _log_visible:
+		_log_label.text = msg
 	var frame := int(_view_time / FRAME_DT)
 	var hero_turn := actor != null and String(actor.get("side", "")) == "hero"
 	var is_end := state == "win" or state == "lose"
+
+	# 選取中的目標敵人（供其圖片微放大）
+	var sel_foe: Variant = null
+	if state == "target":
+		var fpool: Array = foes.filter(func(u): return bool(u.get("alive", false)))
+		if not fpool.is_empty():
+			sel_foe = fpool[t_sel % fpool.size()]
 
 	# --- 敵人 sprite/名稱/血條 ---
 	for node in _foe_nodes:
@@ -1469,6 +1851,7 @@ func _refresh_ui() -> void:
 		var frames: Array = node["frames"]
 		if not frames.is_empty():
 			node["sprite"].texture = frames[frame % frames.size()]
+		node["sprite"].scale = Vector2(1.12, 1.12) if is_same(node["unit"], sel_foe) else Vector2.ONE
 		if node["name"] != null:
 			node["name"].text = ("☠ " if bool(f.get("big", false)) else "") + String(f.get("name", ""))
 
@@ -1495,28 +1878,56 @@ func _refresh_ui() -> void:
 		var wnode: Control = node["wrap"]
 		var base: Vector2 = node["base"]
 		var frames: Array = node["frames"]
-		var lunging := _lunge_unit != null and is_same(node["unit"], _lunge_unit) and _lunge_t < LUNGE_DUR
+		var alive := bool(h.get("alive", false))
+		var lunging := _lunge_unit != null and is_same(node["unit"], _lunge_unit) and _lunge_t < _lunge_dur
 		var anims: Dictionary = node.get("anim_frames", {})
-		var atk_frames: Array = (anims.get(_lunge_anim, []) if lunging else [])
-		if lunging and not atk_frames.is_empty():
-			wnode.position = ATTACK_POS + _shake_offset_for(node["unit"])   # 直接移到隊伍前出場位
-			var si := clampi(int(_lunge_t / LUNGE_DUR * atk_frames.size()), 0, atk_frames.size() - 1)
-			node["sprite"].texture = atk_frames[si]
+		var atk_frames: Array = (anims.get(_lunge_anim, []) if lunging else [])   # 道具 _lunge_anim=="" → 不揮擊
+		# 普攻分階段：0..t1 移動到目標前方 → t1..t2 停頓 0.2s → t2..t3 攻擊動畫 → t3.. 返回原位
+		var t1 := LM_APPROACH
+		var t2 := t1 + LM_WAIT
+		var t3 := t2 + LM_ATTACK
+		var in_attack_phase := lunging and _lunge_move and _lunge_t >= t2 and _lunge_t < t3
+		if lunging and _lunge_move:
+			var front := _lunge_target_front(base)
+			var pos: Vector2
+			if _lunge_t < t1:
+				pos = base.lerp(front, _lunge_t / LM_APPROACH)        # 移動到目標前方
+			elif _lunge_t < t3:
+				pos = front                                            # 停頓＋攻擊：定在目標前
+			else:
+				pos = front.lerp(base, clampf((_lunge_t - t3) / LM_RETURN, 0.0, 1.0))   # 返回原位
+			wnode.position = pos + _shake_offset_for(node["unit"])
 		else:
-			var off := (-LUNGE_DIST * sin(PI * _lunge_t / LUNGE_DUR) if lunging else 0.0)
-			wnode.position = base + Vector2(off, 0.0) + _shake_offset_for(node["unit"])
-			if not frames.is_empty():
-				node["sprite"].texture = frames[frame % frames.size()]
+			wnode.position = base + _shake_offset_for(node["unit"])
+		# 貼圖優先序：死亡 > 受傷 > 攻擊動畫（普攻限攻擊階段；技能/原位整段）> idle
+		var show_atk := not atk_frames.is_empty() and (in_attack_phase or (lunging and not _lunge_move))
+		var spr: TextureRect = node["sprite"]
+		if not alive and node["death_tex"] != null:
+			spr.texture = node["death_tex"]
+			_reset_sprite_scale(node)
+		elif _is_shaking(node["unit"]) and node["hurt_tex"] != null:
+			spr.texture = node["hurt_tex"]
+			_reset_sprite_scale(node)
+		elif show_atk:
+			var span: float = LM_ATTACK if _lunge_move else _lunge_dur
+			var t0: float = t2 if _lunge_move else 0.0
+			var si := clampi(int((_lunge_t - t0) / span * atk_frames.size()), 0, atk_frames.size() - 1)
+			spr.texture = atk_frames[si]
+			_apply_attack_scale(node)
+		elif not frames.is_empty():
+			spr.texture = frames[frame % frames.size()]
+			_reset_sprite_scale(node)
 		wnode.visible = not is_end
-		node["sprite"].modulate = Color(0.4, 0.4, 0.45, 0.9) if not bool(h.get("alive", false)) else Color.WHITE
+		node["sprite"].modulate = Color.WHITE if (alive or node["death_tex"] != null) else Color(0.4, 0.4, 0.45, 0.9)
 
-	# --- 行動者箭頭 ---
+	# --- 行動者箭頭（對齊可見像素的頭頂中心，不是畫布中心）---
 	_actor_arrow.visible = hero_turn and (state == "menu" or state == "skill" or state == "item")
 	if _actor_arrow.visible:
 		var hn = _hero_node_of(actor)
 		if hn != null:
 			var w: Control = hn["wrap"]
-			_actor_arrow.position = w.position + Vector2(-10.0, -float(hn["h"]) - 54.0)
+			var head: Vector2 = hn.get("head", Vector2(0.0, -float(hn["h"])))
+			_actor_arrow.position = w.position + head - Vector2(0.0, ARROW_H)
 
 	# --- 目標游標 ---
 	_cursor.visible = state == "target" or state == "target_ally"
@@ -1527,7 +1938,8 @@ func _refresh_ui() -> void:
 			var tn = (_foe_node_of(tgt) if state == "target" else _hero_node_of(tgt))
 			if tn != null:
 				var tw: Control = tn["wrap"]
-				_cursor.position = tw.position + Vector2(-20.0, -float(tn["h"]) - 48.0)
+				var thead: Vector2 = tn.get("head", Vector2(0.0, -float(tn["h"])))
+				_cursor.position = tw.position + thead - Vector2(0.0, ARROW_H)   # 目標頭頂正上方
 
 	# --- 狀態列（HP/MP/行動條）---
 	for row in _status_rows:
@@ -1607,10 +2019,12 @@ func _refresh_ui() -> void:
 			else:
 				lbl2.visible = false
 
-	# --- 自動鈕 ---
+	# --- 自動鈕／訊息鈕 ---
 	var auto_on := AutoBattle.is_enabled()
 	_auto_btn.text = "自動　開" if auto_on else "自動　關"
 	_auto_btn.add_theme_color_override("font_color", PixelUI.SEL if auto_on else PixelUI.CYAN)
+	_log_btn.text = "訊息　開" if _log_visible else "訊息　關"
+	_log_btn.add_theme_color_override("font_color", PixelUI.SEL if _log_visible else PixelUI.CYAN)
 
 	# --- 勝敗結算 ---
 	_result_overlay.visible = is_end

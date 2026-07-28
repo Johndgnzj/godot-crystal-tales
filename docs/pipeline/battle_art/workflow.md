@@ -52,7 +52,7 @@
 
 # Step 3 建立 Prompt
 
-使用目前正式 preset：角色 `prompts/presets/battle_role_hd_pixel_v3.md`、敵人 `prompts/presets/battle_enemy_v2.md`。
+使用目前正式 preset：角色 `prompts/presets/battle_role_hd_pixel_v4.md`、敵人 `prompts/presets/battle_enemy_v2.md`。
 - **先產 seed，再產動作首幀**。seed 是唯一角色外觀 reference，不屬於 idle 或任何動畫；持武器角色另以 weapon reference 鎖定武器外觀。seed 驗收通過後才依 `idle → hurt → cast → death → attack` 產製。
 - 各動作首幀驗收通過後，再進入該動作的 strip 動畫製作。
 - 組裝規則見 `prompts/role.md`（敵人 `prompts/enemy.md`）。
@@ -73,7 +73,7 @@ seed 驗收通過後，才產指定動作的三張候選首幀。每次產動作
 以已核可、**不屬於任何動作幀**的 seed（中性備戰站姿、基準面向、定造型）為角色 reference；持武器角色另附已驗收 weapon reference 鎖定武器外觀，
 再一次產完整條 strip。
 禁止逐幀硬湊。
-strip 必須在每格之間保留固定空白間距，並在整張圖四周保留安全留邊；角色、武器與特效不可貼邊或跨格。
+對所有多幀素材（`idle`、`attack`、`walk` 等），每一格的角色、武器與特效輪廓前後都必須保留**至少 85px 的單色鍵色安全留白**；相鄰兩格之間因此至少有 170px 的乾淨鍵色區域。此數值以產圖原始解析度計算，不得靠後續縮放補足。整張 strip 四周也必須留白；角色、武器與特效不可貼邊或跨格。
 
 ---
 
@@ -93,10 +93,18 @@ strip 必須在每格之間保留固定空白間距，並在整張圖四周保�
 
 切圖不可只依賴等寬硬切。若角色、武器或特效跨越預定分界，應依實際輪廓重新判定幀範圍，並將每幀放回統一尺寸畫布；無法判定時標記為需要人工確認，不可默默交付。
 
-## 5.2 人工逐幀驗收
+## 5.2 人工逐幀驗收（先看靜態圖）
 
-Review 時必須同時查看原始 strip 與逐幀 PNG／montage，依 `checklist.md` 的「動畫 Strip」逐項確認。
-驗收重點是：每幀內容完整、沒有前後幀像素、幀距與外圍留邊足夠、腳底基準線一致。
+先把原始 strip、逐幀 PNG 與 Review montage 提供給 John 驗收；此時**不得先以 GIF 取代靜態逐幀檢查**。驗收重點是：每幀內容完整、每格角色前後各有至少 85px 鍵色安全留白、沒有前後幀像素、腳底基準線一致。
+
+John 確認靜態圖後，才進入下一節處理去背與對齊。
+
+## 5.3 去背、鎖錨點與 GIF 動態驗收
+
+1. 以鍵色去背輸出透明 RGBA 逐幀圖。
+2. 以每幀腳底的 bottom-center 為共同錨點，放進同尺寸畫布；不得以角色 bbox 或劍尖作為錨點。播放時人物不得左右或上下漂移。
+3. 再次逐幀檢查透明畫布：主體外不得殘留前一幀／下一幀的角色、武器或特效像素。
+4. 以上三項都通過後，才輸出循環 GIF 給 John 驗證動作連續性與 root-lock。GIF 只用於驗證，不取代原始 strip 與透明逐幀 PNG。
 
 若未通過：回到 Step 3 重修 Prompt，或回到本步驟重新切幀；未通過前不得進入 Godot 整合。
 
@@ -154,7 +162,7 @@ Review 時必須同時查看原始 strip 與逐幀 PNG／montage，依 `checklis
 
 - 敵人幀從 0 連號（載入器掃連號循環，不留舊 `_2/_3`）。
 - 像素圖 `.import` 用 **Nearest**。
-- 程式引用：`battle_state_machine.gd`（`HERO_SLOTS` 已有站位）；戰鬥動畫載入待接。
+- 程式引用：`battle_state_machine.gd`（`HERO_SLOTS` 已有站位）。**idle／attack 已接（2026-07-27 作法B）**：`_load_frames` 讀 `hero_<id>_idle_0..3`、`_load_anim_frames` 讀單一 `hero_<id>_attack_0..N`（所有普攻/技能共用此 attack 動畫，不再分 slash/thrust/spellcast）。**hurt／death 已接（2026-07-27）**：受傷時換 `hero_<id>_hurt.png`＋震動、HP 歸零換 `hero_<id>_death.png`（見 `battle_state_machine.gd` 我方 sprite 貼圖優先序）。**cast 暫不接**（尚無元素魔法技能）。
 - 更新 `CREDITS_素材授權.md`；`godot --headless --check-only` 過。
 
 建立 Resource。
