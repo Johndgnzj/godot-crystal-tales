@@ -63,7 +63,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - bgm_battle.mp3 — 戰鬥循環 BGM（loop）。2026-07-27 換入 John 從 Pixabay 抓的新曲（原為 "Powerful Epic Orchestral History Loop" by sonican）。Pixabay Content License（可商用毋須標註）；曲名/作者待補。
 - bgm_battle_opening.mp3 — 戰鬥開場層（**非 loop，與 bgm_battle 疊播**；見 `AudioManager.play_bgm_overlay`，battle `_ready` 起播）。2026-07-27 新增（Pixabay）。Pixabay Content License；曲名/作者待補。
 - bgm_nm.mp3 — 北方礦山與洞窟 BGM。2026-07-27 新增（NMA–NMF）；**2026-07-28 依 John 指示擴用到 `Mine`（舊 tile 版礦坑）與 `Cave`**，這兩張原本掛 bgm_dungeon.mp3。Pixabay Content License；曲名/作者待補。
-- bgm_ef.mp3 — 東之森林與森林深處 BGM（素材源 `assets-source/sound/bgm/ef_bgm.mp3`）。2026-07-28 新增，依 John 指示掛在 EFA–EFI（M3 東之森林）、EFDA–EFDN／EFDM2（M4 東之森深處）與舊 tile 版 EForest1–3 的 `bgm` export；長度 0:19（短循環）。**出處/授權待 John 補**（若為 Suno 等 AI 自產請標「不得商用」）。
+- bgm_ef.mp3 — 東之森林與森林深處 BGM（素材源 `assets-source/sound/bgm/ef_bgm.mp3`）。2026-07-28 新增，依 John 指示掛在 EFA–EFI（M3 東之森林）、EFDA–EFDN／EFDM2（M4 東之森深處）與舊 tile 版 EForest1–3 的 `bgm` export；長度 0:19（**刻意的短循環**，John 2026-07-28 確認）。Pixabay Content License；曲名/作者待補。
 - bgm_nm_conversation.mp3 — 小節6 與死靈術士對話 BGM（`necro_intro`／`s6_curse` 過場的 `bgm` 欄位觸發，見 `dialogue_system._start_cutscene`）。2026-07-27 新增（Pixabay）。Pixabay Content License；曲名/作者待補。
 - bgm_battle_win.mp3 — 戰鬥勝利短曲（一般）；Pixabay Music（Pixabay Content License，可商用毋須標註）。2026-07-16 新增，戰鬥結算時一次性播放不循環（見 battle_state_machine._settle_win）。曲名/作者待補。
 - bgm_battle_level_up.mp3 — 戰鬥勝利短曲（有升級）；來源/授權/用法同上。曲名/作者待補。
