@@ -14,15 +14,22 @@ cmd = "talk"
 script = ExtResource("1_gray_e")
 when = "ch1_step>=10"
 speaker = "老葛雷"
-lines = PackedStringArray("那守衛啊，就好一口酒。", "聽說東之森東邊 f 區有棵老樹，樹上的『烈火蜂蜜』最對味——採回來交給道具店的吉德，他自有辦法。")
+lines = PackedStringArray("那守衛啊，就好一口酒。", "聽說東之森深處有棵老樹，樹上的『烈火蜂蜜』最對味——採回來交給道具店的吉德，他自有辦法。")
 cmd = "talk"
 
 [sub_resource type="Resource" id="request"]
 script = ExtResource("1_gray_e")
+when = "fq==3"
+speaker = "老葛雷"
+lines = PackedStringArray("（叼著菸斗打量兩人）三件委託都辦妥了？看來公會沒派錯人。", "礦坑裡失蹤的，是跟我一起挖了半輩子的老夥伴。官府當他們逃工，不管。", "可我知道——他們絕不會丟下家人不告而別。你們要是有辦法進去，幫我看看他們……到底怎麼了。", "【委託】設法進入被封鎖的北方礦山。拜託了。")
+action = "s5_start"
+cmd = "talk"
+
+[sub_resource type="Resource" id="nag"]
+script = ExtResource("1_gray_e")
 when = "ch1_step==9"
 speaker = "老葛雷"
-lines = PackedStringArray("（叼著菸斗打量兩人）公會派來的新人？也罷。", "礦坑裡失蹤的，是跟我一起挖了半輩子的老夥伴。官府當他們逃工，不管。", "可我知道——他們絕不會丟下家人不告而別。你們要是有辦法進去，幫我看看他們……到底怎麼了。", "【委託】設法進入被封鎖的北方礦山。拜託了。")
-action = "s5_start"
+lines = PackedStringArray("（叼著菸斗打量兩人）公會派來的新人？", "先把緹娜給你們的三件委託辦妥——採藥、討伐取證、打聽消息。", "都辦妥了再來找我，我有正經事要託付。")
 cmd = "talk"
 
 [sub_resource type="Resource" id="generic"]
@@ -34,4 +41,4 @@ cmd = "talk"
 [resource]
 script = ExtResource("2_gray_n")
 id = "gray"
-entries = Array[ExtResource("1_gray_e")]([SubResource("thanks"), SubResource("remind"), SubResource("request"), SubResource("generic")])
+entries = Array[ExtResource("1_gray_e")]([SubResource("thanks"), SubResource("remind"), SubResource("request"), SubResource("nag"), SubResource("generic")])

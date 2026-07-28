@@ -24,7 +24,7 @@ lines = PackedStringArray("東之森裡三株會發光的『鏡草』，就麻�
 
 [sub_resource type="Resource" id="Resource_w03wb"]
 script = ExtResource("1_l7kfg")
-when = "gotEar==0"
+when = "reg==1"
 speaker = "米拉"
 lines = PackedStringArray("東之森的藥草最近都採不到了……草叢裡老是冒出怪物。", "你們要進森林嗎？能不能順手幫我採三株『鏡草』回來？", "對了，這耳環是我在森林邊撿到的，先送你們——就當訂金。", "（獲得『凝神耳環』！）", "（【支線】到東之森採集鏡草×3）")
 action = "mira_start"

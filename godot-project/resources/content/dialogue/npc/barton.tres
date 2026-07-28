@@ -30,7 +30,22 @@ speaker = "巴頓鎮長"
 lines = PackedStringArray("礦山最近不太平靜，連老獵人都不敢靠近。", "亞倫先生的事……我很遺憾。孩子，別勉強自己。")
 cmd = "talk"
 
+[sub_resource type="Resource" id="rumor_done"]
+script = ExtResource("1_dm2me")
+when = "rumor_barton==1"
+speaker = "巴頓鎮長"
+lines = PackedStringArray("礦山的事，就拜託你們了。老頭子我……能做的不多。")
+cmd = "talk"
+
+[sub_resource type="Resource" id="rumor"]
+script = ExtResource("1_dm2me")
+when = "reg==1"
+speaker = "巴頓鎮長"
+lines = PackedStringArray("礦山？唉……二十年前那場塌方，封了礦坑，也封了不少人的心。", "最近又鬧起異狀，我這鎮長卻只能乾等大城的指示，慚愧。你們願意去查，是這鎮子的福氣。")
+action = "rumor_barton"
+cmd = "talk"
+
 [resource]
 script = ExtResource("2_djpd7")
 id = "barton"
-entries = Array[ExtResource("1_dm2me")]([SubResource("Resource_xeui8"), SubResource("Resource_tcj3b"), SubResource("Resource_jolwk"), SubResource("Resource_6l0j3")])
+entries = Array[ExtResource("1_dm2me")]([SubResource("Resource_xeui8"), SubResource("Resource_tcj3b"), SubResource("rumor_done"), SubResource("rumor"), SubResource("Resource_jolwk"), SubResource("Resource_6l0j3")])

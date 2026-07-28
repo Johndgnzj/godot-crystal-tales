@@ -56,6 +56,10 @@ const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
 @export var enc_group: String = ""           ## CFG.encGroup；"" = 本場景無隨機遭遇
 @export var bgm: String = ""                 ## CFG.bgm（目前無音訊系統，先保留資料）
 @export var cut_on_enter: Array = []         ## CFG.cutOnEnter：[{"cut": String, "step": int?}]
+## 「過場獨白→自動走向定點→觸發定點戰」演出（如小節1 EF-G 的熊）。空＝不啟用。
+## 鍵：cut(觸發此流程的過場 id)／encounter(定點戰 id)／x,y(走向的目標點)／once(該過場的 once 旗標，
+## 用來判斷事件是否已發生以決定 actor 顯示)／actor(事件美術節點名，如站在路中央的熊 sprite；事件後隱藏)。
+@export var approach_battle: Dictionary = {}
 @export var npc_list: Array = []             ## [{"id","sprite","x","y","face"}]；手繪圖可用 pos: Vector2 覆寫 tile 座標
 @export var prop_list: Array = []            ## [{"tex","x","y","w","h"}]（x/y=GDevelop 左上像素；w/h=0 用原生尺寸）
 @export var chest_list: Array = []           ## [{"id","tx","ty"}]（loot 資料查 ContentDB.get_chest()）
@@ -112,6 +116,7 @@ func _ready() -> void:
 	_setup_encounter_tracker()
 	DialogueSystem.battle_requested.connect(_on_cut_battle)
 	DialogueSystem.scene_transfer_requested.connect(_on_cut_transfer)
+	_wire_approach_battle()
 	_play_enter_cutscenes()
 	AudioManager.play_bgm(bgm)   # CFG.bgm；空字串＝維持現況（見 AudioManager.play_bgm）
 	if _missing_textures > 0:
@@ -415,6 +420,10 @@ func _wire_zones() -> void:
 ## Pickup/BossMark 的視覺貼圖：由生成器寫在節點 metadata（tex/w/h），這裡掛成 zone 的子節點，
 ## 跟著 zone 腳本自己的 visible 開關一起顯示/隱藏。
 func _attach_zone_sprite(z: Node2D) -> void:
+	# 場景檔已手掛可見 Sprite2D（供設計員在編輯器擺位）→ 不再 runtime 疊一張，避免雙圖。
+	for c in z.get_children():
+		if c is Sprite2D:
+			return
 	if not z.has_meta("tex"):
 		return
 	var tex_path := str(z.get_meta("tex"))
@@ -451,6 +460,15 @@ func _on_picked_up(msg: String, _sfx_name: String) -> void:
 ## 掛載選單與完整 HUD（隊伍血條/金幣/目標/[M]選單提示）。以程式建立而非 .tscn ext_resource，
 ## 見 `_menu`/`_hud_full` 欄位註解。世界的 `$HUD/Prompt`（互動提示）是另一個節點，兩者互不影響。
 func _setup_ui() -> void:
+	# 對話框：舊 tile 場景與 town 是在 .tscn 裡 instance 的；塊 C 生成的手繪場景只放遊戲內容節點，
+	# 缺這個就會「過場一觸發就整個卡死」——DialogueSystem 進 busy 鎖住移動，但沒有節點畫出對話、
+	# 也沒有節點呼叫 advance()（推進輸入在 dialogue_box.gd 的 _unhandled_input），玩家永遠解不開。
+	# 2026-07-28 EFG 熊過場踩到。已有 DialogueBox 的場景不重複掛。
+	if get_node_or_null("DialogueBox") == null \
+			and ResourceLoader.exists("res://scenes/ui/dialogue_box.tscn"):
+		var dlg: Node = load("res://scenes/ui/dialogue_box.tscn").instantiate()
+		dlg.name = "DialogueBox"
+		add_child(dlg)
 	if ResourceLoader.exists("res://scenes/ui/menu_root.tscn"):
 		var menu: Node = load("res://scenes/ui/menu_root.tscn").instantiate()
 		menu.name = "MenuRootRuntime"
@@ -568,6 +586,33 @@ func _on_cut_battle(encounter_id: String) -> void:
 	SceneRouter.start_battle(
 		encounter_id, scene_id, _player.global_position.x, _player.global_position.y
 	)
+
+
+## approach_battle 演出接線（見 approach_battle export）：依 once 旗標決定事件美術(actor)顯示、
+## 掛 cutscene_ended 監聽，等觸發過場播完再自動走位開戰。
+func _wire_approach_battle() -> void:
+	if approach_battle.is_empty():
+		return
+	var actor_name := String(approach_battle.get("actor", ""))
+	if actor_name != "":
+		var actor := get_node_or_null(actor_name)
+		if actor != null:
+			var once := String(approach_battle.get("once", ""))
+			actor.visible = once == "" or GameState.flag_get(once) == 0
+	DialogueSystem.cutscene_ended.connect(_on_approach_cut_ended)
+
+
+## approach_battle 的觸發過場（獨白）播完 → 鎖輸入 → 自動走向定點 → 抵達即開定點戰。
+func _on_approach_cut_ended(cut_id: String) -> void:
+	if approach_battle.is_empty() or cut_id != String(approach_battle.get("cut", "")):
+		return
+	if world_state != null:
+		world_state.lock = true
+	var tx := float(approach_battle.get("x", _player.global_position.x))
+	var ty := float(approach_battle.get("y", _player.global_position.y))
+	_player.walk_to(Vector2(tx, ty))
+	await _player.walk_finished
+	SceneRouter.start_battle(String(approach_battle.get("encounter", "")), scene_id, tx, ty)
 
 
 func _on_cut_transfer(to_scene: String, spawn_id: String) -> void:

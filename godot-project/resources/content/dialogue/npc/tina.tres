@@ -14,13 +14,23 @@ cmd = "talk"
 script = ExtResource("1_tina_e")
 when = "reg==1"
 speaker = "緹娜"
-lines = PackedStringArray("委託都貼在牆上的告示板，慢慢看。", "東之森的採藥（找米拉）、討伐取證、還有鎮上的耳語——先從小的練練手。", "想找正經活兒的話，水井旁的老葛雷一直在找人幫忙，去聽聽他怎麼說。")
+lines = PackedStringArray("委託都貼在牆上的告示板。這三件是給新人練手的——", "①東之森採藥：找村口的米拉。②討伐取證：獵森林裡的野狼、剝兩張狼皮回來交給我。③打聽消息：找鎮上的人聊聊礦山的傳聞。", "三件都辦妥了，再去水井旁找老葛雷——他一直在等有本事的人。")
 cmd = "quest"
 label = "委託"
 
+[sub_resource type="Resource" id="wolf"]
+script = ExtResource("1_tina_e")
+when = "wolf_hide>=2"
+speaker = "緹娜"
+lines = PackedStringArray("（清點狼皮）兩張都是好皮，取證足夠了。這是委託報酬，收好。", "（獲得 120 金幣！討伐取證·完成）")
+action = "turnin_wolf"
+cmd = "wolf_turnin"
+label = "繳交狼皮"
+done = "fq_wolf"
+
 [sub_resource type="Resource" id="reg_do"]
 script = ExtResource("1_tina_e")
-when = "ch1_step>=8"
+when = "ch1_step>=9"
 speaker = "緹娜"
 lines = PackedStringArray("要登錄成為冒險者嗎？", "（端詳片刻，嘆氣又微笑）你們的爸媽當年，也是在這張桌子前登錄的。", "……路德、瑪琳，登錄完成！從今天起，你們就是 F 級冒險者了。", "（獲得『冒險者靴』！新人的裝備——路上小心，活著回來。）")
 action = "register"
@@ -43,4 +53,4 @@ cmd = "talk"
 [resource]
 script = ExtResource("2_tina_n")
 id = "tina"
-entries = Array[ExtResource("1_tina_e")]([SubResource("care"), SubResource("board"), SubResource("reg_do"), SubResource("see"), SubResource("generic")])
+entries = Array[ExtResource("1_tina_e")]([SubResource("care"), SubResource("board"), SubResource("reg_do"), SubResource("wolf"), SubResource("see"), SubResource("generic")])

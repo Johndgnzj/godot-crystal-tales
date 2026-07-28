@@ -47,8 +47,20 @@ var facing: String = "Down"
 ## 目前是否在移動（供動畫/隊伍跟隨判斷用，對應 GDevelop `b.isMoving()`）。
 var is_moving: bool = false
 
+## 腳本化自動移動完成時發出（抵達目標或逾時保底）。供過場後「自動走向定點觸發戰鬥」等演出使用。
+signal walk_finished
+
+## 自動移動目標；null＝非自動移動狀態（吃玩家輸入）。由 walk_to() 設定。
+var _walk_target: Variant = null
+var _walk_time: float = 0.0
+
 
 func _physics_process(delta: float) -> void:
+	# 腳本化自動移動優先於輸入/lock：走向 _walk_target，抵達或逾時即收尾。
+	if _walk_target != null:
+		_process_walk(delta)
+		return
+
 	var locked: bool = world_state != null and world_state.lock
 	var input_dir: Vector2 = Vector2.ZERO
 	if not locked:
@@ -63,6 +75,29 @@ func _physics_process(delta: float) -> void:
 	is_moving = velocity.length() > 1.0
 	if input_dir != Vector2.ZERO:
 		facing = _direction_to_facing(input_dir)
+
+
+## 開始腳本化自動移動：走向 target；抵達（或 5s 逾時保底，避免路徑受阻軟鎖）emit walk_finished。
+func walk_to(target: Vector2) -> void:
+	_walk_target = target
+	_walk_time = 0.0
+
+
+func _process_walk(delta: float) -> void:
+	_walk_time += delta
+	var to_target: Vector2 = (_walk_target as Vector2) - global_position
+	if to_target.length() <= 8.0 or _walk_time > 5.0:
+		_walk_target = null
+		velocity = Vector2.ZERO
+		move_and_slide()
+		is_moving = false
+		walk_finished.emit()
+		return
+	var dir: Vector2 = to_target.normalized()
+	velocity = velocity.move_toward(dir * max_speed, acceleration * delta)
+	move_and_slide()
+	is_moving = velocity.length() > 1.0
+	facing = _direction_to_facing(dir)
 
 
 ## 讀 CORE-6 InputBridge 的 `is_action_held()`（持續按著，對應 GDevelop `hit`），八方向正規化避免

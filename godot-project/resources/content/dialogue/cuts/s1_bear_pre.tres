@@ -6,24 +6,28 @@
 [sub_resource type="Resource" id="L1"]
 script = ExtResource("1_line")
 speaker = ""
-text = "（低沉的咆哮——一頭遠比路德高大的凶暴的熊撞開了樹叢！）"
+text = "（森林小徑的正中央，一頭遠比路德高大的凶暴的熊擋在那兒，正低頭嗅著地面。）"
 
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "這、這麼大隻……沒、沒關係！我可是要當勇者的人！"
+text = "（壓低聲音、腳步釘在原地）……那、那麼大隻……"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
-speaker = ""
-text = "（強敵當前——先撐過牠的攻勢！）"
+speaker = "路德"
+text = "（深吸一口氣，握緊短劍）不行……我是要成為冒險者的人。區區一隻熊，怎麼能怕！"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "上吧——！"
 
 [resource]
 script = ExtResource("2_entry")
 id = "s1_bear_pre"
 once = "c_s1_bear_pre"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3")])
-battle = "bear_forced"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4")])
 transfer = PackedStringArray()
 setstep = 2
 party = PackedStringArray()

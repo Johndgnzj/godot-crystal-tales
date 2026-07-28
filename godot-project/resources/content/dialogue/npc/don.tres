@@ -24,7 +24,17 @@ speaker = "唐恩"
 lines = PackedStringArray("這把年紀，手藝就這樣嘍。", "……欸，別嫌鈍，那叫『有個性』。", "真要好傢伙，得往大城找嘍。")
 cmd = "talk"
 
+[sub_resource type="Resource" id="rumor"]
+script = ExtResource("1_don00")
+when = "reg==1"
+speaker = "唐恩"
+lines = PackedStringArray("礦山的事？最近有人拿『發黑的礦石』來我這，說是礦坑撿的——那石頭邪門，火燒不紅，還冰手。", "我沒敢收。那不是好東西。")
+action = "rumor_don"
+cmd = "rumor_don"
+label = "打聽礦山"
+done = "rumor_don"
+
 [resource]
 script = ExtResource("2_don01")
 id = "don"
-entries = Array[ExtResource("1_don00")]([SubResource("Resource_don_trade"), SubResource("Resource_don_first"), SubResource("Resource_don_talk")])
+entries = Array[ExtResource("1_don00")]([SubResource("Resource_don_trade"), SubResource("Resource_don_first"), SubResource("Resource_don_talk"), SubResource("rumor")])

@@ -434,6 +434,7 @@ func _run_action(action: String) -> void:
 		"mira_reward":
 			GameState.flag_set("mira2", 2)
 			GameState.inv_add("potion", 3)
+			_fq_done("fq_herb")   # F 級委託①採藥完成
 		"relic_turnin":
 			GameState.flag_set("relic", 2)
 			GameState.gold += 100
@@ -449,8 +450,43 @@ func _run_action(action: String) -> void:
 			if GameState.flag_get("honey_wine") == 1:
 				GameState.inv_add("honey_mead", -1)
 				GameState.flag_set("ch1_step", 12)
+		"turnin_wolf":
+			# F 級委託②討伐取證：交狼皮×2 給緹娜（cmd wolf_turnin／done fq_wolf）。
+			if GameState.flag_get("fq_wolf") == 0 and int(GameState.inv_get("wolf_hide")) >= 2:
+				GameState.inv_add("wolf_hide", -2)
+				GameState.flag_set("fq_wolf", 1)   # 兼作室內選單 done 旗標
+				GameState.gold += 120
+				_fq_inc()
+		"rumor_dora", "rumor_don", "rumor_barton":
+			# F 級委託③鎮上耳語：找 3 位鎮民打聽礦山傳聞，湊齊 rumor==3 即完成。
+			_collect_rumor(action)
 		_:
 			push_warning("DialogueSystem: 未知的 action id=%s（略過，不擋對話流程）" % action)
+
+
+## F 級委託（小節4，ch1_step 9→10 之間）完成計數。三件（①採藥②討伐③耳語）各完成一次 +1；
+## fq==3 時老葛雷（gray.tres）才開放私託，推進 ch1_step。見 docs/story/第一章任務攻略.md 二。
+func _fq_inc() -> void:
+	GameState.flag_set("fq", GameState.flag_get("fq") + 1)
+
+
+## 帶單次守衛的 fq +1：guard_flag 已設就不重複計數（避免重播對話灌爆 fq）。
+func _fq_done(guard_flag: String) -> void:
+	if GameState.flag_get(guard_flag) != 0:
+		return
+	GameState.flag_set(guard_flag, 1)
+	_fq_inc()
+
+
+## 委託③耳語：某位鎮民打聽過就記其 done 旗標並 rumor+1；湊齊 3 位（rumor==3）算完成、fq +1。
+func _collect_rumor(which: String) -> void:
+	if GameState.flag_get(which) != 0:
+		return
+	GameState.flag_set(which, 1)
+	var r: int = GameState.flag_get("rumor") + 1
+	GameState.flag_set("rumor", r)
+	if r >= 3:
+		_fq_done("fq_rumor")
 
 
 ## 對應 healAll()（L1375）：隊伍全恢復。**已知限制**：GDevelop 版 healAll() 會先呼叫 derive(ps[i])

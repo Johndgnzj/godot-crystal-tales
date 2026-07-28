@@ -24,7 +24,17 @@ speaker = "朵拉"
 lines = PackedStringArray("瑪琳那孩子，就拜託你多照應了。", "想歇歇隨時說一聲，自己家不收錢的。")
 cmd = "talk"
 
+[sub_resource type="Resource" id="rumor"]
+script = ExtResource("1_leeos")
+when = "reg==1"
+speaker = "朵拉"
+lines = PackedStringArray("礦山的傳聞啊……我旅店住過一個從礦區逃出來的老礦工，說夜裡聽見礦坑深處有『敲石頭的聲音』，明明裡頭早就沒人了。", "他嚇得連夜就走，房錢還多付了呢。")
+action = "rumor_dora"
+cmd = "rumor_dora"
+label = "打聽礦山"
+done = "rumor_dora"
+
 [resource]
 script = ExtResource("2_t21pt")
 id = "dora"
-entries = Array[ExtResource("1_leeos")]([SubResource("Resource_6seby"), SubResource("Resource_8477t"), SubResource("Resource_ltfa2")])
+entries = Array[ExtResource("1_leeos")]([SubResource("Resource_6seby"), SubResource("Resource_8477t"), SubResource("Resource_ltfa2"), SubResource("rumor")])

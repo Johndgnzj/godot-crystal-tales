@@ -15,7 +15,7 @@ cmd = "talk"
 script = ExtResource("1_dgtl8")
 when = "ch1_step>=10"
 speaker = "吉德"
-lines = PackedStringArray("好酒？我這兒是有一壺，可味道普普，換不到什麼好差事。", "不過——東之森裡有種蜂會釀『烈火蜂蜜』，加進酒裡最對味，就掛在森林東邊 f 區一棵老樹上。", "你們不是要當冒險者嗎？順手幫我採一罐回來吧。")
+lines = PackedStringArray("好酒？我這兒是有一壺，可味道普普，換不到什麼好差事。", "不過——東之森裡有種蜂會釀『烈火蜂蜜』，加進酒裡最對味，就掛在森林深處一棵老樹上。", "你們不是要當冒險者嗎？順手幫我採一罐回來吧。")
 cmd = "talk"
 
 [sub_resource type="Resource" id="Resource_r27mq"]
