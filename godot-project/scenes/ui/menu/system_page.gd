@@ -1,16 +1,20 @@
 extends MenuPage
-## 系統分頁（3a 版）：左選單 存檔/讀檔/操作教學/離開遊戲，右面板隨選單切換。
+## 系統分頁：左選單 存檔/讀檔/刪除存檔/操作教學/離開遊戲，右面板隨選單切換。
 ##
-## 真實：操作教學(靜態)、離開→回標題(對照舊 _quit_to_title)、存檔槽1(SaveManager.save_game 零參數)、
-## 讀檔槽1(SaveManager.load_game + SceneRouter.go_to)。佔位：存/讀檔槽 2/3（單槽存檔，其餘停用）。
+## 存檔槽**數量無上限**（2026-07-28，見 autoload/save_manager.gd 檔頭）：右面板列出目前所有存檔槽，
+## 「存檔」頁最後多一列「＋ 新增存檔」（配下一個空號）、「刪除存檔」頁按兩次 Enter 才真的刪。清單放在
+## ScrollContainer 裡，槽再多也捲得到（游標移動時自動捲到選取列）。
 ## 兩層：level0 左選單(↑↓ 選、Enter 進入)、level1 右面板(↑↓ 選項、Enter 執行、Esc 返回)。
 
-const MENU := ["存檔", "讀檔", "操作教學", "離開遊戲"]
+const MENU := ["存檔", "讀檔", "刪除存檔", "操作教學", "離開遊戲"]
 const M_SAVE := 0
 const M_LOAD := 1
-const M_HELP := 2
-const M_EXIT := 3
-const SLOTS := 3
+const M_DELETE := 2
+const M_HELP := 3
+const M_EXIT := 4
+
+## 存檔列顯示的地名。painted 主線場景（NM*＝北方礦山、EF*＝東之森）走前綴判斷，其餘查 MenuLogic.LOC。
+const AREA_PREFIX := [["NM", "北方礦山"], ["EFD", "東之森深處"], ["EF", "東之森"]]
 
 const HELP := [
 	["方向鍵", "移動 / 選擇"],
@@ -27,6 +31,13 @@ var _sub := 0
 var _msg := ""
 var _dirty := true
 var _content: Control
+## SaveManager.list_saves() 的快取；存/刪檔後與進頁時重讀（每幀重掃目錄太浪費）。
+var _saves: Array[Dictionary] = []
+## 刪除的二次確認對象（槽號；0＝沒有待確認的刪除）。
+var _pending_delete := 0
+## 目前選取列的節點與外層 ScrollContainer，重建版面後用來把選取列捲進視野。
+var _sel_row: Control
+var _scroll: ScrollContainer
 
 
 func page_enter() -> void:
@@ -34,7 +45,8 @@ func page_enter() -> void:
 	_menu = 0
 	_sub = 0
 	_msg = ""
-	_dirty = true
+	_pending_delete = 0
+	_reload()
 
 
 func at_top_zone() -> bool:
@@ -45,6 +57,7 @@ func page_back() -> bool:
 	if _level == 1:
 		_level = 0
 		_msg = ""
+		_pending_delete = 0
 		_dirty = true
 		return true
 	return false
@@ -57,19 +70,23 @@ func page_input() -> String:
 		if move_hit("move_down", _menu < MENU.size() - 1):
 			_menu += 1; _dirty = true
 		if hit("ui_accept"):
-			_level = 1; _sub = 0; _msg = ""; _dirty = true
+			_level = 1; _sub = 0; _msg = ""; _pending_delete = 0
+			_reload()
 			AudioManager.sfx("select.mp3")
 		return "↑↓ 選項目　Enter 進入　←→ 切分頁　Esc 關閉"
 
 	# level 1
 	match _menu:
-		M_SAVE, M_LOAD:
+		M_SAVE, M_LOAD, M_DELETE:
+			var n := _row_count()
 			if move_hit("move_up", _sub > 0):
-				_sub -= 1; _dirty = true
-			if move_hit("move_down", _sub < SLOTS - 1):
-				_sub += 1; _dirty = true
+				_sub -= 1; _pending_delete = 0; _dirty = true
+			if move_hit("move_down", _sub < n - 1):
+				_sub += 1; _pending_delete = 0; _dirty = true
 			if hit("ui_accept"):
-				_activate_slot(_sub)
+				_activate_row(_sub)
+			if _menu == M_DELETE:
+				return "↑↓ 選存檔　Enter 刪除（需按兩次）　Esc 返回"
 			return "↑↓ 選存檔槽　Enter 執行　Esc 返回"
 		M_EXIT:
 			if move_hit("move_up", _sub > 0):
@@ -87,22 +104,56 @@ func page_input() -> String:
 			return "操作說明　Esc 返回"
 
 
-func _activate_slot(slot: int) -> void:
-	if slot != 0:
-		AudioManager.sfx("return.mp3")   # 單槽存檔：僅槽 1 可用，槽 2/3 佔位停用
-		return
+## 目前右面板的可選列數：存檔頁多一列「＋ 新增存檔」。
+func _row_count() -> int:
 	if _menu == M_SAVE:
-		SaveManager.save_game()
-		AudioManager.sfx("win.wav")   # 對應 build_cq2.py L1688：存檔
-		_msg = "已存檔（槽 1）"
-		_dirty = true
-	elif _menu == M_LOAD:
-		if SaveManager.has_save() and SaveManager.load_game():
-			# 讀檔後切到存檔場景（load_game 已設 result=resume 與 return 座標）。
-			AudioManager.sfx("select.mp3")
-			SceneRouter.go_to(SaveManager.loaded_scene, "")
-		else:
-			AudioManager.sfx("return.mp3")   # 無存檔可讀
+		return _saves.size() + 1
+	return _saves.size()
+
+
+func _reload() -> void:
+	_saves = SaveManager.list_saves()
+	_sub = clampi(_sub, 0, maxi(0, _row_count() - 1))
+	_dirty = true
+
+
+func _activate_row(row: int) -> void:
+	if row < 0 or row >= _row_count():
+		return
+	# 存檔頁的最後一列＝新增存檔（slot 0 交給 SaveManager 配新槽）。
+	var slot := 0 if row >= _saves.size() else int(_saves[row]["slot"])
+	match _menu:
+		M_SAVE:
+			var written := SaveManager.save_to_slot(slot)
+			if written > 0:
+				AudioManager.sfx("win.wav")   # 對應 build_cq2.py L1688：存檔
+				_msg = "已存檔（槽 %d）" % written
+			else:
+				AudioManager.sfx("return.mp3")
+				_msg = "存檔失敗，請查看主控台訊息"
+			_reload()
+		M_LOAD:
+			if slot > 0 and SaveManager.load_game(slot):
+				# 讀檔後切到存檔場景（load_game 已設 result=resume 與 return 座標）。
+				AudioManager.sfx("select.mp3")
+				SceneRouter.go_to(SaveManager.loaded_scene, "")
+			else:
+				AudioManager.sfx("return.mp3")   # 讀不到（檔案壞掉/已被刪）
+		M_DELETE:
+			if slot <= 0:
+				return
+			if _pending_delete != slot:
+				# 第一次 Enter 只是問「真的要刪？」，避免一鍵誤刪。
+				_pending_delete = slot
+				AudioManager.sfx("cursor.mp3")
+				_msg = "再按一次 Enter 刪除槽 %d（Esc 取消）" % slot
+				_dirty = true
+				return
+			SaveManager.delete_save(slot)
+			AudioManager.sfx("return.mp3")
+			_pending_delete = 0
+			_msg = "已刪除槽 %d" % slot
+			_reload()
 
 
 func _do_exit() -> void:
@@ -125,11 +176,16 @@ func _find_menu_root() -> Node:
 
 # --- 滑鼠 ---
 func _on_menu(i: int) -> void:
-	_menu = i; _level = 1; _sub = 0; _msg = ""; _dirty = true
+	_menu = i; _level = 1; _sub = 0; _msg = ""; _pending_delete = 0
+	_reload()
 
 
-func _on_slot(i: int) -> void:
-	_level = 1; _sub = i; _activate_slot(i)
+func _on_row(i: int) -> void:
+	_level = 1
+	if _sub != i:
+		_sub = i
+		_pending_delete = 0
+	_activate_row(i)
 
 
 func _on_exit_btn(do_exit: bool) -> void:
@@ -153,8 +209,12 @@ func page_refresh() -> void:
 	_dirty = false
 	if _content != null:
 		_content.queue_free()
+	_sel_row = null
+	_scroll = null
 	_content = _build()
 	add_child(_content)
+	if _scroll != null and _sel_row != null:
+		_scroll.call_deferred("ensure_control_visible", _sel_row)
 
 
 func _build() -> Control:
@@ -187,9 +247,11 @@ func _build() -> Control:
 	right.add_child(rv)
 	match _menu:
 		M_SAVE:
-			_build_slots(rv, true)
+			_build_slots(rv, M_SAVE)
 		M_LOAD:
-			_build_slots(rv, false)
+			_build_slots(rv, M_LOAD)
+		M_DELETE:
+			_build_slots(rv, M_DELETE)
 		M_HELP:
 			_build_help(rv)
 		M_EXIT:
@@ -198,49 +260,116 @@ func _build() -> Control:
 	return wrap
 
 
-func _build_slots(box: VBoxContainer, is_save: bool) -> void:
-	box.add_child(PixelUI.label("存檔" if is_save else "讀檔", 20, PixelUI.GOLD, 4))
+func _build_slots(box: VBoxContainer, mode: int) -> void:
+	box.add_child(PixelUI.label(MENU[mode], 20, PixelUI.GOLD, 4))
 	if _msg != "":
-		box.add_child(PixelUI.label(_msg, 15, PixelUI.GOOD, 3))
-	var has := SaveManager.has_save()
-	for i in SLOTS:
-		box.add_child(_slot_row(i, is_save, has))
-	box.add_child(PixelUI.label("＊本作為單一存檔槽，槽 2／3 敬請期待。", 13, PixelUI.DIM, 2))
+		box.add_child(PixelUI.label(_msg, 15, PixelUI.GOOD if _pending_delete == 0 else PixelUI.BAD, 3))
+	if _saves.is_empty() and mode != M_SAVE:
+		box.add_child(PixelUI.label("— 目前沒有任何存檔 —", 16, PixelUI.DIM, 3))
+		return
+
+	_scroll = ScrollContainer.new()
+	_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 8)
+	_scroll.add_child(list)
+	box.add_child(_scroll)
+
+	for i in _saves.size():
+		list.add_child(_slot_row(i, _saves[i], mode))
+	if mode == M_SAVE:
+		list.add_child(_new_slot_row(_saves.size()))
+	box.add_child(PixelUI.label("＊存檔槽數量無上限；自動存檔寫入目前這局使用的槽。", 13, PixelUI.DIM, 2))
 
 
-func _slot_row(i: int, is_save: bool, has_save: bool) -> Control:
-	var enabled := i == 0 and (is_save or has_save)
-	var focused := _level == 1 and i == _sub
+func _row_button(focused: bool, row: int) -> Button:
 	var b := Button.new()
 	b.focus_mode = Control.FOCUS_NONE
-	b.disabled = not enabled
-	b.custom_minimum_size = Vector2(0, 60)
+	b.custom_minimum_size = Vector2(0, 62)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var st := PixelUI.selected_style(true) if focused else PixelUI.panel_style(Color(0.078, 0.086, 0.149, 0.7), 2, PixelUI.OUTLINE)
 	b.add_theme_stylebox_override("normal", st)
-	b.add_theme_stylebox_override("disabled", st)
 	b.add_theme_stylebox_override("hover", st)   # 不做 hover：比照 normal（見 _no_hover）
-	b.pressed.connect(_on_slot.bind(i))
+	b.pressed.connect(_on_row.bind(row))
+	if focused:
+		_sel_row = b
+	return b
+
+
+func _slot_row(row: int, info: Dictionary, mode: int) -> Control:
+	var slot := int(info["slot"])
+	var b := _row_button(_level == 1 and row == _sub, row)
 	var h := HBoxContainer.new()
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.anchor_right = 1.0
 	h.add_theme_constant_override("separation", 12)
 	b.add_child(h)
-	h.add_child(PixelUI.label("%d" % (i + 1), 24, PixelUI.CYAN, 3))
+	var num_col := PixelUI.SEL if slot == SaveManager.current_slot else PixelUI.CYAN
+	h.add_child(PixelUI.label("%d" % slot, 24, num_col, 3))
+
 	var v := VBoxContainer.new()
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	if i == 0:
-		if SaveManager.has_save():
-			v.add_child(PixelUI.label("遊戲進度存檔", 16, PixelUI.WHITE, 3))
-			v.add_child(PixelUI.label("已有存檔紀錄", 13, PixelUI.SUBTLE, 2))
-		else:
-			v.add_child(PixelUI.label("— 空的存檔欄 —", 16, PixelUI.DIM, 3))
-	else:
-		v.add_child(PixelUI.label("— 空的存檔欄 —", 16, PixelUI.DIM, 3))
-		v.add_child(PixelUI.label("（敬請期待）", 12, PixelUI.DIM, 2))
+	var head := "%s　Lv%d　%dG" % [_area_name(String(info["scene"])), int(info["lv"]), int(info["gold"])]
+	if slot == SaveManager.current_slot:
+		head += "　（本局）"
+	v.add_child(PixelUI.label(head, 16, PixelUI.WHITE, 3))
+	var names := PackedStringArray(info["names"])
+	var sub := _time_text(int(info["at"]))
+	if names.size() > 0:
+		sub += "　" + "・".join(names)
+	v.add_child(PixelUI.label(sub, 13, PixelUI.SUBTLE, 2))
 	h.add_child(v)
-	var act := ("覆寫" if (is_save and SaveManager.has_save()) else "存檔") if is_save else "讀取"
-	h.add_child(PixelUI.label(act if enabled else "—", 15, PixelUI.GOLD if enabled else PixelUI.DIM, 3))
+
+	var act := "覆寫"
+	var act_col := PixelUI.GOLD
+	if mode == M_LOAD:
+		act = "讀取"
+	elif mode == M_DELETE:
+		act = "確認刪除" if _pending_delete == slot else "刪除"
+		act_col = PixelUI.BAD
+	h.add_child(PixelUI.label(act, 15, act_col, 3))
 	return b
+
+
+func _new_slot_row(row: int) -> Control:
+	var b := _row_button(_level == 1 and row == _sub, row)
+	var h := HBoxContainer.new()
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.anchor_right = 1.0
+	h.add_theme_constant_override("separation", 12)
+	b.add_child(h)
+	h.add_child(PixelUI.label("＋", 24, PixelUI.GOOD, 3))
+	var v := VBoxContainer.new()
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_child(PixelUI.label("新增存檔", 16, PixelUI.WHITE, 3))
+	v.add_child(PixelUI.label("存到新的一格（槽 %d）" % SaveManager.next_free_slot(), 13, PixelUI.SUBTLE, 2))
+	h.add_child(v)
+	h.add_child(PixelUI.label("存檔", 15, PixelUI.GOLD, 3))
+	return b
+
+
+## 存檔列的地名。painted 場景 id 走前綴表，其餘查 MenuLogic.LOC；都查不到就顯示原始 id。
+func _area_name(scene_id: String) -> String:
+	if scene_id == "":
+		return "旅途中"
+	if MenuLogic.LOC.has(scene_id):
+		return String(MenuLogic.LOC[scene_id])
+	for pair in AREA_PREFIX:
+		if scene_id.begins_with(String(pair[0])):
+			return String(pair[1])
+	return scene_id
+
+
+## 存檔時間（本機時區）。at=0（舊存檔沒有這個欄位）顯示佔位字。
+func _time_text(at: int) -> String:
+	if at <= 0:
+		return "存檔時間不明"
+	var tz: Dictionary = Time.get_time_zone_from_system()
+	var d := Time.get_datetime_dict_from_unix_time(at + int(tz.get("bias", 0)) * 60)
+	return "%04d/%02d/%02d %02d:%02d" % [d["year"], d["month"], d["day"], d["hour"], d["minute"]]
 
 
 func _build_help(box: VBoxContainer) -> void:

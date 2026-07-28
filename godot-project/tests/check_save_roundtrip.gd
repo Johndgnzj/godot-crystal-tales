@@ -8,6 +8,7 @@ extends SceneTree
 ## - eqTitle（String 型 flag，flags 容器的刻意例外，見 game_state.gd flags 註解／titles_data.gd）讀檔保型。
 ## - 零參數 save_game() 沿用舊 scene/x/y、只更新資料欄位。
 ## - 非法場景名讀檔退回 Town（VALID_RESUME_SCENES 白名單）。
+## - 多存檔槽（無上限）：新增槽、槽間互不覆蓋、指定槽讀檔、latest_slot()、刪除單槽後空號回收。
 
 var _fail := 0
 
@@ -26,7 +27,7 @@ func _run() -> void:
 		print("  [FAIL] game_flow.gd 載入失敗")
 		print("=== SAVE_ROUNDTRIP FAIL ==="); quit(1); return
 
-	sm.delete_save()   # 乾淨起點
+	sm.delete_all_saves()   # 乾淨起點（清掉所有槽）
 
 	# --- 建立已知局面 ---
 	gf.new_game()                      # 合法初始隊伍（2 人）＋起始數值
@@ -76,7 +77,7 @@ func _run() -> void:
 	# --- 零參數 save_game()：沿用舊 scene/x/y、只更新資料欄位 ---
 	gs.gold = 888
 	sm.save_game()
-	var raw: Variant = _read_save()
+	var raw: Variant = _read_save(sm, sm.current_slot)
 	if typeof(raw) == TYPE_DICTIONARY:
 		_expect(String(raw.get("scene", "")) == "NMA", "零參 save 沿用舊 scene=NMA（得到 %s）" % raw.get("scene"))
 		_expect(is_equal_approx(float(raw.get("x", -1.0)), 123.0), "零參 save 沿用舊 x=123（得到 %s）" % raw.get("x"))
@@ -89,14 +90,41 @@ func _run() -> void:
 	_expect(sm.load_game(), "非法場景存檔仍可讀")
 	_expect(sm.loaded_scene == "Town", "非法場景讀檔退回 Town（得到 %s）" % sm.loaded_scene)
 
-	sm.delete_save()   # 收尾清乾淨
+	# --- 多存檔槽（無上限）---
+	sm.delete_all_saves()
+	gs.gold = 100
+	var s1: int = sm.save_to_slot(0, "Town", 10.0, 20.0)     # 新槽 → 1
+	_expect(s1 == 1, "第一次存檔配到槽 1（得到 %d）" % s1)
+	gs.gold = 200
+	var s2: int = sm.save_to_slot(0, "NMA", 30.0, 40.0)      # 再一個新槽 → 2
+	_expect(s2 == 2, "「新增存檔」配到槽 2（得到 %d）" % s2)
+	_expect(sm.current_slot == 2, "存檔後 current_slot 指到新槽（得到 %d）" % sm.current_slot)
+	_expect(sm.list_slots().size() == 2, "共 2 槽（得到 %d）" % sm.list_slots().size())
+	_expect(sm.latest_slot() == 2, "latest_slot()=2（得到 %d）" % sm.latest_slot())
+
+	gs.gold = 0
+	_expect(sm.load_game(1), "指定槽 1 讀檔成功")
+	_expect(gs.gold == 100, "槽 1 沒被槽 2 覆蓋（gold=%d，期望 100）" % gs.gold)
+	_expect(sm.current_slot == 1, "讀檔後 current_slot=1（得到 %d）" % sm.current_slot)
+	_expect(sm.loaded_scene == "Town", "槽 1 場景=Town（得到 %s）" % sm.loaded_scene)
+	_expect(sm.load_game(2) and gs.gold == 200, "指定槽 2 讀回 gold=200（得到 %d）" % gs.gold)
+
+	sm.delete_save(1)
+	var left: Array = sm.list_slots()
+	_expect(left.size() == 1 and left[0] == 2, "刪掉槽 1 後只剩槽 2（得到 %s）" % str(left))
+	_expect(sm.next_free_slot() == 1, "空號回收：下一個新槽是 1（得到 %d）" % sm.next_free_slot())
+	_expect(sm.has_save(), "還有存檔時 has_save()=true")
+
+	sm.delete_all_saves()   # 收尾清乾淨
+	_expect(not sm.has_save(), "全部刪除後 has_save()=false")
+	_expect(sm.current_slot == 0, "全部刪除後 current_slot 歸零（得到 %d）" % sm.current_slot)
 
 	print("=== %s ===" % ("SAVE_ROUNDTRIP OK" if _fail == 0 else "SAVE_ROUNDTRIP FAIL（%d）" % _fail))
 	quit(0 if _fail == 0 else 1)
 
 
-func _read_save() -> Variant:
-	var path := "user://cq_save.json"
+func _read_save(sm: Node, slot: int) -> Variant:
+	var path: String = sm.slot_path(slot)
 	if not FileAccess.file_exists(path):
 		return null
 	var f := FileAccess.open(path, FileAccess.READ)

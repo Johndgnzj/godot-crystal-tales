@@ -2,6 +2,8 @@ extends Node2D
 
 ## 標題頁：新遊戲 / 繼續冒險。方向鍵 ↑↓ 選、Enter（ui_accept）確認。
 ## 新遊戲 → GameFlow.new_game() + 進 Town；繼續 → SaveManager.load_game() + 回存檔場景。
+## 存檔槽無上限（見 autoload/save_manager.gd）；標題的「繼續冒險」固定讀**最近存的那一槽**
+## （`load_game()` 零參數＝latest_slot()），要挑槽讀請進遊戲後走選單→系統→讀檔。
 ## 選項用 GDevelop 端烘好的描邊文字 PNG（t_new/t_cont）呈現；$Menu 為隱藏的狀態文字鏡射，
 ## 供 tests/check_title_flow.gd 讀取（該測試檔不在本任務可改範圍，故保留此節點）。
 

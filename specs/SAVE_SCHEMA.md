@@ -1,11 +1,16 @@
 # 規格：存檔／全域狀態 Schema
 
-- Spec 版本: v1.1
+- Spec 版本: v2.0
 - 對應 GDevelop 原始碼快照: `scripts/build_cq2.py` L1275-1296（存檔）、L1608-1618（openChest 寫入
   g_chests）、L1425-1440/L2812-2821/L3366-3393（SceneRouter 交握機制）、DEV_開發指南.md L65-71
   （跨場景狀態）
 - 狀態: 定案
 - 用途: CORE-3（存檔系統）、CORE-4（全域狀態 Autoload）、CORE-5（場景轉場）實作依據
+- v2.0 變更（2026-07-28，John 指示「把存檔數量上限移掉」）：**破壞性變動——存檔槽數量無上限**。
+  Godot 端不再是單一 `user://cq_save.json`，改成一槽一檔 `user://cq_save_<n>.json`（n 從 1 起、不設
+  上限）；舊的單槽檔開機時自動搬成槽 1。存檔物件新增 `at`（存檔時間 Unix 秒，只給清單排序/顯示用，
+  讀檔不使用），其餘欄位與 v1 相同，故 `v` 仍為 1。詳見下方「Godot 端對應設計」與
+  `autoload/save_manager.gd` 檔頭。
 - v1.1 變更（2026-07-14，CORE-4/CORE-5 平行開工各自認領實作時補齊，合併時彙整為同一版本紀錄）：
   1. （CORE-4）`g_chests` 精確型別由「存疑」改為定案：**字串陣列**（已開啟寶箱 id 清單），見下方
      「待確認事項」。
@@ -58,7 +63,8 @@
   `g_returnX/Y` → `replaceScene(存檔場景)`；場景 init 時的出生點分支要認得 `"resume"` 走 returnX/Y 定位，
   而不是預設出生點。
 - 「重新開始」：清 `localStorage["cq_save"]`，其餘全域變數用預設值重建（不持久化，等於全新一局）。
-- 進度只有這一個存檔槽（`SAVE_KEY = "cq_save"`），沒有多存檔位。
+- 進度只有這一個存檔槽（`SAVE_KEY = "cq_save"`），沒有多存檔位。**Godot 端自 v2.0 起不照抄這點**
+  （改成無上限多槽，見下）。
 
 ## Godot 端對應設計（CORE-3/CORE-4 實作用）
 
@@ -68,7 +74,17 @@
 - **`SaveManager`（autoload, `autoload/save_manager.gd`）**：
   - `save_game()` 序列化 `GameState` 需要持久化的欄位（=上表「持久化」那幾項，不含
     `g_encounter`/`g_returnScene`/`g_result`/`g_spawn` 這些場景轉場用的暫態值）成 JSON，寫入
-    `user://cq_save.json`（Godot 慣例用 `user://`，對應 GDevelop 的 `localStorage`）。
+    **目前這局使用的槽** `user://cq_save_<n>.json`（Godot 慣例用 `user://`，對應 GDevelop 的
+    `localStorage`）。
+  - **存檔槽（v2.0，無上限）**：一槽一檔、槽號從 1 起遞增，`list_slots()` 直接掃 `user://` 目錄檔名
+    取得（不維護索引檔，避免索引與實際檔案不同步）。
+    - `current_slot`＝這一局在用的槽；自動存檔一律寫這一槽。`GameFlow.new_game()` 會把它歸零，
+      新的一局第一次自動存檔就配一個新槽（`next_free_slot()`＝最小空號，會回收被刪掉的號碼），
+      不會蓋掉別局的存檔。
+    - 選單→系統：`存檔`（覆寫既有槽／＋新增存檔）、`讀檔`（`load_game(slot)`）、`刪除存檔`
+      （`delete_save(slot)`，需按兩次 Enter 確認）。標題「繼續冒險」＝`load_game()` 零參數＝
+      `latest_slot()`（`at` 最大者）。
+    - 舊版單槽檔 `user://cq_save.json` 在 `_ready()` 自動搬成槽 1（`_migrate_legacy_save()`）。
   - 存檔物件的欄位名稱建議與上表一致（`v/scene/x/y/flags/party/eqInv/itemInv/gold/chests/auto`），方便
     未來若要做「讀取 GDevelop 舊存檔」的一次性遷移工具時對照。
   - `v` 欄位保留，Godot 版存檔格式若跟這份 v1 不同，`v` 要遞增並在本文件記錄差異。
@@ -109,7 +125,8 @@
 
 ## 待確認事項（實作前需與 John 對過，暫列此處避免遺漏）
 
-- 是否要支援多存檔槽（GDevelop 版目前只有一槽）？若不需要，Godot 版維持單槽，不要過度設計。
+- ~~是否要支援多存檔槽（GDevelop 版目前只有一槽）？~~ **已定案（2026-07-28，John）**：支援，且
+  **不設數量上限**（見上方 v2.0 變更）。
 - ~~`g_chests` 目前型別在原始碼是「陣列/物件」寫法不完全一致~~ **已定案（CORE-4，2026-07-14）**：
   精確型別是 **字串陣列**（已開啟寶箱 id 清單）。依據 `build_cq2.py`：
   - `openChest()`（L1608-1618）：`var opened=J("g_chests",[]);` 讀出時 fallback 是 `[]`（陣列）；

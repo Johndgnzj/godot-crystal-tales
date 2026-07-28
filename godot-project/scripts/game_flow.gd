@@ -32,6 +32,9 @@ static func new_game() -> void:
 	GameState.return_x = -1.0
 	GameState.return_y = -1.0
 	GameState.result = ""
+	# 新的一局還沒有自己的存檔槽：歸零後，第一次自動存檔會配一個新槽，不會蓋掉既有存檔
+	# （見 autoload/save_manager.gd 檔頭「存檔槽數量無上限」）。
+	SaveManager.current_slot = 0
 
 
 ## 從 ContentDB 的 PartyMemberDef 樣板建一個「已 derive、滿血魔」的隊員 Dictionary。
