@@ -13,13 +13,14 @@
 | 目錄/檔案 | 內容 |
 |---|---|
 | `CLAUDE.md` | 給開發者/AI agent：目錄結構、Godot 技術選型、程式碼規範、協作總則、權威來源、**文件同步規則** |
-| `docs/` | **文件中樞**，三分法：`design/` 長什麼樣、`pipeline/` 怎麼產生、`story/` 世界觀（敘事聖經）。總索引見 `docs/README.md` |
+| `docs/` | **文件中樞**：`design/` 長什麼樣、`pipeline/` 怎麼產生、`story/` 世界觀（敘事聖經）、`todo/` 後續優化議題。總索引見 `docs/README.md` |
 | `docs/pipeline/設計員指南.md` | **給遊戲設計員（不需寫程式）**：怎麼加/改角色·道具·武器數值、美術、地圖 |
+| `docs/pipeline/world_object_art/遮擋物件資產架構.md` | 滿版地圖的透明高物件資產架構：`YSort` 遮擋、類型→footprint 歸檔、terrain 單一碰撞真相 |
 | `TASKS/` | 可執行任務清單，核心 CORE-* ＋ 模組 MOD-* |
 | `specs/` | 從 `build_cq2.py` 凍結抄錄的權威規格：存檔 schema、戰鬥公式、對話格式 |
 | `reference/gdevelop/` | 原 GDevelop 專案的凍結快照（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`），唯讀 |
 | `MIGRATION_OVERVIEW.md` | 可複用 vs 需重寫的盤點總表 |
-| `godot-project/` | Godot 專案本體（`autoload/` 全域單例、`scenes/` 場景、`scripts/` 模組、`resources/content/` 資料 .tres、`assets/` 美術、`tests/` 測試）|
+| `godot-project/` | Godot 專案本體（`autoload/` 全域單例、`scenes/` 場景、`scripts/` 模組、`resources/content/` 資料 .tres、`resources/shaders/` 畫面效果 shader、`assets/` 美術、`tests/` 測試）|
 | `tools/` | 開發輔助工具（非遊戲程式）。`map_editor/`：地圖連通維護＋**40×40 地格藍圖** paint 工具（真相＝`assets-source/map/map-def.json`；詞彙＝`terrain_palette.json`），啟動 `python3 tools/map_editor/serve.py`；`role_slicer/`：上傳一張全身圖 → 去螢光底＋框頭像(a)/半身(b) → 匯出 `face_/portrait_/menuart_` 到 `assets-source/role/<id>/` 暫存，啟動 `python3 tools/role_slicer/serve.py` |
 
 ## 怎麼開始

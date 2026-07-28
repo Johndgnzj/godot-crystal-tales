@@ -30,6 +30,7 @@ godot-crystal-tales/
     │   ├── title/ world/ battle/ ui/
     ├── scripts/                # 非 autoload 的可重用邏輯（純函式/資源類別）
     ├── resources/content/      # CONTENT.json 對應的 Resource 定義與匯入結果
+    ├── resources/shaders/      # 畫面效果 shader（例：立繪背光 portrait_glow.gdshader）
     ├── assets/                 # 美術/音效資產（改 import 設定；出處見 CREDITS_素材授權.md）
     └── tests/                  # GUT 或 headless smoke test
 ```
