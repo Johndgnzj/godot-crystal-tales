@@ -319,18 +319,18 @@ partyMeta:{
   alan: {role:"資深冒險者", trait:"輕浮而可靠", frameAspect:0.888}
 },
 npcs:[
- {id:"tina",  name:"緹娜",     role:"冒險者公會・櫃檯",     fn:["委託","登錄"], desc:"公會接待員。負責冒險者登錄（F 級）與委託發布——第一章「討伐哥布林頭目」（200G）由她發出，也會指路第二章的老葛雷。"},
+ {id:"tina",  name:"緹娜",     role:"冒險者公會・櫃檯",     fn:["委託","登錄"], desc:"公會接待員。負責 F 級登錄（小節4，贈冒險者靴）與委託告示板——三件 F 級委託由她列出，狼皮 ×2 也繳交給她（+120G）。小節3 亞倫失蹤、小節6 第一章結案，都是向她回報。"},
  {id:"dora",  name:"朵拉",     role:"旅店老闆娘",           fn:["住宿（全恢復・免費）"], desc:"爽利熱心、鎮上的情報站，把路德姊弟當自家孩子照顧的鄰居。住宿即隊伍完全恢復。"},
  {id:"shea",  name:"希雅修女", role:"神殿・蓋婭女神侍奉者", fn:["祈禱（全恢復）"], desc:"能察覺路德身上「女神的記號」的變化。祈禱即隊伍完全恢復；戰敗後隊伍會在教堂（shrine）重生。"},
- {id:"barton",name:"巴頓鎮長", role:"芳蕾鎮鎮長",           fn:["劇情"], desc:"對礦山異變放心不下的老鎮長。第二章結尾囑託把礦山所見帶往大城——牽出第三章的動線。"},
+ {id:"barton",name:"巴頓鎮長", role:"芳蕾鎮鎮長",           fn:["劇情"], desc:"對礦山異變放心不下的老鎮長。F 級委託③「打聽耳語」的三位鎮民之一——他口中的礦山傳聞替小節5、6 的重返礦山鋪陳。"},
  {id:"hank",  name:"漢克",     role:"路德之父・退休冒險者", fn:["劇情"], gift:"臨別把當年用舊的佩劍傳給路德（gotSword）", desc:"路德之父，年輕時與瑪莎組隊闖蕩、混到 C 級上下就收手的退休冒險者。嘴硬心軟，把恐懼包裝成打壓；臨別把自己當年用舊的佩劍傳給路德。"},
  {id:"martha",name:"瑪莎",     role:"路德之母・退休冒險者", fn:["劇情"], gift:"偷塞自己冒險時代的護身戒（gotRing）", desc:"路德之母，漢克當年的隊友兼妻子，偏敏捷/斥候型、比漢克樂觀。用嘮叨掩飾擔心；把冒險時代的護身戒交給路德保平安。"},
  {id:"gid",   name:"吉德",     role:"道具店老闆",           fn:["商店","贈禮"], gift:"新客招待：藥水×2（gotPotion）", desc:"嗓門大、待客熱情的道具商。「補給要趁早，這是老冒險者的鐵則！」販售消耗品與飾品。"},
- {id:"gray",  name:"老葛雷",   role:"退休老礦工・水井旁",   fn:["委託"], gift:"交還礦工頭盔（relic）→ 100G 謝禮", desc:"第二章委託人。老夥計一個個失蹤、官府當逃工不管，只有他知道礦工們絕不會丟下家人。委託：查明礦工失蹤的真相。"},
- {id:"mira",  name:"米拉",     role:"藥師",                 fn:["支線"], gift:"開始支線贈「凝神耳環」（gotEar）；採齊鏡草×3 獎勵藥水×3", desc:"藥草舖的年輕藥師。支線「鏡草採集」：到東之森的水邊與大石旁採三株會發光的鏡草（herb 0→3）。"},
- {id:"rossel",name:"羅素隊長", role:"南門守衛隊長",         fn:["劇情"], desc:"把守封鎖中的南方大道。等王都指示放行——第三章往大城的出口，會把路德一行的事蹟寫進報告。"},
+ {id:"gray",  name:"老葛雷",   role:"退休老礦工・水井旁",   fn:["委託"], gift:"（舊 POC）交還礦工頭盔（relic）→ 100G 謝禮", desc:"小節5 的私託人。老夥計一個個失蹤、官府當逃工不管，只有他知道礦工們絕不會丟下家人。三件 F 級委託全完成（fq==3）後才開口，託路德設法進入封鎖中的礦山——也是他提示森林深處老樹有烈火蜂蜜。"},
+ {id:"mira",  name:"米拉",     role:"藥師",                 fn:["委託"], gift:"接委託贈「凝神耳環」（gotEar）；採齊鏡草×3 獎勵藥水×3", desc:"藥草舖的年輕藥師。F 級委託①「採藥·鏡草」的委託人：到東之森 EFA／EFB／EFD 各採一株會發光的鏡草（herb 0→3）再回來交付。"},
+ {id:"rossel",name:"羅素隊長", role:"南門守衛隊長",         fn:["劇情"], desc:"把守封鎖中的南方大道（舊 POC 動線）。新第一章不經過南門；他所守的路留待往公會總部的旅途再啟用。"},
  {id:"don",   name:"唐恩",     role:"鐵匠鋪・老鐵匠",       fn:["商店"], desc:"芳蕾鎮唯一的鐵匠，年邁、獨自經營鐵鋪。手藝普通偏差、愛把瑕疵講成「特色」；「好裝備得往大城找」的稀缺感由他鋪陳。"},
- {id:"warden",name:"獄卒",     role:"（新對話・待補設定）", fn:["劇情"], desc:"dialogue 資料中新增的對話對象，META 尚未補設定——記得回頭補這一欄。"}
+ {id:"warden",name:"礦山守衛", role:"公會派駐·礦山口",       fn:["劇情","關卡"], desc:"礦山封鎖後派來看守入口的守衛，嘴上說規矩、心裡想喝一杯。小節5 的關卡：拿蜂蜜酒（honey_mead）換放行，喝倒後路德一行才進得了礦山。"}
 ],
 keyChars:[
  {id:"necro",name:"死靈術士",role:"宿敵反派（1–3 章）",tags:["劇情關鍵","反覆遭遇・擊退不擊殺"],desc:"1–3 章反覆遭遇的宿敵，小節6 首遇。為救垂危的妹妹、想查明黑水晶能否治療而走上邪道——非真心害人，礦工異變是其研究的代價。與路德「想救妹妹瑪琳」成正邪對照。戰鬥數值見「敵人圖鑑」。"}
@@ -342,18 +342,18 @@ maps:[
  {id:"forest2", name:"森林・深處",   scene:"Forest2",  kind:"field",desc:"森林後段，狼群出沒。"},
  {id:"eforest1",name:"東之森 I",     scene:"EForest1", kind:"field",desc:"第一章舞台（gen-region 產出地區）。經 Hub 自鎮東門進入。"},
  {id:"eforest2",name:"東之森 II",    scene:"EForest2", kind:"field",desc:"東之森中段。"},
- {id:"eforest3",name:"東之森 III",   scene:"EForest3", kind:"field",desc:"東之森深處，通往哥布林頭目所在的空地。"},
+ {id:"eforest3",name:"東之森 III",   scene:"EForest3", kind:"field",desc:"東之森深處（舊 tile 版）。哥布林頭目所在的空地，屬舊 POC 動線；新主線的森林戲走手繪 EFA–EFI。"},
  {id:"mine",    name:"北方礦山",     scene:"Mine",     kind:"field",desc:"第二章舞台。骷髏礦工＝失蹤的礦工；深處由死靈術士盤踞。"},
  {id:"cave",    name:"礦坑深處",     scene:"Cave",     kind:"field",desc:"第二章後段開放。暗影系魔物與死靈術士（會治療隊友）盤踞。"}
 ],
 events:[
- {id:"prologue_demon",name:"序章・異變的魔影",note:"劇情戰：撐過 3 回合（scripted）。"},
- {id:"ch1_boss",      name:"第一章頭目戰（舊配置）",note:"GDevelop 版遺留的頭目編成，與 eforest3_boss 並存。"},
+ {id:"prologue_demon",name:"小節3・異變的魔影",note:"劇情戰：必敗（scripted_survive）。戰後亞倫斷後失蹤。"},
+ {id:"ch1_boss",      name:"哥布林頭目戰（舊 POC）",note:"舊三段式第一章的委託目標，新主線不觸發；哥布林頭目降為未來 M4 支線。"},
  {id:"eforest3_boss", name:"東之森頭目戰",note:"第一章委託目標。建議 Lv5、先到唐恩處換裝。"},
- {id:"ch2_bear",      name:"第二章・狂暴洞熊",note:"礦山深處擋路頭目；擊破後深處礦道開通。"},
- {id:"bear_forced",   name:"狂暴洞熊（強制戰）",note:""},
- {id:"bear_rematch",  name:"狂暴洞熊（再戰）",note:""},
- {id:"necro",         name:"死靈術士（精英遭遇）",note:""}
+ {id:"ch2_bear",      name:"狂暴洞熊（舊 POC）",note:"舊第二章礦山擋路頭目，新主線由死靈術士取代。"},
+ {id:"bear_forced",   name:"小節1・凶暴的熊（必敗）",note:"EF-G 路中央的定點戰；scripted_survive=2＝先手打幾下也必敗，戰後亞倫救場。"},
+ {id:"bear_rematch",  name:"小節5・凶暴的熊（複戰）",note:"EF-I 老樹旁，玩家自行走近才觸發；這次可勝，勝利取得烈火蜂蜜。"},
+ {id:"necro",         name:"小節6・死靈術士（第一章 boss）",note:"礦山最深處 NMF；可勝但擊退不殺，戰後黑水晶爆發、瑪琳中黑咒印（marin_curse）。"}
 ],
 // 敵人圖預設全動態走 IMG（build_img 掃 assets-source/role/enemies）：bounty_<id>／p_<id>／
 // combat_<id> 有檔就顯示。此表只在「戰鬥像素圖沿用別隻」時覆蓋 combat 來源（c）；新增敵人補了
@@ -422,46 +422,50 @@ function derive(p){
   r.spd=a.agi;
   return r;
 }
-const expNeed=lv=>d0.expBase+Math.round(d0.expCoef*Math.pow(lv,d0.expPow));
-const SECS=[["ov","總覽"],["party","主角隊伍"],["key","關鍵角色"],["npc","NPC 圖鑑"],["foe","敵人圖鑑"],["skill","技能"],["eq","裝備"],["item","道具"],["shop","商店"],["world","地圖與地區"],["formula","戰鬥公式"],["system","系統規格"],["story","劇情與對話"]];
+const SECS=[["ov","總覽"],["party","主角隊伍"],["key","關鍵角色"],["npc","NPC 圖鑑"],["foe","敵人圖鑑"],["skill","技能"],["eq","裝備"],["item","道具"],["shop","商店"],["world","地圖與地區"],["quest","任務"],["exp","經驗與升級"],["formula","戰鬥公式"],["system","系統規格"],["story","劇情與對話"]];
 
 /* ══════════ 狀態 ══════════ */
 const state={mode:null,tab:"ov",q:"",open:{}};
 
 /* ══════════ 靜態內容（總覽／公式／系統）══════════ */
 const OV_CARDS=[
- ["芳蕾鎮","故事起點的邊境小鎮。設施：冒險者公會（緹娜）、旅店（朵拉）、神殿（希雅修女）、鎮長宅（巴頓）、道具店（吉德）、鐵匠鋪（唐恩）、水井旁（老葛雷）、藥草舖（米拉）、南門（羅素隊長）。鎮內無遭遇戰。"],
- ["蓋婭女神與記號","本地信仰的大地女神。序章礦山事件後，女神在路德身上留下「女神的記號」（劇情道具 goddess_mark），希雅修女能察覺其變化——主線暗線。"],
- ["北方礦山","二十年前封閉的礦坑，近來夜裡有異聲。序章見習之地；第二章重返時揭露失蹤礦工已化為骷髏，深處藏著異變的源頭。"],
- ["水晶碎片","蘊含魔力的稀有素材（crystal_shard），與礦山異變直接相關。中後期敵人與頭目掉落，是貫穿全篇的關鍵物。"],
- ["冒險者公會","於公會登錄後取得 F 級「公會登錄證」。委託是章節推進的主要載體：第一章討伐哥布林頭目（200G）、第二章受老葛雷私託調查礦工失蹤。"],
- ["南方大道（伏筆）","通往大城的道路因魔物騷動封鎖，由羅素隊長把守。第二章結束後鎮長囑咐「把礦山所見告訴大城的人」——第三章的出口。"]
+ ["芳蕾鎮","故事起點的邊境小鎮。設施：冒險者公會（緹娜）、旅店（朵拉）、神殿（希雅修女）、鎮長宅（巴頓）、道具店（吉德）、鐵匠鋪（唐恩）、水井旁（老葛雷）、藥草舖（米拉）、路德家（漢克・瑪莎・瑪琳）。鎮內無遭遇戰，戰敗於神殿重生。"],
+ ["主線閘門 ch1_step","第一章的唯一主線旗標，0→13 線性推進（六小節）。過場的 setstep 與少數 action（s5_start→10、warden_pass→12）負責推進；`c_*` 是各過場的一次性旗標。測試想跳到某一節：改存檔的 ch1_step ＋清掉對應 c_*。"],
+ ["蓋婭女神與記號","本地信仰的大地女神。路德身上帶著「女神的記號」，希雅修女能察覺其變化；小節6 黑水晶爆發時記號護住了路德，卻沒能護住瑪琳——主線暗線。"],
+ ["北方礦山","二十年前封閉的礦坑，近來夜裡有異聲。小節3 亞倫在此斷後失蹤、礦山遭公會封鎖；小節5 靠一壺蜂蜜酒買通守衛重返；小節6 最深處（NMF）與死靈術士對決。"],
+ ["東之森（EFA–EFI）","鎮東的練級場，也是第一章的情緒對照組：小節1 在 EF-G 被凶暴的熊打趴（必敗），小節5 在 EF-I 老樹旁複戰同一頭熊並取勝。鏡草（EFA/EFB/EFD）與野狼皮的採集地。"],
+ ["冒險者公會與 F 級委託","小節4 登錄 F 級（得冒險者靴）。登錄後告示板開三件 F 級委託——採藥鏡草、討伐取狼皮、打聽礦山耳語——三件全完成（fq==3）老葛雷才會託付私事，是進礦山的前置。"],
+ ["黑水晶與汙染","小節6 首次揭露：礦工異變、洞熊失心，源頭都是黑水晶。死靈術士為救垂危的妹妹而研究它，瑪琳因此中了黑咒印昏厥——第二章「前往公會總部」的雙重動機（找亞倫＋救瑪琳）。"]
 ];
 const FLOW=[
- {t:"序章「礦山見習」",fl:"step 0→3",d:"路德跟隨 A 級冒險者亞倫前往礦山見習（單人隊伍、教學戰）→ 礦坑深處遭遇「異變的魔影」（撐 3 回合的劇情戰）→ 亞倫斷後失蹤，路德獨自回鎮。"},
- {t:"第一章開端・三天後",fl:"step 4 · reg 1",d:"瑪琳入隊 → 到公會找緹娜登錄成為 F 級冒險者（取得公會登錄證）。鎮上可拿三份贈禮：漢克贈鐵劍、瑪莎贈活力戒指、吉德贈藥水×2。"},
- {t:"第一章「東之森的哥布林」",fl:"ch1 1→3",d:"緹娜發布委託：討伐盤踞東之森深處的哥布林頭目（報酬 200G，建議 Lv5＋換裝）。東之森 I→II→III 推進，擊破頭目戰後回報結案。支線：米拉的鏡草×3。"},
- {t:"第二章「重返礦山」",fl:"ch2 1→3 · relic",d:"老葛雷私託調查礦工失蹤 → 礦山遇見化為骷髏的礦工（真相過場）→ 擊破狂暴洞熊、深處開路 → 帶「失蹤礦工的頭盔」回報老葛雷與鎮長。礦坑深處（Cave）開放。"},
- {t:"第三章（未開放）",fl:"南方大道",d:"深處異變源頭（洞窟食人魔已定義、遭遇待串接）→ 前往大城回報。南門封鎖解除為後續開發內容。"}
+ {t:"小節1「勇者的日常？」",fl:"ch1_step 0→3",d:"嚮往勇者的路德偷溜進東之森試身手 → 進 EF-G 只播獨白、自動走向路中央的熊 → 定點戰 bear_forced（scripted_survive＝必敗）→ 瀕死呼救，進村調查的亞倫一劍擊退熊並送他回鎮。教訓＝純粹的實力受挫。"},
+ {t:"小節2「不甘心的少年」",fl:"3→5",d:"瑪莎敷藥、漢克勸退，路德仍不服氣。全鎮拗不過他勉強幫他武裝：漢克的舊劍（gotSword）、瑪莎的護身戒（gotRing）、吉德的新客招待藥水×2（gotPotion）→ 看見亞倫接了礦山委託往北走，決意偷跟，北門開放。"},
+ {t:"小節3「礦山的那一天」",fl:"5→8",d:"礦山口被亞倫識破、結伴同行（亞倫 guest 入隊）→ 深處遭遇異變的魔影，定點戰 prologue_demon 必敗 → 亞倫斷後把路德推走、下落不明 → 逃回鎮向緹娜回報，公會封鎖礦山。教訓＝代價由別人替你扛。"},
+ {t:"小節4「不是一個人」",fl:"8→9 · reg 1",d:"閉關的路德向瑪琳吐露，瑪琳入隊（隊伍＝路德＋瑪琳）→ 到公會找緹娜登錄 F 級冒險者，取得冒險者靴（adventurer_boots）。"},
+ {t:"小節4.5「初出茅廬」三件 F 級委託",fl:"fq 0→3",d:"登錄後告示板開三件委託，任意順序：①米拉的鏡草×3（EFA/EFB/EFD 各一株，得凝神耳環＋藥水×3）②獵野狼交狼皮×2 給緹娜（+120G）③向朵拉・唐恩・巴頓打聽礦山耳語。三件湊滿 fq==3，老葛雷才開口。"},
+ {t:"小節5「一壺蜂蜜酒」",fl:"9→12",d:"老葛雷私託調查失蹤礦工（→step 10）→ 礦山口守衛擋路想喝酒 → 吉德說要烈火蜂蜜才調得出好酒 → EF-I 老樹旁走近可見的熊，複戰 bear_rematch（這次可勝）取得烈火蜂蜜 → 吉德調成蜂蜜酒 → 遞給守衛放行（→step 12）。"},
+ {t:"小節6「被汙染的真相」",fl:"12→13",d:"重返礦山遭遇骷髏礦工（＝失蹤的礦工）→ 最深處 NMF 與死靈術士對決（可勝，擊退不殺）→ 黑水晶爆發，路德的記號擋下、瑪琳中黑咒印昏厥 → 回鎮由希雅穩住咒印、向緹娜回報，第一章完（setstep -1）。"},
+ {t:"第二章（未實作）",fl:"公會總部",d:"為救中咒的瑪琳、追查亞倫下落，踏上前往公會總部的旅途（設定已定案，實作未開始）。舊 POC 的三段式章節（ch1 哥布林頭目委託／ch2 狂暴洞熊）資料仍在 repo，但新主線不走，待封存。"}
 ];
 const TECH=[
  ["引擎","Godot 4.7（stable）· GDScript · 2D 手繪風"],
  ["畫面","1920×1080（設計基準 1280×720）· stretch mode canvas_items · texture filter linear"],
  ["資料真相源","resources/content/**/*.tres（聚合於 content_db.tres，由 ContentDB autoload 載入；設計員直接在 Inspector 編輯）"],
- ["規則真相源","GDevelop build_cq2.py 凍結抄錄 → specs/（本設定集依 specs v1.1）"],
+ ["規則真相源","GDevelop build_cq2.py 凍結抄錄 → specs/（本設定集依 BATTLE_FORMULAS v5.0 / SAVE_SCHEMA v2.0）"],
  ["全域狀態","Autoload 單例：GameState / SaveManager / ContentDB / SceneRouter / AudioBus 等 7 個"],
- ["存檔","單一存檔槽 user://cq_save.json，自動存檔（進場／劇情／撿取／寶箱／買賣）"]
+ ["存檔","存檔槽數量無上限，一槽一檔 user://cq_save_<n>.json；自動存檔（進場／劇情／撿取／寶箱／買賣）寫回本局使用的槽"],
+ ["升級","100 級經驗表 resources/content/exp_table.json（F-2），滿級 Lv100"]
 ];
 const FORMULAS=[
  {no:"F-1",t:"衍生屬性 derive(m)",code:"maxhp  = 30 + STR×8 + 裝備hp          maxmp = 8 + INT×5 + 裝備mp\npatk   = 6 + 主屬性×2 + 裝備patk       matk  = round(INT×2) + 裝備matk\npdef   = STR + 裝備pdef                mdef  = round(INT×0.8) + 裝備mdef\ndodgeV = round(AGI×1.5) + 裝備dodge    critV = 6.25 + AGI×0.2 + 裝備crit（取一位小數）\nspd    = AGI",d:"裝備值＝各部位對應屬性加總。critV 取一位小數採 WORLD 版寫法（Godot 版統一）。"},
- {no:"F-2",t:"升級經驗 expNeed(lv)",code:"expNeed(lv) = 10 + round(8 × lv^1.4)",d:null},
+ {no:"F-2",t:"升級經驗 expNeed(lv)",code:"expNeed(lv) = 經驗表 exp_table.json 的 levels[lv-1].required_exp\n滿級（Lv100）required_exp = 0 ＝ 不再升級",d:"spec v5.0 起改查表，不再用公式（舊式 10 + round(8×lv^1.4) 只剩「表讀不到」時的 fallback）。完整曲線見「經驗與升級」分頁。"},
  {no:"F-3",t:"普攻傷害 phys(att, defn)",code:"base = atk×1.8 − def（下限 1）；防禦指令中 ×0.5\n會心率：我方 critV／敵方一律 6.25%；會心 ×1.5\nfinal = max(1, round(base × 隨機(0.85~1.00) × 會心倍率))",d:null},
  {no:"F-4",t:"閃避判定 dodge(att, defn)",code:"機率% = clamp(守方dodgeV − 攻方AGI×1.5, 0, 30)",d:"只有普攻判閃避；玩家技能傷害與全體技能一律不判（刻意設計，勿補）。敵方 dodgeV 以 SPD×1.5 計。"},
  {no:"F-5",t:"技能傷害／治療",code:"技能等級加成 skPow = 1 + 0.15 × (技能Lv − 1)\n基值 skBase：int 系→matk（敵人→atk×0.8）；其他→patk（敵人→atk）\n防禦 skDef ：int 系→mdef（敵人→def×0.5）；其他→pdef（敵人→def）\n傷害 = max(1, round((skBase×mult + flat) × skPow − skDef×0.6) × 隨機(0.85~1.00))\n治療 = round((skBase×mult + flat) × skPow)　→ 補至 maxhp 為止，無防禦修正",d:"技能只吃六成防禦（普攻吃全額）——刻意差異，不是筆誤。"},
  {no:"F-6",t:"道具使用（戰鬥）",code:null,d:"僅 kind = heal / mp 可在戰鬥中使用：heal 補 HP、mp 補 MP，皆 clamp 至上限，使用後扣庫存 1。"},
  {no:"F-7",t:"ATB 蓄力",code:'ATB_K = 1.05（全域速度倍率，定案值）\n每幀（僅戰鬥 state == "run"）：atb = min(100, atb + (10 + AGI或SPD) × 1.05 × dt)\n初始值：我方 random()×40／敵方 random()×30；行動後歸 0\n我方優先：任一英雄蓄滿先開指令選單；同幀只處理第一個達標者',d:"選單／演出等非 run 狀態一律暫停蓄力（等待模式由狀態機天然實現）。"},
  {no:"F-8",t:"敵人 AI（foeAct）",code:"依序短路判定（非一次加權抽獎）：\n① healer：隊友中第一個 HP<55% 者 → 治療 20~30（寫死常數），有對象就結束回合\n② 具名技能（foeSkills）：40% → 隨機一招；單體判閃避、傷害 = phys()×mult；全體不判閃避\n③ allAttack：30% → 對全體各打一次標準 phys()，不乘倍率、不判閃避\n④ fallback：對隨機一人普攻（判閃避）",d:"三旗標可同時存在。以狂暴洞熊為例：具名技能 40%、全體攻擊 60%×30%＝18%、一般攻擊 42%。"},
- {no:"F-9",t:"EXP 縮放",code:"實得 EXP = max(1, round(敵方原始 EXP 總和 × EXPSCALE[地圖]))\nEXPSCALE = round(隊伍數 × 升級所需經驗總和 ÷ (預計戰鬥數 × 每場平均EXP), 3)",d:"各地圖係數見「地圖與地區」（依 pacing 現場計算）。不在 pacing 表內的事件戰係數＝1。"},
+ {no:"F-9",t:"EXP 取得與分配",code:"實得 EXP = max(1, 敵方資料表 EXP 總和)　← 不再有任何地圖縮放係數（v4.2 移除）\n每名非客座隊員得 = ceil(實得 EXP ÷ 非客座隊員數)",d:"設定集各魔物標示的 EXP 就是實際入帳的值（全隊合計）。舊版 EXPSCALE 地圖係數（0.15~0.57 倍）已於 spec v4.2 移除，pacing 的進場/目標等級與預計戰鬥數自此只是節奏參考、不影響數值。"},
  {no:"F-10",t:"掉落機率（Godot 端新增，v2.0）",code:"對每個敵人的每筆 drops 元素獨立擲骰：\n最終掉率 = clamp( 道具 base_drop_rate × 怪物 drops[].rate, 0, 1 )\n基數分級：普通素材 0.20／優良素材 0.12／稀有素材 0.05／0＝不從戰鬥掉落",d:"敵方 rate 語意自 v2.0 起是「加成倍率」，不再是絕對機率。base_drop_rate 是各物品獨立欄位——稀有度本身不參與計算；drops 內物品 id 查不到時基數以 1.0 計。伴隨再平衡：一般怪 HP ×約1.7、頭目 ×約1.3；一般素材淨掉率降到 20~30%。"}
 ];
 const DERL={hpBase:"HP 基底",hpPerStr:"每點 STR 加 HP",mpBase:"MP 基底",mpPerInt:"每點 INT 加 MP",weaponAtk:"物攻基底",pointsPerLevel:"每級屬性點",skillPointsPerLevel:"每級技能點",skillMaxLv:"技能等級上限",skillPowerPerLv:"技能每級威力加成",expBase:"經驗基底",expCoef:"經驗係數",expPow:"經驗次方",matkPerInt:"每點 INT 加魔攻",mdefPerInt:"每點 INT 加魔防",dodgePerAgi:"每點 AGI 加閃避",dodgeCap:"閃避上限%",critBase:"會心基底%",critPerAgi:"每點 AGI 加會心"};
@@ -479,20 +483,92 @@ const GSTATE=[
  ["spawn","String","進場出生點 id","暫態"]
 ];
 const SYSNOTES=[
- ["存檔規則","存檔物件欄位：v / scene / x / y / flags / party / eqInv / itemInv / gold / chests / auto，寫入 user://cq_save.json。自動存檔時機：場景進場、帶存檔動作的對話、撿取、開寶箱、買賣完成。室內存檔存「門口外」座標避免重載卡牆。「重新開始」清空存檔重建預設值；只有一個存檔槽。"],
+ ["存檔規則（無槽數上限）","存檔物件欄位：v / scene / x / y / flags / party / eqInv / itemInv / gold / chests / auto / at（存檔時間）。一槽一檔 user://cq_save_<n>.json，槽號從 1 起遞增、不設上限，槽號被刪掉會回收再用；舊版單槽檔 user://cq_save.json 開機時自動搬成槽 1。自動存檔（場景進場、帶存檔動作的對話、撿取、開寶箱、買賣完成）一律寫回本局使用的槽（current_slot）；新遊戲後第一次自動存檔會配新槽，不會蓋掉別局。選單→系統可存檔（覆寫／＋新增存檔）、讀檔、刪除存檔（按兩次 Enter 確認）；標題「繼續冒險」讀最近存的那一槽。室內存檔存「門口外」座標避免重載卡牆。"],
  ["場景轉場（SceneRouter）","邏輯場景名 Title / Town / Forest / Forest2 / Mine / Cave / Battle / Hub / EForest1~3 經 SCENE_PATHS 對照表轉實際路徑。進場定位：result ∈ {win, flee, story, resume} 且 return_x ≥ 0 → 用 return 座標；否則用 spawn 出生點。戰敗特例：lose 強制回 Town、出生點 shrine（教堂重生）。"],
  ["對話系統（matchWhen）","條件語法只有三種：always／旗標==數字／旗標>=數字（未定義旗標視為 0）。每個 NPC 的對話表由上而下取第一個成立的條目——越後期的條件要排越前面。action 為對話結束後的具名副作用；done 旗標保證贈禮類只發一次。過場（CUTS）另支援 battle / transfer / setstep / party 四欄位。"],
  ["架構備忘：content_db.tres 內嵌副本","遊戲實際只 load() 聚合檔 content_db.tres，其內容是內嵌副本、不是連結到個別 .tres——只改個別 .tres 而沒同步聚合檔，改動不會反映在遊戲裡（兩邊都要改）。"]
 ];
 const ACTIONS=[
- ["register","登錄冒險者：reg=1，取得公會登錄證（F 級）"],
- ["ch1_take / ch1_reward","接第一章委託（ch1=1）／結案發 200G（ch1→3）"],
- ["ch2_take / ch2_report","接第二章委託（ch2=1）／礦山回報謝禮（ch2→3）"],
+ ["register","登錄 F 級冒險者：reg=1，贈冒險者靴（adventurer_boots）"],
  ["heal","隊伍完全恢復（住宿／祈禱）"],
- ["give_sword / give_ring / give_potion","贈鐵劍（gotSword）／活力戒指（gotRing）／藥水×2（gotPotion）"],
- ["mira_start / mira_reward","鏡草支線開始（贈凝神耳環，gotEar）／完成獎勵藥水×3"],
- ["relic_turnin","交還礦工頭盔 → 100G"],
- ["shop_hank / shop_gid","開啟鐵匠鋪／道具店商店介面"]
+ ["give_sword / give_ring / give_potion","漢克的舊劍（gotSword）／瑪莎的護身戒（gotRing）／藥水×2（gotPotion）"],
+ ["mira_start / mira_reward","F 委託①：贈凝神耳環開始採鏡草（gotEar・mira2=1）／交齊 3 株發藥水×3（mira2=2，fq_herb→fq+1）"],
+ ["turnin_wolf","F 委託②：交狼皮×2 給緹娜 → +120G（fq_wolf→fq+1）"],
+ ["rumor_dora / rumor_don / rumor_barton","F 委託③：向該鎮民打聽礦山耳語，rumor+1；湊滿 3 位→fq_rumor→fq+1"],
+ ["s5_start","fq==3 後老葛雷託付私事 → ch1_step=10"],
+ ["gid_brew","吉德把烈火蜂蜜調成蜂蜜酒（honey_wine=1）"],
+ ["warden_pass","把蜂蜜酒遞給礦山守衛放行 → ch1_step=12"],
+ ["shop_don / shop_gid","開啟鐵匠鋪／道具店商店介面"],
+ ["give_earring","單獨贈凝神耳環（gotEar）"],
+ ["ch1_take / ch1_reward・ch2_take / ch2_report・relic_turnin","舊 POC 三段式章節與阿吉頭盔支線的 action，新主線不觸發，待封存"]
+];
+
+/* ══════════ 任務（手寫 META：來源 docs/story/第一章任務攻略.md）══════════ */
+const QUEST_MAIN=[
+ {no:"小節 1",t:"勇者的日常？",fl:"ch1_step 0 → 3",rows:[
+  ["新遊戲（ch1_step==0）","芳蕾鎮·路德家門前","開場：路德揮劍、瑪琳勸阻","過場 s1_open","—","ch1_step=1，東門開放"],
+  ["ch1_step>=1","東之森 EFA 起","打雜魚練手往深處走","隨機遭遇 forest（掠翅鳥／綠黏史萊姆）","—","—"],
+  ["進入 EF-G（ch1_step==1）","東之森·EF-G","路中央的熊擋路，只播路德獨白後自動走向牠","過場 s1_bear_pre → 定點戰 bear_forced（必敗）","—","ch1_step=2"],
+  ["戰敗後自動","同上","瀕死呼救 → 亞倫擊退熊、送回鎮","過場 s1_bear","—","ch1_step=3，傳送回鎮"]]},
+ {no:"小節 2",t:"不甘心的少年",fl:"3 → 5",rows:[
+  ["ch1_step==3","路德家（傍晚）","瑪莎敷藥、漢克勸退","過場 s2_home","—","ch1_step=4"],
+  ["ch1_step>=3","路德家·漢克","選「臨別贈言」","—","漢克的舊劍 hank_blade","gotSword=1"],
+  ["ch1_step>=3","路德家·瑪莎","選「母親的心意」","—","瑪莎的護身戒 martha_ring","gotRing=1"],
+  ["首次到道具店","吉德道具店","選「新客招待」","—","藥水 ×2","gotPotion=1"],
+  ["ch1_step==4","鎮上","看見亞倫往北走，決意偷跟","過場 s2_follow","—","ch1_step=5，北門開放"]]},
+ {no:"小節 3",t:"礦山的那一天",fl:"5 → 8",rows:[
+  ["ch1_step==5","北方礦山入口","亞倫識破跟蹤、結伴同行","過場 s3_mine_in","—","ch1_step=6，亞倫 guest 入隊"],
+  ["走到礦山深處","礦山深處","遭遇異變的魔影","過場 s3_demon_pre → 定點戰 prologue_demon（必敗）","—","—"],
+  ["戰鬥結束自動","同上","亞倫斷後、把路德推走","過場 s3_alan_fall","—","ch1_step=7，傳送回鎮、亞倫離隊"],
+  ["ch1_step==7","芳蕾鎮·公會","向緹娜回報，礦山封鎖","過場 s3_report","—","ch1_step=8"]]},
+ {no:"小節 4",t:"不是一個人",fl:"8 → 9（＋登錄）",rows:[
+  ["ch1_step==8","路德家（閉關中）","瑪琳來訪、路德立志","過場 s4_join","—","ch1_step=9，瑪琳入隊"],
+  ["ch1_step>=9","公會·緹娜","對話登錄 F 級（action register）","—","冒險者靴 adventurer_boots","reg=1，委託告示板開放"]]},
+ {no:"小節 5",t:"一壺蜂蜜酒",fl:"9 → 12",rows:[
+  ["fq==3（三件 F 委託完成）","水井旁·老葛雷","接私託「設法進封鎖的礦山」","—","—","ch1_step=10"],
+  ["ch1_step>=10","礦山口·守衛","守衛擋路、想喝酒","—","—","—"],
+  ["ch1_step>=10","道具店·吉德","要「烈火蜂蜜」才調得出好酒","—","—","—"],
+  ["走近 EF-I 老樹旁的熊（玩家自決）","東之森·EF-I","採蜜驚動舊傷復出的熊","過場 s5_bear_pre → 戰 bear_rematch（可勝）","烈火蜂蜜 fire_honey","got_honey=1"],
+  ["戰鬥勝利自動","同上","收工","過場 s5_bear_win","—","ch1_step=11"],
+  ["got_honey==1","道具店·吉德","交蜂蜜、調酒（gid_brew）","—","蜂蜜酒 honey_mead","honey_wine=1"],
+  ["honey_wine==1","礦山口·守衛","遞酒、守衛醉倒放行（warden_pass）","—","蜂蜜酒 −1","ch1_step=12，礦山開放"]]},
+ {no:"小節 6",t:"被汙染的真相",fl:"12 → 13",rows:[
+  ["ch1_step>=12","北方礦山（重返）","探路，遇骷髏礦工","隨機遭遇 mine 表","—","—"],
+  ["走到最深處 NMF","礦山最深處","遇死靈術士","過場 necro_intro → boss 戰 necro（擊退不殺）","—","勝利設 marin_curse=1"],
+  ["戰鬥勝利自動","同上","黑水晶爆發、記號護體、瑪琳中咒昏厥","過場 s6_curse","—","ch1_step=13，傳送回鎮"],
+  ["ch1_step==13","芳蕾鎮","希雅穩住咒印、向緹娜回報","過場 s6_report","—","第一章完（setstep -1）"]]}
+];
+const QUEST_FQ=[
+ {t:"① 採藥·鏡草",who:"村口·米拉（reg==1 起）",do:"領凝神耳環（訂金）→ 東之森 EFA／EFB／EFD 各採 1 株 → 回米拉交付",cond:"herb==3 交付",rew:"凝神耳環、藥水 ×3",fl:"gotEar・mira2 → fq_herb → fq+1"},
+ {t:"② 討伐取證",who:"公會·緹娜（告示板）",do:"到深層森林（EFC/D/G/H/I）獵野狼、湊狼皮 ×2 → 緹娜選單「繳交狼皮」",cond:"wolf_hide>=2 繳交",rew:"+120 金幣",fl:"fq_wolf → fq+1"},
+ {t:"③ 打聽消息（耳語）",who:"鎮上·朵拉／唐恩／巴頓",do:"各聊一段礦山傳聞（純對話、無戰鬥，替礦山鋪陳）",cond:"rumor==3",rew:"—（鋪陳）",fl:"rumor_dora/don/barton → fq_rumor → fq+1"}
+];
+const QUEST_FLAGS=[
+ ["ch1_step","主線進度 0→13（唯一主線閘門）","過場 setstep／s5_start(→10)／warden_pass(→12)"],
+ ["reg","已登錄 F 級","register"],
+ ["fq","F 級委託完成計數 0→3（==3 解鎖老葛雷）","三件各完成時 +1"],
+ ["fq_herb / fq_wolf / fq_rumor","①②③ 各自的完成守衛旗標（防重複計數）","各 action"],
+ ["gotSword / gotRing / gotPotion","漢克劍／瑪莎戒／吉德藥（一次性）","give_sword／give_ring／give_potion"],
+ ["gotEar / mira2","米拉耳環已領／採藥階段（1 接、2 結）","mira_start／mira_reward"],
+ ["herb","鏡草數 0→3","EFA/EFB/EFD 撿取點（show_when mira2==1）"],
+ ["rumor / rumor_dora・rumor_don・rumor_barton","耳語湊齊數 0→3／各鎮民已打聽","_collect_rumor()"],
+ ["got_honey","烈火蜂蜜到手","bear_rematch 戰鬥勝利"],
+ ["honey_wine","蜂蜜酒調好","gid_brew"],
+ ["marin_curse","瑪琳中黑咒印","necro 戰鬥勝利"],
+ ["c_*","各過場的一次性旗標（播過即鎖）","各過場 once"],
+ ["relic・ch1・ch2（舊）","阿吉頭盔支線／舊三段式章節","舊 POC 資料，新主線不觸發"]
+];
+const QUEST_ITEMS=[
+ ["漢克的舊劍 hank_blade","小節2·漢克","裝備（路德）"],
+ ["瑪莎的護身戒 martha_ring","小節2·瑪莎","裝備"],
+ ["藥水 potion ×2","小節2·吉德新客招待","消耗"],
+ ["冒險者靴 adventurer_boots","小節4·公會登錄","裝備"],
+ ["凝神耳環 focus_earring","小節4.5·①米拉（訂金）","裝備"],
+ ["藥水 potion ×3","小節4.5·①米拉領賞","消耗"],
+ ["狼皮 wolf_hide ×2","小節4.5·②深層森林獵狼掉落","交緹娜（+120G）"],
+ ["烈火蜂蜜 fire_honey","小節5·熊複戰勝利","交吉德調酒"],
+ ["蜂蜜酒 honey_mead","小節5·吉德調製","交礦山守衛放行"],
+ ["阿吉頭盔 miner_helmet（舊）","舊 mine.tscn 撿取","交老葛雷（新主線摸不到）"]
 ];
 
 /* ══════════ 主渲染 ══════════ */
@@ -732,13 +808,7 @@ function render(){
     const cfg=g.pacing.maps[m.id];
     let pacing=null;
     if(cfg){
-      const groups=g.encounters[m.id];let scale=null;
-      if(groups&&groups.length){
-        const sums=groups.map(gr=>gr.members.reduce((s,mem)=>s+(foeById[mem.id]?(foeById[mem.id].exp||0)*(mem.min+mem.max)/2:0),0));
-        const avg=sums.reduce((a,b)=>a+b,0)/sums.length;
-        if(avg>0){let need=0;for(let lv=cfg.entryLv;lv<cfg.targetLv;lv++)need+=expNeed(lv);scale=Math.round((cfg.party!=null?cfg.party:g.pacing.partySize)*need/(cfg.battles*avg)*1000)/1000;}
-      }
-      pacing="Lv"+fmt(cfg.entryLv)+" → Lv"+fmt(cfg.targetLv)+" ・ 預計 "+fmt(cfg.battles)+" 戰"+(scale!=null?" ・ EXPSCALE "+scale:"");
+      pacing="Lv"+fmt(cfg.entryLv)+" → Lv"+fmt(cfg.targetLv)+" ・ 預計 "+fmt(cfg.battles)+" 戰";
     }
     const encs=(g.encounters[m.id]||[]).map(gr=>({w:fmt(gr.weight),t:encStr(gr)}));
     const chests=g.chests.filter(c=>c.map===m.id).map(c=>({tier:TIERL[c.tier]||c.tier,tc:TIERC[c.tier]||"c-mut",tx:c.tx,ty:c.ty,loot:c.loot.map(l=>l.type==="gold"?fmt(l.amount)+" G":((eqById[l.id]?eqById[l.id].name:(itemById[l.id]?itemById[l.id].name:l.id))+(l.count?"×"+fmt(l.count):""))).join("、")}));
@@ -805,7 +875,7 @@ function render(){
     <div class="in"><div class="kick">TALE OF CRYSTAL — GODOT 4.7 EDITION</div>
     <h1>水晶傳說 設定集</h1>
     <p>十五歲的路德為查明恩人亞倫失蹤的真相，與青梅竹馬瑪琳一同踏上冒險。水晶碎片、封閉二十年的北方礦山、化為骷髏的失蹤礦工——黑影正在甦醒。</p>
-    <div class="metarow">${chip("2 人隊伍（上限 4）","acc")}${chip("ATB 戰鬥")}${chip("單一存檔槽")}${chip("1280×720 設計基準 · 手繪風 · linear")}${chip("GDScript")}</div></div></section>`);
+    <div class="metarow">${chip("2 人隊伍（上限 4）","acc")}${chip("ATB 戰鬥")}${chip("存檔槽無上限")}${chip("1280×720 設計基準 · 手繪風 · linear")}${chip("GDScript")}</div></div></section>`);
 
   if(show("ov",true))P.push(`<section class="sec" id="sec_ov">${secHead("ov","總覽")}
     <p class="lead">世界觀、章節主線與技術規格。旗標細節見「劇情與對話」，數值規則見「戰鬥公式」。</p>
@@ -846,20 +916,69 @@ function render(){
     <div class="grid-npc">${shops.join("")}</div></section>`);
 
   if(show("world"))P.push(`<section class="sec" id="sec_world">${secHead("world","地圖與地區",maps.length+" 張")}
-    <p class="lead">節奏參數（pacing）定義每張圖的進場等級→目標等級與預計戰鬥數，EXP 縮放係數由此推得（F-9，現場計算）。寶箱座標為圖塊座標（tx, ty）。</p>
+    <p class="lead">節奏參數（pacing）是每張圖的進場等級→目標等級與預計戰鬥數，僅供節奏參考——EXP 不再依此縮放（F-9 於 spec v4.2 移除）。寶箱座標為圖塊座標（tx, ty）。</p>
     <div class="grid-npc">${maps.join("")}</div>
     <h3 class="sub">事件戰・頭目編成</h3><div class="surface"><div class="tw"><table class="tbl"><tbody>${events.map(e=>`<tr><td style="white-space:nowrap"><b>${esc(e.name)}</b><div class="id">${e.id}</div></td><td style="color:#c3cdea;font-size:12.5px">${esc(e.comp)}</td><td class="c-mut" style="font-size:12px">${esc(e.note)}</td></tr>`).join("")}</tbody></table></div></div></section>`);
+
+  if(show("quest",true)){
+    const qTbl=(head,rows)=>`<div class="surface" style="margin-bottom:18px"><div class="tw"><table class="tbl" style="font-size:12.5px;min-width:780px">
+      <thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead>
+      <tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td${i===0?' style="white-space:nowrap"':""} class="${i===0?"c-mut":""}">${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+    const mains=QUEST_MAIN.map(s=>`<h3 class="sub">${esc(s.no)}・${esc(s.t)}　${chip(s.fl,"acc sm")}</h3>
+      ${qTbl(["觸發條件","地點","做什麼","過場／戰鬥","道具","完成後"],s.rows)}`).join("");
+    const fq=`<div class="surface" style="margin-bottom:18px"><div class="tw"><table class="tbl" style="font-size:12.5px;min-width:780px">
+      <thead><tr><th>委託</th><th>接取／地點</th><th>做什麼</th><th>完成條件</th><th>報酬</th><th>旗標</th></tr></thead>
+      <tbody>${QUEST_FQ.map(q=>`<tr><td style="white-space:nowrap"><b>${esc(q.t)}</b></td><td class="c-mut">${esc(q.who)}</td><td style="color:#c3cdea">${esc(q.do)}</td><td class="mono c-acc" style="font-size:11.5px">${esc(q.cond)}</td><td>${esc(q.rew)}</td><td class="mono c-faint" style="font-size:11px">${esc(q.fl)}</td></tr>`).join("")}</tbody></table></div></div>`;
+    P.push(`<section class="sec pur" id="sec_quest">${secHead("quest","任務","第一章 · 六小節","pur","QUEST LOG")}
+      <p class="lead">第一章的可執行流程：每一步的觸發條件 → 地點 → 做什麼 → 收發道具 → 完成後旗標。<b>主線閘門只有 ch1_step（0→13）</b>；想跳到某一節測試，改存檔的 ch1_step ＋清掉對應 <span class="mono">c_*</span> 一次性旗標即可。手寫來源：docs/story/第一章任務攻略.md（對照 .tres／程式實作）。</p>
+      ${mains}
+      <h3 class="sub">小節 4.5・初出茅廬：三件 F 級委託　${chip("fq 0→3","acc sm")}</h3>
+      <p class="c-mut" style="margin:0 0 10px;font-size:13px;max-width:88ch">登錄後必經的練級環節，三件可任意順序、<b>全完成（fq==3）</b>老葛雷才會託付私事推進主線。</p>
+      ${fq}
+      <h3 class="sub">旗標總表（存檔對照）</h3>
+      ${qTbl(["旗標","意義","由誰設"],QUEST_FLAGS)}
+      <h3 class="sub">道具流向速查</h3>
+      ${qTbl(["道具（id）","何時何地入手","去向"],QUEST_ITEMS)}</section>`);
+  }
+
+  if(show("exp",true)){
+    const et=g.expTable||{levels:[],maxLevel:0};
+    const rows=et.levels||[];
+    const pick=rows.filter(r=>r[0]<=10||r[0]%5===0||r[0]===et.maxLevel);
+    const expRow=r=>`<tr><td class="num" style="width:70px">${r[0]}</td><td class="num">${fmt(r[1])}</td><td class="num c-mut">${fmt(r[2])}</td></tr>`;
+    const openAll=!!st.open["exp_all"];
+    P.push(`<section class="sec" id="sec_exp">${secHead("exp","經驗與升級","Lv1–"+et.maxLevel)}
+      <p class="lead"><b>真相源＝resources/content/exp_table.json</b>（specs/BATTLE_FORMULAS.md F-2，spec v5.0）。表由 <span class="mono">${esc(et.formula||"")}</span> 產出，之後<b>以表內數值為準</b>——調曲線直接改 JSON，不用回頭改公式。滿級 Lv${et.maxLevel} 的所需經驗固定 0＝不再升級。</p>
+      <div class="grid" style="margin-bottom:20px">${(et.targets||[]).map(t=>`<div class="card"><p>${esc(t)}</p></div>`).join("")}</div>
+      <h3 class="sub">升級取得（F-9）</h3>
+      <div class="surface" style="margin-bottom:20px"><div class="tw"><table class="tbl" style="font-size:12.5px"><tbody>
+        <tr><td style="width:190px;white-space:nowrap" class="c-mut">實得 EXP</td><td>＝敵方資料表 EXP 總和（無地圖縮放係數；設定集各魔物標示的值就是實際入帳的全隊合計）</td></tr>
+        <tr><td class="c-mut">每人分配</td><td>ceil(實得 EXP ÷ 非客座隊員數)——客座（guest）不分經驗</td></tr>
+        <tr><td class="c-mut">升級獲得</td><td>屬性點 +${fmt(g.derived.pointsPerLevel)}／級、技能點 +${fmt(g.derived.skillPointsPerLevel)}／級，並依 class／unlockLv 自動習得新技能</td></tr>
+        <tr><td class="c-mut">滿級</td><td>Lv${et.maxLevel} 之後 required_exp = 0，升級迴圈以此為終止條件（選單經驗列顯示 MAX）</td></tr>
+      </tbody></table></div></div>
+      <h3 class="sub">經驗曲線（Lv1–10 全列，之後每 5 級）</h3>
+      <div class="surface"><div class="tw"><table class="tbl" style="font-size:12.5px;min-width:420px">
+        <thead><tr><th class="num">等級</th><th class="num">升下一級所需</th><th class="num">累積至該級</th></tr></thead>
+        <tbody>${pick.map(expRow).join("")}</tbody></table></div></div>
+      <div class="gh" data-act="tg" data-id="exp_all" role="button" tabindex="0" style="margin-top:14px">
+        <span class="schev" style="transform:rotate(${openAll?0:-90}deg)">▾</span>完整 ${rows.length} 級對照表</div>
+      ${openAll?`<div class="surface" style="margin-top:10px"><div class="tw" style="max-height:460px;overflow-y:auto"><table class="tbl" style="font-size:12.5px;min-width:420px">
+        <thead><tr><th class="num">等級</th><th class="num">升下一級所需</th><th class="num">累積至該級</th></tr></thead>
+        <tbody>${rows.map(expRow).join("")}</tbody></table></div></div>`:""}
+    </section>`);
+  }
 
   if(show("formula",true)){
     const derivedRows=Object.entries(g.derived).map(([k,v])=>`<tr><td class="mono c-acc" style="font-size:11.5px;white-space:nowrap">${k}</td><td class="num" style="width:90px">${fmt(v)}</td><td class="c-mut">${esc(DERL[k]||"")}</td></tr>`).join("");
     P.push(`<section class="sec" id="sec_formula">${secHead("formula","戰鬥公式")}
-      <p class="lead">摘錄自 specs/BATTLE_FORMULAS.md v2.0。F-1～F-9 抄錄自 GDevelop build_cq2.py（附行號可回溯）；F-10 為 Godot 端刻意新增的平衡設計（2026-07-15 遊玩回饋調整）。</p>
+      <p class="lead">摘錄自 specs/BATTLE_FORMULAS.md v5.0。F-1／F-3～F-8 抄錄自 GDevelop build_cq2.py（附行號可回溯）；F-2 已於 v5.0 改為查經驗表（見「經驗與升級」）、F-9 的地圖縮放係數已於 v4.2 移除、F-10 為 Godot 端刻意新增的平衡設計。</p>
       ${FORMULAS.map(f=>`<div class="formula"><h4><span class="no">${f.no}</span>${esc(f.t)}</h4>${f.code?`<pre>${esc(f.code)}</pre>`:""}${f.d?`<p>${esc(f.d)}</p>`:""}</div>`).join("")}
       <h4 style="margin:0 0 10px">成長常數（derived.tres）</h4><div class="surface"><div class="tw"><table class="tbl" style="font-size:12.5px"><tbody>${derivedRows}</tbody></table></div></div></section>`);
   }
 
   if(show("system",true))P.push(`<section class="sec" id="sec_system">${secHead("system","系統規格")}
-    <p class="lead">摘錄自 specs/SAVE_SCHEMA.md v1.1 與 specs/DIALOGUE_SPEC.md v1.1。</p>
+    <p class="lead">摘錄自 specs/SAVE_SCHEMA.md v2.0 與 specs/DIALOGUE_SPEC.md v1.1。</p>
     <h4 style="margin:0 0 10px">全域狀態（GameState）</h4>
     <div class="surface" style="margin-bottom:20px"><div class="tw"><table class="tbl" style="font-size:12.5px;min-width:560px"><thead><tr><th>欄位</th><th>型別</th><th>內容</th><th>持久化</th></tr></thead><tbody>${GSTATE.map(r=>`<tr><td class="mono c-acc" style="font-size:11.5px;white-space:nowrap">${esc(r[0])}</td><td class="c-mut" style="white-space:nowrap">${esc(r[1])}</td><td style="color:#c3cdea">${esc(r[2])}</td><td class="c-mut">${esc(r[3])}</td></tr>`).join("")}</tbody></table></div></div>
     ${SYSNOTES.map(n=>`<div style="margin-bottom:18px"><h4 style="margin:0 0 6px">${esc(n[0])}</h4><p class="c-mut" style="margin:0;font-size:13px;max-width:88ch">${esc(n[1])}</p></div>`).join("")}

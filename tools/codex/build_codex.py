@@ -14,6 +14,7 @@ REPO = HERE.parents[1]  # tools/codex/ -> repo 根（跨機器可攜）
 GODOT = REPO / "godot-project"
 BATTLE = GODOT / "assets/battle"
 CONTENT_DB = GODOT / "resources/content/content_db.tres"
+EXP_TABLE = GODOT / "resources/content/exp_table.json"
 DIALOGUE_DB = GODOT / "resources/content/dialogue/dialogue_db.tres"
 UI = GODOT / "assets/ui"
 
@@ -138,6 +139,16 @@ def build_game_json():
     game["shops"] = [{
         "id": r["id"], "name": r["display_name"], "greet": r["greet"], "sells": r["sell_ids"],
     } for r in rows("shops")]
+
+    # 經驗表（F-2 真相源，spec v5.0）：exp_table.json 不在 content_db.tres 裡，另外讀。
+    # levels 壓成 [等級, 該級所需, 累積] 三元組陣列，避免 data.json 為了 100 列灌一堆 key 名。
+    exp = json.loads(EXP_TABLE.read_text(encoding="utf-8"))
+    game["expTable"] = {
+        "maxLevel": exp["meta"]["max_level"],
+        "formula": exp["meta"]["formula"],
+        "targets": exp["meta"].get("design_targets", []),
+        "levels": [[r["level"], r["required_exp"], r["total_exp"]] for r in exp["levels"]],
+    }
 
     game["chests"] = [{
         "id": r["id"], "map": r["map"], "tx": r["tx"], "ty": r["ty"], "tier": r["tier"],
