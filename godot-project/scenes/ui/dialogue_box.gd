@@ -48,7 +48,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		confirm = true
 	if confirm:
 		DialogueSystem.advance()
-		get_viewport().set_input_as_handled()
+		# advance() 可能觸發轉場（過場的 transfer 欄位），本節點會連同舊場景一起被移出樹，
+		# 這時 get_viewport() 是 null——不能無條件呼叫。
+		var vp := get_viewport()
+		if vp != null:
+			vp.set_input_as_handled()
 
 
 func _on_started(_npc_id: String, _entry: DialogueEntry) -> void:

@@ -108,6 +108,9 @@ const LOSE_RESPAWN_SPAWN_ID := "shrine"
 ## Town/shrine（見上），所以戰敗一律走「查 spawn 表」這條路徑，不是 returnX/Y。
 const RESULT_USE_RETURN_POS := ["win", "flee", "story", "resume"]
 
+## 切場景進行中（等 idle frame 的那一小段），擋掉同幀重複請求。見 `_change_scene()`。
+var _changing: bool = false
+
 
 ## 一般場景轉場（世界內出口 exit_zone.gd、CUTS `transfer` 欄位）。
 ## 對應 build_cq2.py L2313-2315（`CFG.exits`）與 L1703-1705（CUTS `transfer`）：
@@ -205,6 +208,20 @@ func _change_scene(scene_id: String) -> void:
 	var tree := get_tree()
 	if tree == null:
 		push_warning("SceneRouter: get_tree() 目前為 null（SceneRouter 尚未進入場景樹？），無法切場景 path=%s" % path)
+		return
+	if _changing:
+		return          # 同一幀內第二個切場景請求（例：兩個出口帶重疊）一律忽略，避免切一半再切
+	_changing = true
+	# **一定要等到 idle frame 才切**（2026-07-28 修）：本函式的呼叫端有兩種都在引擎回呼「裡面」——
+	#   ① exit_zone 的 body_entered → 物理回呼中；直接切會噴
+	#      "Removing a CollisionObject node during a physics callback...will cause undesired behavior"
+	#      （John 一次試玩的 log 就有 7 筆）。
+	#   ② dialogue_box 的 _unhandled_input → 輸入派送中；舊場景（含正在派送輸入的 DialogueBox）被
+	#      當場 free 掉，回到 _unhandled_input 時 get_viewport() 已是 null，輸入派送狀態被打斷。
+	# `process_frame` 在 idle 階段發出，不在物理／輸入回呼內，切場景就安全了。
+	await tree.process_frame
+	_changing = false          # 一定要先解旗標，否則任何 early return 都會讓之後再也切不了場景
+	if not is_inside_tree():
 		return
 	var err := tree.change_scene_to_file(path)
 	if err != OK:
