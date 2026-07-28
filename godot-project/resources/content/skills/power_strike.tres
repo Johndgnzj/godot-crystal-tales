@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="SkillDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_h1c5t"]
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_h1c5t")
+script = ExtResource("1_script")
 id = "power_strike"
 display_name = "強力斬"
 char_class = "explorer"

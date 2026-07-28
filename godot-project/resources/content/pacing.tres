@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="PacingParams" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/pacing_params.gd" id="1_isv8w"]
+[ext_resource type="Script" path="res://scripts/content/pacing_params.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_isv8w")
+script = ExtResource("1_script")
 party_size = 2
 maps = {
 "cave": {

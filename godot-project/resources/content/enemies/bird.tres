@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EnemyDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_iwqxm"]
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_iwqxm")
+script = ExtResource("1_script")
 id = "bird"
 display_name = "掠翅鳥"
 sprite = "bird"

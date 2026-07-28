@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EquipmentDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_gqkec"]
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_gqkec")
+script = ExtResource("1_script")
 id = "steel_sword"
 display_name = "鋼劍"
 slot = "weapon"
@@ -11,8 +11,8 @@ desc = "漢克精心鍛造的鋼劍，鋒利沉穩，第二章的主力武器。
 buy = 260
 sell = 78
 tier = 2
-rarity = "rare"
 stats = {
 "patk": 10.0
 }
+rarity = "rare"
 attr_type = "str"

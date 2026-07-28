@@ -269,7 +269,7 @@
         },
         "desc": "扎實的全鐵長劍，冒險者的標準配備。",
         "attr": "str",
-        "rarity": "common"
+        "rarity": "uncommon"
       },
       {
         "id": "traveler_garb",
@@ -297,7 +297,7 @@
         },
         "desc": "鞣製皮革製的護胸，兼顧防護與靈活。",
         "attr": "str",
-        "rarity": "common"
+        "rarity": "uncommon"
       },
       {
         "id": "leather_boots",
@@ -325,7 +325,7 @@
         },
         "desc": "輕量化的軟皮靴，步伐輕盈、易於閃避。",
         "attr": "agi",
-        "rarity": "common"
+        "rarity": "uncommon"
       },
       {
         "id": "cloth_wraps",
@@ -354,7 +354,7 @@
         },
         "desc": "加了鐵片的護腕，格擋之餘還能增添揮劍力道。",
         "attr": "",
-        "rarity": "common"
+        "rarity": "uncommon"
       },
       {
         "id": "hunter_bracer",
@@ -397,7 +397,7 @@
         },
         "desc": "溫熱的紅玉戒指，配戴時體力更加充沛。",
         "attr": "",
-        "rarity": "common"
+        "rarity": "uncommon"
       },
       {
         "id": "focus_earring",
@@ -412,7 +412,7 @@
         },
         "desc": "藍晶耳環，凝神靜氣，強化魔力循環。",
         "attr": "",
-        "rarity": "common"
+        "rarity": "uncommon"
       },
       {
         "id": "lucky_coin",
@@ -470,7 +470,7 @@
         },
         "desc": "細環相扣的鎖子甲，防護扎實但略沉。",
         "attr": "str",
-        "rarity": "common"
+        "rarity": "rare"
       },
       {
         "id": "mage_robe",
@@ -486,7 +486,7 @@
         },
         "desc": "織入符文的法師長袍，擴充魔力並提升法術威力。",
         "attr": "int",
-        "rarity": "common"
+        "rarity": "rare"
       },
       {
         "id": "steel_bracer",
@@ -501,7 +501,7 @@
         },
         "desc": "精鋼打造的護腕，攻防兼備的升級品。",
         "attr": "",
-        "rarity": "common"
+        "rarity": "rare"
       },
       {
         "id": "silver_boots",
@@ -516,7 +516,7 @@
         },
         "desc": "鑲銀的輕靴，兼顧閃避與防護。",
         "attr": "agi",
-        "rarity": "common"
+        "rarity": "rare"
       },
       {
         "id": "guardian_pendant",
@@ -531,7 +531,7 @@
         },
         "desc": "刻有守護紋章的墜飾，同時強化物防與魔防。",
         "attr": "",
-        "rarity": "common"
+        "rarity": "rare"
       },
       {
         "id": "bronze_sword",

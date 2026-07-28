@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EquipmentDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_yagpx"]
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_yagpx")
+script = ExtResource("1_script")
 id = "leather_boots"
 display_name = "皮革長靴"
 slot = "boots"

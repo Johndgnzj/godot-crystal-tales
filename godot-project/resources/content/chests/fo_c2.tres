@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="ChestDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_1s4fh"]
+[ext_resource type="Script" path="res://scripts/content/chest_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_1s4fh")
+script = ExtResource("1_script")
 id = "fo_c2"
 map = "forest"
 tx = 50

@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="DerivedParams" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/derived_params.gd" id="1_55e4v"]
+[ext_resource type="Script" path="res://scripts/content/derived_params.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_55e4v")
+script = ExtResource("1_script")
 hp_base = 30.0
 hp_per_str = 8.0
 mp_base = 8.0

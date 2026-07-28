@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EnemyDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_vlmoy"]
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_vlmoy")
+script = ExtResource("1_script")
 id = "goblin_chief"
 display_name = "哥布林頭目"
 sprite = "maskedorc"

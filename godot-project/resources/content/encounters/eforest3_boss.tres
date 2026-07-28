@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="EncounterDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="1_esc4f"]
+[ext_resource type="Script" path="res://scripts/content/encounter_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_esc4f")
+script = ExtResource("1_script")
 map_id = "eforest3_boss"
 formations = [{"weight": 1.0, "members": [{"id": "goblin_chief", "min": 1, "max": 1}, {"id": "goblin", "min": 2, "max": 3}, {"id": "worm", "min": 0, "max": 1}]}]

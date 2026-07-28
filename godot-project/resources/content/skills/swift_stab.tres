@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="SkillDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_ujo5l"]
+[ext_resource type="Script" path="res://scripts/content/skill_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_ujo5l")
+script = ExtResource("1_script")
 id = "swift_stab"
 display_name = "疾風刺"
 char_class = "explorer"

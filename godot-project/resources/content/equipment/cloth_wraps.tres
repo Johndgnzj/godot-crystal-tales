@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EquipmentDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_vrtge"]
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_vrtge")
+script = ExtResource("1_script")
 id = "cloth_wraps"
 display_name = "布質護腕"
 slot = "wrist"

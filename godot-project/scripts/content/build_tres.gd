@@ -80,6 +80,9 @@ func _save(res: Resource, subdir: String, id: String) -> void:
 	if subdir != "":
 		DirAccess.make_dir_recursive_absolute(dir_path)
 	var path := (dir_path + "/" if subdir != "" else BASE) + id + ".tres"
-	var err := ResourceSaver.save(res, path)
+	# FLAG_CHANGE_PATH：把 resource_path 設成剛存的檔案，聚合檔才會以 ExtResource 引用個別檔。
+	# 少了這個 flag，記憶體物件的 resource_path 是空的 → 存 content_db.tres 時會把每筆「內嵌」成
+	# sub_resource（2026-07-28 查出的舊狀態成因，個別檔從此變成沒人讀的死副本）。
+	var err := ResourceSaver.save(res, path, ResourceSaver.FLAG_CHANGE_PATH)
 	if err != OK:
 		push_error("build_tres: 存 %s 失敗 err=%s" % [path, err])

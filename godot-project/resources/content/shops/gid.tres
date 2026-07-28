@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="ShopDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/shop_def.gd" id="1_ypnh0"]
+[ext_resource type="Script" path="res://scripts/content/shop_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_ypnh0")
+script = ExtResource("1_script")
 id = "gid"
 display_name = "吉德的道具店"
 greet = "要看看我店裡的商品嗎？"

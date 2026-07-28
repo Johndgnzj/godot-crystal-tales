@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EnemyDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_ph3pf"]
+[ext_resource type="Script" path="res://scripts/content/enemy_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_ph3pf")
+script = ExtResource("1_script")
 id = "necro"
 display_name = "死靈術士"
 sprite = "necro"

@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="ShopDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/shop_def.gd" id="1_cd4qf"]
+[ext_resource type="Script" path="res://scripts/content/shop_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_cd4qf")
+script = ExtResource("1_script")
 id = "don"
 display_name = "唐恩的鐵匠鋪"
 greet = "我這手藝……堪用啦。要看看嗎？"

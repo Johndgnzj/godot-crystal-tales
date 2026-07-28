@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="PartyMemberDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="1_t6ogp"]
+[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_t6ogp")
+script = ExtResource("1_script")
 id = "alan"
 display_name = "亞倫"
 char_class = "veteran"

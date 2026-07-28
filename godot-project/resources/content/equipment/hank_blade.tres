@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EquipmentDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_hb01"]
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_hb01")
+script = ExtResource("1_script")
 id = "hank_blade"
 display_name = "漢克的舊劍"
 slot = "weapon"

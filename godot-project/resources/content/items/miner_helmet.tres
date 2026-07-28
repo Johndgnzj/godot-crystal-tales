@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="ItemDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_hspor"]
+[ext_resource type="Script" path="res://scripts/content/item_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_hspor")
+script = ExtResource("1_script")
 id = "miner_helmet"
 rarity = "key"
 base_drop_rate = 0.0

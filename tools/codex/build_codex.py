@@ -54,21 +54,30 @@ def parse_body(body: str) -> dict:
 
 
 def parse_tres(path: pathlib.Path):
+    """解析 content_db.tres。條目可以是內嵌 sub_resource，也可以是 ext_resource 指向個別 .tres
+    （2026-07-28 起聚合檔改成引用個別檔，符合 CLAUDE.md 的資料規範）。兩種都要支援。"""
     text = path.read_text(encoding="utf-8")
     body_text, res_sec = text.split("\n[resource]\n", 1)
-    parts = re.split(r'\[sub_resource type="Resource" id="([^"]+)"\]', body_text)
     subs = {}
+    parts = re.split(r'\[sub_resource type="Resource" id="([^"]+)"\]', body_text)
     for i in range(1, len(parts) - 1, 2):
         subs[parts[i]] = parse_body(parts[i + 1])
+    # ext_resource type="Resource"：讀進被引用的個別檔（type="Script" 的不算條目）
+    for m in re.finditer(r'\[ext_resource type="Resource"([^\]]*)\]', body_text):
+        attrs = m.group(1)
+        res_path = re.search(r'path="res://([^"]+)"', attrs).group(1)
+        eid = re.search(r'id="([^"]+)"', attrs).group(1)
+        sub_text = (GODOT / res_path).read_text(encoding="utf-8")
+        subs[eid] = parse_body(sub_text.split("\n[resource]\n", 1)[1])
 
     def order(cat: str) -> list[str]:
         m = re.search(cat + r" = Array\[[^\]]*\]\(\[(.*?)\]\)", res_sec, re.S)
         if not m:
             sys.exit(f"[resource] 區找不到分類 {cat}")
-        return re.findall(r'SubResource\("([^"]+)"\)', m.group(1))
+        return re.findall(r'(?:Sub|Ext)Resource\("([^"]+)"\)', m.group(1))
 
     def single(cat: str) -> dict:
-        rid = re.search(cat + r' = SubResource\("([^"]+)"\)', res_sec).group(1)
+        rid = re.search(cat + r' = (?:Sub|Ext)Resource\("([^"]+)"\)', res_sec).group(1)
         return subs[rid]
 
     return subs, order, single

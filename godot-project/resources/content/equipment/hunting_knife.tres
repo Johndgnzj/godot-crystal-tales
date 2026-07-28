@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EquipmentDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_a88yn"]
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_a88yn")
+script = ExtResource("1_script")
 id = "hunting_knife"
 display_name = "獵刀"
 slot = "weapon"

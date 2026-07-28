@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="EquipmentDef" format=3]
 
-[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_6aas5"]
+[ext_resource type="Script" path="res://scripts/content/equipment_def.gd" id="1_script"]
 
 [resource]
-script = ExtResource("1_6aas5")
+script = ExtResource("1_script")
 id = "silver_boots"
 display_name = "銀靴"
 slot = "boots"
@@ -11,9 +11,9 @@ desc = "鑲銀的輕靴，兼顧閃避與防護。"
 buy = 80
 sell = 24
 tier = 2
-rarity = "rare"
 stats = {
 "dodge": 3.0,
 "pdef": 2.0
 }
 attr_type = "agi"
+rarity = "rare"
