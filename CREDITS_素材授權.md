@@ -55,8 +55,12 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - bgm_title.mp3 — "Calm Ambient Music – Wizard's Road (Fantasy Background)" by Clavier-Music（標題；1:58。2026-07-16 換入，原為 "Fantasy Adventure Quest" by alex-morgan）
 - bgm_town.mp3 — "Fantasy RPG Exploration V2" by RubyZephyr（芳蕾鎮；3:23。2026-07-16 換入，原為 "Medieval Folk Music" by watermelon_beats。Pixabay 標記為 AI 生成，授權仍為 Pixabay Content License）
 - bgm_forest.mp3 — "Adventure Forest Exploration" by nathan-180（東之森）
-- bgm_dungeon.mp3 — "Dark Fantasy Ambient Dungeon Synth" by deuslower（礦山/洞穴）
-- bgm_battle.mp3 — "Powerful Epic Orchestral History Loop" by sonican（戰鬥）
+- bgm_dungeon.mp3 — "Dark Fantasy Ambient Dungeon Synth" by deuslower（原礦山/洞穴，2026-07-28 已被 bgm_nm.mp3 取代）
+- bgm_battle.mp3 — 戰鬥循環 BGM（loop）。2026-07-27 換入 John 從 Pixabay 抓的新曲（原為 "Powerful Epic Orchestral History Loop" by sonican）。Pixabay Content License（可商用毋須標註）；曲名/作者待補。
+- bgm_battle_opening.mp3 — 戰鬥開場層（**非 loop，與 bgm_battle 疊播**；見 `AudioManager.play_bgm_overlay`，battle `_ready` 起播）。2026-07-27 新增（Pixabay）。Pixabay Content License；曲名/作者待補。
+- bgm_nm.mp3 — 北方礦山與洞窟 BGM。2026-07-27 新增（NMA–NMF）；**2026-07-28 依 John 指示擴用到 `Mine`（舊 tile 版礦坑）與 `Cave`**，這兩張原本掛 bgm_dungeon.mp3。Pixabay Content License；曲名/作者待補。
+- bgm_ef.mp3 — 東之森林與森林深處 BGM（素材源 `assets-source/sound/bgm/ef_bgm.mp3`）。2026-07-28 新增，依 John 指示掛在 EFA–EFI（M3 東之森林）、EFDA–EFDN／EFDM2（M4 東之森深處）與舊 tile 版 EForest1–3 的 `bgm` export；長度 0:19（短循環）。**出處/授權待 John 補**（若為 Suno 等 AI 自產請標「不得商用」）。
+- bgm_nm_conversation.mp3 — 小節6 與死靈術士對話 BGM（`necro_intro`／`s6_curse` 過場的 `bgm` 欄位觸發，見 `dialogue_system._start_cutscene`）。2026-07-27 新增（Pixabay）。Pixabay Content License；曲名/作者待補。
 - bgm_battle_win.mp3 — 戰鬥勝利短曲（一般）；Pixabay Music（Pixabay Content License，可商用毋須標註）。2026-07-16 新增，戰鬥結算時一次性播放不循環（見 battle_state_machine._settle_win）。曲名/作者待補。
 - bgm_battle_level_up.mp3 — 戰鬥勝利短曲（有升級）；來源/授權/用法同上。曲名/作者待補。
 - 處理：2026-07-12 首批曲目皆經響度正規化與 128kbps 壓製；2026-07-16 換入的 title/town 與勝利短曲已做響度正規化（線性增益對齊 ≈ -17.9 LUFS，同基準批次；128kbps 重壓）。sfx 的 select/cursor 同日以峰值對齊至 ≈ -1.5 dBTP。

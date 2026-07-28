@@ -285,6 +285,8 @@ func _start_cutscene(cut_id: String) -> void:
 	_current_cut = cut
 	_cut_idx = 0
 	AudioManager.sfx("select.mp3")   # 對應 build_cq2.py L1695：過場開啟
+	if cut.bgm != "":
+		AudioManager.play_bgm(cut.bgm)   # 過場指定 BGM（如 necro 對話切 bgm_nm_conversation）
 	cutscene_started.emit(cut_id)
 	if cut.lines.size() > 0:
 		var line: CutsceneLine = cut.lines[0]

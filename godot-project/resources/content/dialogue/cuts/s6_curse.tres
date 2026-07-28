@@ -41,6 +41,7 @@ text = "（抱起昏迷的瑪琳）亞倫大哥的下落、還有救瑪琳的方
 [resource]
 script = ExtResource("2_entry")
 id = "s6_curse"
+bgm = "bgm_nm_conversation.mp3"
 once = "c_s6_curse"
 lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
 transfer = PackedStringArray("Town", "home")

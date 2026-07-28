@@ -16,6 +16,7 @@ extends Resource
 @export var transfer: PackedStringArray = PackedStringArray()  ## [to_scene, spawn_id]，空＝不轉場
 @export var setstep: int = -1                 ## -1＝不改 step；>=0 時播完寫入 GameState.flags.step
 @export var party: PackedStringArray = PackedStringArray()     ## 播完生效的隊伍組成，空＝不改隊伍
+@export var bgm: String = ""                  ## 空＝不動 BGM；非空＝過場開始時切到此 BGM（如 necro 對話）
 
 
 static func from_dict(cut_id: String, d: Dictionary) -> CutsceneEntry:
@@ -42,5 +43,8 @@ static func from_dict(cut_id: String, d: Dictionary) -> CutsceneEntry:
 
 	var party_raw = d.get("party")
 	result.party = PackedStringArray(party_raw) if party_raw != null else PackedStringArray()
+
+	var bgm_raw = d.get("bgm")
+	result.bgm = bgm_raw if bgm_raw != null else ""
 
 	return result
