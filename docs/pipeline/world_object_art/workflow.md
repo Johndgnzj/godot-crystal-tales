@@ -4,14 +4,16 @@
 
 建立可重用、可互動、能貼合地圖環境的物件素材；不把寶箱、任務物品等互動物件畫死在地圖背景中。
 
+**本產線也負責道具／裝備的背包圖示**（`types/icon.md`）：同一個 art id 只有一份描述檔，有地圖實體者一次產出「地圖拾取物 32×32 貼地」與「背包圖示 64×64 方形」兩種交付；只有 UI 的道具與全部裝備只出圖示。圖示規格在 [`../../design/道具武器設計.md` §三](../../design/道具武器設計.md)。
+
 ## Step 1 建立互動需求
 
 先記錄以下資訊：
 
-- 類型：`chest`／`quest_item`（首批）；採集點、告示牌等日後再擴充。
+- 類型：`chest`／`quest_item`／`icon`；採集點、告示牌等日後再擴充。
 - art id：描述外觀族，不含地圖位置或獎勵，例如 `chest_wood`、`chest_mossy`。
 - 地區風格：森林、礦坑、城鎮等，只影響材質、配色與磨損程度。
-- footprint：首批固定 `1×1` 格（成品 `32×32px`）。
+- footprint：地圖物件首批固定 `1×1` 格（成品 `32×32px`）；`icon` 類型不吃 footprint，成品固定 `64×64px` 正方。
 - 狀態：依 [`../../design/地圖互動物件規格.md`](../../design/地圖互動物件規格.md) 的類型規則選擇。
 
 互動邏輯、掉落物、任務 flag 與地圖座標不寫進 prompt；它們屬於 Godot content／scene。
@@ -61,12 +63,13 @@ final 本體寬高比 = final.png 的 alpha bbox 高 / 寬
 | 狀態候選 | `<state>_candidate_1_raw.png` 至 `candidate_3_raw.png` |
 | 核可狀態 | `<state>_raw.png`、`<state>_alpha.png` |
 | 正規化來源成品 | `<state>.png` |
+| 背包圖示成品（`icon` 類型／雙交付） | `icon.png`（64×64） |
 
 ## Step 7 正式整合
 
 只有 John 明確驗收通過後才能整合：
 
-1. 複製正規化 PNG 到 `godot-project/assets/props/`。
+1. 複製正規化 PNG 到 `godot-project/assets/props/`；**背包圖示複製到 `godot-project/assets/icons/<name>.png`**（扁平單層，`<name>` 見規格 §3.3——允許同族共用一張）。
 2. 首批共用寶箱固定覆蓋 `chest_closed.png`、`chest_opened.png`；這可直接被現有 `world_scene.gd` 載入。
 3. 任務拾取物或新的外觀族若需要程式載入，先另開實作任務；不可只複製檔案就假設遊戲會顯示。
 4. 更新 `CREDITS_素材授權.md`，Reimport，並執行 `godot --headless --check-only --path godot-project`。

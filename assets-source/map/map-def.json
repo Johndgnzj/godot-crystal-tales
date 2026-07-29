@@ -16,6 +16,7 @@
         "town": {
           "scene": "Town",
           "scene_file": "town",
+          "props_collide_in_scene": true,
           "kind": "town",
           "floor": 0,
           "cell": [
@@ -36,13 +37,13 @@
           "terrain": [
             "fffffff^^^^^^^^^^^^^^^^^^^^^^^^^fffffff^",
             "^fffffff^^^^^^^^^^^^^^^^^^^^^^^ffffffff^",
-            "^^fffffff^^^^^^^^^^^^^BBBB^^^^fffffffff^",
-            "f^^ffffffff^^^^^^^^^^^BBBg^^^fffffffff^^",
-            "ff^^fffffffffffffffggggddgggfffffffff^^f",
-            "fff^ffffffffffffffgggggddggggfffffff^^ff",
-            "fff^^ffffffffffffggggggddgggggfffff^^fff",
-            "ffff^^^^^^^^^^^^^^^^^^BBBB^^^^^^^^^^ffff",
-            "fffffggggggggggggggggggddgggggffffffffff",
+            "^^fffffff^^^^^^^^^^^^^^^^^^^^^fffffffff^",
+            "f^^ffffffff^^^^^^^^^^^^B^^^^^fffffffff^^",
+            "ff^^fffffffffffffff^^^^d^^^^fffffffff^^f",
+            "fff^ffffffffffffffff^^^d^^^fffffffff^^ff",
+            "fff^^fffffffffffff^^^^^d^^^^^ffffff^^fff",
+            "ffff^^^^^^^^^^^^^g^^^^^B^^^^^^^^^^^^ffff",
+            "fffffggg^^^^^^^^^^^^^^gd^g^^^^ffffffffff",
             "fffffggggggggggggggggggddggggggggggfffff",
             "fffffggggggggdgggggggggddggggggggggfffff",
             "ffffffgggggggdgggggggggddggggggggggfffff",
@@ -50,36 +51,36 @@
             "ffffffgggggggdgggggdgggddgggggggggffffff",
             "ffffffgggggggdddddddgggddggggggggfffffff",
             "fffffggggdgggggggggdgggddggddggggfffffff",
-            "fffggggggddddddddddddddddggddggggfffffff",
-            "dddddggggggggggggggggggddggddggggggggggg",
+            "fffffggggddddddddddddddddggddggggfffffff",
+            "dddddggggggggggggggggggddggddggggfffffff",
             "dddddggggggggggggggggggddggddgggggdddddd",
-            "ffgddggggggggggggggggddddddddddddddddddd",
+            "ddgddggggggggggggggggddddddddddddddddddd",
             "ffggddggggggggdggggggdddddddddddddgggggg",
             "fffgdddgggggggdggggggddddddggggggggfffff",
             "ffffgddddddddddddddddddddddggggggfffffff",
             "ffffggggggdggggggggggddddddggggggfffffff",
-            "fffffgggggdggggggggggddddddgggggggffffff",
+            "fffffgggggdggggggggggddddddggggggfffffff",
             "ffffffggggdggggggggggggddgggggggggffffff",
-            "ffffffggggdggggggggggggddggggggggggfffff",
+            "ffffffggggdggggggggggggddgggggggggffffff",
             "fffffffgggdggggggggggggddggggggggggfffff",
             "fffffgffggdddggggggdgggddggggdgggggfffff",
-            "ffffffffggggddddddddddddddddddddBgggffff",
-            "ffffgfffgggggggggddggggggggdggggggggffff",
-            "fffgggffgggggggggddggggggggdgggggggggggf",
-            "fffggggggggggggggddggggggggdgggggggggggf",
-            "ffgggggggggggggggddggggggggdgggggggggggf",
-            "ffgggggggggggggggddggggggggdgggggggggggf",
-            "fggggggggggddggggddggfffgggdggdggggggggf",
-            "gggggggggggddddddddggfgffggddddggggggggf",
-            "gggggggggggggggggggggffffggggggggggggggf",
-            "##################gg#########fffffffffff",
-            "ggggggggggggggggg#gg#ggggggggfffffffffff"
+            "ffffffffggggddddddddddddddddddddBggfffff",
+            "ffffffffgggggggggddggggggggdggggfgfgffff",
+            "ffffffffgggggggggddggggggggdggggggggggff",
+            "ffffffffgggggggggddggggggggdggggggggggff",
+            "ffffffffgggggggggddggggggggdggggggggggff",
+            "ffffffffgggggggggddggggggggdggggggggggff",
+            "ffff####gggddggggddggfffgggdggdgggggggff",
+            "ff######gggddddddddggfgfgggddddgggggggff",
+            "########ggggggggggggggfggggggggggfffffff",
+            "########g#gggggggggg#####gggggffffffffff",
+            "##################gg#######fffffffffffff"
           ],
           "entrances": [
             "........................................",
             "........................................",
             "........................................",
-            ".......................EE...............",
+            ".......................E................",
             "........................................",
             "........................................",
             "........................................",
@@ -93,7 +94,7 @@
             "............................E...........",
             "........................................",
             "........................................",
-            "E......................................E",
+            "E.......................................",
             "E......................................E",
             "..............E........................E",
             ".......................................E",
@@ -119,461 +120,6 @@
           ],
           "props": [
             {
-              "id": "house_cottage_floret_a",
-              "type": "architecture",
-              "cell": [
-                9,
-                14
-              ],
-              "footprint": [
-                2,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "house_cottage_floret_a",
-              "type": "architecture",
-              "cell": [
-                13,
-                9
-              ],
-              "footprint": [
-                2,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "building_mayor_floret_a",
-              "type": "architecture",
-              "cell": [
-                18,
-                11
-              ],
-              "footprint": [
-                5,
-                2
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "building_shop_floret_a",
-              "type": "architecture",
-              "cell": [
-                11,
-                26
-              ],
-              "footprint": [
-                5,
-                2
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "building_shrine_floret_a",
-              "type": "architecture",
-              "cell": [
-                27,
-                13
-              ],
-              "footprint": [
-                3,
-                2
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "building_smithy_floret_a",
-              "type": "architecture",
-              "cell": [
-                27,
-                26
-              ],
-              "footprint": [
-                5,
-                2
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "building_guild_floret_a",
-              "type": "architecture",
-              "cell": [
-                9,
-                33
-              ],
-              "footprint": [
-                6,
-                2
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "building_inn_floret_a",
-              "type": "architecture",
-              "cell": [
-                12,
-                18
-              ],
-              "footprint": [
-                6,
-                2
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "house_cottage_floret_a",
-              "type": "architecture",
-              "cell": [
-                30,
-                34
-              ],
-              "footprint": [
-                2,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "house_cottage_floret_a",
-              "type": "architecture",
-              "cell": [
-                19,
-                27
-              ],
-              "footprint": [
-                2,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "haystack_small_a",
-              "type": "nature",
-              "cell": [
-                35,
-                30
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "haystack_small_a",
-              "type": "nature",
-              "cell": [
-                33,
-                30
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "haystack_small_a",
-              "type": "nature",
-              "cell": [
-                31,
-                30
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "crop_field_rows_a",
-              "type": "nature",
-              "cell": [
-                33,
-                32
-              ],
-              "footprint": [
-                4,
-                4
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_corner_bl_a",
-              "type": "structure",
-              "cell": [
-                32,
-                36
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_corner_br_a",
-              "type": "structure",
-              "cell": [
-                37,
-                36
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_corner_tl_a",
-              "type": "structure",
-              "cell": [
-                32,
-                31
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_corner_tr_a",
-              "type": "structure",
-              "cell": [
-                37,
-                31
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_a",
-              "type": "structure",
-              "cell": [
-                33,
-                31
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_a",
-              "type": "structure",
-              "cell": [
-                34,
-                31
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_a",
-              "type": "structure",
-              "cell": [
-                35,
-                31
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_a",
-              "type": "structure",
-              "cell": [
-                36,
-                31
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_a",
-              "type": "structure",
-              "cell": [
-                32,
-                32
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_a",
-              "type": "structure",
-              "cell": [
-                32,
-                35
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_a",
-              "type": "structure",
-              "cell": [
-                32,
-                33
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "scarecrow_field_a",
-              "type": "nature",
-              "cell": [
-                29,
-                31
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_oak_round_a",
-              "type": "nature",
-              "cell": [
-                26,
-                18
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_oak_round_a",
-              "type": "nature",
-              "cell": [
-                20,
-                24
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_oak_round_a",
-              "type": "nature",
-              "cell": [
-                6,
-                9
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_oak_round_a",
-              "type": "nature",
-              "cell": [
-                6,
-                29
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_oak_round_a",
-              "type": "nature",
-              "cell": [
-                22,
-                37
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                34,
-                23
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                36,
-                22
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                34,
-                16
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                37,
-                12
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
               "id": "tree_pine_tall_a",
               "type": "nature",
               "cell": [
@@ -590,8 +136,60 @@
               "id": "tree_pine_tall_a",
               "type": "nature",
               "cell": [
+                8,
+                6
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
                 16,
                 6
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                22,
+                8
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                25,
+                8
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_oak_round_a",
+              "type": "nature",
+              "cell": [
+                6,
+                9
               ],
               "footprint": [
                 1,
@@ -613,414 +211,11 @@
               "anchor": "bottom_center"
             },
             {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                8,
-                6
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                4,
-                15
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                2,
-                21
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                3,
-                23
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                37,
-                30
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "tree_pine_tall_a",
-              "type": "nature",
-              "cell": [
-                38,
-                26
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_well_stone_a",
-              "type": "street",
-              "cell": [
-                28,
-                22
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                22,
-                15
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                20,
-                20
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                15,
-                23
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                16,
-                30
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                19,
-                30
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                22,
-                28
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                25,
-                28
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                29,
-                18
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                25,
-                16
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                28,
-                35
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                16,
-                35
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                8,
-                16
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                25,
-                8
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_lamp_iron_a",
-              "type": "street",
-              "cell": [
-                22,
-                8
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "stairs_stone_wide_a",
+              "id": "fence_wood_tile_straight_v_a",
               "type": "structure",
               "cell": [
-                22,
-                5
-              ],
-              "footprint": [
-                4,
-                3
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_gate_v_open_left_a",
-              "type": "structure",
-              "cell": [
-                32,
-                34
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_right_a",
-              "type": "structure",
-              "cell": [
-                37,
-                32
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_right_a",
-              "type": "structure",
-              "cell": [
-                37,
-                33
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_right_a",
-              "type": "structure",
-              "cell": [
-                37,
-                34
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_right_a",
-              "type": "structure",
-              "cell": [
-                37,
-                35
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_bottom_a",
-              "type": "structure",
-              "cell": [
-                33,
-                36
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_bottom_a",
-              "type": "structure",
-              "cell": [
-                34,
-                36
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_bottom_a",
-              "type": "structure",
-              "cell": [
-                35,
-                36
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_bottom_a",
-              "type": "structure",
-              "cell": [
-                36,
-                36
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "street_well_stone_a",
-              "type": "street",
-              "cell": [
-                9,
-                10
+                30,
+                9
               ],
               "footprint": [
                 1,
@@ -1042,37 +237,11 @@
               "anchor": "bottom_center"
             },
             {
-              "id": "fence_wood_tile_corner_bl_a",
-              "type": "structure",
+              "id": "street_well_stone_a",
+              "type": "street",
               "cell": [
-                30,
-                13
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_a",
-              "type": "structure",
-              "cell": [
-                30,
-                12
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_v_a",
-              "type": "structure",
-              "cell": [
-                30,
-                11
+                9,
+                10
               ],
               "footprint": [
                 1,
@@ -1098,7 +267,85 @@
               "type": "structure",
               "cell": [
                 30,
-                9
+                11
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "house_cottage_floret_a",
+              "type": "architecture",
+              "cell": [
+                13,
+                12
+              ],
+              "footprint": [
+                2,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_mayor_floret_a",
+              "type": "architecture",
+              "cell": [
+                18,
+                12
+              ],
+              "footprint": [
+                5,
+                2
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_a",
+              "type": "structure",
+              "cell": [
+                30,
+                12
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                37,
+                12
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_bl_a",
+              "type": "structure",
+              "cell": [
+                30,
+                13
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_bottom_a",
+              "type": "structure",
+              "cell": [
+                31,
+                13
               ],
               "footprint": [
                 1,
@@ -1123,19 +370,6 @@
               "id": "fence_wood_tile_straight_h_bottom_a",
               "type": "structure",
               "cell": [
-                31,
-                13
-              ],
-              "footprint": [
-                1,
-                1
-              ],
-              "anchor": "bottom_center"
-            },
-            {
-              "id": "fence_wood_tile_straight_h_bottom_a",
-              "type": "structure",
-              "cell": [
                 33,
                 13
               ],
@@ -1151,6 +385,760 @@
               "cell": [
                 34,
                 13
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_shrine_floret_a",
+              "type": "architecture",
+              "cell": [
+                27,
+                14
+              ],
+              "footprint": [
+                3,
+                2
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "house_cottage_floret_a",
+              "type": "architecture",
+              "cell": [
+                9,
+                15
+              ],
+              "footprint": [
+                2,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                5,
+                16
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                8,
+                16
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                17,
+                16
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                22,
+                16
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                34,
+                16
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                25,
+                18
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_inn_floret_a",
+              "type": "architecture",
+              "cell": [
+                12,
+                19
+              ],
+              "footprint": [
+                6,
+                2
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                29,
+                19
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                3,
+                22
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_oak_round_a",
+              "type": "nature",
+              "cell": [
+                20,
+                22
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                36,
+                22
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                15,
+                23
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                34,
+                23
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                5,
+                24
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_oak_round_a",
+              "type": "nature",
+              "cell": [
+                30,
+                24
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                38,
+                26
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_shop_floret_a",
+              "type": "architecture",
+              "cell": [
+                12,
+                27
+              ],
+              "footprint": [
+                5,
+                2
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_smithy_floret_a",
+              "type": "architecture",
+              "cell": [
+                27,
+                27
+              ],
+              "footprint": [
+                5,
+                2
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                11,
+                28
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "house_cottage_floret_a",
+              "type": "architecture",
+              "cell": [
+                19,
+                28
+              ],
+              "footprint": [
+                2,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                22,
+                28
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                25,
+                28
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_well_stone_a",
+              "type": "street",
+              "cell": [
+                33,
+                28
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_oak_round_a",
+              "type": "nature",
+              "cell": [
+                6,
+                29
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                19,
+                30
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "haystack_small_a",
+              "type": "nature",
+              "cell": [
+                33,
+                30
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                37,
+                30
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_tl_a",
+              "type": "structure",
+              "cell": [
+                32,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "haystack_small_a",
+              "type": "nature",
+              "cell": [
+                32,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_a",
+              "type": "structure",
+              "cell": [
+                33,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_a",
+              "type": "structure",
+              "cell": [
+                34,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_a",
+              "type": "structure",
+              "cell": [
+                35,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "haystack_small_a",
+              "type": "nature",
+              "cell": [
+                35,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_a",
+              "type": "structure",
+              "cell": [
+                36,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_tr_a",
+              "type": "structure",
+              "cell": [
+                37,
+                31
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_a",
+              "type": "structure",
+              "cell": [
+                32,
+                32
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "crop_field_rows_a",
+              "type": "nature",
+              "cell": [
+                33,
+                32
+              ],
+              "footprint": [
+                4,
+                4
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_right_a",
+              "type": "structure",
+              "cell": [
+                37,
+                32
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "scarecrow_field_a",
+              "type": "nature",
+              "cell": [
+                31,
+                33
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_a",
+              "type": "structure",
+              "cell": [
+                32,
+                33
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_right_a",
+              "type": "structure",
+              "cell": [
+                37,
+                33
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_guild_floret_a",
+              "type": "architecture",
+              "cell": [
+                9,
+                34
+              ],
+              "footprint": [
+                6,
+                2
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_gate_v_open_left_a",
+              "type": "structure",
+              "cell": [
+                32,
+                34
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_right_a",
+              "type": "structure",
+              "cell": [
+                37,
+                34
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                16,
+                35
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                28,
+                35
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "house_cottage_floret_a",
+              "type": "architecture",
+              "cell": [
+                30,
+                35
+              ],
+              "footprint": [
+                2,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_a",
+              "type": "structure",
+              "cell": [
+                32,
+                35
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_right_a",
+              "type": "structure",
+              "cell": [
+                37,
+                35
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_bl_a",
+              "type": "structure",
+              "cell": [
+                32,
+                36
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_bottom_a",
+              "type": "structure",
+              "cell": [
+                33,
+                36
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_bottom_a",
+              "type": "structure",
+              "cell": [
+                34,
+                36
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_bottom_a",
+              "type": "structure",
+              "cell": [
+                35,
+                36
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_bottom_a",
+              "type": "structure",
+              "cell": [
+                36,
+                36
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_br_a",
+              "type": "structure",
+              "cell": [
+                37,
+                36
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_oak_round_a",
+              "type": "nature",
+              "cell": [
+                22,
+                37
               ],
               "footprint": [
                 1,

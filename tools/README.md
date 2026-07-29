@@ -20,6 +20,7 @@ hub 一個入口用漢堡選單整合下面四個網頁工具，同一視窗切�
 | `frame_aligner/` | Sprite 幀對齊：去背＋錨點對齊＋統一裁切，輸出多幀戰鬥呼吸圖（分離幀／幀條兩模式）| `python3 tools/frame_aligner/serve.py` → `:8779` |
 | `stickman_animator/` | 火柴人骨架動畫：動作參考 | `python3 tools/stickman_animator/serve.py` → `:8778` |
 | `codex/` | 設定集 codex（push 後 CI 自動發佈 GitHub Pages）| 見 [`codex/README.md`](codex/README.md) |
+| `map_terrain_audit.py` | 比對手繪成圖與 map-def 地格，抓出「產圖沒照藍圖」的偏差（偏差要回寫 map-def，不可手刷碰撞）| `python3 tools/map_terrain_audit.py M1 town --out /tmp/a.png` |
 | `githooks/` | git pre-commit hook | — |
 | `compose_map_overviews.py` | 舊地圖總覽拼圖腳本（**已過時**）| — |
 

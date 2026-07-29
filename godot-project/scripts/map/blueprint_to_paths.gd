@@ -56,7 +56,9 @@ func _run() -> void:
 			if not only.is_empty() and not only.has(scene_name):
 				continue
 			var entrances: Variant = map.get("entrances", null)
-			var props: Variant = map.get("props", [])
+			# 場景已為每個物件掛 StaticBody2D 者（如芳蕾鎮 town，設計員直接在編輯器搬物件），
+			# props 不進 CollisionPaint——否則物件一移動，tilemap 就留下對不上的幽靈牆。
+			var props: Variant = [] if bool(map.get("props_collide_in_scene", false)) else map.get("props", [])
 			if _apply(scene_name, terrain, entrances, props, blocked):
 				count += 1
 	print("\nblueprint_to_paths 完成：寫入 PathPaint32 的圖 = %d。接著跑 invert_paths.gd 產碰撞。" % count)
