@@ -1,6 +1,6 @@
 # 規格：對話／過場／觸發／撿取資料格式
 
-- Spec 版本: v3.1
+- Spec 版本: v3.2
 - 對應 GDevelop 原始碼快照: `reference/gdevelop/build_cq2.py`（2026-07 快照）L941-1015（DLG）、
   L1016-1036（CUTS）、L1302-1306（matchWhen）、L1564-1566（openOwnerCmd）、L1575-1582（buildIntCmds）、
   L1859-1864（室外 NPC 對話）；其餘段落（劇情佇列/出口/觸發區/pickups）行號仍對應 v1.1 舊快照，待全面校對
@@ -203,6 +203,13 @@ pickups: [
   **立即 `saveGame()`**（撿取是自動存檔時機之一，見 `specs/SAVE_SCHEMA.md`）。
 - 目前兩個實例：鏡草 ×3（`op:"inc", flag:"herb"`，`showWhen:"mira2==1"`）、阿吉頭盔
   （`op:"set", flag:"relic", val:1, item:"miner_helmet", showWhen:"ch2>=1"`）。
+- **Godot 端刻意偏離（v3.2、2026-07-30 John 指定）**：撿取**不再是走過去就入手**。`PickupZone` 新增三個
+  export：`require_interact`（預設 true＝要靠玩家在旁邊按互動鍵「調查」，由 `world_scene` 的
+  `_update_interactions()` 顯示「空白鍵：調查」並呼叫 `investigate()`）、`blocks`（預設 true＝原地生一個
+  `StaticBody2D` 擋路，撿到後移除；**未顯示時擋路體自動 disabled**，免得還沒接委託就有隱形牆）、
+  `cut_prefix`（撿完後播 `<cut_prefix>_<flag 新值>` 過場，例 `herb_get_1/2/3`，查不到就退回 `msg`）。
+  原始 GDevelop 行為（腳點落在矩形內即入手、只顯示 `msg`）＝`require_interact=false, blocks=false,
+  cut_prefix=""`，仍可用資料切回去。
 - **裝飾用 prop 不要誤用 pickup 系統**：純裝飾物件走一般碰撞（`foot` 矩形），不是這裡的 `pickups` 表；
   `foot=(0,0,0,0)` 會被 build 腳本當成整格是牆，這是地圖生成的坑，不是本規格的一部分，記錄在
   `TASKS/08_地圖管線.md` 供 MOD-H 注意。

@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "（把第三株收進包裡）三株，到齊了。"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "第一件委託，居然真的辦完了。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "什麼「居然」啊。……不過確實，比我想的順利。"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "那就別在這裡耗了。鏡草放久藥效會掉，米拉還等著熬藥。回芳蕾鎮吧。"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "嗯。回去交差——然後接下一件。"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（鏡草 ×3 到手。回芳蕾鎮村口找米拉交付委託。）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "herb_get_3"
+once = "c_herb_get_3"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6")])
+battle = ""
+transfer = PackedStringArray()
+setstep = -1
+party = PackedStringArray()
+bgm = ""

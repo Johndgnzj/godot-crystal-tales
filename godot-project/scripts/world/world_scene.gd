@@ -40,15 +40,21 @@ const ATLAS_COLS := 6
 const SPRITE_FEET_OFFSET := Vector2(0.0, -22.0)
 ## NPC 對話半徑，對應 build_cq2.py L1713 `_talkR=st.inside?134:72`（室內模式範圍外，固定用 72）。
 const TALK_RADIUS := 72.0
+## 「調查」撿取物的容許距離（px）：撿取物有擋路體、玩家會貼著站，不需要 NPC 那麼寬。
+const INVESTIGATE_RADIUS := 56.0
 const PROMPT_SECONDS := 3.0
 const CHAR_DIR := "res://assets/char"
 ## 跟隨者可用的行走圖白名單，對應 WORLD_JS `FSPRITES={marin:1,aaron:1}`（L2282；aaron 本專案已改名 alan）。
-const FOLLOWER_SPRITES := ["marin", "alan"]
-const WALK_FPS := 12.5  # GDevelop anim timeBetweenFrames=0.08s
+## 2026-07-30 加入 ludo：領頭是隊伍第一位，亞倫帶路時路德會變成跟隨者（見 _leader_sprite()）。
+const FOLLOWER_SPRITES := ["marin", "alan", "ludo"]
+## 使用像素 walk（貼腳偏移走 PIXEL_WALK_FEET_OFFSET）的角色；其餘沿用舊 LPC 的 SPRITE_FEET_OFFSET。
+const PIXEL_WALK_SPRITES := ["ludo", "alan", "marin"]
+## GDevelop 原值 12.5（timeBetweenFrames=0.08s）；2026-07-29 移動速度降 30% 後同步降到 8.75，
+## 免得腳步看起來在地上滑。
+const WALK_FPS := 8.75
 const PIXEL_WALK_FEET_OFFSET := Vector2(0.0, -32.0)
 ## 路德／亞倫終版基準 walk 使用原生 64px cell；瑪琳仍是過渡期 96px walk，縮小 1/3 對回地圖尺度。
 const LUDO_SPRITE_SCALE := 1.0
-const ALAN_SPRITE_SCALE := 1.0
 const PLAYER_SPRITE_SCALE := 2.0 / 3.0
 
 @export var scene_id: String = ""            ## CFG.SCENE 邏輯名稱（"Town"…），交給 SceneRouter 用。
@@ -84,6 +90,7 @@ var _player_anim: AnimatedSprite2D = null
 var _followers: Array = []      # [{node, anim}]
 var _npc_nodes: Array = []      # [{id, node}]
 var _chest_nodes: Array = []    # [{id, tx, ty, sprite}]
+var _pickup_zones: Array[PickupZone] = []   # 要按鍵「調查」才撿得到的撿取點（見 _find_near_pickup）
 var _prompt_timer: float = 0.0
 var _missing_textures: int = 0
 
@@ -327,18 +334,41 @@ func _build_char_frames(sprite_names: Array, prefix_with_name: bool) -> SpriteFr
 	return frames if any else null
 
 
+## 走在最前面的是**隊伍第一位**（`GameState.party[0]`），不是永遠的路德——小節 3 進礦山時隊伍是
+## 「亞倫→路德」，該由老手亞倫帶路（John 2026-07-30）。玩家仍操控這個領頭節點，路德變成跟隨者。
+func _leader_sprite() -> String:
+	var party: Array = GameState.party
+	if not party.is_empty() and typeof(party[0]) == TYPE_DICTIONARY:
+		var s := String(party[0].get("sprite", ""))
+		if s != "" and ResourceLoader.exists("%s/%s_Down_0.png" % [CHAR_DIR, s]):
+			return s
+	return "ludo"
+
+
 func _setup_player_visual() -> void:
-	var frames := _build_char_frames(["ludo"], false)
+	var leader := _leader_sprite()
+	var frames := _build_char_frames([leader], false)
 	if frames == null:
 		return
+	var sprite_scale: float = _sprite_scale_for(leader)
 	_player_anim = AnimatedSprite2D.new()
 	_player_anim.sprite_frames = frames
-	_player_anim.scale = Vector2(LUDO_SPRITE_SCALE, LUDO_SPRITE_SCALE)
-	_player_anim.position = PIXEL_WALK_FEET_OFFSET * LUDO_SPRITE_SCALE
+	_player_anim.scale = Vector2(sprite_scale, sprite_scale)
+	_player_anim.position = _feet_offset_for(leader) * sprite_scale
 	_player_anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_player.add_child(_player_anim)
 	if frames.has_animation("IdleDown"):
 		_player_anim.play("IdleDown")
+
+
+## 行走圖尺度／貼腳偏移（領頭與跟隨者共用同一套規則）：路德與亞倫是終版 64px cell；
+## 瑪琳仍是過渡期 96px walk，要縮 2/3 對回地圖尺度。非像素 walk 的舊 LPC 圖走 SPRITE_FEET_OFFSET。
+func _sprite_scale_for(sprite_name: String) -> float:
+	return PLAYER_SPRITE_SCALE if sprite_name == "marin" else LUDO_SPRITE_SCALE
+
+
+func _feet_offset_for(sprite_name: String) -> Vector2:
+	return PIXEL_WALK_FEET_OFFSET if PIXEL_WALK_SPRITES.has(sprite_name) else SPRITE_FEET_OFFSET
 
 
 func _setup_followers() -> void:
@@ -398,9 +428,9 @@ func _update_followers(walking: bool) -> void:
 		node.position = pt["pos"]
 		var anim: AnimatedSprite2D = f["anim"]
 		if anim != null:
-			var sprite_scale := ALAN_SPRITE_SCALE if spr_name == "alan" else PLAYER_SPRITE_SCALE
+			var sprite_scale := _sprite_scale_for(spr_name)
 			anim.scale = Vector2(sprite_scale, sprite_scale)
-			anim.position = (PIXEL_WALK_FEET_OFFSET if spr_name in ["alan", "marin"] else SPRITE_FEET_OFFSET) * sprite_scale
+			anim.position = _feet_offset_for(spr_name) * sprite_scale
 			var anim_name := "%s_%s%s" % [spr_name, "Walk" if walking else "Idle", pt["facing"]]
 			if anim.sprite_frames.has_animation(anim_name) and anim.animation != anim_name:
 				anim.play(anim_name)
@@ -424,6 +454,7 @@ func _wire_zones() -> void:
 		elif z is PickupZone:
 			world_state.register_gated_zone(z)
 			z.picked_up.connect(_on_picked_up)
+			_pickup_zones.append(z)
 			_attach_zone_sprite(z)
 		elif z is BossMark:
 			_attach_zone_sprite(z)
@@ -649,6 +680,7 @@ func _update_interactions(delta: float) -> void:
 		_accept_release_needed = false
 	var near_npc := _find_near_npc()
 	var near_chest := _find_near_chest()
+	var near_pickup := _find_near_pickup()
 	# 走到門口格「自動進屋」，不用按鍵（John 要求）。只認門口格本身（_find_near_door 判 pty==dty），
 	# 離開時玩家被放到門下一格（dty+1），不落在門口格上 → 不會一出來就立刻重進。NPC/寶箱優先（保險，
 	# 門口一般不會有戶外 NPC）。
@@ -664,11 +696,16 @@ func _update_interactions(delta: float) -> void:
 		if not near_chest.is_empty():
 			_open_chest(near_chest)
 			return
+		if near_pickup != null:
+			near_pickup.investigate()
+			return
 	if _prompt_timer <= 0.0:
 		if near_npc != "":
 			$HUD/Prompt.text = "空白鍵：交談"
 		elif not near_chest.is_empty():
 			$HUD/Prompt.text = "空白鍵：開啟寶箱"
+		elif near_pickup != null:
+			$HUD/Prompt.text = "空白鍵：調查"
 		else:
 			$HUD/Prompt.text = ""
 
@@ -682,6 +719,21 @@ func _find_near_npc() -> String:
 		if node.position.distance_to(_player.global_position) < TALK_RADIUS:
 			return e["id"]
 	return ""
+
+
+## 需要「調查」才撿得到的撿取點（`PickupZone.require_interact`）：取最近且在 INVESTIGATE_RADIUS 內的一個。
+## 半徑比 TALK_RADIUS 小——鏡草有擋路體，玩家會貼著它站，不需要那麼寬的容許範圍。
+func _find_near_pickup() -> PickupZone:
+	var best: PickupZone = null
+	var best_d := INVESTIGATE_RADIUS
+	for z in _pickup_zones:
+		if not z.can_investigate():
+			continue
+		var d := z.global_position.distance_to(_player.global_position)
+		if d < best_d:
+			best_d = d
+			best = z
+	return best
 
 
 func _find_near_chest() -> Dictionary:

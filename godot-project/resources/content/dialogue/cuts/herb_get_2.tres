@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="CutsceneEntry" format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
+[ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="L1"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "第二株。你看，它旁邊的草全往外倒。"
+
+[sub_resource type="Resource" id="L2"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "被光曬彎的？森林裡的東西，好像都比我記得的更奇怪一點。"
+
+[sub_resource type="Resource" id="L3"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "……先採草。奇怪的事，回去再跟米拉說。"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（採到鏡草 ×2。還差一株。）"
+
+[resource]
+script = ExtResource("2_entry")
+id = "herb_get_2"
+once = "c_herb_get_2"
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4")])
+battle = ""
+transfer = PackedStringArray()
+setstep = -1
+party = PackedStringArray()
+bgm = ""

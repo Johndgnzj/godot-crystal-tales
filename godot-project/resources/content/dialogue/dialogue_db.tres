@@ -24,6 +24,9 @@
 [ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s5_bear_win.tres" id="35_s5bw"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s6_curse.tres" id="38_s6c"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/cuts/s6_report.tres" id="39_s6r"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/herb_get_1.tres" id="40_hg1"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/herb_get_2.tres" id="41_hg2"]
+[ext_resource type="Resource" path="res://resources/content/dialogue/cuts/herb_get_3.tres" id="42_hg3"]
 [ext_resource type="Script" path="res://scripts/dialogue/npc_dialogue.gd" id="10_j0vgd"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/npc/tina.tres" id="11_xwnol"]
 [ext_resource type="Resource" path="res://resources/content/dialogue/npc/dora.tres" id="12_ksmd7"]
@@ -42,4 +45,4 @@
 [resource]
 script = ExtResource("21_oivy1")
 npcs = Array[ExtResource("10_j0vgd")]([ExtResource("11_xwnol"), ExtResource("12_ksmd7"), ExtResource("13_6521e"), ExtResource("14_0cqli"), ExtResource("15_pimf7"), ExtResource("16_bc6eq"), ExtResource("17_ldcmo"), ExtResource("18_pjvw3"), ExtResource("19_0akta"), ExtResource("20_koq7g"), ExtResource("22_don00"), ExtResource("37_ward")])
-cutscenes = Array[ExtResource("1_mheqe")]([ExtResource("2_jnunl"), ExtResource("3_0hvef"), ExtResource("4_jvhwk"), ExtResource("5_mfmo3"), ExtResource("6_movar"), ExtResource("7_o0ytv"), ExtResource("8_pmyqt"), ExtResource("9_yo858"), ExtResource("23_nec00"), ExtResource("24_s1o"), ExtResource("25_s1bp"), ExtResource("26_s1b"), ExtResource("27_s2h"), ExtResource("28_s2f"), ExtResource("29_s3mi"), ExtResource("30_s3dp"), ExtResource("31_s3af"), ExtResource("32_s3r"), ExtResource("33_s4j"), ExtResource("34_s5bp"), ExtResource("35_s5bw"), ExtResource("38_s6c"), ExtResource("39_s6r")])
+cutscenes = Array[ExtResource("1_mheqe")]([ExtResource("2_jnunl"), ExtResource("3_0hvef"), ExtResource("4_jvhwk"), ExtResource("5_mfmo3"), ExtResource("6_movar"), ExtResource("7_o0ytv"), ExtResource("8_pmyqt"), ExtResource("9_yo858"), ExtResource("23_nec00"), ExtResource("24_s1o"), ExtResource("25_s1bp"), ExtResource("26_s1b"), ExtResource("27_s2h"), ExtResource("28_s2f"), ExtResource("29_s3mi"), ExtResource("30_s3dp"), ExtResource("31_s3af"), ExtResource("32_s3r"), ExtResource("33_s4j"), ExtResource("34_s5bp"), ExtResource("35_s5bw"), ExtResource("38_s6c"), ExtResource("39_s6r"), ExtResource("40_hg1"), ExtResource("41_hg2"), ExtResource("42_hg3")])

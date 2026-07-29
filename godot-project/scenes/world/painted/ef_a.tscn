@@ -93,6 +93,7 @@ once_flag = "herb_p0"
 flag_name = "herb"
 msg = "（採到一株發光的鏡草！）"
 sfx_name = "learn.mp3"
+cut_prefix = "herb_get"
 metadata/tex = "res://assets/props/herb.png"
 
 [node name="Shape" type="CollisionShape2D" parent="Zones/PickupHerb0" unique_id=1669787636]
