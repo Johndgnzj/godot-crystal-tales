@@ -22,6 +22,7 @@ const SUBTLE := Color("aab4dc")      # 欄位標籤淺藍
 const GOOD := Color("78e68c")        # 屬性上升
 const BAD := Color("ff9696")         # 屬性下降/危險
 const HP := Color("d0584a")
+const CRIT := Color("ff3b2f")        # 會心傷害飄字（深底＋描邊下仍鮮明的紅）
 const MP := Color("5aa0c8")
 const PANEL_BG := Color(0.063, 0.070, 0.125, 0.86)   # ~rgba(16,18,32,.82)
 const PANEL_BG2 := Color(0.117, 0.133, 0.211, 0.85)  # ~rgba(30,34,54,.85)

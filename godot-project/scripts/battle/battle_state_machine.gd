@@ -167,7 +167,7 @@ func _init_battle() -> void:
 		heroes.append(m)
 
 	foes.clear()
-	for i in range(mini(group.size(), FOE_SLOTS.size())):
+	for i in range(mini(group.size(), FOE_X.size())):
 		var eid := String(group[i])
 		var ed: EnemyDef = ContentDB.get_enemy(eid)
 		if ed == null:
@@ -720,35 +720,81 @@ func _node_of(u: Variant) -> Variant:
 	return n if n != null else _foe_node_of(u)
 
 
-## 飄字本體。crit=true 走「彈出放大＋大字金色」的強調演出。
+## 飄字本體。crit=true 走「彈出放大＋大字紅色」的強調演出。
 func _popup(u: Variant, text: String, color: Color, size: int, crit: bool, y_off: float = 0.0) -> void:
 	if _root == null:
 		return
 	var node = _node_of(u)
 	if node == null:
 		return
-	var anchor: Vector2 = (node["wrap"] as Control).position + Vector2(node.get("head", Vector2.ZERO))
 	var lbl := PixelUI.label(text, size, color, 7 if crit else 5)
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.size = Vector2(240, float(size) + 12.0)
-	lbl.pivot_offset = Vector2(120, (float(size) + 12.0) * 0.5)
-	lbl.position = anchor + Vector2(-120.0, -58.0 + y_off + randf_range(-6.0, 6.0))
-	_root.add_child(lbl)
+	_launch_popup(u, lbl, crit, Vector2(240.0, float(size) + 12.0), y_off)
+
+
+## 飄字/飄數字的共用起飛：掛到被作用單位頭頂、上升＋淡出，crit 另加彈出放大。
+func _launch_popup(u: Variant, ctrl: Control, crit: bool, node_size: Vector2, y_off: float = 0.0) -> void:
+	var node = _node_of(u)
+	if node == null:
+		ctrl.queue_free()
+		return
+	var anchor: Vector2 = (node["wrap"] as Control).position + Vector2(node.get("head", Vector2.ZERO))
+	ctrl.size = node_size
+	ctrl.pivot_offset = node_size * 0.5
+	ctrl.position = anchor + Vector2(-node_size.x * 0.5, -58.0 + y_off + randf_range(-6.0, 6.0))
+	_root.add_child(ctrl)
 	var tw := create_tween()
 	if crit:
-		lbl.scale = Vector2(0.35, 0.35)
-		tw.tween_property(lbl, "scale", Vector2(1.4, 1.4), 0.13).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		tw.tween_property(lbl, "scale", Vector2(1.1, 1.1), 0.1)
-	tw.tween_property(lbl, "position:y", lbl.position.y - POP_RISE, POP_DUR).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tw.parallel().tween_property(lbl, "modulate:a", 0.0, POP_DUR * 0.55).set_delay(POP_DUR * 0.45)
-	tw.tween_callback(lbl.queue_free)
+		ctrl.scale = Vector2(0.35, 0.35)
+		tw.tween_property(ctrl, "scale", Vector2(1.4, 1.4), 0.13).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.tween_property(ctrl, "scale", Vector2(1.1, 1.1), 0.1)
+	tw.tween_property(ctrl, "position:y", ctrl.position.y - POP_RISE, POP_DUR).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(ctrl, "modulate:a", 0.0, POP_DUR * 0.55).set_delay(POP_DUR * 0.45)
+	tw.tween_callback(ctrl.queue_free)
 
 
-## 傷害數字：一般＝紅白大字；會心＝金色特大字＋彈出放大＋畫面震動（不加「會心一擊！」字樣，John 2026-07-28）。
+## 圖片數字：把整數排成一列 AtlasTexture（素材＝一列 10 格等寬 0..9、透明底）。
+## **素材缺檔就回傳 null**，呼叫端沿用描邊字型 Label——數字圖還沒驗收進專案時遊戲照跑。
+func _digits_node(n: int, target_h: float, tint: Color) -> Control:
+	if _digits_tex == null:
+		return null
+	var full: Vector2 = _digits_tex.get_size()
+	var cell := Vector2(full.x / float(DIGITS_COUNT), full.y)
+	if cell.x <= 0.0 or cell.y <= 0.0:
+		return null
+	var s: float = target_h / cell.y
+	var box := Control.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var x := 0.0
+	for ch in str(maxi(n, 0)):
+		var at := AtlasTexture.new()
+		at.atlas = _digits_tex
+		at.region = Rect2(cell.x * float(int(ch)), 0.0, cell.x, cell.y)
+		var tr := TextureRect.new()
+		tr.texture = at
+		tr.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # 數字圖是平滑浮雕（非像素），縮小走 Linear
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		tr.size = cell * s
+		tr.position = Vector2(x, 0.0)
+		tr.modulate = tint
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		box.add_child(tr)
+		x += cell.x * s * DIGIT_KERN
+	box.custom_minimum_size = Vector2(x, cell.y * s)
+	return box
+
+
+## 傷害數字：有數字圖就用圖（會心染紅、字更大），沒有就退回描邊字型。
+## 會心另加畫面震動＋彈出放大（不加「會心一擊！」字樣，John 2026-07-28）。
 func _popup_damage(u: Variant, dmg: int, crit: bool) -> void:
 	if crit:
-		_popup(u, str(dmg), PixelUI.GOLD, 54, true)
 		_shake_screen(CRIT_SHAKE_AMP, SCREEN_SHAKE_DUR)
+	var box := _digits_node(dmg, CRIT_DIGIT_H if crit else DMG_DIGIT_H, PixelUI.CRIT if crit else Color.WHITE)
+	if box != null:
+		_launch_popup(u, box, crit, box.custom_minimum_size)
+	elif crit:
+		_popup(u, str(dmg), PixelUI.CRIT, 54, true)
 	else:
 		_popup(u, str(dmg), Color(1.0, 0.87, 0.85), 34, false)
 
@@ -1167,18 +1213,35 @@ func _process_end() -> void:
 # battle.tscn 只提供 Node2D 根＋View(CanvasLayer)/Root(Control)，其餘節點都在這裡建。
 # =========================================================================
 
-const HERO_SLOTS := [Vector2(1074, 500), Vector2(1180, 464), Vector2(1044, 410), Vector2(1160, 372)]
-const FOE_SLOTS := [Vector2(300, 500), Vector2(190, 464), Vector2(324, 410), Vector2(168, 372), Vector2(300, 336)]   # 第 5 槽為敵人數上限 5 新增（座標為估值，待實機微調）
-const HERO_H := 208.0   # 我方戰鬥立繪：2026-07-27 John 要求放大成原本 2 倍（原 104）
-const FOE_H := 82.0     # 原 122 縮成 2/3
-const BOSS_H := 140.0   # 原 210 縮成 2/3
+## 站位（2026-07-30 John 指定）：最前排的腳點＝下方面板上緣往上 15px，往後每排再上移一個 step；
+## 越靠下＝越前面（圖層由 _sort_units_by_depth() 依腳點 y 重排，不用 z_index 以免蓋到下方面板）。
+const PANEL_TOP := 556.0                       # 下方「行動」面板上緣（見 _build_action_panel）
+const FRONT_GAP := 15.0                        # 最前排腳點離面板上緣
+const ROW_Y0 := PANEL_TOP - FRONT_GAP          # 541：最前排的地面線
+const FOE_ROW_STEP := 56.0
+const HERO_X := [1074.0, 1180.0, 1044.0, 1160.0]   # 非三人時的交錯站位
+const HERO_ROW_STEP := 70.0                    # 非三人時每往後一排上移的距離
+## 三人隊伍：共用同一個 x、一排一排往上疊（座標讀自 John 2026-07-30 的截圖標記，誤差約 ±10px）。
+const HERO_X_ALIGNED := 975.0
+const HERO_ROW_STEP_ALIGNED := 120.0           # 三人時的排距（腳點 541 / 421 / 301）
+const FOE_X := [300.0, 190.0, 324.0, 168.0, 300.0]   # 第 5 槽為敵人數上限 5 新增
+const HERO_H := 250.0   # 我方戰鬥立繪：2026-07-27 放大成 2 倍（208）→ 2026-07-30 John 再 +20%
+const FOE_H := 98.0     # 原 82，2026-07-30 同步 +20%
+const BOSS_H := 168.0   # 原 140，2026-07-30 同步 +20%
 const HERO_RATIO := {"ludo": 0.75, "marin": 0.58, "alan": 0.80}   # 由目前戰鬥幀的角色畫布比例換算；Ludo 已改用 HD Pixel idle 四幀
-## 攻擊/技能幀的**額外**放大倍率（藝術倍率）。基準倍率由 _build_unit() 自動算出：把該角色攻擊 strip
-## 「最高的那一幀」的可見高度對齊自己 idle 的可見高度——各角色攻擊幀的畫布比例／繪製比例都不同
-## （ludo 628×678、marin 900×850、alan 802×640，idle 都是 3:4），KEEP_ASPECT 會讓角色忽大忽小。
+## 攻擊/技能幀的**額外**放大倍率（藝術倍率）。基準倍率由 _build_unit() 自動算出：把攻擊 strip 中主體
+## 最高的一幀對齊該角色 idle 的主體高度（各角色攻擊幀畫布比例都不同——ludo 628×678、marin 900×850、
+## alan 802×640，idle 都是 3:4——KEEP_ASPECT 會讓角色忽大忽小）。
 ## 基準倍率**整段動畫共用一個值**（不逐幀算，否則蹲低的幀會被放大成一呼一吸）。
-## ludo 1.40 ＝ John 2026-07-28 驗收的「總倍率 1.5」等效值；未列的角色＝只做自動對齊。
-const ATTACK_SCALE := {"ludo": 1.40}
+## 2026-07-29 John 回饋「攻擊時放大又上移」：舊做法拿「可見高度」對齊（被舉起的劍拉高→角色被縮小），
+## 再用 ludo 1.40 硬補回來，總倍率變成 idle 的 1.3 倍。改成量主體高度後不需要藝術倍率，一律 1.0。
+const ATTACK_SCALE := {}
+## 傷害數字用的圖片字：一張橫向 10 格等寬的 0..9、透明底。缺檔＝自動退回描邊字型（見 _digits_node）。
+const DIGITS_PATH := "res://assets/ui/dmg_digits.png"
+const DIGITS_COUNT := 10
+const DMG_DIGIT_H := 40.0             # 一般傷害的數字顯示高（px）
+const CRIT_DIGIT_H := 62.0            # 會心傷害的數字顯示高
+const DIGIT_KERN := 0.82              # 字距：每位往右推 (格寬 × 此值)，<1＝略為靠攏
 const ARROW_H := 32.0                 # marker_arrow 三角高＋間隙：箭頭尖端離頭頂的距離
 const POP_RISE := 46.0                # 飄字上升距離
 const POP_DUR := 0.8                  # 飄字停留時間
@@ -1236,6 +1299,7 @@ var _shake_unit: Variant = null      # 被攻擊而震動中的對象（敵/我�
 var _shake_t: float = 0.0            # 震動剩餘時間（delta 倒數）
 var _boss_disp_r: float = 1.0        # boss 血條顯示比例（漸減動畫用）
 var _screen_shake_t: float = 0.0     # 畫面震動剩餘時間
+var _digits_tex: Texture2D = null    # 傷害數字圖（DIGITS_PATH）；null＝素材未進專案，改用描邊字型
 var _screen_shake_amp: float = 0.0   # 畫面震動幅度
 var _root_base: Vector2 = Vector2.ZERO   # Root 原位（震動歸位用）
 static var _log_visible: bool = false    # 上方戰鬥訊息：預設不顯示（2026-07-28 John），同 session 記住玩家的切換
@@ -1269,6 +1333,7 @@ var _result_btn: Button
 func _build_view() -> void:
 	_root = $View/Root
 	_root_base = _root.position
+	_digits_tex = _tex(DIGITS_PATH)
 	for c in _root.get_children():
 		c.queue_free()
 	_foe_nodes.clear()
@@ -1295,6 +1360,7 @@ func _build_view() -> void:
 		_foe_nodes.append(_build_unit(f, false))
 	for h in heroes:
 		_hero_nodes.append(_build_unit(h, true))
+	_sort_units_by_depth()
 
 	# --- 目標游標 + 行動者箭頭 ---
 	var MarkerArrow := load("res://scripts/battle/marker_arrow.gd")
@@ -1344,12 +1410,34 @@ func _build_view() -> void:
 	_build_result_overlay()
 
 
+## 槽位座標：第 0 槽最靠下（最前），往後每槽上移一個 step。我方剛好三人時三人共用同一個 x。
+func _slot_pos(is_hero: bool, idx: int) -> Vector2:
+	if is_hero:
+		if heroes.size() == 3:
+			return Vector2(HERO_X_ALIGNED, ROW_Y0 - HERO_ROW_STEP_ALIGNED * float(idx))
+		return Vector2(HERO_X[idx % HERO_X.size()], ROW_Y0 - HERO_ROW_STEP * float(idx))
+	return Vector2(FOE_X[idx % FOE_X.size()], ROW_Y0 - FOE_ROW_STEP * float(idx))
+
+
+## 越靠下＝越前面：在 _root 的子節點順序裡把所有單位依腳點 y 由小到大重排（後畫的蓋在前畫的上面）。
+## 只重排「單位」這一段（背景固定 index 0，游標/箭頭/面板都在單位之後建立，順序不受影響），
+## 刻意不用 z_index——單位一旦 z_index > 0 就會蓋在下方指令面板與血條上。
+func _sort_units_by_depth() -> void:
+	var wraps: Array = []
+	for n in _foe_nodes:
+		wraps.append(n["wrap"])
+	for n2 in _hero_nodes:
+		wraps.append(n2["wrap"])
+	wraps.sort_custom(func(a, b): return (a as Control).position.y < (b as Control).position.y)
+	for i in range(wraps.size()):
+		_root.move_child(wraps[i], 1 + i)   # index 0＝背景
+
+
 ## 建一個站在地面上的單位（敵人或英雄）。foot-anchor：wrap 在腳點，sprite 從 -h 到 0。
 func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	var wrap := Control.new()
 	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var slots: Array = HERO_SLOTS if is_hero else FOE_SLOTS
-	wrap.position = slots[int(u.get("slot", 0)) % slots.size()]
+	wrap.position = _slot_pos(is_hero, int(u.get("slot", 0)))
 	_root.add_child(wrap)
 
 	var frames := _load_frames(u, is_hero)
@@ -1416,21 +1504,48 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 		wrap.add_child(hp_fill)
 
 	var anchors := _visible_anchors(frames, w, h)
-	# 攻擊動畫縮放基準：以 strip 中「可見最高」的一幀（≈站直的姿勢）對齊 idle 的可見高度，整段共用。
-	var idle_m := _frame_metrics(frames[0] if not frames.is_empty() else null, w, h)
-	var atk_fit := 1.0
-	var atk_off := 0.0
-	var ref_m := {}
-	for at in anim_frames.get("attack", []):
-		var m := _frame_metrics(at, w, h)
-		if ref_m.is_empty() or float(m["vis_h"]) > float(ref_m["vis_h"]):
-			ref_m = m
-	if not ref_m.is_empty():
-		atk_fit = float(idle_m["vis_h"]) / maxf(1.0, float(ref_m["vis_h"]))
-		var total := atk_fit * float(ATTACK_SCALE.get(String(u.get("sprite", "")), 1.0))
-		atk_off = float(idle_m["bottom"]) - float(ref_m["bottom"]) * total   # 腳踩回 idle 的地面線
+	var fits := _build_fits(String(u.get("sprite", "")), frames, anim_frames, hurt_tex, death_tex, w, h)
 
-	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": -h, "head": anchors["head"], "mid": anchors["mid"], "atk_fit": atk_fit, "atk_off": atk_off}
+	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": -h, "head": anchors["head"], "mid": anchors["mid"], "fits": fits}
+
+
+## 把「非 idle」的每張貼圖校正到與 idle 相同的人物大小與地面線，回傳 Texture2D → {s, off} 對照表。
+## idle 是基準（s=1、off=0，不入表）；查不到的貼圖一律當基準處理，所以敵人不需要這張表。
+##
+## 為什麼要校正：同一角色的 idle／attack／hurt／death 是分批產的，畫布尺寸與角色在畫布裡的佔比都不同
+## （例：ludo idle 543×724、attack 628×678、hurt/death 1086×1448），KEEP_ASPECT 直接播會忽大忽小、
+## 腳離地。校正分兩種：
+##   - **直立姿勢**（attack strip／hurt）：用「主體高度」（排除舉起的武器，見 _body_height）對齊 idle。
+##     attack **整段共用一個倍率**（取 strip 中主體最高的一幀當基準），否則蹲低的幀會被放大成一呼一吸。
+##   - **躺姿**（death）：主體高度沒有可比性（人是橫的），維持素材原始比例（s=1）只做貼底。
+## 兩種都逐張算貼底補正，讓每一幀的腳（可見底邊）落在 idle 的同一條地面線上。
+func _build_fits(sprite_id: String, frames: Array, anim_frames: Dictionary, hurt_tex: Texture2D, death_tex: Texture2D, w: float, h: float) -> Dictionary:
+	var fits := {}
+	if frames.is_empty():
+		return fits
+	var idle_bottom: float = float(_frame_metrics(frames[0], w, h)["bottom"])
+	var idle_body := _body_height(frames[0], w, h)
+
+	var atks: Array = anim_frames.get("attack", [])
+	if not atks.is_empty():
+		var max_body := 0.0
+		for at in atks:
+			max_body = maxf(max_body, _body_height(at, w, h))
+		var s := 1.0
+		if idle_body > 0.0 and max_body > 0.0:
+			s = idle_body / max_body
+		s *= float(ATTACK_SCALE.get(sprite_id, 1.0))
+		for at2 in atks:
+			fits[at2] = {"s": s, "off": idle_bottom - float(_frame_metrics(at2, w, h)["bottom"]) * s}
+
+	if hurt_tex != null:
+		var hb := _body_height(hurt_tex, w, h)
+		var hs: float = (idle_body / hb) if (idle_body > 0.0 and hb > 0.0) else 1.0
+		fits[hurt_tex] = {"s": hs, "off": idle_bottom - float(_frame_metrics(hurt_tex, w, h)["bottom"]) * hs}
+
+	if death_tex != null:
+		fits[death_tex] = {"s": 1.0, "off": idle_bottom - float(_frame_metrics(death_tex, w, h)["bottom"])}
+	return fits
 
 
 ## 量一張貼圖在「w×h ＋ STRETCH_KEEP_ASPECT」框內的可見像素幾何。
@@ -1449,6 +1564,45 @@ func _frame_metrics(tex: Texture2D, w: float, h: float) -> Dictionary:
 	var k: float = minf(w / tw, h / th)
 	var top := (h - th * k) * 0.5     # KEEP_ASPECT 置中留白
 	return {"vis_h": float(used.size.y) * k, "bottom": top + float(used.position.y + used.size.y) * k - h}
+
+
+## 一列要有多少比例的不透明像素才算「主體」（而非舉起的劍/法杖等細長物）。頭部寬度遠超這個門檻。
+const BODY_ROW_COVER := 0.10
+
+## 量「主體」的顯示高度（px）＝頭頂（第一條達到 BODY_ROW_COVER 覆蓋率的橫排）到可見底邊（腳）。
+## 量不到（缺圖／壓縮貼圖／全透明）時回傳 0，呼叫端自行退回不校正。
+func _body_height(tex: Texture2D, w: float, h: float) -> float:
+	if tex == null:
+		return 0.0
+	var img: Image = tex.get_image()
+	if img == null or img.is_compressed():
+		return 0.0
+	var used := img.get_used_rect()
+	if used.size.y <= 0:
+		return 0.0
+	if img.get_format() != Image.FORMAT_RGBA8:
+		img = img.duplicate() as Image
+		img.convert(Image.FORMAT_RGBA8)
+	var wpx := img.get_width()
+	var data := img.get_data()
+	var need: int = maxi(16, int(float(wpx) * BODY_ROW_COVER))
+	var step := 2                          # 每兩像素取一點：夠判斷覆蓋率，省掉一半掃描量
+	var body_top := -1
+	for y in range(used.position.y, used.position.y + used.size.y):
+		var cnt := 0
+		var base: int = y * wpx * 4
+		for x in range(0, wpx, step):
+			if data[base + x * 4 + 3] > 8:
+				cnt += step
+				if cnt >= need:
+					body_top = y
+					break
+		if body_top >= 0:
+			break
+	if body_top < 0:
+		return 0.0
+	var k: float = minf(w / float(wpx), h / float(img.get_height()))
+	return float(used.position.y + used.size.y - body_top) * k
 
 
 ## 量出立繪「實際可見像素」的頭頂與身體中心（相對 wrap 原點＝腳點），供箭頭/游標/飄字/特效定位。
@@ -1757,22 +1911,17 @@ func _build_result_overlay() -> void:
 	_result_overlay.add_child(_result_btn)
 
 
-## 攻擊/技能幀縮放：倍率＝自動對齊 idle 可見高度的基準（atk_fit）× 藝術倍率（ATTACK_SCALE），整段動畫固定。
-## pivot 在框底中心，放大會原地長大；再套 atk_off 讓腳落在與 idle 同一條地面線（攻擊幀的畫布留白與 idle
-## 不同，不補的話角色一攻擊就往上浮）。
-func _apply_attack_scale(node: Dictionary) -> void:
+## 換貼圖＋套上該貼圖的校正（見 _build_fits）：pivot 在框底中心，縮放原地長大，再用 off 把腳踩回
+## idle 的地面線。查不到校正的貼圖（idle 幀、敵人）＝基準值，直接還原 scale/position。
+func _set_frame(node: Dictionary, tex: Texture2D) -> void:
 	var spr: TextureRect = node["sprite"]
-	var u: Dictionary = node["unit"]
-	var s := float(node.get("atk_fit", 1.0)) * float(ATTACK_SCALE.get(String(u.get("sprite", "")), 1.0))
-	spr.scale = Vector2(s, s)
-	spr.position.y = float(node["spr_y"]) + float(node.get("atk_off", 0.0))
-
-
-func _reset_sprite_scale(node: Dictionary) -> void:
-	var spr: TextureRect = node["sprite"]
-	if spr.scale != Vector2.ONE:
-		spr.scale = Vector2.ONE
-	spr.position.y = float(node["spr_y"])
+	spr.texture = tex
+	var fit: Dictionary = node.get("fits", {}).get(tex, {})
+	var s := float(fit.get("s", 1.0))
+	var target := Vector2(s, s)
+	if spr.scale != target:
+		spr.scale = target
+	spr.position.y = float(node["spr_y"]) + float(fit.get("off", 0.0))
 
 
 func _on_log_pressed() -> void:
@@ -1906,22 +2055,17 @@ func _refresh_ui() -> void:
 			wnode.position = base + _shake_offset_for(node["unit"])
 		# 貼圖優先序：死亡 > 受傷 > 攻擊動畫（普攻限攻擊階段；技能/原位整段）> idle
 		var show_atk := not atk_frames.is_empty() and (in_attack_phase or (lunging and not _lunge_move))
-		var spr: TextureRect = node["sprite"]
 		if not alive and node["death_tex"] != null:
-			spr.texture = node["death_tex"]
-			_reset_sprite_scale(node)
+			_set_frame(node, node["death_tex"])
 		elif _is_shaking(node["unit"]) and node["hurt_tex"] != null:
-			spr.texture = node["hurt_tex"]
-			_reset_sprite_scale(node)
+			_set_frame(node, node["hurt_tex"])
 		elif show_atk:
 			var span: float = LM_ATTACK if _lunge_move else _lunge_dur
 			var t0: float = t2 if _lunge_move else 0.0
 			var si := clampi(int((_lunge_t - t0) / span * atk_frames.size()), 0, atk_frames.size() - 1)
-			spr.texture = atk_frames[si]
-			_apply_attack_scale(node)
+			_set_frame(node, atk_frames[si])
 		elif not frames.is_empty():
-			spr.texture = frames[frame % frames.size()]
-			_reset_sprite_scale(node)
+			_set_frame(node, frames[frame % frames.size()])
 		wnode.visible = not is_end
 		node["sprite"].modulate = Color.WHITE if (alive or node["death_tex"] != null) else Color(0.4, 0.4, 0.45, 0.9)
 
