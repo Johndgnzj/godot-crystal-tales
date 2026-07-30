@@ -118,7 +118,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   - Marin 戰鬥 `attack / dagger_thrust` 五幀 strip（2026-07-23；2026-07-30 正規化更新）：OpenAI 內建 imagegen 依已驗收的 Marin seed 與短刀 weapon reference 生成，經 John 驗收後以洋紅鍵去背、重排為「預備 → 回復預備 → 蓄力 → 左手突刺 → 收刀」。2026-07-30 依 John 核可，逐幀統一為 543×724 透明畫布，以雙腳區域錨點與腳底 y=659 鎖定，消除個別動作幀的水平／垂直漂移。原始 strip、RGBA strip、逐幀來源與 Review montage 保存於 `assets-source/role/main/marin/battle_attack_strip_{raw,alpha}.png`、`battle_attack_0..4.png`、`battle_attack_review_montage.png`；runtime 為 `hero_marin_attack_0..4.png`。提示詞作者 John／協作 Agent。
   - Ludo 戰鬥 `idle` seed／四幀 strip／`hurt`／`cast`／`death`／`attack` 首幀（2026-07-22）：OpenAI 內建 imagegen 依正式 `battle_role_hd_pixel_v2` prompt 與 `menuart_ludo.png` 參考生成，John 驗收 idle、閉眼難過表情 hurt、背負劍鞘 cast、完全趴地 death 與指定劍長 attack seed；`assets/battle/hero_ludo_f0..3.png`、`hero_ludo_hurt.png`、`hero_ludo_cast.png`、`hero_ludo_death.png` 已整合。當時的 attack 首幀僅保留為歷史候選，已由 2026-07-27 的正式五幀斜劈 strip 取代。原始圖、RGBA 版與 idle 預覽包保存於 `assets-source/role/main/ludo/battle_idle/`，提示詞作者 John／協作 Agent。
 - `assets/ui/battlebg_*.png`：程序化生成（自製）。2026-07-15：`battlebg_forest.png` 換成 John 提供的「東之森戰鬥背景」圖（取代原程序化版）。2026-07-20：`battlebg_mine.png` 換成 OpenAI 內建 imagegen 生成、經 John 驗收的手繪礦山戰鬥背景；`battlebg_forest_depths.png` 為同日經 John 驗收的深林遺跡戰鬥背景，供 `eforest1`～`eforest3`（含 boss）使用。原圖分別保留於 `assets-source/battle/battlebg_mine_2026-07-20.png` 與 `assets-source/battle/battlebg_forest_depths_2026-07-20.png`（提示詞作者 John／協作 Agent）。
-- `assets/battle/fx_{slash_0..3,blunt_0,burst_0,magic_0}.png`（2026-07-28 整合）：戰鬥受擊特效。**AI 生成**（John 提供 1024×1024 透明底特效幀表，提示詞作者 John）；原圖本身已是透明底、未做去背，以暫存腳本按「每排指定格數＋最細頸部下刀」自動切格（斬光在 x 方向互相重疊，投影法切不開），統一輸出 256×256 置中 RGBA。用途：斬光 4 幀＝有刃武器普攻（素材原方向＝我方打敵人，敵方打我方時 runtime 水平翻轉）、`blunt_0` 白火花＝杖／鈍器／徒手與敵人普攻、`burst_0` 紅橙爆＝物理系技能、`magic_0` 藍星＝魔法系技能。素材源與 17 格完整切圖（含 `_contact.png` 對照表）保留於 `assets-source/battle/fx/slash_sheet_raw.png`、`assets-source/battle/fx/preview/`；未採用的斬光變體 `fx_r1_*`／`fx_r2_*` 與金星芒／橘火星亦在該目錄備用。**授權：AI 生成，不得商用。** 取代 `build_cq2.py` 程序產生的 64×64 佔位幀（同批移除不再使用的 `fx_spark_0..3`、`fx_burst_1..3`；治療用 `fx_heal_0..3` 仍為舊佔位圖，待換）。
+- `assets/battle/fx_{slash_0..3,blunt_0,burst_0,magic_0}.png`（2026-07-28 整合）：戰鬥受擊特效。**AI 生成**（John 提供 1024×1024 透明底特效幀表，提示詞作者 John）；原圖本身已是透明底、未做去背，以暫存腳本按「每排指定格數＋最細頸部下刀」自動切格（斬光在 x 方向互相重疊，投影法切不開），統一輸出 256×256 置中 RGBA。用途：斬光 4 幀＝有刃武器普攻（素材原方向＝我方打敵人，敵方打我方時 runtime 水平翻轉）、`blunt_0` 白火花＝杖／鈍器／徒手與敵人普攻、`burst_0` 紅橙爆＝物理系技能、`magic_0` 藍星＝魔法系技能。素材源與 17 格完整切圖（含 `_contact.png` 對照表）保留於 `assets-source/battle/fx/slash_sheet_raw.png`、`assets-source/battle/fx/preview/`；未採用的斬光變體 `fx_r1_*`／`fx_r2_*` 與金星芒／橘火星亦在該目錄備用。**授權：AI 生成，John 確認可商用。**（2026-07-30 更正：原記為不得商用，實際與 `fx_stab` 同批同性質，皆可商用。） 取代 `build_cq2.py` 程序產生的 64×64 佔位幀（同批移除不再使用的 `fx_spark_0..3`、`fx_burst_1..3`；治療用 `fx_heal_0..3` 仍為舊佔位圖，待換）。
 - `assets/map/north_mine/nm_{a,b,c,d,e,f}.png`（素材源＝`assets-source/map/north_mine/nm_*.png`，2026-07-21 統一為專案命名；總覽圖移至 `north_mine/_overview/`）：
   AI 生成素材（ChatGPT 內建圖片生成功能，提示詞作者 John/協作 Agent，2026-07-16）；北方礦山 a～f 手繪畫面地圖，f 為 boss 房。
   2026-07-17 依地圖連線調整 a、b、c、e 出入口構圖與路徑。
@@ -157,6 +157,15 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   AI 生成素材（ChatGPT 內建圖片生成，提示詞作者 John／協作 Agent，2026-07-20）；M4 東之森深處 m2 畫面——`j` 的 boss（`m`）擊破後開放的分支路線、通往 M7。2026-07-25 經 John 驗收後，以 terrain 藍圖重繪為全幅苔蘚森林與東西向泥路，替換前版本保留於 `east_forest_depths/_backup/efd_m2_before_blueprint_repaint-2026-07-25.png`。
 - **[2026-07-21 尺寸統一]** `ef_a–i`、`efd_g–n`＋`efd_m2` 共 18 張原 1254 地圖圖批次縮放（sips）至 1280×1280，讓碰撞格 32／16 整除、消除遷就 1254 的 38；原 1254 版備份於各 dir 的 `_backup/orig_1254/`。屬機械縮放、無新授權變動。
 - `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。
+- `assets/battle/fx_stab_0..3.png`（瑪琳普攻的刺擊特效，256×256 RGBA 四幀；**2026-07-30 整合**）：
+  **AI 生成**（John 提供 1254×1254 特效幀表 `assets-source/battle/fx/stab_sheet_raw.png`，提示詞作者 John）。
+  **授權：AI 生成，John 確認可商用。**
+  原圖是**黑底 RGB、無 alpha**（與 slash 幀表不同），以亮度轉 alpha＋亮度地板 34（smoothstep 到 72）去除
+  每格外圈的微亮暈，否則會出現淡淡的方框霧；四幀用**同一個 496×496 視窗＋對齊亮核**裁切，保住幀間相對
+  大小與命中點位置（各幀各自縮放會讓小火花被放大成滿框、命中點在動畫中漂移）。
+  取用第 2 排（向左的直線刺擊，對上「素材原方向＝我方打敵人」慣例）；未採用的第 1 排（向右）、第 3 排
+  （斜向）、第 4／5 排（藍色爆散與碎屑，可作 `fx_magic` 多幀升級的備料）留在幀表內，切好的四幀另存
+  `assets-source/battle/fx/preview/stab_row2_0..3.png`。
 - `assets/ui/dmg_digits.png`（戰鬥傷害數字圖片字，950×120＝10 格 95×120 的 0–9 透明底；**2026-07-30 經 John 驗收整合**）：
   AI 生成素材（Gemini gemini-2.5-flash-image，提示詞作者 John／協作 Agent，由 /gen-art skill raw type 生成）。
   厚實浮雕金色數字（乳白→暖金漸層＋深棕黑粗描邊＋淡金高光）。**產法**：先產一張風格參考圖定調，再以它當

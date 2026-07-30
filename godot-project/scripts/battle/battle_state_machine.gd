@@ -809,8 +809,12 @@ func _popup_miss(u: Variant) -> void:
 	_popup(u, "Miss!!", Color(0.85, 0.92, 1.0), 32, false)
 
 
-## 普攻受擊特效種類：依攻擊者武器類別（有刃＝斬光、其餘＝白火花）。敵人沒有 weapon_type → 白火花。
+## 普攻受擊特效種類：角色專屬（SPRITE_FX）優先，否則依攻擊者武器類別（有刃＝斬光、其餘＝白火花）。
+## 敵人沒有 sprite 對映也沒有 weapon_type → 白火花。
 func _phys_fx(a: Dictionary) -> String:
+	var own := String(SPRITE_FX.get(String(a.get("sprite", "")), ""))
+	if own != "":
+		return own
 	return String(WTYPE_FX.get(_weapon_type(a), "blunt"))
 
 
@@ -847,7 +851,10 @@ func _play_hit_fx(u: Variant, kind: String) -> void:
 	if frames.is_empty():
 		return
 	var h := float(node["h"])
+	# 斬光是斜掃長條、刺擊是更細更長的直線（要能穿過目標才有穿透感），放射狀（火花/爆/魔光/治療）最小。
 	var s: float = clampf(h * 1.8, 120.0, 230.0) if kind == "slash" else clampf(h * 1.3, 130.0, 200.0)
+	if kind == "stab":
+		s = clampf(h * 2.6, 180.0, 320.0)
 	var spr := TextureRect.new()
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # 手繪筆觸特效走平滑取樣（像素立繪仍各自 Nearest）
 	spr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -1255,8 +1262,13 @@ const FX_FRAMES := {
 	"burst": ["fx_burst_0.png"],
 	"magic": ["fx_magic_0.png"],
 	"heal": ["fx_heal_0.png", "fx_heal_1.png", "fx_heal_2.png", "fx_heal_3.png"],
+	"stab": ["fx_stab_0.png", "fx_stab_1.png", "fx_stab_2.png", "fx_stab_3.png"],
 }
 const WTYPE_FX := {"sword": "slash", "dagger": "slash", "claw": "slash"}   # 有刃武器＝斬光；其餘（杖/鈍器/徒手/敵人）＝白火花
+## 角色專屬的普攻特效，**優先於 WTYPE_FX**（2026-07-30 John：只有瑪琳用刺擊，不是所有匕首）。
+## 之所以綁 sprite 而不是武器類別：這是「這個角色怎麼打」的演出設定，換武器不該換掉她的招式感。
+## 之後若每個角色都要專屬特效，再改成 PartyMemberDef 的資料欄位（現在只有一筆，不值得動資料層）。
+const SPRITE_FX := {"marin": "stab"}
 const FX_DT := 0.07                   # 受擊特效每幀秒數（多幀）
 const FX_PUNCH := 0.09                # 單幀特效每段秒數（縮放彈出）
 const FRAME_DT := 0.18
