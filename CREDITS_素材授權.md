@@ -157,6 +157,13 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   AI 生成素材（ChatGPT 內建圖片生成，提示詞作者 John／協作 Agent，2026-07-20）；M4 東之森深處 m2 畫面——`j` 的 boss（`m`）擊破後開放的分支路線、通往 M7。2026-07-25 經 John 驗收後，以 terrain 藍圖重繪為全幅苔蘚森林與東西向泥路，替換前版本保留於 `east_forest_depths/_backup/efd_m2_before_blueprint_repaint-2026-07-25.png`。
 - **[2026-07-21 尺寸統一]** `ef_a–i`、`efd_g–n`＋`efd_m2` 共 18 張原 1254 地圖圖批次縮放（sips）至 1280×1280，讓碰撞格 32／16 整除、消除遷就 1254 的 38；原 1254 版備份於各 dir 的 `_backup/orig_1254/`。屬機械縮放、無新授權變動。
 - `assets/ui/face_default.png`（戰鬥面板無行動者時的預設頭像）：AI 生成素材——蓋婭女神石雕（Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-15 由 /gen-art skill raw type 生成）。
+- `assets/battle/fx_stab_skill_0..4.png`（瑪琳技能命中的斜向刺擊）與 `assets/battle/fx_magic_0..4.png`
+  （魔法系技能命中的藍色爆散，**由原本的單幀 `fx_magic_0` 升級為 5 幀**）；**2026-07-30 整合**：
+  同一張 `stab_sheet_raw.png` 的第 3 排與第 4 排，處理法同下（亮度轉 alpha＋共用視窗＋對齊亮核），
+  地板逐排調（斜向 40／爆散 56——爆散外圈的暈更亮，34 擋不掉會露出方框霧）。
+  斜向那排**水平鏡射**後才符合「素材原方向＝我方打敵人」（原圖光條指向右上＝從左邊打過來）。
+  切好的幀另存 `assets-source/battle/fx/preview/stab_skill_row3_0..4.png`、`magic_row4_0..4.png`。
+  **授權同下：AI 生成，John 確認可商用。**
 - `assets/battle/fx_stab_0..3.png`（瑪琳普攻的刺擊特效，256×256 RGBA 四幀；**2026-07-30 整合**）：
   **AI 生成**（John 提供 1254×1254 特效幀表 `assets-source/battle/fx/stab_sheet_raw.png`，提示詞作者 John）。
   **授權：AI 生成，John 確認可商用。**

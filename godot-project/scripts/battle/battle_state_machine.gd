@@ -539,7 +539,7 @@ func _apply_one(ts: Array) -> void:
 			var sksfx := _skill_sfx(a, sk)
 			sfx.append(_sfx_or(sksfx, "att_magic.mp3"))
 			_defer_hits([{"t": t, "dmg": float(dmg), "crit": false}], sksfx)
-			_queue_fx(t, ("magic" if sk.attr == "int" else "burst"), 0.0)   # 與 attack 動畫同時起
+			_queue_fx(t, _skill_fx(a, sk.attr), 0.0)   # 與 attack 動畫同時起
 		else:
 			anim = "attack"
 			var heal := DamageCalc.skill_heal(a, sk)
@@ -608,7 +608,7 @@ func _apply_all(sk: SkillDef) -> void:
 	var list: Array = foes.filter(func(u): return bool(u.get("alive", false)))
 	var tot := 0
 	var hits: Array = []
-	var fx_kind := "magic" if sk.attr == "int" else "burst"
+	var fx_kind := _skill_fx(a, sk.attr)
 	for f in list:
 		var target: Dictionary = f
 		var dmg := DamageCalc.skill_damage(a, target, sk)
@@ -818,6 +818,14 @@ func _phys_fx(a: Dictionary) -> String:
 	return String(WTYPE_FX.get(_weapon_type(a), "blunt"))
 
 
+## 技能命中特效：角色專屬（SPRITE_SKILL_FX）優先，否則依技能屬性（魔法系＝藍星爆、物理系＝紅橙爆）。
+func _skill_fx(a: Dictionary, attr: String) -> String:
+	var own := String(SPRITE_SKILL_FX.get(String(a.get("sprite", "")), ""))
+	if own != "":
+		return own
+	return "magic" if attr == "int" else "burst"
+
+
 ## 排入「跟攻擊動畫同時起」的受擊特效：at＝相對本次 lunge 起點的秒數（普攻＝動畫階段開始、技能＝0）。
 ## 傷害數字/震動仍走 _apply_pending_hits（等音效的 lead-in 播完），兩者刻意分開。
 func _queue_fx(t: Dictionary, kind: String, at: float) -> void:
@@ -855,6 +863,8 @@ func _play_hit_fx(u: Variant, kind: String) -> void:
 	var s: float = clampf(h * 1.8, 120.0, 230.0) if kind == "slash" else clampf(h * 1.3, 130.0, 200.0)
 	if kind == "stab":
 		s = clampf(h * 2.6, 180.0, 320.0)
+	elif kind == "stab_skill":
+		s = clampf(h * 2.2, 170.0, 290.0)   # 斜向長條，比平刺短一點；技能命中不要蓋掉整個畫面
 	var spr := TextureRect.new()
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # 手繪筆觸特效走平滑取樣（像素立繪仍各自 Nearest）
 	spr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -1260,7 +1270,8 @@ const FX_FRAMES := {
 	"slash": ["fx_slash_0.png", "fx_slash_1.png", "fx_slash_2.png", "fx_slash_3.png"],
 	"blunt": ["fx_blunt_0.png"],
 	"burst": ["fx_burst_0.png"],
-	"magic": ["fx_magic_0.png"],
+	"magic": ["fx_magic_0.png", "fx_magic_1.png", "fx_magic_2.png", "fx_magic_3.png", "fx_magic_4.png"],
+	"stab_skill": ["fx_stab_skill_0.png", "fx_stab_skill_1.png", "fx_stab_skill_2.png", "fx_stab_skill_3.png", "fx_stab_skill_4.png"],
 	"heal": ["fx_heal_0.png", "fx_heal_1.png", "fx_heal_2.png", "fx_heal_3.png"],
 	"stab": ["fx_stab_0.png", "fx_stab_1.png", "fx_stab_2.png", "fx_stab_3.png"],
 }
@@ -1269,6 +1280,8 @@ const WTYPE_FX := {"sword": "slash", "dagger": "slash", "claw": "slash"}   # 有
 ## 之所以綁 sprite 而不是武器類別：這是「這個角色怎麼打」的演出設定，換武器不該換掉她的招式感。
 ## 之後若每個角色都要專屬特效，再改成 PartyMemberDef 的資料欄位（現在只有一筆，不值得動資料層）。
 const SPRITE_FX := {"marin": "stab"}
+## 同上，但用於**技能**命中（優先於「attr==int → magic、其餘 → burst」的預設）。
+const SPRITE_SKILL_FX := {"marin": "stab_skill"}
 const FX_DT := 0.07                   # 受擊特效每幀秒數（多幀）
 const FX_PUNCH := 0.09                # 單幀特效每段秒數（縮放彈出）
 const FRAME_DT := 0.18
