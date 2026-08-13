@@ -8,7 +8,8 @@
 [ext_resource type="TileSet" uid="uid://b2wjb3a77ee5y" path="res://resources/map/path_tileset_32.tres" id="6_pth32"]
 [ext_resource type="TileSet" uid="uid://bxtocmtgda8yn" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
 [ext_resource type="TileSet" uid="uid://tffllkuxmw7m" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
-[ext_resource type="Texture2D" uid="uid://b67s1nbev8cqe" path="res://assets/battle/foe_bear_0.png" id="9_bear"]
+[ext_resource type="Texture2D" path="res://assets/char/bear_Field_0.png" id="9_bear"]
+[ext_resource type="Script" path="res://scripts/world/field_actor.gd" id="10_field_actor"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6b3we"]
 size = Vector2(51, 90)
@@ -96,9 +97,13 @@ shape = SubResource("RectangleShape2D_j25ff")
 [node name="BearField" type="Sprite2D" parent="." unique_id=1516126441]
 texture_filter = 1
 position = Vector2(642, 707.00006)
-scale = Vector2(1.5138893, 1.5138893)
 texture = ExtResource("9_bear")
 flip_h = true
+script = ExtResource("10_field_actor")
+frame_paths = PackedStringArray("res://assets/char/bear_Field_0.png", "res://assets/char/bear_Field_1.png", "res://assets/char/bear_Field_2.png")
+animation_fps = 2.0
+shadow_width = 76
+shadow_height = 14
 
 [node name="YSort" type="Node2D" parent="." unique_id=309594254]
 y_sort_enabled = true

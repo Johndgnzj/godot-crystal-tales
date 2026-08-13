@@ -29,7 +29,7 @@
 
 ## 正式版本
 
-**正式產圖用凍結 preset：[`presets/battle_role_hd_pixel_v4.md`](presets/battle_role_hd_pixel_v4.md)**（2026-07-27 凍結；多幀格內前後各 85px 鍵色安全留白）。
+**正式產圖用凍結 preset：[`presets/battle_role_hd_pixel_v5.md`](presets/battle_role_hd_pixel_v5.md)**（2026-08-09 凍結；我方約 3.5 頭身、多幀格內前後各 85px 鍵色安全留白）。
 
 - `sections/`＝最小可維護單元（一檔一規則）：改去背只動 `50_去背螢光底.md`、測新動畫限制只動 `70_動畫.md`。
 - `presets/`＝release 快照：**不改舊 preset**；sections 實驗成功後另存新檔（如 `battle_role_v2.md`），再回來更新本節與 [`../workflow.md`](../workflow.md) 的指向。

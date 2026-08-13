@@ -14,18 +14,18 @@ cmd = "talk"
 script = ExtResource("1_tina_e")
 when = "reg==1"
 speaker = "緹娜"
-lines = PackedStringArray("委託都貼在牆上的告示板。這三件是給新人練手的——", "①東之森採藥：找村口的米拉。②討伐取證：獵森林裡的野狼、剝兩張狼皮回來交給我。③打聽消息：找鎮上的人聊聊礦山的傳聞。", "三件都辦妥了，再去水井旁找老葛雷——他一直在等有本事的人。")
+lines = PackedStringArray("委託都貼在牆上的告示板。這三件是給新人練手的——", "①東之森採藥：找村口的米拉。②討伐取證：獵森林裡的野狼、取兩枚狼牙回來交給我。③打聽消息：找鎮上的人聊聊礦山的傳聞。", "三件都辦妥了，再去水井旁找老葛雷——他一直在等有本事的人。")
 cmd = "quest"
 label = "委託"
 
 [sub_resource type="Resource" id="wolf"]
 script = ExtResource("1_tina_e")
-when = "wolf_hide>=2"
+when = "wolf_fang>=2"
 speaker = "緹娜"
-lines = PackedStringArray("（清點狼皮）兩張都是好皮，取證足夠了。這是委託報酬，收好。", "（獲得 120 金幣！討伐取證·完成）")
+lines = PackedStringArray("（端起狼牙看了看）兩枚都是成年狼的牙，取證足夠了。這是委託報酬，收好。", "（獲得 120 金幣！討伐取證·完成）")
 action = "turnin_wolf"
 cmd = "wolf_turnin"
-label = "繳交狼皮"
+label = "繳交狼牙"
 done = "fq_wolf"
 
 [sub_resource type="Resource" id="reg_do"]

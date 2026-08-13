@@ -13,6 +13,11 @@ extends SceneTree
 ##                      ※ 進場可能自動播開場過場（對話框會入鏡），屬正常
 ##   scene:<res://路徑> 直接載入任意場景；用於尚未接進 SceneRouter 的試作場景
 ##   guide:<res://路徑> 直接載入並隱藏 layout_prop／Player，輸出可供手繪背景參考的乾淨 guide
+##   battle:<enc>[|<敵人id>]
+##                      new_game 後直接開一場戰鬥（enc＝encounters/*.tres 的 map_id，預設 forest）。
+##                      隊型是加權隨機抽的，加 `|<敵人id>` 會重抽到該敵人出現為止（上限 20 次），
+##                      例 `battle:forest2|wolf`。注意只有掛進 content_db.tres 的 encounter 查得到，
+##                      查不到會 fallback 成 forest 表。
 ##   battle_preview     LPC 怪物試作，沿用正式 battle.tscn 的 UI／版面
 ##
 ## 例：
@@ -98,6 +103,30 @@ func _shoot(target: String) -> void:
 				var player := host.get_node_or_null("YSort/Player")
 				if player is CanvasItem:
 					(player as CanvasItem).visible = false
+		"battle":
+			_ensure_new_game()
+			var gs2: Node = root.get_node_or_null("/root/GameState")
+			if gs2 == null:
+				print("[SHOT] battle 目標需要 GameState autoload")
+				return
+			# arg＝"<enc>" 或 "<enc>|<必含敵人 id>"：隊型是加權隨機抽的，指定 id 就重抽到出現為止。
+			var parts := arg.split("|")
+			gs2.encounter = String(parts[0]) if parts.size() > 0 and parts[0] != "" else "forest"
+			var want := String(parts[1]) if parts.size() > 1 else ""
+			for _try in 20:
+				host = _instance("res://scenes/battle/battle.tscn")
+				if host == null:
+					break
+				await process_frame
+				var ids: Array = []
+				for f in host.foes:
+					ids.append(String((f as Dictionary).get("id", "")))
+				if want == "" or ids.has(want):
+					print("[SHOT] battle:%s 敵人＝%s" % [gs2.encounter, ", ".join(PackedStringArray(ids))])
+					break
+				host.queue_free()
+				host = null
+				await process_frame
 		"battle_preview":
 			host = _instance("res://scenes/battle/lpc_preview.tscn")
 		_:

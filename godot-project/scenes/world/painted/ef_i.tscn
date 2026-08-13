@@ -9,8 +9,8 @@
 [ext_resource type="TileSet" uid="uid://bxtocmtgda8yn" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
 [ext_resource type="TileSet" uid="uid://tffllkuxmw7m" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
 [ext_resource type="Script" uid="uid://byfw8y40gornh" path="res://scripts/world/trigger_zone.gd" id="9_tz"]
-[ext_resource type="Script" uid="uid://culc52cmemhia" path="res://scripts/world/gated_sprite.gd" id="10_gs"]
-[ext_resource type="Texture2D" uid="uid://b67s1nbev8cqe" path="res://assets/battle/foe_bear_0.png" id="11_bear"]
+[ext_resource type="Script" path="res://scripts/world/field_actor.gd" id="10_gs"]
+[ext_resource type="Texture2D" path="res://assets/char/bear_Upright_0.png" id="11_bear"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_58vyb"]
 size = Vector2(157, 54)
@@ -85,12 +85,15 @@ shape = SubResource("RectangleShape2D_trig")
 
 [node name="BearField" type="Sprite2D" parent="." unique_id=776025454]
 texture_filter = 1
-position = Vector2(640, 505)
-scale = Vector2(1.3888887, 1.3888887)
+position = Vector2(640, 489)
 texture = ExtResource("11_bear")
 script = ExtResource("10_gs")
 show_when = "ch1_step>=10"
 hide_flag = "c_s5_bear"
+frame_paths = PackedStringArray("res://assets/char/bear_Upright_0.png", "res://assets/char/bear_Upright_1.png", "res://assets/char/bear_Upright_2.png")
+animation_fps = 2.0
+shadow_width = 84
+shadow_height = 14
 
 [node name="YSort" type="Node2D" parent="." unique_id=1727676613]
 y_sort_enabled = true

@@ -14,7 +14,7 @@ spd = 12.0
 exp = 16
 gold = 11
 drops = [{
-"id": "wolf_hide",
+"id": "wolf_fang",
 "rate": 2.0
 }, {
 "id": "beast_hide",

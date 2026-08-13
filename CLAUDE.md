@@ -60,6 +60,13 @@ godot-crystal-tales/
 
 驗收前若 John 要求修改，必須繼續留在預覽驗收階段，不可提前做任何專案整合工作。
 
+### 多幀 Sprite 共通規則
+
+- 動畫以「單一方向／單一動作的完整 horizontal strip」為產圖單位；先核可 seed，再於同一次生成完成整條 strip，禁止逐幀獨立產圖後拼接成正式動畫。
+- 同一 strip 必須共用 cell、global scale、腳底線與 bottom-center anchor；切圖／去背不得逐幀自動縮放。
+- 靜態 raw strip、透明逐幀、動態預覽與 runtime 原生尺寸場景合成都要驗收；GIF 不得取代靜態幀，放大精緻度不得取代實景縮小可讀性。
+- 接地影子由 runtime／場景端獨立生成，不得烘進 sprite。世界角色細節以 `docs/design/世界立繪規格.md` 與 `docs/pipeline/世界立繪流程.md` 為準；戰鬥角色沿用 `docs/pipeline/battle_art/` 的 G0～G7 Gate。
+
 ## 文件同步規則（重要，避免文件與實際脫勾）
 
 **調整遊戲內容後，必須同步更新對應文件——這是硬性規則，不是可選項。** 文件與實際脫勾是本專案最該避免的技術債。
@@ -105,7 +112,7 @@ godot-crystal-tales/
   - **沿革**：CORE-1 原採 `viewport`＋Nearest（像素風的**書面判斷、未實機驗證**），理由是 tile 像素風要避免
     接縫/次像素抖動。2026-07-18 John 實機發現手繪素材偏糊，且**美術方向已轉手繪**（地圖改成整張手繪畫面圖、
     非 tilemap，接縫理由消失；角色改水彩立繪），故正式改 `canvas_items`＋Linear。縮放/清晰度以 John 實機觀感為準。
-  - **例外**：若仍保留**真正的像素小圖**（LPC 行走圖／**高品質像素二頭身戰鬥圖與角色動畫〔AI 產，見 `docs/design/戰鬥立繪規格.md`〕**／tile atlas／虛擬搖桿等），那幾張要在各自的
+  - **例外**：若仍保留**真正的像素小圖**（LPC 二頭身行走圖／**高品質像素約 3.5 頭身戰鬥圖與角色動畫〔AI 產，見 `docs/design/戰鬥立繪規格.md`〕**／tile atlas／虛擬搖桿等），那幾張要在各自的
     `.import` 個別設 `Nearest` 覆蓋全域 Linear，避免被糊化（待製作，逐一挑出）。
 - **狀態管理：Autoload 單例**取代原本的全域變數（`g_party`/`g_flags`/…），詳見 `specs/SAVE_SCHEMA.md`。
 - **場景切換**：用 `get_tree().change_scene_to_file()` 或自訂 `SceneRouter` autoload，取代原本的 `replaceScene` + `g_result`/`g_returnScene` 機制（規格照搬，實作方式改用 Godot Signal）。

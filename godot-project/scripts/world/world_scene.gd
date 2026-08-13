@@ -304,12 +304,15 @@ func _npc_shadow_texture(width: int) -> Texture2D:
 	var image := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	image.fill(Color(0.0, 0.0, 0.0, 0.0))
 	var radius_x := float(width) / 2.0
+	var radius_y := 4.0
 	for y in range(57, 64):
 		for x in range(7, 56):
 			var nx := (float(x) - 31.0) / radius_x
-			var ny := (float(y) - 60.0) / 3.0
-			if nx * nx + ny * ny <= 1.0:
-				image.set_pixel(x, y, Color(43.0 / 255.0, 37.0 / 255.0, 30.0 / 255.0, 72.0 / 255.0))
+			var ny := (float(y) - 60.0) / radius_y
+			var distance := nx * nx + ny * ny
+			if distance <= 1.0:
+				var alpha := 13.0 + (127.0 - 13.0) * pow(1.0 - distance, 1.35)
+				image.set_pixel(x, y, Color(58.0 / 255.0, 52.0 / 255.0, 44.0 / 255.0, alpha / 255.0))
 	var texture := ImageTexture.create_from_image(image)
 	_npc_shadow_textures[width] = texture
 	return texture

@@ -8,6 +8,8 @@
 [ext_resource type="TileSet" uid="uid://b2wjb3a77ee5y" path="res://resources/map/path_tileset_32.tres" id="6_pth32"]
 [ext_resource type="TileSet" uid="uid://bxtocmtgda8yn" path="res://resources/map/path_tileset_16.tres" id="7_pth16"]
 [ext_resource type="TileSet" uid="uid://tffllkuxmw7m" path="res://resources/map/collision_tileset_16.tres" id="8_cdt16"]
+[ext_resource type="Texture2D" path="res://assets/char/necro_Field_0.png" id="9_necro"]
+[ext_resource type="Script" path="res://scripts/world/field_actor.gd" id="10_field_actor"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ilhok"]
 size = Vector2(34, 52)
@@ -75,6 +77,17 @@ shape = SubResource("RectangleShape2D_ilhok")
 
 [node name="YSort" type="Node2D" parent="." unique_id=1611649092]
 y_sort_enabled = true
+
+[node name="NecroField" type="Sprite2D" parent="YSort"]
+texture_filter = 1
+position = Vector2(640, 384)
+texture = ExtResource("9_necro")
+script = ExtResource("10_field_actor")
+show_when = "ch1_step==12"
+hide_flag = "c_necro_intro"
+frame_paths = PackedStringArray("res://assets/char/necro_Field_0.png", "res://assets/char/necro_Field_1.png", "res://assets/char/necro_Field_2.png")
+animation_fps = 2.0
+shadow_width = 40
 
 [node name="Player" type="CharacterBody2D" parent="YSort" unique_id=1097093490 groups=["player"]]
 position = Vector2(640, 640)

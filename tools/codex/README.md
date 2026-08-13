@@ -51,7 +51,7 @@ python3 -m http.server 8899                  # 然後開 http://127.0.0.1:8899/t
 | 數值/裝備/技能/敵人/商店/道具/寶箱 | `content_db.tres` | ✅ 自動 |
 | 經驗表（「經驗與升級」分頁的曲線）| `resources/content/exp_table.json` | ✅ 自動 |
 | 對話全文（NPC＋過場）| `dialogue/**/*.tres`（`dialogue_db.tres` 聚合）| ✅ 自動 |
-| 立繪／頭像／敵人圖 | `assets-source/role/<類>/<id>/`（face/portrait/menuart/bounty/combat/battle_idle）| ✅ 自動（`build_img()` 掃目錄）|
+| 立繪／頭像／敵人圖／隊伍身高比較圖 | `assets-source/role/<類>/<id>/`（face/portrait/menuart/bounty/combat/battle_idle）＋`assets-source/role/party_height_comparison.png` | ✅ 自動（`build_img()` 掃目錄）|
 | NPC/地圖**文字說明**、關鍵角色、敵人描述、立繪對照 | `codex_template.html` 的 `META`（`npcs`/`keyChars`/`foeArt`/`foeDesc`/`partyMeta`）| ✋ 手改 |
 | **任務**分頁（主線六小節、F 級三委託、旗標總表、道具流向）| `codex_template.html` 的 `QUEST_MAIN`/`QUEST_FQ`/`QUEST_FLAGS`/`QUEST_ITEMS`（來源 `docs/story/第一章任務攻略.md`）| ✋ 手改 |
 | **劇情**（總覽的主線流程、世界卡片、action 一覽）| `codex_template.html` 的 `FLOW`/`OV_CARDS`/`ACTIONS` | ✋ 手改 |

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Gemini 產圖腳本（gen-art skill 的執行端）。
 
-用法（Godot 專案版；路徑相對 godot-project/）：
-  python3 .claude/skills/gen-art/gen_image.py --type face --frame bust --prompt "鐵匠漢克：壯碩老年男子、花白絡腮鬍、皮圍裙" --out godot-project/assets/ui/face_hank.png
-  python3 .claude/skills/gen-art/gen_image.py --type face --frame full --prompt "主角魯多：俊美青年劍士、藍披風"            --out godot-project/assets/ui/face_ludo_full.png
-  python3 .claude/skills/gen-art/gen_image.py --type battlebg --prompt "廢棄礦坑深處，藍黑色調"                          --out godot-project/assets/ui/battlebg_cave2.png
-  python3 .claude/skills/gen-art/gen_image.py --type interior --prompt "溫暖的旅店大廳，木質吧台"                        --out godot-project/assets/props/int_inn2.png
+用法（預覽階段一律輸出到 /tmp 或 preview 路徑；John 核可後才整合）：
+  python3 .claude/skills/gen-art/gen_image.py --type face --frame bust --prompt "鐵匠漢克：壯碩老年男子、花白絡腮鬍、皮圍裙" --out /tmp/face_hank_candidate.png
+  python3 .claude/skills/gen-art/gen_image.py --type face --frame full --prompt "主角路德：俊美青年劍士、藍披風"            --out /tmp/face_ludo_full_candidate.png
+  python3 .claude/skills/gen-art/gen_image.py --type battlebg --prompt "廢棄礦坑深處，藍黑色調"                     --out /tmp/battlebg_cave2_candidate.png
+  python3 .claude/skills/gen-art/gen_image.py --type interior --prompt "溫暖的旅店大廳，木質吧台"                   --out /tmp/int_inn2_candidate.png
   python3 .claude/skills/gen-art/gen_image.py --type raw      --prompt "..." --ar 1:1 --out /tmp/test.png
 
 金鑰：讀環境變數 GEMINI_API_KEY，否則往上層目錄找 .env（KEY=VALUE 格式）。

@@ -5,6 +5,35 @@
 建立符合本專案美術規格的戰鬥立繪，
 並確保所有素材皆能直接用於 Godot 專案。
 
+## 不可跳過的驗收 Gate
+
+| Gate | 交付物 | 通過後才能做 |
+|---|---|---|
+| G0 Reference 鎖定 | Menu Art／角色設定、weapon reference、頭身與面向 | 產 Seed 候選 |
+| G1 Seed 靜態驗收 | 滿版鍵色 `battle_seed_candidate_*_raw.png` | 正式去背 Seed |
+| G2 Seed Alpha 驗收 | `battle_seed_alpha.png`，邊緣、手腳、武器完整 | 產任一動作首幀 |
+| G3 動作首幀驗收 | 滿版鍵色 `battle_<action>_raw.png` | 產該動作 strip |
+| G4 Strip 靜態驗收 | 鍵色原始 strip／逐幀 PNG／幀號 montage | 正式去背 strip |
+| G5 Alpha 靜態驗收 | 透明 strip 與透明逐幀 PNG | 合成驗收 GIF |
+| G6 GIF 動態驗收 | 透明循環 GIF，檢查 root-lock、武器與首尾幀 | 列為可整合候選 |
+| G7 正式整合核可 | John 明確回覆「可以」或等價語句 | 覆寫 runtime 素材、更新 CREDITS、import 與測試 |
+
+任一 Gate 未通過就停在該階段修正。GIF 不得取代靜態幀驗收；多幀素材不得在 G4 之前去背，單幀素材不得在 G3 之前去背。在 G7 之前，所有候選只存於預覽位置，不得寫入 `assets-source/`、`godot-project/assets/`、CREDITS 或 import 流程。
+
+上表的 G4 與 G6 專用於多幀動畫（`idle`、`attack`）。單幀動作（`hurt`、`cast`、`death`）的路徑為 `G3 鍵色靜態 → G5 Alpha 靜態 → G7 整合核可`，不為單幀強行製作 strip 或 GIF。所有路徑仍必須先驗收鍵色靜態圖，再去背。
+
+## 交付格式合約
+
+| 交付物 | 格式 | 硬性規則 |
+|---|---|---|
+| Key-color Raw | PNG，不透明 | 背景滿版單一純鍵色；同一動作所有幀同色，無漸層、spill、投影、邊框或 UI |
+| Raw Strip | PNG，不透明 | 單列、等格、左至右；每格輪廓前後至少 85px 鍵色留白，相鄰輪廓至少 170px 純鍵色空間 |
+| Alpha Strip／Frames | PNG RGBA | 完整 Alpha channel；畫布、縮放、bottom-center 錨點與腳底線一致；無鍵色 spill 或誤刪像素 |
+| Review Montage | PNG | 可在圖片外的驗收區標幀號；不得把幀號、格線或 UI 畫進任一來源幀 |
+| Review GIF | 無限循環 GIF | 使用與 runtime 一致的幀順序，預設每幀 `0.18s`；只用於動態驗收，不是 runtime 真相源 |
+
+來源檔名一律使用下方 Step 6 的固定命名，不帶日期。正式 runtime 一幀一張 PNG，不直接讀 strip 或 GIF。
+
 ---
 
 # Step 1 建立需求與選擇動作
@@ -40,7 +69,7 @@
 
 確認：
 
-- 比例
+- 我方角色約 3.5 頭身（可接受 3.3～3.7）；敵人依物種解剖比例
 - Pixel Style
 - 配色
 - 光源
@@ -52,7 +81,7 @@
 
 # Step 3 建立 Prompt
 
-使用目前正式 preset：角色 `prompts/presets/battle_role_hd_pixel_v4.md`、敵人 `prompts/presets/battle_enemy_v2.md`。
+使用目前正式 preset：角色 `prompts/presets/battle_role_hd_pixel_v5.md`、敵人 `prompts/presets/battle_enemy_v2.md`。
 - **先產 seed，再產動作首幀**。seed 是唯一角色外觀 reference，不屬於 idle 或任何動畫；持武器角色另以 weapon reference 鎖定武器外觀。seed 驗收通過後才依 `idle → hurt → cast → death → attack` 產製。
 - 各動作首幀驗收通過後，再進入該動作的 strip 動畫製作。
 - 組裝規則見 `prompts/role.md`（敵人 `prompts/enemy.md`）。
@@ -64,15 +93,15 @@
 
 # Step 4 AI 產圖
 
-先產三張 **seed** 候選圖。seed 必須是非動作的中性備戰站姿，只用來鎖定角色外觀、服裝、配色、比例與基準面向；不得當作 idle 或任何動作的首幀。持武器角色產 seed 時，必須實際附上 weapon reference 與角色設定圖，讓武器外觀與手部持握在 seed 階段即固定。
+先產三張滿版單一鍵色的 **seed** 候選圖。seed 必須是非動作的中性備戰站姿，只用來鎖定角色外觀、服裝、配色、3.5 頭身比例與基準面向；不得當作 idle 或任何動作的首幀。持武器角色產 seed 時，必須實際附上 weapon reference 與角色設定圖，讓武器外觀與手部持握在 seed 階段即固定。G1 驗收後才去背製作 `battle_seed_alpha.png`，G2 再驗收透明邊緣與完整性。
 seed 驗收通過後，才產指定動作的三張候選首幀。每次產動作都必須附上該單位已驗收的 `battle_seed_alpha.png` 作為 image reference；持武器角色還必須同時附上 `battle_weapon_<id>_alpha.png`。換對話也一樣，固定檔名或專案路徑本身不會使產圖工具自動讀圖。
 若結果不符合規格：
 回到 Step 3 修正 Prompt。
 
 動畫 strip 產法：
 以已核可、**不屬於任何動作幀**的 seed（中性備戰站姿、基準面向、定造型）為角色 reference；持武器角色另附已驗收 weapon reference 鎖定武器外觀，
-再一次產完整條 strip。
-禁止逐幀硬湊。
+再於**同一次生成**完成整條 horizontal strip；不得將各幀分開產圖後拼接。整條 strip 後製時只使用一個 global scale、共同畫布與 bottom-center 腳點，禁止逐幀 fit-to-cell；若首幀已經核可，正規化時必須保持它的實際人物尺寸與腳點。
+各幀必須是符合動作相位的真實局部重繪；禁止把同一張圖逐幀平移、縮放或用大塊腳部矩形硬湊成動畫。
 對所有多幀素材（`idle`、`attack`、`walk` 等），每一格的角色、武器與特效輪廓前後都必須保留**至少 85px 的單色鍵色安全留白**；相鄰兩格之間因此至少有 170px 的乾淨鍵色區域。此數值以產圖原始解析度計算，不得靠後續縮放補足。整張 strip 四周也必須留白；角色、武器與特效不可貼邊或跨格。
 
 ---
@@ -110,9 +139,9 @@ John 確認靜態圖後，才進入下一節處理去背與對齊。
 
 ---
 
-# Step 6 素材整理
+# Step 6 預覽素材整理
 
-通過 strip 預覽與逐幀驗收後，將正式輸出存放至素材源（與既有素材同一套位置）。產線檔名一律固定、不得附日期；同一單位重產時覆蓋對應檔案：
+通過 strip 預覽與逐幀驗收後，先在 preview／visualization 位置按下列固定檔名整理候選；G7 正式整合核可後，才將同一組核可輸出存入素材源。正式檔名不得附日期；同一單位重產時覆蓋對應檔案：
 
 - 角色：`assets-source/role/main/<id>/`
 - 敵人：`assets-source/role/enemies/<id>/`（`combat_0/1.png`，從 0 連號）

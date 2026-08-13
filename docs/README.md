@@ -18,20 +18,26 @@
 |---|---|
 | [story/世界觀設定.md](story/世界觀設定.md) | 世界觀權威整理：信仰/地理/勢力/威脅/核心意象。**含「待拍板」清單** |
 | [story/故事大綱.md](story/故事大綱.md) | 主軸、章節結構表、flag/step 對照、伏筆與破綻清單 |
+| [story/路德篇章節骨架.md](story/路德篇章節骨架.md) | **已核可方向**：七章路德篇、王都嫁禍線、炎龍終戰、角色弧線與伏筆邊界；各章細節尚在設計 |
 | [story/角色設定.md](story/角色設定.md) | 主角/NPC/反派設定（缺點與動機）＋外觀設定（立繪用）|
 | [story/第一章劇本草稿.md](story/第一章劇本草稿.md) | 第一章六小節可讀劇本草稿（待審→轉對話 .tres，見 DIALOGUE_SPEC v3.0）|
+| [story/第一章小說式母稿.md](story/第一章小說式母稿.md) | 第一章小說式敘事母稿：場景氣氛、人物動作、情緒轉折與完整因果；不直接等同 runtime 台詞 |
 | [story/第一章任務攻略.md](story/第一章任務攻略.md) | 攻略式任務流程：`ch1_step` 0→13 逐節（觸發/地點/道具/NPC/旗標）＋支線＋驗收缺口，順劇情驗收用 |
+| [story/第二章任務攻略.md](story/第二章任務攻略.md) | **v1.1 定案（2026-08-12）·第二章施工藍圖**：《無名的旅伴》六小節展開成 `ch2_step` 0→12 任務流程＋大道路網＋灰木危機事件＋休斯城多種族 NPC＋新內容清單；開發待辦見 `TASKS/16_第二章施工.md` |
+| [story/第二章劇本草稿.md](story/第二章劇本草稿.md) | **草稿 v1.0（待審）**：第二章六小節可讀劇本（全過場 `t1_*`~`t6_*` 台詞＋NPC 對話＋支線③；含轉 `.tres` 備忘），審過→轉對話 .tres |
 
 ## 二、design/ — 長什麼樣
 
 | 文件 | 內容 |
 |---|---|
 | [design/屬性戰鬥設計.md](design/屬性戰鬥設計.md) | 四主屬性(str/agi/int/**luck**)→衍生戰鬥數值→三段式攻擊的設計與係數表（對應 BATTLE_FORMULAS v4.0）|
+| [design/武器/](design/武器/杖/description.md) | **各武器類型的部件說明與立繪比例**，一類一目錄（`刀`／`劍`／`錘`／`杖`），每個目錄 `description.md`＋參考圖。部件名稱一律用實物術語；含「角色立繪可完整呈現／戰鬥立繪只強調哪幾項」與長度佔身高比例；`杖`另含莉莉角色＋武器介紹圖 |
 | [design/道具武器設計.md](design/道具武器設計.md) | 道具與武器的**設計原則**（稀有度/8 階曲線；equipment_def.gd / validate_content.py 以此為 schema spec）＋**§三＝道具/裝備圖示規格單一來源**（手繪水彩 64px、路徑、構圖、不可畫進圖裡的東西）。**數值不在此**——以 `equipment/*.tres`＋codex 設定檢視為準 |
 | [design/魔物圖鑑.md](design/魔物圖鑑.md) | 全魔物**總覽**：數值/特性/掉落/出沒地/圖鑑描述＋各地圖遭遇表對照（彙整自 `enemies/*.tres`＋`encounters/*.tres`）|
 | [design/角色立繪規格.md](design/角色立繪規格.md) | 對話/介紹用**高品質立繪**長怎樣（a 頭像／b 半身／c 全身＋敵人設定集/懸賞立繪）|
-| [design/戰鬥立繪規格.md](design/戰鬥立繪規格.md) | **〔主〕戰鬥素材**長怎樣（角色＋敵人，高品質像素＋二頭身）：動畫集/幀數/排版/風格/逐幀一致性＋敵人專節＋受擊特效 fx_* 素材規格 |
-| [design/世界立繪規格.md](design/世界立繪規格.md) | **地圖移動素材**長怎樣（overworld walk：9 幀×4 向、步態相位）|
+| [design/戰鬥立繪規格.md](design/戰鬥立繪規格.md) | **〔主〕戰鬥素材**長怎樣：我方高品質 Pixel Art 約 3.5 頭身、角色身高換算、動畫集／幀數／排版／逐幀一致性＋敵人專節＋受擊特效 fx_* 素材規格 |
+| [design/戰鬥背景規格.md](design/戰鬥背景規格.md) | **戰鬥背景**長怎樣：16:9、下方至少 2/3 連續可站立地面、腳底承托與站位禁項 |
+| [design/世界立繪規格.md](design/世界立繪規格.md) | **地圖 Sprite** 長怎樣：單方向完整 strip、共用尺度／bottom-center anchor、64px 人型與大型事件 actor 尺寸、獨立漸層影子 |
 | [design/地圖畫面規格.md](design/地圖畫面規格.md) | 手繪**地圖背景畫面**長怎樣（32px 網格/1280²/禁項/遮擋/色彩/城鎮建築/地格藍圖）|
 | [design/地圖互動物件規格.md](design/地圖互動物件規格.md) | 寶箱、任務拾取物等**引擎另擺的物件**長怎樣（外觀族、狀態、錨點、尺寸與互動資料分離）；同時是背包道具者另有 64×64 圖示交付 |
 
@@ -41,10 +47,11 @@
 |---|---|
 | [pipeline/設計員指南.md](pipeline/設計員指南.md) | 怎麼在 Godot 編輯器改角色/道具/武器/數值/美術/地圖（不寫程式）|
 | [pipeline/角色立繪流程.md](pipeline/角色立繪流程.md) | 角色/敵人立繪：產圖→去背螢光底→切圖→整合＋**prompt 固定開頭模板**＋交付檢查＋帳本（`gen-role-prompt` skill 引用）|
-| [pipeline/battle_art/](pipeline/battle_art/workflow.md) | 戰鬥立繪**產線**（唯一入口，`gen-battle-prompt` skill 引用）：workflow 8 步驟（獨立 seed→動作選擇→strip、固定檔名）＋checklist 驗收＋`prompts/`（`actions/` 對話式動作資料集、`sections/` 一檔一規則、`presets/` 凍結正式版、`descriptions/` 各單位最後一版描述（一單位一檔）、組裝規則 `role.md`/`enemy.md`（enemy 含 Gemini 產法＋現況帳本））|
+| [pipeline/battle_art/](pipeline/battle_art/workflow.md) | 戰鬥立繪**產線**（唯一入口，`gen-battle-prompt` skill 引用）：G0～G7 分階段 Gate（Seed 鍵色靜態→Seed Alpha→動作首幀→Strip 鍵色靜態→Alpha 靜態→GIF→整合）＋checklist 驗收＋`prompts/`（我方正式 `battle_role_hd_pixel_v5`、actions／sections／presets／descriptions）；待辦總表見 [`TASKS/17_戰鬥角色美術統一.md`](../TASKS/17_戰鬥角色美術統一.md) |
+| [pipeline/戰鬥背景流程.md](pipeline/戰鬥背景流程.md) | 戰鬥背景的產圖→預覽驗收→整合流程，含固定 prompt 核心與地面／腳點檢查清單 |
 | [pipeline/world_object_art/](pipeline/world_object_art/workflow.md) | 地圖互動物件**與道具/裝備圖示產線**：獨立 design anchor→狀態圖→固定命名→整合；類型 `chest`／`quest_item`／`icon`（圖示規格見 design/道具武器設計.md §三）|
 | [pipeline/world_object_art/遮擋物件資產架構.md](pipeline/world_object_art/遮擋物件資產架構.md) | 城鎮／野外高物件：滿版 Ground、透明遮擋物件、`YSort` 與類型→footprint 素材歸檔 |
-| [pipeline/世界立繪流程.md](pipeline/世界立繪流程.md) | walk 素材：產法/去背/切圖命名/LPC 過渡現況 |
+| [pipeline/世界立繪流程.md](pipeline/世界立繪流程.md) | 世界 Sprite **strip-first 產線**：W0～W6 Gate、seed→完整 strip→去背正規化→原生尺寸場景驗收→整合 |
 | [pipeline/地圖產圖流程.md](pipeline/地圖產圖流程.md) | 畫一張手繪地圖 png：**prompt 固定開頭模板**＋交付檢查（`gen-map-prompt` skill 引用）|
 | [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋**40×40 地格藍圖（§2.5）**＋場景生成（塊 A/B/C）|
 | [pipeline/素材管理規範.md](pipeline/素材管理規範.md) | 素材放哪、進 Godot 後怎麼處理、授權標註規則、檢查清單 |
@@ -82,15 +89,21 @@ docs/
 ├── story/               # 敘事聖經（世界觀）
 │   ├── 世界觀設定.md
 │   ├── 故事大綱.md
+│   ├── 路德篇章節骨架.md
 │   ├── 角色設定.md
 │   ├── 第一章劇本草稿.md
-│   └── 第一章任務攻略.md
+│   ├── 第一章小說式母稿.md
+│   ├── 第一章任務攻略.md
+│   ├── 第二章任務攻略.md   # v1.1 定案·第二章施工藍圖
+│   └── 第二章劇本草稿.md   # 草稿 v1.1（待審）
 ├── design/              # 長什麼樣
 │   ├── 屬性戰鬥設計.md
 │   ├── 道具武器設計.md
+│   ├── 武器/            # 一類一目錄：刀／劍／錘／杖，各 description.md＋參考圖
 │   ├── 魔物圖鑑.md
 │   ├── 角色立繪規格.md
 │   ├── 戰鬥立繪規格.md
+│   ├── 戰鬥背景規格.md
 │   ├── 世界立繪規格.md
 │   ├── 地圖畫面規格.md
 │   └── 地圖互動物件規格.md
@@ -98,6 +111,7 @@ docs/
     ├── 設計員指南.md
     ├── 角色立繪流程.md
     ├── 世界立繪流程.md
+    ├── 戰鬥背景流程.md
     ├── 地圖產圖流程.md
     ├── 地圖製作流程.md
     ├── 素材管理規範.md

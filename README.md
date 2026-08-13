@@ -15,8 +15,10 @@
 | `CLAUDE.md` | 給開發者/AI agent：目錄結構、Godot 技術選型、程式碼規範、協作總則、權威來源、**文件同步規則** |
 | `docs/` | **文件中樞**：`design/` 長什麼樣、`pipeline/` 怎麼產生、`story/` 世界觀（敘事聖經）、`todo/` 後續優化議題。總索引見 `docs/README.md` |
 | `docs/pipeline/設計員指南.md` | **給遊戲設計員（不需寫程式）**：怎麼加/改角色·道具·武器數值、美術、地圖 |
+| `docs/design/戰鬥背景規格.md` ／ `docs/pipeline/戰鬥背景流程.md` | 戰鬥背景的構圖規格與產圖流程；含下方 2/3 可站立地面、腳底承托與驗收清單 |
 | `docs/pipeline/world_object_art/遮擋物件資產架構.md` | 滿版地圖的透明高物件資產架構：`YSort` 遮擋、類型→footprint 歸檔、terrain 單一碰撞真相 |
 | `TASKS/` | 可執行任務清單，核心 CORE-* ＋ 模組 MOD-* |
+| `TASKS/17_戰鬥角色美術統一.md` | 我方戰鬥角色 3.5 頭身統一：路德／瑪琳全套重製、莉莉／潔絲補齊、實際身高正規化與全隊驗收 |
 | `TASK/v2/` | v2 後續製作追蹤；目前入口為世界美術終版與芳蕾鎮垂直切片 |
 | `specs/` | 從 `build_cq2.py` 凍結抄錄的權威規格：存檔 schema、戰鬥公式、對話格式 |
 | `reference/gdevelop/` | 原 GDevelop 專案的凍結快照（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`），唯讀 |
@@ -40,9 +42,9 @@ cd godot-project
 
 **設計員（做角色/數值/美術/地圖）**：直接讀 **`docs/pipeline/設計員指南.md`**，不用碰程式碼。
 
-**構思劇情/世界觀**：讀 **`docs/story/`**（`docs/README.md` 是總索引）——世界觀設定、故事大綱、角色設定；寫作方法論在 `docs/pipeline/劇本寫作心法.md`。
+**構思劇情/世界觀**：讀 **`docs/story/`**（`docs/README.md` 是總索引）——世界觀設定、故事大綱、角色設定；已核可的七章路德篇走向見 `docs/story/路德篇章節骨架.md`，小說式正文從 `docs/story/第一章小說式母稿.md` 開始；寫作方法論在 `docs/pipeline/劇本寫作心法.md`。
 
-**找/處理素材**：讀 **`docs/pipeline/素材管理規範.md`**——素材放哪、進 Godot 後怎麼處理、授權怎麼記。
+**找/處理素材**：讀 **`docs/pipeline/素材管理規範.md`**——素材放哪、進 Godot 後怎麼處理、授權怎麼記；武器部件與立繪比例見 **`docs/design/武器/`**（刀／劍／錘／杖）。
 
 > ⚠️ **改任何內容後，記得同步文件**（對應 docs、本 README 索引；設定集 codex 由 CI 自動發佈到 GitHub Pages）。規則見 `CLAUDE.md` 的「文件同步規則」。
 

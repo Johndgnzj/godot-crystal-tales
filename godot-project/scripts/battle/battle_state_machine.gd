@@ -1243,8 +1243,21 @@ const HERO_X_ALIGNED := 975.0
 const HERO_ROW_STEP_ALIGNED := 120.0           # 三人時的排距（腳點 541 / 421 / 301）
 const FOE_X := [300.0, 190.0, 324.0, 168.0, 300.0]   # 第 5 槽為敵人數上限 5 新增
 const HERO_H := 250.0   # 我方戰鬥立繪：2026-07-27 放大成 2 倍（208）→ 2026-07-30 John 再 +20%
-const FOE_H := 98.0     # 原 82，2026-07-30 同步 +20%
+const FOE_H := 98.0     # 原 82，2026-07-30 同步 +20%；只在敵人貼圖量不到可見像素時當退路（見 FOE_GEO）
 const BOSS_H := 168.0   # 原 140，2026-07-30 同步 +20%
+## 敵人立繪的統一顯示量級：以「可見像素的幾何均值」√(可見寬 × 可見高) 為基準，不再把畫布塞進固定框。
+## 為什麼改（2026-07-30 John 實機回饋「狼偏小、離血條很遠、沒有靠下對齊」）：敵人貼圖畫布比例落差極大
+## （野狼 112×50、骷髏 41×60），固定框 88×98 ＋ KEEP_ASPECT 會讓寬扁的四足獸被寬度卡住——野狼只畫出
+## 88×39（幾何均值 58.9），骷髏卻是 67×98（81.0）；且 KEEP_ASPECT 是**置中**，狼腳浮在地面線上方 29px，
+## 而血條掛在地面線下 6px，看起來就是「浮空又離血條很遠」。我方立繪本來就有 _build_fits 做等身校正，
+## 敵人這條路徑先前完全沒有校正。
+## 110＝John 從 76／110／150 三檔截圖挑定（2026-07-30）：76 是改動前全體幾何均值的中位數，一致但整體
+## 偏小（骷髏只有我方 250px 的 37%）；110 讓骷髏約 53%、野狼 165×74，敵我比例合理；150 起兩隻狼會互相
+## 重疊，且骷髏原生只有 41×60、放大 3 倍後像素塊變粗（敵人是放大、我方立繪是縮小，密度差看得出來——
+## 要再大得等敵人戰鬥圖以更高解析度重產）。個別單位要再大或再小，用 EnemyDef.battle_scale 在 .tres
+## 微調（bear_dire 已在用）。
+const FOE_GEO := 110.0
+const BOSS_GEO := 188.0   # big 敵人（劇情 boss）；比例沿用改動前的 BOSS_H / FOE_H ≈ 1.71
 const HERO_RATIO := {"ludo": 0.75, "marin": 0.58, "alan": 0.80}   # 由目前戰鬥幀的角色畫布比例換算；Ludo 已改用 HD Pixel idle 四幀
 ## 攻擊/技能幀的**額外**放大倍率（藝術倍率）。基準倍率由 _build_unit() 自動算出：把攻擊 strip 中主體
 ## 最高的一幀對齊該角色 idle 的主體高度（各角色攻擊幀畫布比例都不同——ludo 628×678、marin 900×850、
@@ -1485,6 +1498,15 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
 	var w := h * ratio
 
+	# 敵人：改用「可見像素正規化＋貼底」（見 FOE_GEO／_foe_fit）。量不到像素（缺圖、壓縮貼圖）就沿用固定框。
+	var foe_fit: Dictionary = {}
+	if not is_hero and not frames.is_empty():
+		var geo_base: float = BOSS_GEO if bool(u.get("big", false)) else FOE_GEO
+		foe_fit = _foe_fit(frames[0], geo_base * maxf(0.1, float(u.get("battle_scale", 1.0))))
+	if not foe_fit.is_empty():
+		w = float(foe_fit["vis_w"])   # 名字／血條／箭頭／飄字都改掛在可見像素的寬高上
+		h = float(foe_fit["vis_h"])
+
 	if frames.is_empty():
 		var ph := ColorRect.new()   # 無戰鬥圖的敵人（bear/orc/ogre/necro…）用佔位塊，仍看得到名字/血條
 		ph.color = Color(0.1, 0.11, 0.16, 0.55)
@@ -1499,9 +1521,14 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	spr.flip_h = false   # 都不翻轉：素材我方本就面朝左、敵方面朝右（John 回饋我方原本翻反了）
-	spr.size = Vector2(w, h)
-	spr.position = Vector2(-w * 0.5, -h)
-	spr.pivot_offset = Vector2(w * 0.5, h)   # 腳底中心＝wrap 原點：選中放大時原地長大不位移
+	# 敵人走 _foe_fit 時，size/pos 是「整張畫布」等比放大後的值（KEEP_ASPECT 剛好填滿、不留白），
+	# 位移已把可見底邊推到 wrap 原點；其餘情況維持舊的固定框擺法。
+	var spr_pos := Vector2(-w * 0.5, -h)
+	spr.size = Vector2(w, h) if foe_fit.is_empty() else Vector2(foe_fit["size"])
+	if not foe_fit.is_empty():
+		spr_pos = Vector2(foe_fit["pos"])
+	spr.position = spr_pos
+	spr.pivot_offset = -spr_pos   # 可見腳底中心＝wrap 原點：選中放大時原地長大不位移
 	if not frames.is_empty():
 		spr.texture = frames[0]
 	wrap.add_child(spr)
@@ -1528,10 +1555,12 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 		hp_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		wrap.add_child(hp_fill)
 
-	var anchors := _visible_anchors(frames, w, h)
+	# 走 _foe_fit 的敵人已經把可見像素對齊了（水平中心 x=0、底邊 y=0），錨點直接由可見高度推出。
+	var anchors := ({"head": Vector2(0.0, -h), "mid": Vector2(0.0, -h * 0.5)} if not foe_fit.is_empty()
+			else _visible_anchors(frames, w, h))
 	var fits := _build_fits(String(u.get("sprite", "")), frames, anim_frames, hurt_tex, death_tex, w, h)
 
-	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": -h, "head": anchors["head"], "mid": anchors["mid"], "fits": fits}
+	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": spr_pos.y, "head": anchors["head"], "mid": anchors["mid"], "fits": fits}
 
 
 ## 把「非 idle」的每張貼圖校正到與 idle 相同的人物大小與地面線，回傳 Texture2D → {s, off} 對照表。
@@ -1571,6 +1600,31 @@ func _build_fits(sprite_id: String, frames: Array, anim_frames: Dictionary, hurt
 	if death_tex != null:
 		fits[death_tex] = {"s": 1.0, "off": idle_bottom - float(_frame_metrics(death_tex, w, h)["bottom"])}
 	return fits
+
+
+## 敵人立繪的正規化擺放：把 tex 的可見像素縮到 geo 量級（幾何均值），並讓可見底邊踩在 wrap 原點
+## （＝地面線）、可見水平中心對齊 wrap 的 x。回傳 sprite 該用的 size/position 與正規化後的可見寬高；
+## 量不到（缺圖／壓縮貼圖／全透明）回傳空 Dictionary，呼叫端退回固定框擺法。see FOE_GEO
+##
+## 只用 idle 第 0 幀當基準，其餘幀共用同一組 size/position——逐幀重量會讓兩幀 idle 的可見範圍差異
+## 變成一呼一吸的抖動（跟我方 _build_fits 刻意整段共用一個倍率同理）。
+func _foe_fit(tex: Texture2D, geo: float) -> Dictionary:
+	if tex == null:
+		return {}
+	var img: Image = tex.get_image()
+	if img == null or img.is_compressed():
+		return {}
+	var used := img.get_used_rect()
+	if used.size.x <= 0 or used.size.y <= 0:
+		return {}
+	var k: float = geo / sqrt(float(used.size.x) * float(used.size.y))
+	return {
+		"size": Vector2(float(img.get_width()) * k, float(img.get_height()) * k),
+		"pos": Vector2(-(float(used.position.x) + float(used.size.x) * 0.5) * k,
+				-(float(used.position.y) + float(used.size.y)) * k),
+		"vis_w": float(used.size.x) * k,
+		"vis_h": float(used.size.y) * k,
+	}
 
 
 ## 量一張貼圖在「w×h ＋ STRETCH_KEEP_ASPECT」框內的可見像素幾何。

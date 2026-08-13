@@ -184,6 +184,9 @@ code{font-family:var(--mono);font-size:12px;color:var(--acc)}
 .skline{display:flex;gap:9px;align-items:baseline;font-size:12.5px;flex-wrap:wrap}
 .storybox{margin:18px 0 0;padding:12px 16px;border-left:2px solid var(--pur);background:var(--code);
   border-radius:0 10px 10px 0;font-size:12.8px;color:var(--mut);line-height:1.85}
+.height-board{margin:0 0 16px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;overflow:hidden}
+.height-board img{display:block;width:100%;height:auto;border-radius:10px}
+.height-board .note{margin:9px 4px 0;color:var(--dim);font-size:11.5px;line-height:1.6}
 
 /* npc grid card */
 .ncard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
@@ -314,12 +317,12 @@ const GAME = __GAME_JSON__;
 /* ── 手寫維護 META（角色定位、圖鑑描述、地圖說明、素材對照）── 對應設計專案 codex-meta.js ── */
 const META = {
 partyMeta:{
-  ludo: {role:"前衛劍士",   trait:"衝動熱血",   frameAspect:0.888},
-  marin:{role:"敏捷斥候",   trait:"冷靜務實",   frameAspect:0.5},
-  alan: {role:"資深冒險者", trait:"輕浮而可靠", frameAspect:0.888}
+  ludo: {role:"前衛劍士",   trait:"衝動熱血",   height:165, frameAspect:0.888},
+  marin:{role:"敏捷斥候",   trait:"冷靜務實",   height:158, frameAspect:0.5},
+  alan: {role:"資深冒險者", trait:"輕浮而可靠", height:178, frameAspect:0.888}
 },
 npcs:[
- {id:"tina",  name:"緹娜",     role:"冒險者公會・櫃檯",     fn:["委託","登錄"], desc:"公會接待員。負責 F 級登錄（小節4，贈冒險者靴）與委託告示板——三件 F 級委託由她列出，狼皮 ×2 也繳交給她（+120G）。小節3 亞倫失蹤、小節6 第一章結案，都是向她回報。"},
+ {id:"tina",  name:"緹娜",     role:"冒險者公會・櫃檯",     fn:["委託","登錄"], desc:"公會接待員。負責 F 級登錄（小節4，贈冒險者靴）與委託告示板——三件 F 級委託由她列出，狼牙 ×2 也繳交給她（+120G）。小節3 亞倫失蹤、小節6 第一章結案，都是向她回報。"},
  {id:"dora",  name:"朵拉",     role:"旅店老闆娘",           fn:["住宿（全恢復・免費）"], desc:"爽利熱心、鎮上的情報站，把路德姊弟當自家孩子照顧的鄰居。住宿即隊伍完全恢復。"},
  {id:"shea",  name:"希雅修女", role:"神殿・蓋婭女神侍奉者", fn:["祈禱（全恢復）"], desc:"能察覺路德身上「女神的記號」的變化。祈禱即隊伍完全恢復；戰敗後隊伍會在教堂（shrine）重生。"},
  {id:"barton",name:"巴頓鎮長", role:"芳蕾鎮鎮長",           fn:["劇情"], desc:"對礦山異變放心不下的老鎮長。F 級委託③「打聽耳語」的三位鎮民之一——他口中的礦山傳聞替小節5、6 的重返礦山鋪陳。"},
@@ -333,7 +336,9 @@ npcs:[
  {id:"warden",name:"礦山守衛", role:"公會派駐·礦山口",       fn:["劇情","關卡"], desc:"礦山封鎖後派來看守入口的守衛，嘴上說規矩、心裡想喝一杯。小節5 的關卡：拿蜂蜜酒（honey_mead）換放行，喝倒後路德一行才進得了礦山。"}
 ],
 keyChars:[
- {id:"necro",name:"死靈術士",role:"宿敵反派（1–3 章）",tags:["劇情關鍵","反覆遭遇・擊退不擊殺"],desc:"1–3 章反覆遭遇的宿敵，小節6 首遇。為救垂危的妹妹、想查明黑水晶能否治療而走上邪道——非真心害人，礦工異變是其研究的代價。與路德「想救妹妹瑪琳」成正邪對照。戰鬥數值見「敵人圖鑑」。"}
+ {id:"necro",name:"死靈術士",role:"宿敵反派（1–3 章）",tags:["劇情關鍵","反覆遭遇・擊退不擊殺"],desc:"1–3 章反覆遭遇的宿敵，小節6 首遇。為救垂危的妹妹、想查明黑水晶能否治療而走上邪道——非真心害人，礦工異變是其研究的代價。與路德「想救妹妹瑪琳」成正邪對照。戰鬥數值見「敵人圖鑑」。"},
+ {id:"lily",name:"莉莉",role:"第二章入隊・休斯城三公主／魔法師",height:162,tags:["光／風魔法","微服出宮","王室三公主"],desc:"16 歲，為解除父王的詛咒而微服出宮，對外自稱遊學見習魔法師「莉」。氣質高貴卻不太會說謊；持深褐木質法杖，杖頭為雙層圓形渦旋並嵌淡紫水晶，胸針與衣著工藝也不時洩漏她的王室身分。"},
+ {id:"jess",name:"潔絲",role:"第二章入隊・見習聖職者",height:167,tags:["治癒魔法","解謎擔當","莉莉的摯友"],desc:"17 歲，蓋婭教會的見習聖職者。沉穩機警、擅長圓場，熟讀教會典籍並會初階治癒魔法；手持教會授予的單手六翼釘頭錘，象徵「侍奉女神者不持刃」的老規矩。"}
 ],
 maps:[
  {id:"town",    name:"芳蕾鎮",       scene:"Town",     kind:"town", desc:"主城鎮。公會／旅店／神殿／鎮長宅／道具店／鐵匠鋪等設施；無遭遇戰。戰敗重生點（shrine・教堂）。"},
@@ -433,8 +438,8 @@ const OV_CARDS=[
  ["主線閘門 ch1_step","第一章的唯一主線旗標，0→13 線性推進（六小節）。過場的 setstep 與少數 action（s5_start→10、warden_pass→12）負責推進；`c_*` 是各過場的一次性旗標。測試想跳到某一節：改存檔的 ch1_step ＋清掉對應 c_*。"],
  ["蓋婭女神與記號","本地信仰的大地女神。路德身上帶著「女神的記號」，希雅修女能察覺其變化；小節6 黑水晶爆發時記號護住了路德，卻沒能護住瑪琳——主線暗線。"],
  ["北方礦山","二十年前封閉的礦坑，近來夜裡有異聲。小節3 亞倫在此斷後失蹤、礦山遭公會封鎖；小節5 靠一壺蜂蜜酒買通守衛重返；小節6 最深處（NMF）與死靈術士對決。"],
- ["東之森（EFA–EFI）","鎮東的練級場，也是第一章的情緒對照組：小節1 在 EF-G 被凶暴的熊打趴（必敗），小節5 在 EF-I 老樹旁複戰同一頭熊並取勝。鏡草（EFA/EFB/EFD）與野狼皮的採集地。"],
- ["冒險者公會與 F 級委託","小節4 登錄 F 級（得冒險者靴）。登錄後告示板開三件 F 級委託——採藥鏡草、討伐取狼皮、打聽礦山耳語——三件全完成（fq==3）老葛雷才會託付私事，是進礦山的前置。"],
+ ["東之森（EFA–EFI）","鎮東的練級場，也是第一章的情緒對照組：小節1 在 EF-G 被凶暴的熊打趴（必敗），小節5 在 EF-I 老樹旁複戰同一頭熊並取勝。鏡草（EFA/EFB/EFD）與野狼的獵場。"],
+ ["冒險者公會與 F 級委託","小節4 登錄 F 級（得冒險者靴）。登錄後告示板開三件 F 級委託——採藥鏡草、討伐取狼牙、打聽礦山耳語——三件全完成（fq==3）老葛雷才會託付私事，是進礦山的前置。"],
  ["黑水晶與汙染","小節6 首次揭露：礦工異變、洞熊失心，源頭都是黑水晶。死靈術士為救垂危的妹妹而研究它，瑪琳因此中了黑咒印昏厥——第二章「前往公會總部」的雙重動機（找亞倫＋救瑪琳）。"]
 ];
 const FLOW=[
@@ -442,7 +447,7 @@ const FLOW=[
  {t:"小節2「不甘心的少年」",fl:"3→5",d:"瑪莎敷藥、漢克勸退，路德仍不服氣。全鎮拗不過他勉強幫他武裝：漢克的舊劍（gotSword）、瑪莎的護身戒（gotRing）、吉德的新客招待藥水×2（gotPotion）→ 看見亞倫接了礦山委託往北走，決意偷跟，北門開放。"},
  {t:"小節3「礦山的那一天」",fl:"5→8",d:"礦山口被亞倫識破、結伴同行（亞倫 guest 入隊）→ 深處遭遇異變的魔影，定點戰 prologue_demon 必敗 → 亞倫斷後把路德推走、下落不明 → 逃回鎮向緹娜回報，公會封鎖礦山。教訓＝代價由別人替你扛。"},
  {t:"小節4「不是一個人」",fl:"8→9 · reg 1",d:"閉關的路德向瑪琳吐露，瑪琳入隊（隊伍＝路德＋瑪琳）→ 到公會找緹娜登錄 F 級冒險者，取得冒險者靴（adventurer_boots）。"},
- {t:"小節4.5「初出茅廬」三件 F 級委託",fl:"fq 0→3",d:"登錄後告示板開三件委託，任意順序：①米拉的鏡草×3（EFA/EFB/EFD 各一株，得凝神耳環＋藥水×3）②獵野狼交狼皮×2 給緹娜（+120G）③向朵拉・唐恩・巴頓打聽礦山耳語。三件湊滿 fq==3，老葛雷才開口。"},
+ {t:"小節4.5「初出茅廬」三件 F 級委託",fl:"fq 0→3",d:"登錄後告示板開三件委託，任意順序：①米拉的鏡草×3（EFA/EFB/EFD 各一株，得凝神耳環＋藥水×3）②獵野狼交狼牙×2 給緹娜（+120G）③向朵拉・唐恩・巴頓打聽礦山耳語。三件湊滿 fq==3，老葛雷才開口。"},
  {t:"小節5「一壺蜂蜜酒」",fl:"9→12",d:"老葛雷私託調查失蹤礦工（→step 10）→ 礦山口守衛擋路想喝酒 → 吉德說要烈火蜂蜜才調得出好酒 → EF-I 老樹旁走近可見的熊，複戰 bear_rematch（這次可勝）取得烈火蜂蜜 → 吉德調成蜂蜜酒 → 遞給守衛放行（→step 12）。"},
  {t:"小節6「被汙染的真相」",fl:"12→13",d:"重返礦山遭遇骷髏礦工（＝失蹤的礦工）→ 最深處 NMF 與死靈術士對決（可勝，擊退不殺）→ 黑水晶爆發，路德的記號擋下、瑪琳中黑咒印昏厥 → 回鎮由希雅穩住咒印、向緹娜回報，第一章完（setstep -1）。"},
  {t:"第二章（未實作）",fl:"公會總部",d:"為救中咒的瑪琳、追查亞倫下落，踏上前往公會總部的旅途（設定已定案，實作未開始）。舊 POC 的三段式章節（ch1 哥布林頭目委託／ch2 狂暴洞熊）資料仍在 repo，但新主線不走，待封存。"}
@@ -493,7 +498,7 @@ const ACTIONS=[
  ["heal","隊伍完全恢復（住宿／祈禱）"],
  ["give_sword / give_ring / give_potion","漢克的舊劍（gotSword）／瑪莎的護身戒（gotRing）／藥水×2（gotPotion）"],
  ["mira_start / mira_reward","F 委託①：贈凝神耳環開始採鏡草（gotEar・mira2=1）／交齊 3 株發藥水×3（mira2=2，fq_herb→fq+1）"],
- ["turnin_wolf","F 委託②：交狼皮×2 給緹娜 → +120G（fq_wolf→fq+1）"],
+ ["turnin_wolf","F 委託②：交狼牙×2 給緹娜 → +120G（fq_wolf→fq+1）"],
  ["rumor_dora / rumor_don / rumor_barton","F 委託③：向該鎮民打聽礦山耳語，rumor+1；湊滿 3 位→fq_rumor→fq+1"],
  ["s5_start","fq==3 後老葛雷託付私事 → ch1_step=10"],
  ["gid_brew","吉德把烈火蜂蜜調成蜂蜜酒（honey_wine=1）"],
@@ -540,7 +545,7 @@ const QUEST_MAIN=[
 ];
 const QUEST_FQ=[
  {t:"① 採藥·鏡草",who:"村口·米拉（reg==1 起）",do:"領凝神耳環（訂金）→ 東之森 EFA／EFB／EFD 各採 1 株 → 回米拉交付",cond:"herb==3 交付",rew:"凝神耳環、藥水 ×3",fl:"gotEar・mira2 → fq_herb → fq+1"},
- {t:"② 討伐取證",who:"公會·緹娜（告示板）",do:"到深層森林（EFC/D/G/H/I）獵野狼、湊狼皮 ×2 → 緹娜選單「繳交狼皮」",cond:"wolf_hide>=2 繳交",rew:"+120 金幣",fl:"fq_wolf → fq+1"},
+ {t:"② 討伐取證",who:"公會·緹娜（告示板）",do:"到深層森林（EFC/D/G/H/I）獵野狼、湊狼牙 ×2 → 緹娜選單「繳交狼牙」",cond:"wolf_fang>=2 繳交",rew:"+120 金幣",fl:"fq_wolf → fq+1"},
  {t:"③ 打聽消息（耳語）",who:"鎮上·朵拉／唐恩／巴頓",do:"各聊一段礦山傳聞（純對話、無戰鬥，替礦山鋪陳）",cond:"rumor==3",rew:"—（鋪陳）",fl:"rumor_dora/don/barton → fq_rumor → fq+1"}
 ];
 const QUEST_FLAGS=[
@@ -565,7 +570,7 @@ const QUEST_ITEMS=[
  ["冒險者靴 adventurer_boots","小節4·公會登錄","裝備"],
  ["凝神耳環 focus_earring","小節4.5·①米拉（訂金）","裝備"],
  ["藥水 potion ×3","小節4.5·①米拉領賞","消耗"],
- ["狼皮 wolf_hide ×2","小節4.5·②深層森林獵狼掉落","交緹娜（+120G）"],
+ ["狼牙 wolf_fang ×2","小節4.5·②深層森林獵狼掉落","交緹娜（+120G）"],
  ["烈火蜂蜜 fire_honey","小節5·熊複戰勝利","交吉德調酒"],
  ["蜂蜜酒 honey_mead","小節5·吉德調製","交礦山守衛放行"],
  ["阿吉頭盔 miner_helmet（舊）","舊 mine.tscn 撿取","交老葛雷（新主線摸不到）"]
@@ -589,7 +594,7 @@ function render(){
     const gOf=k=>{if(!gr)return"固定";const f=gr.find(x=>x[0]===k);return f?"+"+fmt(f[1])+"/級":"—";};
     const battle=IMG["bi_"+p.id]||null;
     let tags=chip(CLSN[p.cls]+" "+p.cls,"acc")+chip("主屬 "+p.main.toUpperCase(),"pur")+chip("Lv"+p.lv+" 起始");
-    if(pm.role)tags+=chip(pm.role,"gold"); if(pm.trait)tags+=chip(pm.trait); if(p.guest)tags+=chip("客座 guest","bad");
+    if(pm.role)tags+=chip(pm.role,"gold"); if(pm.trait)tags+=chip(pm.trait); if(pm.height)tags+=chip(pm.height+" cm"); if(p.guest)tags+=chip("客座 guest","bad");
     const attrs=[["STR 力量",p.base.str,gOf("str")],["AGI 敏捷",p.base.agi,gOf("agi")],["INT 智力",p.base.int,gOf("int")],["LUCK 幸運",p.base.luck,"—"]]
       .map(([k,v,gg])=>`<div class="tile"><div class="k">${k}</div><div class="v">${fmt(v)} <span class="c-hp" style="font-size:11px">${gg}</span></div></div>`).join("");
     const dv2=[["HP",dv.maxhp,"c-hp"],["MP",dv.maxmp,"c-mp"],["物攻",dv.patk,""],["魔攻",dv.matk,""],["物防",dv.pdef,""],["魔防",dv.mdef,""],["閃避",dv.dodge,""],["會心%",dv.crit,"c-gold"],["速度",dv.spd,""]]
@@ -627,7 +632,7 @@ function render(){
     const hay=[k.id,k.name,k.role,k.desc,(k.tags||[]).join("")].join(" ").toLowerCase();
     if(!mm(hay))return null; hits++;
     const open=!!st.open["k_"+k.id];
-    const tags=(k.tags||[]).map(t=>chip(t)).join("");
+    const tags=(k.tags||[]).map(t=>chip(t)).join("")+(k.height?chip(k.height+" cm"):"");
     return `<div class="row key${open?" open":""}" style="${open?"border-color:rgba(167,155,242,.55)":""}">
       <div class="head" data-act="tg" data-id="k_${k.id}" role="button" tabindex="0">
         ${faceHtml(k.id,k.name,"border-color:#35306b")}
@@ -885,6 +890,7 @@ function render(){
 
   if(show("party"))P.push(`<section class="sec" id="sec_party">${secHead("party","主角隊伍",party.length+" 名")}
     <p class="lead">衍生數值由公式 F-1 計算（含初始裝備）。屬性點：每級 +3 自由分配；技能點：每級 +1，技能上限 Lv10（每級威力 +15%）。點列展開完整檔案。</p>
+    ${IMG["party_height_comparison"]?`<div class="height-board"><img src="${IMG["party_height_comparison"]}" alt="瑪琳、莉莉、路德、潔絲與亞倫的同比例身高比較" loading="lazy"><p class="note">正式立繪以共同鞋底線與同一像素比例排列；身高取頭頂至鞋底，武器、法杖與髮飾不計入。</p></div>`:""}
     <div class="rows">${party.join("")}</div></section>`);
 
   if(show("key"))P.push(`<section class="sec pur" id="sec_key">${secHead("key","關鍵角色",keys.length+" 名","pur","KEY FIGURES")}

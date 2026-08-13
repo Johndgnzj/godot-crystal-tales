@@ -262,6 +262,9 @@ ROLE_REL = "../../assets-source/role"
 
 def build_img():
     img = {}
+    height_board = ROLE / "party_height_comparison.png"
+    if height_board.exists():
+        img["party_height_comparison"] = f"{ROLE_REL}/party_height_comparison.png"
     for sub in ("main", "npc", "enemies"):
         base = ROLE / sub
         if not base.is_dir():

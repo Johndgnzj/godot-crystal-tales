@@ -453,9 +453,9 @@ func _run_action(action: String) -> void:
 				GameState.inv_add("honey_mead", -1)
 				GameState.flag_set("ch1_step", 12)
 		"turnin_wolf":
-			# F 級委託②討伐取證：交狼皮×2 給緹娜（cmd wolf_turnin／done fq_wolf）。
-			if GameState.flag_get("fq_wolf") == 0 and int(GameState.inv_get("wolf_hide")) >= 2:
-				GameState.inv_add("wolf_hide", -2)
+			# F 級委託②討伐取證：交狼牙×2 給緹娜（cmd wolf_turnin／done fq_wolf）。
+			if GameState.flag_get("fq_wolf") == 0 and int(GameState.inv_get("wolf_fang")) >= 2:
+				GameState.inv_add("wolf_fang", -2)
 				GameState.flag_set("fq_wolf", 1)   # 兼作室內選單 done 旗標
 				GameState.gold += 120
 				_fq_inc()

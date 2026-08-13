@@ -1,13 +1,13 @@
 ---
 name: gen-art
-description: 用 Gemini API 生成水晶戰記（Godot 版）的美術素材（NPC/角色立繪、戰鬥背景、區域地圖、標題圖、圖示、室內背景），也能把遊戲的 TileMap 地圖拼起來再 image-to-image 風格化成手繪地區圖（gen-region 產完地圖後的美術收尾）。當 John 說「產圖」「生成素材」「幫某角色畫立繪」「換戰鬥背景」「把地圖變成手繪風格」「地區地圖上色」等美術生成需求時使用。像素級小圖（行走圖、圖磚、敵人戰鬥圖）不適用本 skill——那些用 LPC 合成或商店素材。
+description: 用 Gemini API 生成水晶戰記（Godot 版）的大型美術素材（NPC/角色立繪、戰鬥背景、區域地圖、標題圖、圖示、室內背景），也能把遊戲的 TileMap 地圖拼起來再 image-to-image 風格化成手繪地區圖。世界角色／NPC／事件魔物像素素材改走 docs/pipeline/世界立繪流程.md 的 strip-first 產線；戰鬥 sprite 走 docs/pipeline/battle_art/。
 ---
 
 # gen-art：Gemini 產圖管線（Godot 版）
 
 > **本檔＝Claude 端 gen-art**，走 **Gemini API**（`gen_image.py`）。Codex 端另有一份走內建 imagegen 的版本在 `.agents/skills/gen-art/`——同名 skill 對兩個 agent 的不同產圖後端，**刻意分開、不要合併**。
 
-呼叫 Gemini 產圖，存進 `godot-project/assets/`，交給 Godot 編輯器 import。
+呼叫 Gemini 產圖產生候選；先放預覽位置給 John 驗收，核可後才存進 `assets-source/` 與 `godot-project/assets/`，交給 Godot import。
 
 ## 金鑰
 
@@ -18,15 +18,17 @@ description: 用 Gemini API 生成水晶戰記（Godot 版）的美術素材（N
 ## 生成
 
 ```bash
-# 於 godot-crystal-tales/ 根目錄執行；--out 路徑相對 godot-project/
-python3 .claude/skills/gen-art/gen_image.py --type <類型> [--frame bust|full] --prompt "<描述>" --out <路徑>
+# 於 godot-crystal-tales/ 根目錄執行；預覽階段輸出到 /tmp 或其他 preview 路徑
+python3 .claude/skills/gen-art/gen_image.py --type <類型> [--frame bust|full] --prompt "<描述>" --out /tmp/<候選檔名>.png
 ```
+
+`--out` 相對路徑以執行時的 repo 根目錄為準，不是自動相對 `godot-project/`。只有 John 核可後，才可指定 `assets-source/...` 或 `godot-project/assets/...` 的正式路徑。
 
 模型 `gemini-2.5-flash-image`（自動退階、429/503 自動重試）。`--type` 會自動加對應風格前綴，`--prompt` 只需寫「畫面內容」。各 type：
 
 | type | 長寬比 | 構圖約定 | Godot 存放與後處理 |
 |------|--------|----------|--------------|
-| `face` | bust→16:9 / full→3:4 | 人物置中、**與角色配色明顯區隔的單色底**＋**整圈連續描邊**（利於去背）、無文字；**不預設色調**（顏色由角色描述帶入）。`--frame bust`＝腰上半身（預設）／`--frame full`＝全身 | **半身**直接存 `godot-project/assets/ui/face_<id>.png`（現有 26 個 `face_*.png` 同慣例）；需 144×144 頭像時整張直接用、或在 Godot 編輯器用 `AtlasTexture`/`region` 裁切。**全身**另存 `godot-project/assets/ui/face_<id>_full.png`（作立繪／室內大型前景用；不進頭像流程） |
+| `face` | bust→16:9 / full→3:4 | 人物置中、**與角色配色明顯區隔的單色底**＋**整圈連續描邊**（利於去背）、無文字；**不預設色調**（顏色由角色描述帶入）。`--frame bust`＝腰上半身（預設）／`--frame full`＝全身 | 核可後，半身成品存 `godot-project/assets/ui/face_<id>.png`；全身另存 `godot-project/assets/ui/face_<id>_full.png`。預覽階段不得直接寫入這些路徑 |
 | `battlebg` | 16:9 | 側視戰場、中景留空、地平線在上 1/3、無角色 | 縮到 640×360 存 `godot-project/assets/ui/battlebg_<場景>.png`（現有 `battlebg*.png` 同慣例）；戰鬥場景直接依檔名載入貼圖 |
 | `map` | 16:9 | 鳥瞰地區圖、無文字 | 縮製後替換 `godot-project/assets/ui/region_map.png` |
 | `title` | 16:9 | 關鍵美術、無 logo 文字 | 縮 1280×720 替換 `godot-project/assets/ui/menubg.png`；若需疊 logo／文字，在 Godot 場景內用 Label／TextureRect 疊 |
@@ -49,13 +51,14 @@ python3 .claude/skills/gen-art/gen_image.py --type <類型> [--frame bust|full] 
 
 ## 產後步驟
 
-1. Read 圖確認構圖，不合格改 prompt 重生。
-2. 放進 `assets/` 對應子目錄，由 Godot 編輯器 import。
-3. 在 `godot-crystal-tales/CREDITS_素材授權.md` 註明「AI 生成（Gemini），提示詞作者 John」。
+1. 候選只放 preview／`tmp/`，Read 圖確認構圖並顯示給 John；不合格改 prompt 重生。
+2. John 明確核可後，原圖進 `assets-source/`，處理後成品才進 `godot-project/assets/` 並 Reimport。
+3. 核可整合時在 `CREDITS_素材授權.md` 註明「AI 生成（Gemini），提示詞作者 John」。
 
 ## 邊界
 
-- 生成式**不適合** 16-64px 像素素材（行走圖/圖磚/敵人小圖）：偽像素網格對不齊。用 LPC 圖層合成（來源素材在 `godot-project/assets/battle/lpc_src/`）或商店素材。
+- 世界角色／NPC／事件魔物像素素材走 `docs/pipeline/世界立繪流程.md`：seed-first、單方向／單姿態一次產完整 horizontal strip、共用 global scale 與 bottom-center anchor，並以原生尺寸放回場景驗收。LPC 只作封存 fallback。
+- 戰鬥 sprite 走 `docs/pipeline/battle_art/` 的 G0～G7 Gate；圖磚與商店素材沿用各自流程。
 - prompt 一律描述畫面內容與風格，**不要放遊戲名或人名文字**（模型會把字畫進圖裡）；也不放版權 IP／畫師名。
 - 免費額度有限，失敗先看 HTTP 429（配額）再重試。
 - **不要修改 `reference/gdevelop/` 凍結快照**（唯讀參考來源）。

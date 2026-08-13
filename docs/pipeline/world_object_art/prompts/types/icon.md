@@ -25,7 +25,7 @@
 
 ## 與地圖拾取物的關係（雙交付）
 
-art id 若同時有地圖實體（`descriptions/` 已有描述檔、且 `items/*.tres` 也存在，目前為 `wolf_hide`、`miner_helmet`），**同一次產圖出兩種交付**，不要拆成兩份描述檔：
+art id 若同時有地圖實體（`descriptions/` 已有描述檔、且 `items/*.tres` 也存在，目前為 `wolf_fang`、`miner_helmet`），**同一次產圖出兩種交付**，不要拆成兩份描述檔：
 
 | 交付 | 尺寸／構圖 | 用途 |
 |---|---|---|
