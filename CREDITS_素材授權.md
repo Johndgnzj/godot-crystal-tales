@@ -228,3 +228,5 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   標題選單描邊字 `t_start/t_cont/t_restart.png` 亦為 PIL 系統字體烘製（自製）。
   ※ 遊戲定名：水晶傳說：路德篇 Tale of Crystal: The Legend of Ludo（主標 水晶傳說／Tale of Crystal ＋ 副標 路德篇／The Legend of Ludo）；曾誤植「水晶奇譚」「水晶戰記」，已更正。
   專案資料夾 crystal-quest 維持為代號。
+- `assets/char/{mira,warden,gray}_Down_0.png`（2026-08-13）：米拉、芳蕾鎮守衛與葛雷的原生 64px overworld `Down Idle`。由 OpenAI 內建 imagegen 依三人的核准立繪、路德終版世界 sprite 基準與芳蕾鎮實機地圖色盤生成，經 John 驗收縮小可讀性、人物一致性、去背與獨立接地影子後整合。raw／alpha／64px final 保存於 `assets-source/role/npc/<id>/overworld_final/`；影子由遊戲程式獨立生成，未烘進 PNG。提示詞作者 John／協作 Agent。其餘方向與 walk 尚待產出。
+- `assets/char/{rossel,hank,martha}_Down_0..8.png`（2026-08-13）：羅瑟爾、漢克與瑪莎的原生 64px overworld Down 簡易版。由 OpenAI 內建 imagegen 依各角色核准立繪、羅瑟爾既有世界 style seed、芳蕾鎮實機地圖及首批 NPC 基準，一次生成每人的 `Idle / Step L / Step R` strip；經 John 驗收人物一致性、縮小可讀性、解剖左右腳交換、bottom-center、去背與獨立接地影子後整合。runtime `0=Idle`，`1..8` 依 `L/R` 交替；raw／alpha／64px 三幀及替換前素材保存於 `assets-source/role/npc/<id>/overworld_final/`。提示詞作者 John／協作 Agent；其餘方向尚待產出。

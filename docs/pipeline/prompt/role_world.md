@@ -23,4 +23,5 @@
 ## 各角色
 
 - **ludo 路德**：**使用既有 LPC 走路素材，待優化**轉二頭身（現素材見 `assets-source/role/main/ludo/`；LPC 流程封存於 `reference/legacy_art/LPC製作流程.md`）。
-- **marin／alan／hank …**：待做（先做戰鬥動畫，walk 優先度最低）。
+- **rossel／hank／martha**：2026-08-13 已完成並整合 `Down Idle / Step L / Step R` 原生 64px 簡易版；其餘方向待做。
+- **marin／alan／其他角色**：依既有完成狀態逐角補齊，walk 優先度仍低於戰鬥動畫。

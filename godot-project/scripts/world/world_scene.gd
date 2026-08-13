@@ -71,7 +71,7 @@ const PLAYER_SPRITE_SCALE := 2.0 / 3.0
 ## 鍵：cut(觸發此流程的過場 id)／encounter(定點戰 id)／x,y(走向的目標點)／once(該過場的 once 旗標，
 ## 用來判斷事件是否已發生以決定 actor 顯示)／actor(事件美術節點名，如站在路中央的熊 sprite；事件後隱藏)。
 @export var approach_battle: Dictionary = {}
-@export var npc_list: Array = []             ## [{"id","sprite","x","y","face"}]；手繪圖可用 pos: Vector2 覆寫 tile 座標
+@export var npc_list: Array = []             ## [{"id","sprite","x","y","face","shadow_width"}]；手繪圖可用 pos: Vector2 覆寫 tile 座標
 @export var prop_list: Array = []            ## [{"tex","x","y","w","h"}]（x/y=GDevelop 左上像素；w/h=0 用原生尺寸）
 @export var chest_list: Array = []           ## [{"id","tx","ty"}]（loot 資料查 ContentDB.get_chest()）
 @export var door_list: Array = []            ## [{"tx","ty","key","label","owners":[id...]}]（僅 Town 有；立繪選單式室內進屋資料）
@@ -93,6 +93,7 @@ var _chest_nodes: Array = []    # [{id, tx, ty, sprite}]
 var _pickup_zones: Array[PickupZone] = []   # 要按鍵「調查」才撿得到的撿取點（見 _find_near_pickup）
 var _prompt_timer: float = 0.0
 var _missing_textures: int = 0
+var _npc_shadow_textures: Dictionary = {}
 
 # UI（選單/HUD）由本控制器在 _ready() 以程式建立，不進 .tscn ext_resource——這樣地圖生成器
 # （region_generator.gd）生成場景檔時不會覆蓋掉 UI 掛載，也避免與地圖資料工作搶同一個 .tscn。
@@ -277,6 +278,13 @@ func _spawn_npcs() -> void:
 		node.position = Vector2(float(n["x"]) * TS + 32.0, float(n["y"]) * TS + 48.0)
 		if n.has("pos") and n["pos"] is Vector2:
 			node.position = n["pos"]
+		var shadow_width := int(n.get("shadow_width", 0))
+		if shadow_width > 0:
+			var shadow := Sprite2D.new()
+			shadow.texture = _npc_shadow_texture(shadow_width)
+			shadow.position = Vector2(0.0, -32.0)
+			shadow.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			node.add_child(shadow)
 		var tex_path := "%s/%s_%s_0.png" % [CHAR_DIR, str(n["sprite"]), str(n.get("face", "Down"))]
 		if ResourceLoader.exists(tex_path):
 			var spr := Sprite2D.new()
@@ -287,6 +295,24 @@ func _spawn_npcs() -> void:
 			_missing_textures += 1
 		$YSort.add_child(node)
 		_npc_nodes.append({"id": str(n["id"]), "node": node})
+
+
+func _npc_shadow_texture(width: int) -> Texture2D:
+	width = clampi(width, 8, 48)
+	if _npc_shadow_textures.has(width):
+		return _npc_shadow_textures[width]
+	var image := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0.0, 0.0, 0.0, 0.0))
+	var radius_x := float(width) / 2.0
+	for y in range(57, 64):
+		for x in range(7, 56):
+			var nx := (float(x) - 31.0) / radius_x
+			var ny := (float(y) - 60.0) / 3.0
+			if nx * nx + ny * ny <= 1.0:
+				image.set_pixel(x, y, Color(43.0 / 255.0, 37.0 / 255.0, 30.0 / 255.0, 72.0 / 255.0))
+	var texture := ImageTexture.create_from_image(image)
+	_npc_shadow_textures[width] = texture
+	return texture
 
 
 func _spawn_chests() -> void:

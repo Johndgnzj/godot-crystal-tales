@@ -101,9 +101,10 @@ cut_on_enter = [{
 "step": 13
 }]
 npc_list = [{
-"face": "Right",
+"face": "Down",
 "id": "gray",
 "pos": Vector2(592, 592),
+"shadow_width": 27,
 "sprite": "gray",
 "x": 18,
 "y": 18
@@ -111,27 +112,31 @@ npc_list = [{
 "face": "Down",
 "id": "mira",
 "pos": Vector2(176, 592),
-"sprite": "villager",
+"shadow_width": 24,
+"sprite": "mira",
 "x": 5,
 "y": 18
 }, {
 "face": "Down",
 "id": "rossel",
 "pos": Vector2(656, 496),
+"shadow_width": 31,
 "sprite": "rossel",
 "x": 20,
 "y": 15
 }, {
-"face": "Right",
+"face": "Down",
 "id": "hank",
 "pos": Vector2(528, 720),
+"shadow_width": 28,
 "sprite": "hank",
 "x": 16,
 "y": 22
 }, {
-"face": "Left",
+"face": "Down",
 "id": "martha",
 "pos": Vector2(720, 720),
+"shadow_width": 27,
 "sprite": "martha",
 "x": 22,
 "y": 22
@@ -139,7 +144,8 @@ npc_list = [{
 "face": "Down",
 "id": "warden",
 "pos": Vector2(752, 304),
-"sprite": "villager",
+"shadow_width": 33,
+"sprite": "warden",
 "x": 23,
 "y": 9
 }]
