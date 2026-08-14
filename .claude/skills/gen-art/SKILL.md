@@ -1,6 +1,6 @@
 ---
 name: gen-art
-description: 用 Gemini API 生成水晶戰記（Godot 版）的大型美術素材（NPC/角色立繪、戰鬥背景、區域地圖、標題圖、圖示、室內背景），也能把遊戲的 TileMap 地圖拼起來再 image-to-image 風格化成手繪地區圖。世界角色／NPC／事件魔物像素素材改走 docs/pipeline/世界立繪流程.md 的 strip-first 產線；戰鬥 sprite 走 docs/pipeline/battle_art/。
+description: 用 Gemini API 生成水晶戰記（Godot 版）的大型美術素材（NPC/角色立繪、world sprite 的 D1 非 Pixel Art Design Reference、戰鬥背景、區域地圖、標題圖、圖示、室內背景），也能把 TileMap 風格化成手繪地區圖。D2／D3／strip 改用 gen-world-prompt 與世界立繪流程；戰鬥 sprite 走 battle_art。
 ---
 
 # gen-art：Gemini 產圖管線（Godot 版）
@@ -57,7 +57,7 @@ python3 .claude/skills/gen-art/gen_image.py --type <類型> [--frame bust|full] 
 
 ## 邊界
 
-- 世界角色／NPC／事件魔物像素素材走 `docs/pipeline/世界立繪流程.md`：seed-first、單方向／單姿態一次產完整 horizontal strip、共用 global scale 與 bottom-center anchor，並以原生尺寸放回場景驗收。LPC 只作封存 fallback。
+- world sprite 的 D1 非 Pixel Art Design Reference 可用本 skill，但開工前完整讀 `docs/design/世界立繪規格.md` 與 `docs/pipeline/世界立繪流程.md`；尺寸與驗收只讀文件，不在本 skill 維護副本。D2／D3／strip 改用 `gen-world-prompt`，LPC 只作歷史封存。
 - 戰鬥 sprite 走 `docs/pipeline/battle_art/` 的 G0～G7 Gate；圖磚與商店素材沿用各自流程。
 - prompt 一律描述畫面內容與風格，**不要放遊戲名或人名文字**（模型會把字畫進圖裡）；也不放版權 IP／畫師名。
 - 免費額度有限，失敗先看 HTTP 429（配額）再重試。

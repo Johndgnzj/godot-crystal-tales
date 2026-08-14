@@ -1,6 +1,6 @@
 ---
 name: "gen-art"
-description: "使用內建 imagegen 生成《水晶戰記》Godot 版的大型美術素材：NPC／角色／魔物立繪、戰鬥背景、區域地圖、標題圖、圖示與室內背景。像素級小圖（行走圖、圖磚、敵人戰鬥圖）不適用本 skill。"
+description: "使用內建 imagegen 生成《水晶戰記》Godot 版的大型美術素材：NPC／角色／魔物立繪、world sprite 的 D1 非 Pixel Art Design Reference、戰鬥背景、區域地圖、標題圖、圖示與室內背景。D2／D3／strip 像素小圖改用 gen-world-prompt 與世界立繪流程。"
 ---
 
 # gen-art：imagegen 產圖管線
@@ -11,7 +11,7 @@ description: "使用內建 imagegen 生成《水晶戰記》Godot 版的大型�
 
 ## 何時使用
 
-當 John 要求產生大型美術，例如 NPC／角色／魔物立繪、戰鬥背景、區域地圖、標題圖、圖示或室內背景時使用。像素小圖不走本 skill：世界角色／NPC／事件魔物依 `docs/pipeline/世界立繪流程.md` 的 strip-first 產線；戰鬥角色／敵人依 `docs/pipeline/battle_art/`；圖磚沿用既有專用流程。LPC 只作封存 fallback，不再是正式世界 sprite 產法。
+當 John 要求產生大型美術，例如 NPC／角色／魔物立繪、world sprite 的 D1 Design Reference、戰鬥背景、區域地圖、標題圖、圖示或室內背景時使用。world D1 開工前完整讀 `docs/design/世界立繪規格.md` 與 `docs/pipeline/世界立繪流程.md`，其尺寸與驗收只讀文件，不在本 skill 複製。D2／D3／strip 像素小圖改用 `gen-world-prompt`；戰鬥角色／敵人依 `docs/pipeline/battle_art/`；圖磚沿用既有專用流程。LPC 只作歷史封存。
 
 ## 執行流程
 

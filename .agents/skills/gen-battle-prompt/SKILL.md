@@ -29,6 +29,6 @@ description: 組出「戰鬥立繪」的產圖 prompt（純文字，直接貼到
 
 ## 邊界
 
-- 對話／介紹用立繪 → `gen-role-prompt`；地圖 walk／idle／事件 actor → 見 `docs/pipeline/世界立繪流程.md`，採 seed-first、單方向完整 strip，不得逐幀獨立產圖。
+- 對話／介紹用立繪 → `gen-role-prompt`；world D1／D2／D3、walk／idle／事件 actor → `gen-world-prompt`。不得把戰鬥圖的 3.5 頭身或 cm 身高規則套到 world sprite。
 - 要**實驗改規則**（風格／去背／動畫限制…）→ 改 `prompts/sections/` 對應檔組實驗版，不動 preset；
   成功後另存新 preset 並更新 `role.md` 與 `workflow.md` 的指向。

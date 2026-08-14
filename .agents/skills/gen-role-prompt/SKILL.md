@@ -1,6 +1,6 @@
 ---
 name: gen-role-prompt
-description: 用問答收集角色立繪需求，組出「角色立繪」的產圖 prompt（純文字，直接貼到 John 的產圖工具）。三類立繪：a 戰鬥頭像 / b 對話半身 / c 角色全身。當 John 說「產角色 prompt／立繪 prompt」「幫某角色出頭像／半身／全身 prompt」「角色立繪產圖問答」「重出某角色立繪」等需求時使用。規則與 prompt 模板不內嵌在本 skill——權威來源是 docs/design/角色立繪規格.md（長什麼樣）＋ docs/pipeline/角色立繪流程.md（去背挑色、prompt 固定開頭模板、交付檢查），開工先讀這兩份。
+description: 用問答收集對話／設定用角色立繪需求，組出 a 戰鬥頭像、b 對話半身、c 角色全身 prompt。world sprite 的 D1／D2／D3／strip 不適用，改用 gen-world-prompt。立繪規則只讀 docs/design/角色立繪規格.md 與 docs/pipeline/角色立繪流程.md。
 ---
 
 # gen-role-prompt：問答 → 角色立繪產圖 prompt（純文字）
@@ -12,6 +12,8 @@ description: 用問答收集角色立繪需求，組出「角色立繪」的產�
 2. `docs/pipeline/角色立繪流程.md` —— 去背螢光底＋挑底色規則、**Prompt 固定開頭模板（英/中）與附加段**、交付檢查清單
 
 ## 流程
+
+0. 若需求是 world design reference、world idle／walk、Native Seed 或 strip，停止本 skill，改用 `gen-world-prompt`；不得把角色立繪的 cm 身高規則套到 world sprite。
 
 1. **一次問完**（別擠牙膏式來回）。用一則訊息列出下面問題讓 John 一次回答；**務必先問「產出語言：中文或英文」**
    （John 兩種都用得到，測過中文結果稍好）。選項型問題（語言／類別）可用 AskUserQuestion，自由描述型（外觀／配色）

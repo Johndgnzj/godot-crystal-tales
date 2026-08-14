@@ -37,7 +37,7 @@
 | [design/角色立繪規格.md](design/角色立繪規格.md) | 對話/介紹用**高品質立繪**長怎樣（a 頭像／b 半身／c 全身＋敵人設定集/懸賞立繪）|
 | [design/戰鬥立繪規格.md](design/戰鬥立繪規格.md) | **〔主〕戰鬥素材**長怎樣：我方高品質 Pixel Art 約 3.5 頭身、角色身高換算、動畫集／幀數／排版／逐幀一致性＋敵人專節＋受擊特效 fx_* 素材規格 |
 | [design/戰鬥背景規格.md](design/戰鬥背景規格.md) | **戰鬥背景**長怎樣：16:9、下方至少 2/3 連續可站立地面、腳底承托與站位禁項 |
-| [design/世界立繪規格.md](design/世界立繪規格.md) | **地圖 Sprite** 長怎樣：單方向完整 strip、共用尺度／bottom-center anchor、64px 人型與大型事件 actor 尺寸、獨立漸層影子 |
+| [design/世界立繪規格.md](design/世界立繪規格.md) | **地圖 Sprite 唯一規格源**：D1 Design Reference → D2 Pixel Art Reference → D3 Native Seed、視覺尺寸級別、strip／runtime／影子與驗收 |
 | [design/地圖畫面規格.md](design/地圖畫面規格.md) | 手繪**地圖背景畫面**長怎樣（32px 網格/1280²/禁項/遮擋/色彩/城鎮建築/地格藍圖）|
 | [design/地圖互動物件規格.md](design/地圖互動物件規格.md) | 寶箱、任務拾取物等**引擎另擺的物件**長怎樣（外觀族、狀態、錨點、尺寸與互動資料分離）；同時是背包道具者另有 64×64 圖示交付 |
 
@@ -51,7 +51,7 @@
 | [pipeline/戰鬥背景流程.md](pipeline/戰鬥背景流程.md) | 戰鬥背景的產圖→預覽驗收→整合流程，含固定 prompt 核心與地面／腳點檢查清單 |
 | [pipeline/world_object_art/](pipeline/world_object_art/workflow.md) | 地圖互動物件**與道具/裝備圖示產線**：獨立 design anchor→狀態圖→固定命名→整合；類型 `chest`／`quest_item`／`icon`（圖示規格見 design/道具武器設計.md §三）|
 | [pipeline/world_object_art/遮擋物件資產架構.md](pipeline/world_object_art/遮擋物件資產架構.md) | 城鎮／野外高物件：滿版 Ground、透明遮擋物件、`YSort` 與類型→footprint 素材歸檔 |
-| [pipeline/世界立繪流程.md](pipeline/世界立繪流程.md) | 世界 Sprite **strip-first 產線**：W0～W6 Gate、seed→完整 strip→去背正規化→原生尺寸場景驗收→整合 |
+| [pipeline/世界立繪流程.md](pipeline/世界立繪流程.md) | 世界 Sprite **W0～W7 產線**：需求→D1→D2→D3→完整 strip→Alpha→實景 runtime QA→整合 |
 | [pipeline/地圖產圖流程.md](pipeline/地圖產圖流程.md) | 畫一張手繪地圖 png：**prompt 固定開頭模板**＋交付檢查（`gen-map-prompt` skill 引用）|
 | [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋**40×40 地格藍圖（§2.5）**＋場景生成（塊 A/B/C）|
 | [pipeline/素材管理規範.md](pipeline/素材管理規範.md) | 素材放哪、進 Godot 後怎麼處理、授權標註規則、檢查清單 |
@@ -133,4 +133,4 @@ docs/
 
 **規格與流程的配對**：每種素材一份 `design/*規格.md`（長什麼樣）＋一份 pipeline 產線（怎麼產）——
 角色立繪/世界立繪/地圖為 `pipeline/*流程.md`，**戰鬥立繪為 `pipeline/battle_art/`**（actions 動作資料集、sections 一檔一規則、presets 凍結正式版）；**地圖互動物件與道具/裝備圖示為 `pipeline/world_object_art/`**（design anchor、狀態模板與固定檔名；圖示走 `types/icon.md`，規格在 `design/道具武器設計.md` §三，刻意不另開產線目錄以免同一 art id 出現兩份描述檔）。
-`gen-role-prompt`／`gen-map-prompt`／`gen-battle-prompt` skill 的規則與模板**只存在對應的 pipeline 文件**（skill 引用文件、不內嵌副本），改規則只改文件即可。
+`gen-role-prompt`／`gen-map-prompt`／`gen-battle-prompt`／`gen-world-prompt` skill 的規則與模板**只存在對應的 design／pipeline 文件**（skill 只負責觸發、讀取與執行 Gate，不內嵌副本），改規則只改權威文件即可。
