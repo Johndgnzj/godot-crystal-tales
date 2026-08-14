@@ -1572,7 +1572,7 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 ##   - **直立姿勢**（attack strip／hurt）：用「主體高度」（排除舉起的武器，見 _body_height）對齊 idle。
 ##     attack **整段共用一個倍率**（取 strip 中主體最高的一幀當基準），否則蹲低的幀會被放大成一呼一吸。
 ##   - **躺姿**（death）：主體高度沒有可比性（人是橫的），維持素材原始比例（s=1）只做貼底。
-## 兩種都逐張算貼底補正，讓每一幀的腳（可見底邊）落在 idle 的同一條地面線上。
+## attack 沿用素材已鎖定的共同腳點，只以首幀算一次貼底補正；hurt／death 則各自貼底。
 func _build_fits(sprite_id: String, frames: Array, anim_frames: Dictionary, hurt_tex: Texture2D, death_tex: Texture2D, w: float, h: float) -> Dictionary:
 	var fits := {}
 	if frames.is_empty():
@@ -1589,8 +1589,11 @@ func _build_fits(sprite_id: String, frames: Array, anim_frames: Dictionary, hurt
 		if idle_body > 0.0 and max_body > 0.0:
 			s = idle_body / max_body
 		s *= float(ATTACK_SCALE.get(sprite_id, 1.0))
+		# Attack strip 已在素材階段鎖定共同腳點；整段共用首幀的貼底補正，避免蹲低／跨步幀
+		# 因另一隻腳底較低而被 runtime 逐幀重新上推，破壞已核可的水平／垂直錨點。
+		var attack_off := idle_bottom - float(_frame_metrics(atks[0], w, h)["bottom"]) * s
 		for at2 in atks:
-			fits[at2] = {"s": s, "off": idle_bottom - float(_frame_metrics(at2, w, h)["bottom"]) * s}
+			fits[at2] = {"s": s, "off": attack_off}
 
 	if hurt_tex != null:
 		var hb := _body_height(hurt_tex, w, h)

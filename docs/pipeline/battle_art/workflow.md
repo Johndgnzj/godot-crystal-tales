@@ -191,7 +191,7 @@ John 確認靜態圖後，才進入下一節處理去背與對齊。
 
 - 敵人幀從 0 連號（載入器掃連號循環，不留舊 `_2/_3`）。
 - 像素圖 `.import` 用 **Nearest**。
-- 程式引用：`battle_state_machine.gd`（`HERO_SLOTS` 已有站位）。**idle／attack 已接（2026-07-27 作法B）**：`_load_frames` 讀 `hero_<id>_idle_0..3`、`_load_anim_frames` 讀單一 `hero_<id>_attack_0..N`（所有普攻/技能共用此 attack 動畫，不再分 slash/thrust/spellcast）。**hurt／death 已接（2026-07-27）**：受傷時換 `hero_<id>_hurt.png`＋震動、HP 歸零換 `hero_<id>_death.png`（見 `battle_state_machine.gd` 我方 sprite 貼圖優先序）。**cast 暫不接**（尚無元素魔法技能）。
+- 程式引用：`battle_state_machine.gd`（`HERO_SLOTS` 已有站位）。**idle／attack 已接（2026-07-27 作法B）**：`_load_frames` 讀 `hero_<id>_idle_0..3`、`_load_anim_frames` 讀單一 `hero_<id>_attack_0..N`（所有普攻/技能共用此 attack 動畫，不再分 slash/thrust/spellcast）。Attack strip 在素材階段必須把共同腳點烘焙於同一 cell 座標；runtime 整段共用首幀的垂直貼底補正，不得依各幀最低可見像素重新推動，避免跨步／蹲低幀破壞核可錨點。**hurt／death 已接（2026-07-27）**：受傷時換 `hero_<id>_hurt.png`＋震動、HP 歸零換 `hero_<id>_death.png`（見 `battle_state_machine.gd` 我方 sprite 貼圖優先序）。**cast 暫不接**（尚無元素魔法技能）。
 - 更新 `CREDITS_素材授權.md`；`godot --headless --check-only` 過。
 
 建立 Resource。
