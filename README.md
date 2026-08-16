@@ -19,6 +19,7 @@
 | `docs/pipeline/world_object_art/遮擋物件資產架構.md` | 滿版地圖的透明高物件資產架構：`YSort` 遮擋、類型→footprint 歸檔、terrain 單一碰撞真相 |
 | `TASKS/` | 可執行任務清單，核心 CORE-* ＋ 模組 MOD-* |
 | `TASKS/17_戰鬥角色美術統一.md` | 我方戰鬥角色 3.5 頭身統一：路德／瑪琳全套重製、莉莉／潔絲補齊、實際身高正規化與全隊驗收 |
+| `TASKS/20_敵人戰鬥圖重製.md` | 敵人戰鬥圖 HD 重製：依放大倍率×曝光度排 P1~P3 優先序，逐隻走 battle_art 產線對齊 necro 品質基準 |
 | `TASK/v2/` | v2 後續製作追蹤；目前入口為世界美術終版與芳蕾鎮垂直切片 |
 | `specs/` | 從 `build_cq2.py` 凍結抄錄的權威規格：存檔 schema、戰鬥公式、對話格式 |
 | `reference/gdevelop/` | 原 GDevelop 專案的凍結快照（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`），唯讀 |

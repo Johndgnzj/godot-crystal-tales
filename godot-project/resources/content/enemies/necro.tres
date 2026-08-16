@@ -13,6 +13,7 @@ def_stat = 6.0
 spd = 9.0
 exp = 40
 gold = 35
+battle_scale = 1.65
 healer = true
 drops = [{
 "id": "crystal_shard",

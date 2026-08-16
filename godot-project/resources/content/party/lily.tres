@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="PartyMemberDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "lily"
+display_name = "莉莉"
+char_class = "mage"
+main_attr = "int"
+sprite = "lily"
+base = {
+"agi": 3.0,
+"int": 5.0,
+"luck": 3.0,
+"str": 2.0
+}
+growth = {
+"agi": 1.0,
+"int": 2.0
+}
+start_eq = {
+"armor": "apprentice_robe",
+"boots": "leather_boots",
+"weapon": "apprentice_wand"
+}
+story = ["休斯城的三公主，隱藏身分隨隊而行。", "自幼修習魔法，靈藥與詛咒的傳聞讓她決意走出王宮。", "（初版數值：戰鬥比例測試用，正式數值與技能由第二章施工調整。）"]

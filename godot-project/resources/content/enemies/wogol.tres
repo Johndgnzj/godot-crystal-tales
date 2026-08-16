@@ -13,6 +13,7 @@ def_stat = 4.0
 spd = 15.0
 exp = 11
 gold = 8
+battle_scale = 0.85
 drops = [{
 "id": "crystal_shard",
 "rate": 1.0

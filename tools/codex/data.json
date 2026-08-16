@@ -163,6 +163,63 @@
           "「快跑！把這裡的事回報公會！」",
           "此後下落不明。他留下的劍與背影，成了路德的目標。"
         ]
+      },
+      {
+        "id": "lily",
+        "name": "莉莉",
+        "cls": "mage",
+        "main": "int",
+        "lv": 1,
+        "guest": false,
+        "base": {
+          "agi": 3.0,
+          "int": 5.0,
+          "luck": 3.0,
+          "str": 2.0
+        },
+        "growth": {
+          "agi": 1.0,
+          "int": 2.0
+        },
+        "eq": {
+          "armor": "apprentice_robe",
+          "boots": "leather_boots",
+          "weapon": "apprentice_wand"
+        },
+        "story": [
+          "休斯城的三公主，隱藏身分隨隊而行。",
+          "自幼修習魔法，靈藥與詛咒的傳聞讓她決意走出王宮。",
+          "（初版數值：戰鬥比例測試用，正式數值與技能由第二章施工調整。）"
+        ]
+      },
+      {
+        "id": "jess",
+        "name": "潔絲",
+        "cls": "cleric",
+        "main": "int",
+        "lv": 1,
+        "guest": false,
+        "base": {
+          "agi": 3.0,
+          "int": 4.0,
+          "luck": 3.0,
+          "str": 3.0
+        },
+        "growth": {
+          "agi": 1.0,
+          "int": 1.0,
+          "str": 1.0
+        },
+        "eq": {
+          "armor": "traveler_garb",
+          "boots": "leather_boots",
+          "weapon": "oak_wand"
+        },
+        "story": [
+          "蓋婭教會的見習聖職者，莉莉在教會結識的摯友。",
+          "陪莉莉溜出王宮，一半是守護，一半是想看看外面的世界。",
+          "（初版數值：戰鬥比例測試用；武器六翼釘頭錘未製作，暫以短杖代替，正式數值由第二章施工調整。）"
+        ]
       }
     ],
     "skills": [

@@ -13,6 +13,7 @@ def_stat = 9.0
 spd = 6.0
 exp = 18
 gold = 14
+battle_scale = 2.0
 drops = [{
 "id": "iron_ore",
 "rate": 1.5

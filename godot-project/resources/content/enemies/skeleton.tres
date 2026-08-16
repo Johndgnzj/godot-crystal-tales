@@ -13,6 +13,7 @@ def_stat = 7.0
 spd = 7.0
 exp = 12
 gold = 10
+battle_scale = 1.6
 drops = [{
 "id": "bone_shard",
 "rate": 1.2

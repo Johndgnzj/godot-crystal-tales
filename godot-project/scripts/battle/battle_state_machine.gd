@@ -1236,15 +1236,26 @@ const PANEL_TOP := 556.0                       # 下方「行動」面板上緣�
 const FRONT_GAP := 15.0                        # 最前排腳點離面板上緣
 const ROW_Y0 := PANEL_TOP - FRONT_GAP          # 541：最前排的地面線
 const FOE_ROW_STEP := 56.0
-const HERO_X := [1074.0, 1180.0, 1044.0, 1160.0]   # 非三人時的交錯站位
-const HERO_ROW_STEP := 70.0                    # 非三人時每往後一排上移的距離
-## 三人隊伍：共用同一個 x、一排一排往上疊（座標讀自 John 2026-07-30 的截圖標記，誤差約 ±10px）。
-const HERO_X_ALIGNED := 975.0
-const HERO_ROW_STEP_ALIGNED := 120.0           # 三人時的排距（腳點 541 / 421 / 301）
+## 我方站位＝九宮格（數字鍵盤編號：1=左下…9=右上），依人數查表（John 2026-08-16 指定）。
+## 越靠下＝越前面，圖層仍由 _sort_units_by_depth() 依腳點 y 重排。
+const HERO_GRID_X := [960.0, 1055.0, 1150.0]   # 九宮格 左／中／右 列的 x（右列＋亞倫半寬 ~101 仍在 1280 內）
+const HERO_GRID_Y := [541.0, 455.0, 370.0]     # 九宮格 下／中／上 排的腳點 y（下排＝ROW_Y0）
+const HERO_FORMATION := {1: [4], 2: [1, 7], 3: [1, 7, 6], 4: [1, 3, 7, 9]}
 const FOE_X := [300.0, 190.0, 324.0, 168.0, 300.0]   # 第 5 槽為敵人數上限 5 新增
-const HERO_H := 250.0   # 我方戰鬥立繪：2026-07-27 放大成 2 倍（208）→ 2026-07-30 John 再 +20%
-const FOE_H := 98.0     # 原 82，2026-07-30 同步 +20%；只在敵人貼圖量不到可見像素時當退路（見 FOE_GEO）
-const BOSS_H := 168.0   # 原 140，2026-07-30 同步 +20%
+## 全體顯示縮放（我方＋敵方一起吃）：John 2026-08-16 四人隊實機定案「所有人物/敵人縮小 15%」。
+## 下方 HERO_H／FOE_GEO／BOSS_GEO／FOE_H／BOSS_H 的基準值不動（保留歷次實機挑定的紀錄），一律乘這顆。
+const UNIT_SCALE := 0.85
+const HERO_H := 250.0 * UNIT_SCALE   # 潔絲（167cm）的「主體可見高度」基準：2026-07-27 ×2（208）→ 2026-07-30 +20% → 2026-08-16 定為身高換算基準
+## 我方 runtime 主體可見高＝HERO_H × 設定身高 ÷ 167（see TASKS/17 P3-1）。對齊的是 _body_height 量出的
+## 主體（頭頂→腳底、排除舉高武器），不是畫布高——各角色 G7 cell 的主體佔比並不相等
+## （ludo 515px、alan 僅 404px），拿畫布高換算會讓 178cm 的亞倫反而顯示最矮。
+const HERO_CM := {"ludo": 165.0, "marin": 158.0, "alan": 178.0, "lily": 162.0, "jess": 167.0}
+## idle 首幀的「人體頭頂→最低腳底」畫布 y（543×724 cell，2026-08-16 逐角色 2× 目測定案）。
+## 不用 _body_height 的 10% 覆蓋率啟發式量 idle——會被舉高的劍身／杖頭圓球污染（莉莉曾因此
+## 顯示得跟瑪琳一樣高，John 打回）。頭頂＝髮冠實心輪廓；馬尾拱起、單絲呆毛不算。G7 重產素材時要重量更新。
+const HERO_BODY := {"ludo": [144, 659], "marin": [123, 629], "alan": [203, 605], "lily": [156, 681], "jess": [126, 655]}
+const FOE_H := 98.0 * UNIT_SCALE     # 原 82，2026-07-30 同步 +20%；只在敵人貼圖量不到可見像素時當退路（見 FOE_GEO）
+const BOSS_H := 168.0 * UNIT_SCALE   # 原 140，2026-07-30 同步 +20%
 ## 敵人立繪的統一顯示量級：以「可見像素的幾何均值」√(可見寬 × 可見高) 為基準，不再把畫布塞進固定框。
 ## 為什麼改（2026-07-30 John 實機回饋「狼偏小、離血條很遠、沒有靠下對齊」）：敵人貼圖畫布比例落差極大
 ## （野狼 112×50、骷髏 41×60），固定框 88×98 ＋ KEEP_ASPECT 會讓寬扁的四足獸被寬度卡住——野狼只畫出
@@ -1256,9 +1267,8 @@ const BOSS_H := 168.0   # 原 140，2026-07-30 同步 +20%
 ## 重疊，且骷髏原生只有 41×60、放大 3 倍後像素塊變粗（敵人是放大、我方立繪是縮小，密度差看得出來——
 ## 要再大得等敵人戰鬥圖以更高解析度重產）。個別單位要再大或再小，用 EnemyDef.battle_scale 在 .tres
 ## 微調（bear_dire 已在用）。
-const FOE_GEO := 110.0
-const BOSS_GEO := 188.0   # big 敵人（劇情 boss）；比例沿用改動前的 BOSS_H / FOE_H ≈ 1.71
-const HERO_RATIO := {"ludo": 0.75, "marin": 0.58, "alan": 0.80}   # 由目前戰鬥幀的角色畫布比例換算；Ludo 已改用 HD Pixel idle 四幀
+const FOE_GEO := 110.0 * UNIT_SCALE
+const BOSS_GEO := 188.0 * UNIT_SCALE   # big 敵人（劇情 boss）；比例沿用改動前的 BOSS_H / FOE_H ≈ 1.71
 ## 攻擊/技能幀的**額外**放大倍率（藝術倍率）。基準倍率由 _build_unit() 自動算出：把攻擊 strip 中主體
 ## 最高的一幀對齊該角色 idle 的主體高度（各角色攻擊幀畫布比例都不同——ludo 628×678、marin 900×850、
 ## alan 802×640，idle 都是 3:4——KEEP_ASPECT 會讓角色忽大忽小）。
@@ -1448,12 +1458,14 @@ func _build_view() -> void:
 	_build_result_overlay()
 
 
-## 槽位座標：第 0 槽最靠下（最前），往後每槽上移一個 step。我方剛好三人時三人共用同一個 x。
+## 槽位座標：我方查 HERO_FORMATION 九宮格；敵方第 0 槽最靠下（最前），往後每槽上移一個 step。
 func _slot_pos(is_hero: bool, idx: int) -> Vector2:
 	if is_hero:
-		if heroes.size() == 3:
-			return Vector2(HERO_X_ALIGNED, ROW_Y0 - HERO_ROW_STEP_ALIGNED * float(idx))
-		return Vector2(HERO_X[idx % HERO_X.size()], ROW_Y0 - HERO_ROW_STEP * float(idx))
+		var cells: Array = HERO_FORMATION.get(clampi(heroes.size(), 1, 4), [1, 3, 7, 9])
+		var cell: int = int(cells[idx]) if idx < cells.size() else 5   # 表外多出的人擺中宮
+		var col := (cell - 1) % 3
+		var row := int(floorf(float(cell - 1) / 3.0))   # 0=下排(1~3)、1=中排、2=上排
+		return Vector2(HERO_GRID_X[col], HERO_GRID_Y[row])
 	return Vector2(FOE_X[idx % FOE_X.size()], ROW_Y0 - FOE_ROW_STEP * float(idx))
 
 
@@ -1494,8 +1506,28 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	# 敵人高度＝（big 用 BOSS_H、其餘 FOE_H）× EnemyDef.battle_scale（劇情 boss 的壓迫感由資料調，見 enemy_def.gd）
 	var default_foe_h: float = BOSS_H if bool(u.get("big", false)) else FOE_H
 	var foe_h: float = float(u.get("battle_height", default_foe_h)) * maxf(0.1, float(u.get("battle_scale", 1.0)))
-	var h: float = HERO_H if is_hero else foe_h
-	var ratio: float = (float(HERO_RATIO.get(String(u.get("sprite", "")), 0.8)) if is_hero else 0.9)
+	# 我方：目標主體可見高＝HERO_CM 身高換算（見 const 註解），再由 idle 首幀的主體佔比反推顯示框高。
+	# 顯示框長寬比直接量 idle 畫布（G7 統一 543×724），框貼合畫布、KEEP_ASPECT 不再被硬編
+	# ratio 卡住（舊 HERO_RATIO 瑪琳殘留 0.58：換新 cell 後被寬度限制，只顯示約 77% 高）。
+	var h: float = foe_h
+	var ratio := 0.9
+	if is_hero:
+		var target_body: float = HERO_H * float(HERO_CM.get(String(u.get("sprite", "")), 167.0)) / 167.0
+		h = target_body
+		ratio = 0.75
+		if not frames.is_empty():
+			var t0: Texture2D = frames[0]
+			var t0w := float(t0.get_width())
+			var t0h := float(t0.get_height())
+			ratio = t0w / maxf(1.0, t0h)
+			var body_px := 0.0
+			var bp: Array = HERO_BODY.get(String(u.get("sprite", "")), [])
+			if bp.size() == 2:
+				body_px = float(bp[1]) - float(bp[0])   # 定案錨點：頭頂→腳底
+			else:
+				body_px = _body_height(t0, t0w, t0h)    # 不在表內的角色退回啟發式（k=1＝畫布像素高）
+			if body_px > 0.0:
+				h = t0h * target_body / body_px
 	var w := h * ratio
 
 	# 敵人：改用「可見像素正規化＋貼底」（見 FOE_GEO／_foe_fit）。量不到像素（缺圖、壓縮貼圖）就沿用固定框。
@@ -1531,6 +1563,37 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 		w = float(foe_fit["vis_w"])   # 名字／血條／箭頭／飄字都改掛在可見像素的寬高上
 		h = float(foe_fit["vis_h"])
 
+	# 接地影子：runtime 生成、不烘進 sprite（CLAUDE.md 多幀 Sprite 共通規則）。橢圓參數對齊世界端
+	# field_actor.gd／世界立繪規格 §五；寬度＝可見寬 × 0.95，掛在 wrap 最底層、跟著單位移動。
+	var sh_w := 0.0
+	var sh_cx := 0.0
+	if not frames.is_empty():
+		var im0: Image = (frames[0] as Texture2D).get_image()
+		if im0 != null and not im0.is_compressed():
+			var ur0 := im0.get_used_rect()
+			if ur0.size.x > 0:
+				if foe_fit.is_empty():
+					var k0: float = h / maxf(1.0, float(im0.get_height()))   # 我方：顯示框貼合畫布
+					# 影子用「腳部帶」（可見底往上 6%）外框定中心與寬度——用全可見框會把舉起的
+					# 武器算進來（路德的劍會讓影子整個偏左、寬到不像話）。
+					var band_top: int = ur0.position.y + ur0.size.y - maxi(4, int(float(ur0.size.y) * 0.06))
+					var fl := -1
+					var fr := -1
+					for fy in range(band_top, ur0.position.y + ur0.size.y):
+						for fx in range(ur0.position.x, ur0.position.x + ur0.size.x):
+							if im0.get_pixel(fx, fy).a > 0.03:
+								if fl < 0 or fx < fl:
+									fl = fx
+								if fx > fr:
+									fr = fx
+					if fr > fl:
+						sh_w = float(fr - fl) * k0 * 1.25
+						sh_cx = (float(fl + fr) * 0.5 - float(im0.get_width()) * 0.5) * k0
+				else:
+					sh_w = float(foe_fit["vis_w"]) * 0.95   # 敵方：可見水平中心已對齊 wrap x=0
+	if sh_w > 0.0:
+		wrap.add_child(_ground_shadow(sh_w, sh_cx))
+
 	if frames.is_empty():
 		var ph := ColorRect.new()   # 無戰鬥圖的敵人（bear/orc/ogre/necro…）用佔位塊，仍看得到名字/血條
 		ph.color = Color(0.1, 0.11, 0.16, 0.55)
@@ -1547,7 +1610,12 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	spr.flip_h = false   # 都不翻轉：素材我方本就面朝左、敵方面朝右（John 回饋我方原本翻反了）
 	# 敵人走 _foe_fit 時，size/pos 是「整張畫布」等比放大後的值（KEEP_ASPECT 剛好填滿、不留白），
 	# 位移已把可見底邊推到 wrap 原點；其餘情況維持舊的固定框擺法。
-	var spr_pos := Vector2(-w * 0.5, -h)
+	# 我方另做貼底：各 cell 的腳底深度不一（605~681），畫布底貼地會讓腳懸空且高低不齊——
+	# 把 idle 首幀的可見底邊踩回地面線（wrap 原點），其餘幀經 _set_frame 的 off 沿用同一地面線。
+	var hero_ground_off := 0.0
+	if is_hero and not frames.is_empty():
+		hero_ground_off = -float(_frame_metrics(frames[0], w, h)["bottom"])
+	var spr_pos := Vector2(-w * 0.5, -h + hero_ground_off)
 	spr.size = Vector2(w, h) if foe_fit.is_empty() else Vector2(foe_fit["size"])
 	if not foe_fit.is_empty():
 		spr_pos = Vector2(foe_fit["pos"])
@@ -1582,6 +1650,9 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	# 走 _foe_fit 的敵人已經把可見像素對齊了（水平中心 x=0、底邊 y=0），錨點直接由可見高度推出。
 	var anchors := ({"head": Vector2(0.0, -h), "mid": Vector2(0.0, -h * 0.5)} if not foe_fit.is_empty()
 			else _visible_anchors(frames, w, h))
+	if hero_ground_off != 0.0:   # 錨點跟著貼底位移（_visible_anchors 假設 spr 在 (-w/2, -h)）
+		anchors["head"] = Vector2(anchors["head"]) + Vector2(0.0, hero_ground_off)
+		anchors["mid"] = Vector2(anchors["mid"]) + Vector2(0.0, hero_ground_off)
 	var fits := _build_fits(String(u.get("sprite", "")), frames, anim_frames, hurt_tex, death_tex, w, h)
 
 	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": spr_pos.y, "spr_pos": spr_pos, "frame_offs": frame_offs, "head": anchors["head"], "mid": anchors["mid"], "fits": fits}
@@ -1627,6 +1698,34 @@ func _build_fits(sprite_id: String, frames: Array, anim_frames: Dictionary, hurt
 	if death_tex != null:
 		fits[death_tex] = {"s": 1.0, "off": idle_bottom - float(_frame_metrics(death_tex, w, h)["bottom"])}
 	return fits
+
+
+## 接地影子節點：橢圓、中心 α127/255 → 邊緣 13/255、(1-d²)^1.35 漸淡、RGB(58,52,44)——公式照抄
+## 世界端 field_actor.gd _add_shadow()（規格＝docs/design/世界立繪規格.md §五），戰鬥端影子同一種語彙。
+## 影子中心＝wrap 原點（腳點地面線），cx 供我方畫布可見中心不在畫布正中時偏移。
+func _ground_shadow(w: float, cx: float) -> TextureRect:
+	var iw := maxi(10, int(round(w))) + 2
+	var ih := clampi(int(round(w * 0.2)), 8, 36) + 2
+	var img := Image.create(iw, ih, false, Image.FORMAT_RGBA8)
+	img.fill(Color.TRANSPARENT)
+	var rx := float(iw - 2) * 0.5
+	var ry := float(ih - 2) * 0.5
+	var cx_img := float(iw - 1) * 0.5
+	var cy_img := float(ih - 1) * 0.5
+	for y in range(ih):
+		for x in range(iw):
+			var nx := (float(x) - cx_img) / rx
+			var ny := (float(y) - cy_img) / ry
+			var d := nx * nx + ny * ny
+			if d <= 1.0:
+				var alpha := 13.0 + (127.0 - 13.0) * pow(1.0 - d, 1.35)
+				img.set_pixel(x, y, Color(58.0 / 255.0, 52.0 / 255.0, 44.0 / 255.0, alpha / 255.0))
+	var tr := TextureRect.new()
+	tr.texture = ImageTexture.create_from_image(img)
+	tr.position = Vector2(cx - float(iw) * 0.5, -float(ih) * 0.5)
+	tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return tr
 
 
 ## 敵人立繪的正規化擺放：把 tex 的可見像素縮到 geo 量級（幾何均值），並讓可見底邊踩在 wrap 原點
@@ -1864,35 +1963,37 @@ func _titled_panel(title: String, pos: Vector2, sz: Vector2) -> void:
 	_root.add_child(tab)
 
 
+## 底部佈局（John 2026-08-17 指定）：行動區寬度減半（432→216）、頭像跟著左移貼齊、
+## 狀態區擴為一行四欄（每欄一名角色、HP/MP/行動條垂直排列，見 _build_status_panel）。
 func _build_action_panel() -> void:
-	_titled_panel("行動", Vector2(30, 556), Vector2(432, 150))
+	_titled_panel("行動", Vector2(30, 556), Vector2(216, 150))
 	# 指令 2×2：攻擊/技能 上排、道具/逃跑 下排
 	var grid := GridContainer.new()
 	grid.columns = 2
 	grid.position = Vector2(62, 588)
-	grid.add_theme_constant_override("h_separation", 40)
+	grid.add_theme_constant_override("h_separation", 24)
 	grid.add_theme_constant_override("v_separation", 16)
 	for nm in ["攻擊", "技能", "道具", "逃跑"]:
 		var l := PixelUI.label(String(nm), 26, PixelUI.WHITE, 4)
-		l.custom_minimum_size = Vector2(150, 0)
+		l.custom_minimum_size = Vector2(64, 0)
 		grid.add_child(l)
 		_cmd_labels.append(l)
 	_root.add_child(grid)
-	# 技能／道具清單（覆在行動面板區，依狀態切換顯示）
+	# 技能／道具清單（覆在行動面板區，依狀態切換顯示；面板減半後字級 18→15 才塞得下最長技能行）
 	_skill_box = VBoxContainer.new()
-	_skill_box.position = Vector2(52, 574)
+	_skill_box.position = Vector2(44, 572)
 	_skill_box.add_theme_constant_override("separation", 3)
 	_root.add_child(_skill_box)
 	for i in range(5):
-		var sl := PixelUI.label("", 18, PixelUI.WHITE, 3)
+		var sl := PixelUI.label("", 15, PixelUI.WHITE, 3)
 		_skill_box.add_child(sl)
 		_skill_labels.append(sl)
 	_item_box = VBoxContainer.new()
-	_item_box.position = Vector2(52, 574)
+	_item_box.position = Vector2(44, 572)
 	_item_box.add_theme_constant_override("separation", 3)
 	_root.add_child(_item_box)
 	for i in range(5):
-		var il := PixelUI.label("", 18, PixelUI.WHITE, 3)
+		var il := PixelUI.label("", 15, PixelUI.WHITE, 3)
 		_item_box.add_child(il)
 		_item_labels.append(il)
 
@@ -1900,46 +2001,56 @@ func _build_action_panel() -> void:
 func _build_portrait_panel() -> void:
 	var bg := Panel.new()
 	bg.add_theme_stylebox_override("panel", PixelUI.panel_style(Color(0.051, 0.059, 0.094, 1.0), 3))
-	bg.position = Vector2(478, 556)
+	bg.position = Vector2(262, 556)
 	bg.size = Vector2(156, 150)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(bg)
 	_portrait = TextureRect.new()
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_portrait.position = Vector2(484, 562)
+	_portrait.position = Vector2(268, 562)
 	_portrait.size = Vector2(144, 138)
 	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_portrait)
 
 
 func _build_status_panel() -> void:
-	_titled_panel("狀態", Vector2(650, 556), Vector2(600, 150))
-	var col := VBoxContainer.new()
-	col.position = Vector2(664, 586)
-	col.custom_minimum_size = Vector2(576, 0)
-	col.add_theme_constant_override("separation", 9)
-	_root.add_child(col)
+	# 一行四欄（John 2026-08-17 指定）：每欄一名角色，名字下面垂直排 HP／MP／行動條。
+	# 面板 x 從行動區減半＋頭像左移後的 434 起、吃滿右緣到 1250。
+	_titled_panel("狀態", Vector2(434, 556), Vector2(816, 150))
+	var cols := HBoxContainer.new()
+	cols.position = Vector2(452, 582)
+	cols.add_theme_constant_override("separation", 14)
+	_root.add_child(cols)
 	for h in heroes:
-		var row := HBoxContainer.new()
-		row.custom_minimum_size = Vector2(576, 26)
-		row.add_theme_constant_override("separation", 6)
-		var nm := _srow_label(String(h.get("name", "")), 19, PixelUI.GOLD, 54.0)
-		row.add_child(nm)
-		row.add_child(_srow_label("HP", 13, Color(0.62, 0.77, 0.74), 0.0))
-		var hp := _bar(PixelUI.HP, 98.0)
-		row.add_child(hp["wrap"])
-		var hptxt := _srow_label("", 15, Color(0.84, 0.94, 0.91), 66.0)
-		row.add_child(hptxt)
-		row.add_child(_srow_label("MP", 13, Color(0.64, 0.72, 0.83), 0.0))
-		var mp := _bar(PixelUI.MP, 78.0)
-		row.add_child(mp["wrap"])
-		var mptxt := _srow_label("", 15, Color(0.88, 0.92, 0.96), 48.0)
-		row.add_child(mptxt)
-		row.add_child(_srow_label("行動", 13, Color(0.71, 0.67, 0.82), 0.0))
-		var atb := _bar(Color(0.76, 0.72, 0.91), 54.0)
-		row.add_child(atb["wrap"])
-		col.add_child(row)
+		var col := VBoxContainer.new()
+		col.custom_minimum_size = Vector2(184, 0)
+		col.add_theme_constant_override("separation", 2)
+		cols.add_child(col)
+		var nm := _srow_label(String(h.get("name", "")), 19, PixelUI.GOLD, 0.0)
+		col.add_child(nm)
+		var hp_line := HBoxContainer.new()
+		hp_line.add_theme_constant_override("separation", 4)
+		hp_line.add_child(_srow_label("HP", 13, Color(0.62, 0.77, 0.74), 24.0))
+		var hp := _bar(PixelUI.HP, 90.0)
+		hp_line.add_child(hp["wrap"])
+		var hptxt := _srow_label("", 15, Color(0.84, 0.94, 0.91), 56.0)
+		hp_line.add_child(hptxt)
+		col.add_child(hp_line)
+		var mp_line := HBoxContainer.new()
+		mp_line.add_theme_constant_override("separation", 4)
+		mp_line.add_child(_srow_label("MP", 13, Color(0.64, 0.72, 0.83), 24.0))
+		var mp := _bar(PixelUI.MP, 90.0)
+		mp_line.add_child(mp["wrap"])
+		var mptxt := _srow_label("", 15, Color(0.88, 0.92, 0.96), 56.0)
+		mp_line.add_child(mptxt)
+		col.add_child(mp_line)
+		var atb_line := HBoxContainer.new()
+		atb_line.add_theme_constant_override("separation", 4)
+		atb_line.add_child(_srow_label("行動", 13, Color(0.71, 0.67, 0.82), 36.0))
+		var atb := _bar(Color(0.76, 0.72, 0.91), 90.0)
+		atb_line.add_child(atb["wrap"])
+		col.add_child(atb_line)
 		_status_rows.append({"unit": h, "name": nm, "hp": hp, "hptxt": hptxt, "mp": mp, "mptxt": mptxt, "atb": atb})
 
 

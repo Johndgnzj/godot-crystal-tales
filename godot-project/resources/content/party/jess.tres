@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="PartyMemberDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/content/party_member_def.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = "jess"
+display_name = "潔絲"
+char_class = "cleric"
+main_attr = "int"
+sprite = "jess"
+base = {
+"agi": 3.0,
+"int": 4.0,
+"luck": 3.0,
+"str": 3.0
+}
+growth = {
+"agi": 1.0,
+"int": 1.0,
+"str": 1.0
+}
+start_eq = {
+"armor": "traveler_garb",
+"boots": "leather_boots",
+"weapon": "oak_wand"
+}
+story = ["蓋婭教會的見習聖職者，莉莉在教會結識的摯友。", "陪莉莉溜出王宮，一半是守護，一半是想看看外面的世界。", "（初版數值：戰鬥比例測試用；武器六翼釘頭錘未製作，暫以短杖代替，正式數值由第二章施工調整。）"]

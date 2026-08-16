@@ -13,6 +13,7 @@ def_stat = 4.0
 spd = 4.0
 exp = 6
 gold = 4
+battle_scale = 0.75
 drops = [{
 "id": "slime_gel",
 "rate": 1.25

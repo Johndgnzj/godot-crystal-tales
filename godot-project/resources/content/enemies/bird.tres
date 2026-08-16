@@ -13,6 +13,7 @@ def_stat = 2.0
 spd = 14.0
 exp = 5
 gold = 3
+battle_scale = 0.75
 drops = [{
 "id": "soft_feather",
 "rate": 1.2

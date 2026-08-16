@@ -13,6 +13,7 @@ def_stat = 9.0
 spd = 5.0
 exp = 28
 gold = 18
+battle_scale = 1.8
 drops = [{
 "id": "beast_hide",
 "rate": 2.5

@@ -13,6 +13,7 @@ def_stat = 3.0
 spd = 7.0
 exp = 8
 gold = 5
+battle_scale = 1.25
 drops = [{
 "id": "worm_carapace",
 "rate": 1.2
