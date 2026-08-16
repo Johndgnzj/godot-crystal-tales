@@ -1,6 +1,6 @@
 # 世界魔物／事件 Actor Sprite Prompt 組裝模板
 
-- 版本: v3.0（2026-08-14）
+- 版本: v3.2（2026-08-14；同步 D2 logical grid、outline 與原生 D3 分層）
 - 規格唯一來源: [世界立繪規格](../../design/世界立繪規格.md)
 - Gate 唯一來源: [世界立繪流程](../世界立繪流程.md)
 
@@ -10,7 +10,8 @@
 
 ## 核心流程
 
-- 新單位同樣走 D1 非 Pixel Art Design Reference → D2 原生 Pixel Art Reference → D3 Native Seed → 單姿態完整 strip。
+- 新單位同樣走 D1 高解析非 Pixel Art Design Reference → D2 grid-authored 中等細節 Pixel Art Reference → D3 原生 Native Seed → 單姿態完整 strip。D1 不得自動轉成 D2，D1／D2 也不得自動縮小成 D3。
+- D1／D2 的人型或魔物 reference prompt 依 [role_world.md](role_world.md) 的分層原則組裝；本檔的固定核心只用於已通過 W3 的 D3 之後的事件 strip。
 - 一條 strip 只包含同一方向／姿態家族，例如 `Field` 四足或 `Upright` 直立；不同任務姿態分開製作。
 - 非標準體型在 W0 依目標場景鎖定 cell、bbox、ground anchor 與影子，不按現實身高或為塞進一般人型 cell 而縮小。
 - 圖內不得烘入影子；影子規則只讀世界立繪規格。
