@@ -11,24 +11,34 @@ text = "看好了——這一劍，就是打倒魔王的一劍！"
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = "瑪琳"
-text = "……你昨天也這麼說。前天也是。"
+text = "……你昨天也用同一劍打倒魔王了。前天那隻也是。"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "這次不一樣！公會貼了告示，東之森最近冒出魔物。我先去清掉牠們，緹娜姐一定馬上讓我登錄！"
+text = "昨天角度不對！公會貼了告示——東之森有魔物。我去帶點戰果回來，緹娜姐總不能再拿「沒經驗」堵我吧！"
 
 [sub_resource type="Resource" id="L4"]
 script = ExtResource("1_line")
 speaker = "瑪琳"
-text = "哥，亞倫大哥也說森林深處不能亂闖——喂，路德！"
+text = "哥，等等——媽叫你劈的柴還在後院！亞倫大哥也說森林最近不對勁——喂，路德！"
 
 [sub_resource type="Resource" id="L5"]
 script = ExtResource("1_line")
 speaker = ""
-text = "（話還沒說完，路德已經抓起劍衝了出去。）"
+text = "（話還沒說完，路德已經抓起劍衝出巷口，只回頭揮了一下手。）"
 
 [sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "中午前回來！"
+
+[sub_resource type="Resource" id="L7"]
+script = ExtResource("1_line")
+speaker = "瑪琳"
+text = "哥哥是大笨蛋ーーーーー！！！！"
+
+[sub_resource type="Resource" id="L8"]
 script = ExtResource("1_line")
 speaker = ""
 text = "勇者的日常，第一天。——才怪。"
@@ -37,7 +47,7 @@ text = "勇者的日常，第一天。——才怪。"
 script = ExtResource("2_entry")
 id = "s1_open"
 once = "c_s1_open"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6")])
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7"), SubResource("L8")])
 transfer = PackedStringArray()
 setstep = 1
 party = PackedStringArray()

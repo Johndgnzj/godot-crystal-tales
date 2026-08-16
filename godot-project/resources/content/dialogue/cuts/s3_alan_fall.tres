@@ -6,12 +6,13 @@
 [sub_resource type="Resource" id="L1"]
 script = ExtResource("1_line")
 speaker = ""
-text = "亞倫的劍壓不住那東西。他單膝跪地，撐著劍回頭。"
+text = "（亞倫的劍壓不住那東西。他一次次把路德推到身後，直到單膝跪地，以劍撐住身體。）"
 
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = "亞倫"
-text = "——還愣著幹嘛！叫你跑！"
+text = "——還愣著幹嘛！跑！"
+image = "res://assets/cg/cg_s3_alan_fall.png"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
@@ -21,23 +22,34 @@ text = "我不能丟下你——！"
 [sub_resource type="Resource" id="L4"]
 script = ExtResource("1_line")
 speaker = "亞倫"
-text = "（難得認真地笑了一下）傻小子。回鎮上，把這裡的事回報公會——這是大哥給你的最後一個委託。快去！"
+text = "你留在這裡，只會讓我多救一個人！"
 
 [sub_resource type="Resource" id="L5"]
 script = ExtResource("1_line")
-speaker = ""
-text = "（路德被一股力量推開，踉蹌往外跑。身後金鐵交擊、那東西的咆哮，然後——歸於死寂。）"
+speaker = "亞倫"
+text = "（難得認真地笑了一下）回鎮上，把這裡的事回報公會。這是大哥給你的最後一個委託——完成它。"
 
 [sub_resource type="Resource" id="L6"]
 script = ExtResource("1_line")
 speaker = ""
+text = "（路德被用力推進側道，跌倒，又爬起來。身後金鐵交擊、岩石崩裂，然後一聲更深的轟響——整條坑道都震了一下。之後，什麼都聽不見了。）"
+
+[sub_resource type="Resource" id="L7"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（他沒有回頭。）"
+
+[sub_resource type="Resource" id="L8"]
+script = ExtResource("1_line")
+speaker = ""
 text = "——三天後，芳蕾鎮。"
+style = "timecard"
 
 [resource]
 script = ExtResource("2_entry")
 id = "s3_alan_fall"
 once = "c_s3_alan_fall"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6")])
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7"), SubResource("L8")])
 transfer = PackedStringArray("Town", "home")
 setstep = 7
 party = PackedStringArray("ludo")

@@ -5,34 +5,40 @@
 
 [sub_resource type="Resource" id="Resource_nec1"]
 script = ExtResource("1_nec_l")
-text = "（礦道深處，骷髏礦工的殘骸環繞著一塊搏動的黑水晶。一個黑袍身影背對著眾人低語。）"
+speaker = ""
+text = "（採礦場中央堆滿黑水晶。一個披兜帽的身影站在水晶前，骷髏像被無形的絲線牽引，緩緩轉過身來。）"
 
 [sub_resource type="Resource" id="Resource_nec2"]
 script = ExtResource("1_nec_l")
 speaker = "死靈術士"
-text = "……別過來。這裡不是你們該踏進的地方。"
+text = "又有活人闖進來……走吧。我還用得到這些水晶，不想把時間浪費在你們身上。"
 
 [sub_resource type="Resource" id="Resource_nec3"]
 script = ExtResource("1_nec_l")
 speaker = "路德"
-text = "這些礦工……是你把他們變成這樣的嗎！"
+text = "（指著那些戴礦工帽的骷髏）這些礦工——是你把他們變成這樣的嗎！他們有家人在等！"
 
 [sub_resource type="Resource" id="Resource_nec4"]
 script = ExtResource("1_nec_l")
 speaker = "死靈術士"
-text = "我只是需要這水晶的力量。為了……不，跟你們說也沒用。"
+text = "（沉默片刻，聲音裡沒有得意，只有疲憊）家人再怎麼等，死人也不會回來。我沒打算傷害任何人——我只需要知道，這些水晶到底能做到什麼。"
 
 [sub_resource type="Resource" id="Resource_nec5"]
 script = ExtResource("1_nec_l")
+speaker = "路德"
+text = "所以別人的命，就可以拿來試嗎！"
+
+[sub_resource type="Resource" id="Resource_nec6"]
+script = ExtResource("1_nec_l")
 speaker = "死靈術士"
-text = "擋路的話——就別怪我手下無情了。"
+text = "（第一次抬頭。兜帽下，一雙凹陷的眼睛）……你什麼都不懂。"
 
 [resource]
 script = ExtResource("2_nec_e")
 id = "necro_intro"
 bgm = "bgm_nm_conversation.mp3"
 once = "c_necro_intro"
-lines = Array[ExtResource("1_nec_l")]([SubResource("Resource_nec1"), SubResource("Resource_nec2"), SubResource("Resource_nec3"), SubResource("Resource_nec4"), SubResource("Resource_nec5")])
+lines = Array[ExtResource("1_nec_l")]([SubResource("Resource_nec1"), SubResource("Resource_nec2"), SubResource("Resource_nec3"), SubResource("Resource_nec4"), SubResource("Resource_nec5"), SubResource("Resource_nec6")])
 battle = "necro"
 transfer = PackedStringArray()
 party = PackedStringArray()

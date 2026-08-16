@@ -6,33 +6,43 @@
 [sub_resource type="Resource" id="L1"]
 script = ExtResource("1_line")
 speaker = "亞倫"
-text = "（頭也不回）……出來吧，跟了一路了。腳步那麼重，是要我裝作沒聽到？"
+text = "（頭也不回）出來吧。跟了一路，踩斷四根樹枝，還踢到兩次石頭。"
 
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "（心虛現身）我、我也要去！我可以幫忙！"
+text = "（心虛現身）我、我也要去！我有裝備，也帶了藥，我可以幫忙！"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
 speaker = "亞倫"
-text = "（揉太陽穴）真是……這是公會的委託，不是郊遊。（嘆氣）算了。跟在我後面，別亂跑。出事你就往回跑，聽到沒？"
+text = "你上次也帶了劍。"
 
 [sub_resource type="Resource" id="L4"]
 script = ExtResource("1_line")
-speaker = "路德"
-text = "嗯！"
+speaker = ""
+text = "（一句話，就讓路德閉上了嘴。亞倫望向回鎮的路——天色已暗，讓他一個人回去，同樣危險。）"
 
 [sub_resource type="Resource" id="L5"]
 script = ExtResource("1_line")
+speaker = "亞倫"
+text = "（把一捆備用繩索丟進路德懷裡）跟在我後面。看不懂的別碰，逃掉的別追。真出事就往出口跑，不准回頭。聽懂了沒？"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = "路德"
+text = "……好啦。真的出事，我就跑。這樣可以了吧？"
+
+[sub_resource type="Resource" id="L7"]
+script = ExtResource("1_line")
 speaker = ""
-text = "（亞倫加入了隊伍。礦坑二十年前就封了，最近卻有人說夜裡有聲音……）"
+text = "（亞倫加入了隊伍。）"
 
 [resource]
 script = ExtResource("2_entry")
 id = "s3_mine_in"
 once = "c_s3_mine_in"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5")])
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
 transfer = PackedStringArray()
 setstep = 6
 party = PackedStringArray("alan", "ludo")

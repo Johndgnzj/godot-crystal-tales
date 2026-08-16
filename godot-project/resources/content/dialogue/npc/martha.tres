@@ -14,7 +14,7 @@ cmd = "talk"
 script = ExtResource("1_b7qdl")
 when = "ch1_step>=3"
 speaker = "瑪莎"
-lines = PackedStringArray("你這孩子，越來越像年輕時的你爸了。", "這個戒指你收著——是我年輕出門那些年一直戴著的，保平安。收好。", "（獲得『瑪莎的護身戒』！開啟 選單→裝備 可以裝上）")
+lines = PackedStringArray("你這孩子，越來越像年輕時的你爸了。", "這個戒指你收著——我年輕出門那些年一直戴著的，保平安。", "（替他合起手指）我不是要把你關在鎮上一輩子。可是下次要走，先說一聲——別再讓我們最後一個才知道。", "（獲得『瑪莎的護身戒』！開啟 選單→裝備 可以裝上）")
 action = "give_ring"
 cmd = "martha_gift"
 label = "母親的心意"

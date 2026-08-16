@@ -6,44 +6,51 @@
 [sub_resource type="Resource" id="L1"]
 script = ExtResource("1_line")
 speaker = ""
-text = "（死靈術士踉蹌後退，撞倒了那堆黑水晶。剎那間黑光暴漲，一股冰冷的波動朝兩人湧來——）"
+text = "（死靈術士踉蹌後退，肩膀撞上水晶堆。清脆的碎裂聲——一枚黑水晶滾進術式中央，黑光瞬間淹沒整座採礦場。）"
+image = "res://assets/cg/cg_s6_curse.png"
 
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "（胸口的記號驟然發燙、亮起微光，替他擋下了寒意）唔——這光是……？"
+text = "（胸口的記號驟然發燙，淡綠的光在他面前撐開一層薄薄的屏障）唔——這光、是……？"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
-speaker = "瑪琳"
-text = "（毫無防備，被黑光正面掃中）啊——！"
+speaker = ""
+text = "（瑪琳沒有那層光。她只來得及叫一聲，就被黑色的波紋正面掃中，癱軟倒下。右手腕浮出一圈淡黑的紋路，像細小的根鬚在皮膚下蔓延。）"
 
 [sub_resource type="Resource" id="L4"]
 script = ExtResource("1_line")
-speaker = ""
-text = "（瑪琳當場癱軟昏厥。她的手腕上，浮現出一圈淡淡的黑色咒印。）"
+speaker = "路德"
+text = "瑪琳！瑪琳！——（猛然抬頭）你知道這是什麼對吧？救她！"
 
 [sub_resource type="Resource" id="L5"]
 script = ExtResource("1_line")
 speaker = "死靈術士"
-text = "（望著這一幕，眼神複雜）……那女孩沒有『加護』。這下，她跟我落到一樣的處境了。"
+text = "（看見咒印的瞬間，準備反擊的手停住了）……我，無能為力。（望向路德胸前未熄的綠光）你有『加護』，她沒有。現在——她跟我一樣了。"
 
 [sub_resource type="Resource" id="L6"]
 script = ExtResource("1_line")
 speaker = "死靈術士"
-text = "在找到答案之前，我不會停手——我們，還會再見的。（後退，隱入黑暗。骷髏隨之癱倒。）"
+text = "在找到答案之前，我不會停手。等你走到我這一步，就會懂了。（退入黑暗。骷髏一具接一具癱倒。）"
 
 [sub_resource type="Resource" id="L7"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "（抱起昏迷的瑪琳）亞倫大哥的下落、還有救瑪琳的方法……答案，一定都在這些水晶、還有那個男人身上。……我一定會查清楚。"
+text = "（抱起瑪琳。採礦場另一端裂開一條向下的黑暗礦道，冷風從地底吹上來）……亞倫大哥的下落、救瑪琳的方法——答案都在下面、都在那個男人身上。我一定會查清楚。"
+
+[sub_resource type="Resource" id="L8"]
+script = ExtResource("1_line")
+speaker = ""
+text = "——當晚，芳蕾鎮。"
+style = "timecard"
 
 [resource]
 script = ExtResource("2_entry")
 id = "s6_curse"
 bgm = "bgm_nm_conversation.mp3"
 once = "c_s6_curse"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7"), SubResource("L8")])
 transfer = PackedStringArray("Town", "home")
 setstep = 13
 party = PackedStringArray()

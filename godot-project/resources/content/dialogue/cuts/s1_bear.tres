@@ -6,57 +6,59 @@
 [sub_resource type="Resource" id="L1"]
 script = ExtResource("1_line")
 speaker = ""
-text = "熊一掌橫掃，短劍脫手飛出，路德重重摔在濕冷的落葉上，再也爬不起來。"
+text = "熊一掌橫掃。短劍飛進草叢，路德重重摔在濕冷的落葉上，肺裡的空氣全被擠了出去。"
 
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "（視線模糊、胸口劇痛，聲音虛弱得快聽不見）……好痛……身體、一點力氣都提不起來……"
+text = "（吸不到氣，手臂一撐就軟）……站起來……快站起來啊……"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
-speaker = "路德"
-text = "（恐懼一寸寸爬上來）原來……我真的什麼都做不到……瑪琳、爸媽說的……都是對的……"
+speaker = ""
+text = "（瑪琳的聲音、爸皺起的眉、亞倫那句「別走太深」——全在這一瞬間回到腦中。原來知道自己錯了，時間也不會倒回去。）"
 
 [sub_resource type="Resource" id="L4"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "（眼眶發熱）對不起……我不該逞強、一個人跑進來的……"
+text = "（用盡最後的力氣）——救、救命——！！"
 
 [sub_resource type="Resource" id="L5"]
 script = ExtResource("1_line")
 speaker = ""
-text = "（熊的巨影一步步逼近。路德咬緊牙，用盡最後一絲力氣——）"
+text = "（寒光先落下。劍背重擊熊的前肢；第二劍劈在地面，泥土炸起。熊咆哮著徘徊兩圈，帶著不甘退回樹叢。）"
+image = "res://assets/cg/cg_s1_bear.png"
 
 [sub_resource type="Resource" id="L6"]
 script = ExtResource("1_line")
-speaker = "路德"
-text = "——救、救命——！！！"
+speaker = "亞倫"
+text = "（收劍，一臉嫌麻煩）喂喂，這種地方，小鬼跑進來找死啊？"
 
 [sub_resource type="Resource" id="L7"]
 script = ExtResource("1_line")
-speaker = ""
-text = "（喊聲未落，一道人影懶洋洋踱進空地——下一瞬，寒光一閃，熊悶哼著退開了。）"
+speaker = "路德"
+text = "（眼淚還掛在臉上）你是……每天躺在旅店屋簷下、還叫我幫你買麵包的亞倫大哥……！"
 
 [sub_resource type="Resource" id="L8"]
 script = ExtResource("1_line")
 speaker = "亞倫"
-text = "喂喂，這種地方，小鬼跑進來找死啊？"
+text = "這種時候，不是應該先說謝謝嗎？而且那次的錢我有還吧。（伸手）能站嗎？"
 
 [sub_resource type="Resource" id="L9"]
 script = ExtResource("1_line")
-speaker = "路德"
-text = "（眼淚還掛在臉上）你是……住旅店那個、成天曬太陽的亞倫大哥……！"
+speaker = ""
+text = "（路德被一把拉起。亞倫沒有訓話，只放慢腳步，偶爾回頭確認他跟上了。）"
 
 [sub_resource type="Resource" id="L10"]
 script = ExtResource("1_line")
-speaker = "亞倫"
-text = "（把路德一把拉起來）還喊得出聲，看來死不了。走，自己走回去。我還想天黑前補個回籠覺呢。"
+speaker = "路德"
+text = "（望著前面的背影）……剛剛只用了兩劍。原來厲害的冒險者，不是敢不敢拔劍——是危險來的時候，能立刻站到別人前面。"
 
 [sub_resource type="Resource" id="L11"]
 script = ExtResource("1_line")
-speaker = "路德"
-text = "（盯著那道背影，忘了痛）……好快的劍。那，才是真正的冒險者……"
+speaker = ""
+text = "——傍晚，芳蕾鎮。"
+style = "timecard"
 
 [resource]
 script = ExtResource("2_entry")

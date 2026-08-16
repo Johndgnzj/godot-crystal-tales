@@ -5,14 +5,14 @@
 
 [sub_resource type="Resource" id="Resource_big8q"]
 script = ExtResource("1_nx5ay")
-when = "ch1==3"
+when = "ch1_step>=13"
 speaker = "羅素隊長"
-lines = PackedStringArray("南方大道還在封鎖中。", "等王都的指示一到就放行——你們的事蹟我會寫進報告。")
+lines = PackedStringArray("礦山的事，我聽緹娜說了。南方大道還在封鎖中——等王都的指示一到就放行。", "……你們的事蹟，我會寫進報告。這座鎮欠你們的，不會沒人記得。")
 
 [sub_resource type="Resource" id="Resource_tbw4f"]
 script = ExtResource("1_nx5ay")
 speaker = "羅素隊長"
-lines = PackedStringArray("前方道路因魔物騷動封閉中，王都的援軍還沒到。", "想去大城的話，再等等吧。")
+lines = PackedStringArray("前方道路因魔物騷動封閉中，王都的援軍還沒到。", "想去休斯城的話，再等等吧。")
 
 [resource]
 script = ExtResource("2_3q866")

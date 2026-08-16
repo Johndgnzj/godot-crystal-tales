@@ -16,6 +16,10 @@ extends CanvasLayer
 @onready var _portrait: TextureRect = $Box/Portrait
 @onready var _speaker_label: Label = $Box/SpeakerLabel
 @onready var _text_label: Label = $Box/TextLabel
+# 事件演出（docs/design/事件演出規格.md）：全螢幕事件 CG（畫在對話框下）＋黑幕時間字卡（蓋住一切）
+@onready var _cg: TextureRect = $Box/Cg
+@onready var _timecard: ColorRect = $Box/Timecard
+@onready var _timecard_label: Label = $Box/Timecard/TimecardLabel
 
 # 立繪幾何（換算自 build_cq2.py setFace L1417-1420，座標系與 GDevelop 相同＝1280x720）：
 # 目標高 380；等比換寬，過寬（拖擺長袍等）限 470；貼近左緣 x=14；底邊固定在 y=540（對話框上緣附近）。
@@ -62,6 +66,8 @@ func _on_started(_npc_id: String, _entry: DialogueEntry) -> void:
 func _on_cutscene_started(_cut_id: String) -> void:
 	_box.visible = true
 	_speaker_label.visible = false  # 過場旁白（speaker==""）常見，line_changed 會再依內容切回顯示
+	_timecard.visible = false
+	_cg.visible = false             # CG 只活在單一過場內，開場先重置
 
 
 func _on_line_changed(speaker: String, text: String) -> void:
@@ -69,6 +75,50 @@ func _on_line_changed(speaker: String, text: String) -> void:
 	_speaker_label.text = speaker
 	_text_label.text = text
 	_set_portrait(speaker)
+	_apply_cutscene_visual()
+
+
+## 事件演出（docs/design/事件演出規格.md）：讀當前過場行的 image/style。
+## NPC 對話（DLG）沒有這兩欄，current_cutscene_line() 回 null → 只確保字卡收起。
+func _apply_cutscene_visual() -> void:
+	var line: CutsceneLine = DialogueSystem.current_cutscene_line()
+	if line == null:
+		_timecard.visible = false
+		return
+	if line.style == "timecard":
+		_timecard_label.text = line.text
+		_timecard.visible = true
+		_portrait.visible = false
+	else:
+		_timecard.visible = false
+	if line.image != "":
+		_show_cg(line.image)
+
+
+func _show_cg(path: String) -> void:
+	if not ResourceLoader.exists(path):
+		push_warning("dialogue_box: 找不到事件 CG %s，略過" % path)
+		return
+	var tex := load(path) as Texture2D
+	if tex == null:
+		push_warning("dialogue_box: 事件 CG 載入失敗 %s，略過" % path)
+		return
+	_cg.texture = tex
+	if not _cg.visible:
+		_cg.visible = true
+		_cg.modulate.a = 0.0
+		var tw := create_tween()
+		tw.tween_property(_cg, "modulate:a", 1.0, 0.5)   # 首張淡入（規格 B 層）
+	else:
+		_cg.modulate.a = 1.0                              # 同過場換圖＝直接切
+
+
+func _hide_cg() -> void:
+	if not _cg.visible:
+		return
+	var tw := create_tween()
+	tw.tween_property(_cg, "modulate:a", 0.0, 0.3)
+	tw.tween_callback(func() -> void: _cg.visible = false)
 
 
 ## 依當前說話者顯示名切換半身立繪（NPC 對話與過場共用；比照 build_cq2.py setFace L1410-1421）。
@@ -116,3 +166,5 @@ func _on_ended(_npc_id: String) -> void:
 
 func _on_cutscene_ended(_cut_id: String) -> void:
 	_box.visible = false
+	_timecard.visible = false
+	_hide_cg()

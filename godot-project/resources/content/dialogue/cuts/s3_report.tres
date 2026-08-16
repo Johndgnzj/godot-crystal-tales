@@ -6,28 +6,34 @@
 [sub_resource type="Resource" id="L1"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "（衝進公會）緹娜姐！礦山裡面……亞倫大哥他——！"
+text = "（推開公會的門，幾乎站不穩）緹娜姐……礦山裡面……亞倫大哥他——！"
 
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = "緹娜"
-text = "（臉色一變，扶住他）慢慢說。……我明白了。礦山即刻封鎖，我立刻向總部請求支援調查。"
+text = "（從櫃檯後繞出來扶住他）慢慢說。我聽著，每一句都說完。"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
 speaker = "緹娜"
-text = "（放柔聲音）你已經做得很好了。剩下的，交給大人們。"
+text = "（聽完，握筆的手慢慢收緊）……馬上封鎖礦山。通知總部，標最高警戒！"
 
 [sub_resource type="Resource" id="L4"]
 script = ExtResource("1_line")
+speaker = "緹娜"
+text = "（蹲到路德面前，放柔聲音）你完成他的委託了。剩下的先交給我們——回家吧，現在就回去。"
+
+[sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
 speaker = ""
-text = "（可是，總部的支援遲遲沒有來。）"
+text = "總部的支援，沒有來。\n一天、兩天、一週——公會牆上的求援回函欄，始終空著。"
+style = "timecard"
 
 [resource]
 script = ExtResource("2_entry")
 id = "s3_report"
 once = "c_s3_report"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4")])
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5")])
 transfer = PackedStringArray()
 setstep = 8
 party = PackedStringArray()

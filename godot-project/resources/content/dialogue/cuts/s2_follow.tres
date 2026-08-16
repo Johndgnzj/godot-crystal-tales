@@ -3,26 +3,37 @@
 [ext_resource type="Script" path="res://scripts/dialogue/cutscene_line.gd" id="1_line"]
 [ext_resource type="Script" path="res://scripts/dialogue/cutscene_entry.gd" id="2_entry"]
 
+[sub_resource type="Resource" id="L0"]
+script = ExtResource("1_line")
+speaker = ""
+text = "——幾天後。"
+style = "timecard"
+
 [sub_resource type="Resource" id="L1"]
 script = ExtResource("1_line")
 speaker = ""
-text = "（路德看見亞倫揹著行囊，正往鎮北走去。）"
+text = "（傍晚。路德看見亞倫揹著繩索、火把和三天份的行囊，往鎮北走去。）"
 
 [sub_resource type="Resource" id="L2"]
 script = ExtResource("1_line")
 speaker = ""
-text = "公會給了亞倫一紙委託——調查北方礦山近來的異狀。"
+text = "公會給了亞倫一紙委託——調查北方礦山近來的異狀。二十年前封閉的礦坑，最近有人在夜裡聽見怪聲。"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
 speaker = "路德"
-text = "（握緊手裡的舊劍）……跟上去。這次，我不會扯後腿。"
+text = "（手搭上父親的舊劍）……跟上去。這次，我不會扯後腿。"
+
+[sub_resource type="Resource" id="L4"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（熊留下的瘀青還沒退。他把那份不甘，錯認成了準備充分。）"
 
 [resource]
 script = ExtResource("2_entry")
 id = "s2_follow"
 once = "c_s2_follow"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3")])
+lines = Array[ExtResource("1_line")]([SubResource("L0"), SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4")])
 transfer = PackedStringArray()
 setstep = 5
 party = PackedStringArray()

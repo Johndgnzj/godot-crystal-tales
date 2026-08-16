@@ -5,9 +5,9 @@
 
 [sub_resource type="Resource" id="Resource_xeui8"]
 script = ExtResource("1_dm2me")
-when = "ch2>=3"
+when = "ch1_step>=13"
 speaker = "巴頓鎮長"
-lines = PackedStringArray("礦工失蹤的事……我早該多過問一句的。", "孩子，你們比這鎮上所有大人都勇敢。", "把礦山看到的一切，原原本本告訴大城的人吧。")
+lines = PackedStringArray("礦工失蹤的事……我早該多過問一句的。", "孩子，你們比這鎮上所有大人都勇敢。", "緹娜的報告會送去休斯城總部。要是……要是總部再不回話，這鎮子就得自己想辦法了。")
 cmd = "talk"
 
 [sub_resource type="Resource" id="Resource_tcj3b"]

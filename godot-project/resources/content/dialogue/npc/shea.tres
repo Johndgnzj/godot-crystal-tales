@@ -5,7 +5,7 @@
 
 [sub_resource type="Resource" id="Resource_u2c5k"]
 script = ExtResource("1_i3oc4")
-when = "ch2>=2"
+when = "ch1_step>=13"
 speaker = "希雅修女"
 lines = PackedStringArray("你們從礦山帶回來的……不只是疲憊。", "那是亡者未能安息的哀嘆。願蓋婭女神接引他們。", "（隊伍完全恢復了！）", "……路德，女神在你身上的記號，又亮了一分。")
 action = "heal"

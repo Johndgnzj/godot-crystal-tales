@@ -15,25 +15,40 @@ text = "我知道啦……我只是想證明我可以。"
 
 [sub_resource type="Resource" id="L3"]
 script = ExtResource("1_line")
-speaker = "瑪莎"
-text = "（替他敷上藥草）你這孩子……越來越像你爸年輕的時候了。"
+speaker = "漢克"
+text = "（抱著手臂靠在門邊）證明了什麼？"
 
 [sub_resource type="Resource" id="L4"]
 script = ExtResource("1_line")
-speaker = "漢克"
-text = "（抱著手臂靠在門邊）當冒險者？哼，那可不是鬧著玩的。"
+speaker = "路德"
+text = "（抬頭）我會變強。下次——"
 
 [sub_resource type="Resource" id="L5"]
+script = ExtResource("1_line")
+speaker = "漢克"
+text = "冒險不是輸了再來一場的遊戲。有些人，沒有下次。"
+
+[sub_resource type="Resource" id="L6"]
+script = ExtResource("1_line")
+speaker = ""
+text = "（房間安靜下來。瑪莎手上的藥布，停了一下。）"
+
+[sub_resource type="Resource" id="L7"]
 script = ExtResource("1_line")
 speaker = "路德"
 text = "可你們當年不也——"
 
-[sub_resource type="Resource" id="L6"]
+[sub_resource type="Resource" id="L8"]
 script = ExtResource("1_line")
 speaker = "漢克"
-text = "……我和你媽在外面闖了那麼多年，到頭來什麼名堂也沒闖出來，才回這座鎮上。別走我們的老路。"
+text = "所以我才知道。我和你媽在外面走了那麼多年，沒成為什麼英雄，只學會哪些墓碑原本不該立在那裡。（轉身離開）……別把我們走過的路，想得太漂亮。"
 
-[sub_resource type="Resource" id="L7"]
+[sub_resource type="Resource" id="L9"]
+script = ExtResource("1_line")
+speaker = "瑪莎"
+text = "（替他敷上藥草，輕聲）你爸說得難聽，是因為他記得的事，比你知道的多。先別急著怪他。"
+
+[sub_resource type="Resource" id="L10"]
 script = ExtResource("1_line")
 speaker = ""
 text = "（去和家人、鎮上的人說說話吧——他們嘴上唸著，手上卻一個個幫你打點行裝。）"
@@ -42,7 +57,7 @@ text = "（去和家人、鎮上的人說說話吧——他們嘴上唸著，手
 script = ExtResource("2_entry")
 id = "s2_home"
 once = "c_s2_home"
-lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7")])
+lines = Array[ExtResource("1_line")]([SubResource("L1"), SubResource("L2"), SubResource("L3"), SubResource("L4"), SubResource("L5"), SubResource("L6"), SubResource("L7"), SubResource("L8"), SubResource("L9"), SubResource("L10")])
 transfer = PackedStringArray()
 setstep = 4
 party = PackedStringArray()

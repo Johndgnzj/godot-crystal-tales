@@ -14,7 +14,7 @@ cmd = "talk"
 script = ExtResource("1_x51ct")
 when = "ch1_step>=3"
 speaker = "漢克"
-lines = PackedStringArray("……路德，你也要出去闖了啊。", "（取下牆上一把用舊的劍）拿去。這把陪我走過不少地方。別死在外面。", "（獲得『漢克的舊劍』！開啟 選單→裝備 分頁換上它）")
+lines = PackedStringArray("（沉默了一會兒，取下牆上那把用舊的劍）……拿去。", "放在牆上，只會積灰。這把陪我走過不少地方——別死在外面。", "（獲得『漢克的舊劍』！開啟 選單→裝備 分頁換上它）")
 action = "give_sword"
 cmd = "hank_gift"
 label = "臨別贈言"

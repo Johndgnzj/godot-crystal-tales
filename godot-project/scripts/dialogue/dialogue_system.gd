@@ -64,8 +64,15 @@ var _cut_idx: int = 0
 var _cut_queue: Array[String] = []
 
 
+## 轉場淡出/淡入遮罩（事件演出規格 A 層，2026-08-16）：掛在本 autoload 上、layer 100，
+## 只被「過場的 transfer 轉場」使用；一般地圖出口（exit_zone）不吃 fade，維持即時切換。
+var _fade_layer: CanvasLayer
+var _fade_rect: ColorRect
+
+
 func _ready() -> void:
 	_load()
+	_setup_fade_overlay()
 
 
 func _load() -> void:
@@ -103,6 +110,17 @@ func is_in_dialogue() -> bool:
 
 func is_in_cutscene() -> bool:
 	return _current_cut != null
+
+
+## 目前正在顯示的過場台詞（含 image/style 演出欄位）；非過場中（或索引越界）回傳 null。
+## dialogue_box 在收到 cutscene_line_changed 後呼叫本函式取演出資訊——既有訊號簽名
+## （speaker/text）維持不變，避免動到其他訂閱端。
+func current_cutscene_line() -> CutsceneLine:
+	if _current_cut == null:
+		return null
+	if _cut_idx < 0 or _cut_idx >= _current_cut.lines.size():
+		return null
+	return _current_cut.lines[_cut_idx]
 
 
 # =========================================================================
@@ -320,16 +338,63 @@ func _finish_cutscene(cut: CutsceneEntry, cut_id: String) -> void:
 	if cut.once != "" or cut.setstep >= 0 or cut.party.size() > 0:
 		_try_save()
 
+	# 事件演出：帶 transfer 且最後一行是黑幕字卡（style="timecard"）時，先把遮罩瞬間補滿——
+	# 字卡的黑直接無縫接轉場的黑，不讓世界場景在中間閃一幀（規格 A 層）。
+	var has_transfer := cut.transfer.size() >= 2
+	var ends_on_timecard := cut.lines.size() > 0 and cut.lines[cut.lines.size() - 1].style == "timecard"
+	if has_transfer and ends_on_timecard and _fade_rect != null:
+		_fade_rect.modulate.a = 1.0
+
 	cutscene_ended.emit(cut_id)
 
 	if cut.battle != "":
 		battle_requested.emit(cut.battle)
 		return
-	if cut.transfer.size() >= 2:
-		scene_transfer_requested.emit(cut.transfer[0], cut.transfer[1])
+	if has_transfer:
+		_do_transfer_with_fade(cut.transfer[0], cut.transfer[1], ends_on_timecard)
 		return
 
 	_drain_cut_queue()
+
+
+# =========================================================================
+# 轉場淡出/淡入（事件演出規格 A 層；只服務過場的 transfer，一般地圖出口不經過這裡）
+# =========================================================================
+
+func _setup_fade_overlay() -> void:
+	_fade_layer = CanvasLayer.new()
+	_fade_layer.layer = 100
+	_fade_rect = ColorRect.new()
+	_fade_rect.color = Color(0.0, 0.0, 0.0, 1.0)
+	_fade_rect.modulate.a = 0.0
+	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_fade_layer.add_child(_fade_rect)
+	add_child(_fade_layer)
+
+
+## 過場 transfer 的轉場：淡出到黑（末行是字卡時已瞬間補滿、skip_out=true）→ 發轉場訊號
+## （世界場景收到後呼叫 SceneRouter.go_to）→ 等新場景就位幾個 idle frame → 淡回。
+## SceneRouter 對缺檔場景採容錯不切，此時 fade 也會自行淡回，不會卡在黑幕。
+func _do_transfer_with_fade(to_scene: String, spawn_id: String, skip_out: bool) -> void:
+	if _fade_rect == null:
+		scene_transfer_requested.emit(to_scene, spawn_id)
+		return
+	if not skip_out:
+		await _fade_to(1.0, 0.5)
+	scene_transfer_requested.emit(to_scene, spawn_id)
+	var tree := get_tree()
+	if tree != null:
+		await tree.process_frame
+		await tree.process_frame
+		await tree.process_frame
+	await _fade_to(0.0, 0.5)
+
+
+func _fade_to(target_a: float, dur: float) -> void:
+	var tw := create_tween()
+	tw.tween_property(_fade_rect, "modulate:a", target_a, dur)
+	await tw.finished
 
 
 ## 對應 mkMember()/party() 的隊伍組成替換（L997 town_start 的 "party":["ludo","marin"]）：
