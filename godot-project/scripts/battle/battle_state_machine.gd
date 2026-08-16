@@ -1503,6 +1503,30 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	if not is_hero and not frames.is_empty():
 		var geo_base: float = BOSS_GEO if bool(u.get("big", false)) else FOE_GEO
 		foe_fit = _foe_fit(frames[0], geo_base * maxf(0.1, float(u.get("battle_scale", 1.0))))
+
+	# 敵人多幀 idle 的逐幀貼底補正（2026-08-16 John 實機回饋「熊的兩幀會上下動」）：
+	# 這批兩幀呼吸素材普遍是「第 1 幀整體在畫布內上移」（bear 底邊 72→69、wolf 50→48、skeleton 60→58），
+	# 共用 frame0 擺位會讓整隻連腳一起上下跳。修法＝縮放沿用 frame0 的 k（不逐幀重量，避免大小抖動），
+	# 但逐幀把「可見底邊」貼回地面線——腳釘住，呼吸變成上緣起伏。畫布尺寸與 frame0 不同的幀直接剔除
+	# （素材錯置，例：foe_demon_0 62×82 vs 1..3 36×40，共框必抖；剔除後靜態顯示 frame0，重製歸 battle_art 產線）。
+	var frame_offs: Array = []
+	if not is_hero and not foe_fit.is_empty() and frames.size() > 1:
+		var base_img: Image = (frames[0] as Texture2D).get_image()
+		var canvas := Vector2i(base_img.get_width(), base_img.get_height())
+		var used0 := base_img.get_used_rect()
+		var b0: int = used0.position.y + used0.size.y
+		var k: float = float(foe_fit["size"].x) / maxf(1.0, float(canvas.x))
+		var keep: Array = [frames[0]]
+		frame_offs.append(0.0)
+		for fi in range(1, frames.size()):
+			var im: Image = (frames[fi] as Texture2D).get_image()
+			if im == null or im.is_compressed() or Vector2i(im.get_width(), im.get_height()) != canvas:
+				push_warning("battle: foe_%s 第 %d 幀畫布與第 0 幀不符，剔除（素材待重製）" % [String(u.get("sprite", "")), fi])
+				continue
+			var ur := im.get_used_rect()
+			keep.append(frames[fi])
+			frame_offs.append(float(b0 - (ur.position.y + ur.size.y)) * k)
+		frames = keep
 	if not foe_fit.is_empty():
 		w = float(foe_fit["vis_w"])   # 名字／血條／箭頭／飄字都改掛在可見像素的寬高上
 		h = float(foe_fit["vis_h"])
@@ -1560,7 +1584,7 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 			else _visible_anchors(frames, w, h))
 	var fits := _build_fits(String(u.get("sprite", "")), frames, anim_frames, hurt_tex, death_tex, w, h)
 
-	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": spr_pos.y, "head": anchors["head"], "mid": anchors["mid"], "fits": fits}
+	return {"unit": u, "wrap": wrap, "sprite": spr, "name": name_lbl, "hp_fill": hp_fill, "frames": frames, "anim_frames": anim_frames, "hurt_tex": hurt_tex, "death_tex": death_tex, "is_hero": is_hero, "h": h, "base": wrap.position, "spr_y": spr_pos.y, "spr_pos": spr_pos, "frame_offs": frame_offs, "head": anchors["head"], "mid": anchors["mid"], "fits": fits}
 
 
 ## 把「非 idle」的每張貼圖校正到與 idle 相同的人物大小與地面線，回傳 Texture2D → {s, off} 對照表。
@@ -2086,7 +2110,12 @@ func _refresh_ui() -> void:
 		node["wrap"].position = base_pos + Vector2(foe_off, 0.0) + _shake_offset_for(node["unit"])
 		var frames: Array = node["frames"]
 		if not frames.is_empty():
-			node["sprite"].texture = frames[frame % frames.size()]
+			var fidx: int = frame % frames.size()
+			node["sprite"].texture = frames[fidx]
+			# 逐幀貼底補正（見 _build_unit 的 frame_offs）：腳釘在地面線，呼吸只動上緣
+			var offs: Array = node.get("frame_offs", [])
+			if fidx < offs.size():
+				node["sprite"].position = Vector2(node["spr_pos"]) + Vector2(0.0, float(offs[fidx]))
 		node["sprite"].scale = Vector2(1.12, 1.12) if is_same(node["unit"], sel_foe) else Vector2.ONE
 		if node["name"] != null:
 			node["name"].text = ("☠ " if bool(f.get("big", false)) else "") + String(f.get("name", ""))

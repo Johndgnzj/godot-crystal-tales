@@ -87,6 +87,7 @@ var _player: PlayerController
 var _trail := PartyTrail.new()
 var _tracker: EncounterTracker = null
 var _player_anim: AnimatedSprite2D = null
+var _leader_current: String = ""   # 目前領頭視覺用的 sprite（過場換隊伍時比對用，見 _on_cutscene_ended_refresh_leader）
 var _followers: Array = []      # [{node, anim}]
 var _npc_nodes: Array = []      # [{id, node}]
 var _chest_nodes: Array = []    # [{id, tx, ty, sprite}]
@@ -129,6 +130,7 @@ func _ready() -> void:
 	_setup_encounter_tracker()
 	DialogueSystem.battle_requested.connect(_on_cut_battle)
 	DialogueSystem.scene_transfer_requested.connect(_on_cut_transfer)
+	DialogueSystem.cutscene_ended.connect(_on_cutscene_ended_refresh_leader)
 	_wire_approach_battle()
 	_play_enter_cutscenes()
 	AudioManager.play_bgm(bgm)   # CFG.bgm；空字串＝維持現況（見 AudioManager.play_bgm）
@@ -379,6 +381,7 @@ func _setup_player_visual() -> void:
 	var frames := _build_char_frames([leader], false)
 	if frames == null:
 		return
+	_leader_current = leader
 	var sprite_scale: float = _sprite_scale_for(leader)
 	_player_anim = AnimatedSprite2D.new()
 	_player_anim.sprite_frames = frames
@@ -388,6 +391,18 @@ func _setup_player_visual() -> void:
 	_player.add_child(_player_anim)
 	if frames.has_animation("IdleDown"):
 		_player_anim.play("IdleDown")
+
+
+## 過場可能中途更換隊伍（例：s3_mine_in 亞倫入隊改當領隊）。領頭行走圖只在 _ready() 建一次，
+## 不刷新會出現「領頭還是路德＋跟隨位又一個路德」的雙路德，直到下一次場景重載（如打完一場仗）
+## 才恢復——所以過場結束時偵測領隊變更、原地重建領頭視覺（跟隨者本來就逐幀讀隊伍，不用動）。
+func _on_cutscene_ended_refresh_leader(_cut_id: String) -> void:
+	if _leader_sprite() == _leader_current:
+		return
+	if _player_anim != null:
+		_player_anim.queue_free()
+		_player_anim = null
+	_setup_player_visual()
 
 
 ## 行走圖尺度／貼腳偏移（領頭與跟隨者共用同一套規則）：路德與亞倫是終版 64px cell；

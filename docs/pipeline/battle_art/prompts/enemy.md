@@ -44,7 +44,11 @@
 - **東之森**：`bird`、`gslime`、`goblin`、`worm`、`wolf`、`maskedorc`（掠翅鳥拍翅、綠黏史萊姆壓縮起伏、哥布林持刀手兩幀一致）。
 - **東之森深處候選**：`goblin_shaman`、`goblin_tamer`、`wild_hare`、`horn_hare`、`thorn_boar`、`fungus_owl`、`rotwood_beetle`（野兔/掠角兔共用蓄力跳基底）。此批戰鬥圖已整合，尚未建數值/遭遇表。
 
+**已整合（Gemini 流程）**：
+
+- **`shadow_demon`（2026-08-16）**：依 [descriptions/shadow_demon.md](descriptions/shadow_demon.md) v2（以 `portrait_shadow_demon` 為本體真相源）產 seed、John 驗收 D 案；idle 四幀（`0→1→2→1`：上身羽化上漂＋煙尾底釘死＋胸核光強弱），交付 91×128（boss 高解析）。取代匯入日起即錯置的舊 `foe_demon_*`（62×82 與 36×40 兩套混用，舊檔備份 `assets-source/role/enemies/shadow_demon/legacy/`）。
+
 **待優化**：
 
 - 多數現有戰鬥圖為 OpenAI imagegen 產、產圖當下未存 prompt；`bear_dire` 為首張 Gemini 產。
-- 缺呼吸圖待補：`necro`／`ogre`／`shadow_demon`／`chort`／`goblin_chief`（沿用上節 Gemini 流程）。
+- 缺呼吸圖待補：`necro`／`ogre`／`chort`／`goblin_chief`（沿用上節 Gemini 流程）。
