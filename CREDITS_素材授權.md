@@ -155,13 +155,13 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/map/calib/calib_a.png`：
   **非美術素材**——由 `tools/`(PIL) 程式生成的 32px 棋盤底圖（每 5 格粗線＋座標刻度），供 MZ 碰撞校正場實機判讀格線用，無第三方素材、無授權問題。
 - `assets/props/m5_tree.png`（素材源＝`assets-source/props/m5_tree/m5_tree_{raw,alpha}.png`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5-a 用的俯視手繪闊葉樹。John 驗收後以洋紅鍵去背，原始鍵圖與 alpha 版皆保留。**2026-08-19 已改由素材庫項目 `tree_m5_road_a` 取代**（見下一則），本檔在專案內已無引用、僅留作原始出處。
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5-a 用的俯視手繪闊葉樹。John 驗收後以洋紅鍵去背，原始鍵圖與 alpha 版皆保留於素材源。**2026-08-19 已由素材庫項目 `tree_m5_road_a` 取代，專案端的 `assets/props/m5_tree.png` 同日刪除**（素材源保留）。
 - `assets/props/world/nature/1x1/tree_m5_road_a.png`（素材源＝`assets-source/props/world/nature/1x1/tree_m5_road_a/`）：
   同上 `m5_tree` 的 alpha 版整理入庫（2026-08-19，John 驗收）；裁到 alpha 內容框讓樹幹底貼齊圖底（比照其他高物件的 bottom-center anchor 慣例），縮為 201×230（0.21 倍，落在原本六個手工實例的 0.20~0.22 之間）。1×1 footprint＝只擋樹幹腳點；原始 1024×1536 raw/alpha 保留為 `design_anchor_{raw,alpha}.png`。M5-a 六棵樹自此改由 `map-def.json` 的 `props` 驅動，位置與碰撞單一真相，不再是手工節點。
 - `assets/props/world/architecture/6x2/building_inn_floret_a.png`（素材源＝`assets-source/props/world/architecture/6x2/building_inn_floret_a/`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用旅店高物件。經 John 驗收後以洋紅鍵去背、正規化為 336×224 RGBA PNG；6×2 footprint（2026-07-28 由 6×4 縮為只擋建築底部），正面平行地圖底邊、入口貼齊底邊，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
 - `assets/props/world/architecture/{6x2/building_guild_floret_a,3x2/building_shrine_floret_a,5x2/building_mayor_floret_a,5x2/building_shop_floret_a,5x2/building_smithy_floret_a}.png`（素材源＝對應 `assets-source/props/world/architecture/<footprint>/<id>/`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用公會、神殿、鎮長宅、道具店與鐵匠鋪。經 John 批次驗收後以洋紅／淺色棋盤鍵去背，正規化為透明 RGBA PNG；全部正面平行地圖底邊、入口貼齊底邊，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用公會、神殿、鎮長宅、道具店與鐵匠鋪。經 John 批次驗收後以洋紅／淺色棋盤鍵去背，正規化為透明 RGBA PNG；全部正面平行地圖底邊、入口貼齊底邊，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。**2026-08-19：guild、smithy、mayor、shop 四張以既有影像重建二值 alpha，移除錯誤去背留下的半透明背景；同時將既有窗框內的玻璃恢復為不透明、加上低調淡灰反光。畫布尺寸與其餘建築像素內容不變。**
 - `assets/props/world/architecture/2x1/house_cottage_floret_a.png`、`assets/props/world/landmark/4x3/landmark_mine_entrance_floret_a.png`（素材源＝對應 `assets-source/props/world/<type>/<footprint>/<id>/`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用民宅與北方礦坑入口。經 John 驗收後以洋紅鍵去背並收邊 1px，正規化為透明 RGBA PNG；入口貼齊底邊並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
 - `assets/props/world/structure/4x3/stairs_stone_wide_a.png`、`assets/props/world/street/1x1/{street_well_stone_a,street_lamp_iron_a}.png`、`assets/props/world/structure/{1x1/fence_wood_corner_a,1x2/fence_wood_straight_v_a,2x1/fence_wood_straight_a,2x1/fence_wood_gate_a}.png`（素材源＝對應 `assets-source/props/world/<type>/<footprint>/<id>/`）：
@@ -210,12 +210,11 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   然後泛洪去黑底、統一字高 96px 與基線、重排成 10 格等寬。素材源與字形核對圖保存於
   `assets-source/ui/dmg_digits/`（`style_anchor.png` 風格參考、`glyph_check_montage.png` 十字核對、
   `dmg_digits_sheet.png` 成品）。
-- `assets/props/ext_*.png`（六棟建築外觀，洋紅底原圖）：AI 生成素材（Gemini gemini-2.5-flash-image，
+- `assets-source/props/building_ext/ext_*.png`（六棟建築外觀，洋紅底原圖；**2026-08-19 由 `godot-project/assets/props/` 移到素材源**——它是去背前的原圖，不該留在專案產物裡；專案實際使用的是去背版 `extc_*.png`）：AI 生成素材（Gemini gemini-2.5-flash-image，
   提示詞作者 John/協作 Agent，由 /gen-art skill 的 building type 生成）。2026-07-15 重生成為**正面平視、門在正面下緣**的日系像素風（取代原 2026-07-12 的 45° isometric 版，便於在正交地圖擺進入點）。
   2026-07-16 再把公會/旅店/鎮長宅/鐵匠鋪四棟重繪成**「正面朝前＋屋頂從上方可見」的俯視 45° 感**（比照原本就是此風的神殿/道具店，用 gen-art raw type＋以 extc_shrine/extc_shop 當風格參考圖 image-to-image 生成；門仍在正面下緣，不是舊的 isometric 側視）。
   Godot 端去洋紅底（洋紅特徵 key，非 GDevelop 的 `_clean_ext` 石造重上色）＋裁透明邊產去背版 `extc_*.png`（town.tscn 實際使用；**維持暖色 JRPG 原色**，未套舊灰石調）。
-- `assets/props/f_*.png`（室內家具：床/桌椅/櫃架/櫃檯/壁爐/祭壇/鐵砧/武具架…）與
-  `assets/props/int_room_wood/stone.png`（室內房間外殼）：**程序化像素繪製（自製，`art_v12_furniture.py` 以 PIL 繪，無授權限制）**。
+- ~~`assets/props/f_*.png`（室內家具）與 `assets/props/int_room_{wood,stone}.png`（室內房間外殼）~~：程序化像素繪製（自製，`art_v12_furniture.py` 以 PIL 繪，無授權限制）。**2026-08-19 已刪除**——室內改成整張手繪大圖 `intc_<key>` 後，這批家具拼貼素材全無引用。
 - `assets/props/int_<key>.png`（六棟室內大圖：公會/旅店/神殿/鎮長宅/道具店/鐵匠鋪）：AI 生成素材
   （Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-13，由 /gen-art skill 的 interior type
   「細線稿＋水彩手繪」風生成、色調隨房間氛圍決定）。現行室內為「立繪＋選單式」，build 去底產衍生版 `intc_<key>.png` 當手繪背景註冊進 game.json。
