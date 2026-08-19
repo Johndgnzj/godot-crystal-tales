@@ -17,6 +17,7 @@
     舊場景沒有 metadata 時，改用節點名反推素材 id（節點名＝`Prop_<id 去掉數字等字元>_<序號>`）。
     反推不到或有歧義時**拒絕寫入該張圖**，避免把 prop 靜靜弄丟——先重生成一次補上 metadata 即可。
   - cell 由節點座標反推：`c = x/32 - w/2`、`r = y/32 - h`（build_scenes.gd 擺放公式的逆運算）。
+  - **不寫 footprint**：那是素材層級規格，真相在素材庫 `meta.json`（校正一次、所有地圖生效）。
   - 掛在 `GroundProps` 但素材庫沒標 `layer:"ground"`（或反之）時，在該筆 prop 寫明 `layer` 覆寫。
   - 場景中被刪掉的 prop 會一併從 map-def 移除；帶 metadata 的新增節點會被收進來。
 """
@@ -146,7 +147,7 @@ def sync_scene(path: Path, mapdef: dict, catalog: dict, write: bool):
             fp = tuple(item["footprint"]) if item else (1, 1)
         c, r = to_cell(p["pos"], fp)
         rec = {"id": pid, "type": ptype or (item["type"] if item else "structure"),
-               "cell": [c, r], "footprint": [fp[0], fp[1]], "anchor": "bottom_center"}
+               "cell": [c, r], "anchor": "bottom_center"}          # footprint 不寫：素材層級規格，真相在 meta.json
         want_ground = p["parent"] == "GroundProps"
         default_ground = bool(item and item.get("layer") == "ground")
         if want_ground != default_ground:                                  # 與素材庫預設不同才寫覆寫

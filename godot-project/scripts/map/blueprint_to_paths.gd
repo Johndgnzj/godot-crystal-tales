@@ -8,7 +8,8 @@ extends SceneTree
 ## 地格語意讀 assets-source/map/terrain_palette.json：walkable=false 的 code（河/牆/山壁/森林/空）＝擋、不刷；
 ## 其餘 code 當可走地面 → 刷 PathPaint32。**空（.）＝圖外/未畫＝擋**（要可走就得畫地格）。
 ## **出入口另讀 map 的 entrances 屬性**（獨立於 terrain）：entrances 的 E 格一律當可走開口（刷 PathPaint，覆蓋 terrain 的擋）。
-## **高物件另讀 map 的 props 陣列**：每筆 `{cell:[x,y], footprint:[w,h]}` 的 footprint 預設擋，
+## **高物件另讀 map 的 props 陣列**：每筆 `{cell:[x,y]}` 的 footprint **由素材庫 meta.json 決定**（素材層級、
+## 校正一次所有地圖生效），該範圍預設擋，
 ## 由物件配置與碰撞共用同一份資料；出入口格仍優先可走。
 ## **例外**：素材 `meta.json` 標 `"walkable": true` 的物件不生碰撞（石階、低矮農作、開著的門）——
 ## 否則石階會把礦坑唯一通路封死。判定只看這一個旗標，讀不到 meta 時保守當作會擋。
@@ -110,15 +111,15 @@ func _prop_blocks(props: Variant) -> Dictionary:
 			continue
 		var prop: Dictionary = raw
 		var cell: Variant = prop.get("cell", [])
-		var footprint: Variant = prop.get("footprint", [])
-		if not (cell is Array) or not (footprint is Array) or cell.size() < 2 or footprint.size() < 2:
-			push_warning("props 格式錯誤，略過：" + str(prop.get("id", "(未命名)")))
+		if not (cell is Array) or cell.size() < 2:
+			push_warning("props 缺 cell，略過：" + str(prop.get("id", "(未命名)")))
 			continue
 		var x := int(cell[0])
 		var y := int(cell[1])
-		var w := maxi(1, int(footprint[0]))
-		var h := maxi(1, int(footprint[1]))
-		if _prop_is_walkable(prop, w, h):                   # 石階／低矮農作／開著的門＝踩得過去，不生碰撞
+		var fp := _prop_footprint(prop)                     # 素材庫決定，不看 map-def
+		var w := fp.x
+		var h := fp.y
+		if _prop_is_walkable(prop):                         # 石階／低矮農作／開著的門＝踩得過去，不生碰撞
 			continue
 		for r in range(y, y + h):
 			for c in range(x, x + w):
@@ -127,17 +128,44 @@ func _prop_blocks(props: Variant) -> Dictionary:
 	return out
 
 
-## 物件是否可踩過：真相源＝素材的 meta.json `walkable`（見 docs/pipeline/world_object_art/遮擋物件資產架構.md）。
-## 讀不到 meta 時保守當作會擋，避免把該擋的地方開成洞。
-func _prop_is_walkable(prop: Dictionary, w: int, h: int) -> bool:
+## 素材庫 meta.json＝素材層級規格（footprint／walkable／layer）的真相源。
+## 用 type＋id **掃描** <footprint> 那層目錄找檔——不能拿 map-def 的 footprint 去拼路徑，
+## 否則校正後改了 footprint 就找不到自己的 meta。目錄名只是歸檔，值以 meta.json 為準。
+func _prop_meta(prop: Dictionary) -> Dictionary:
 	var id := str(prop.get("id", ""))
 	if id == "":
-		return false
+		return {}
 	if not _prop_meta_cache.has(id):
-		var rel := "../assets-source/props/world/%s/%dx%d/%s/meta.json" % [
-			str(prop.get("type", "structure")), w, h, id]
-		_prop_meta_cache[id] = _load_json(rel)
-	return bool((_prop_meta_cache[id] as Dictionary).get("walkable", false))
+		var base := ProjectSettings.globalize_path("res://").path_join(
+			"../assets-source/props/world/%s" % str(prop.get("type", "structure")))
+		var meta := {}
+		var da := DirAccess.open(base)
+		if da != null:
+			for sub in da.get_directories():
+				var f := base.path_join("%s/%s/meta.json" % [sub, id])
+				if FileAccess.file_exists(f):
+					var v: Variant = JSON.parse_string(FileAccess.get_file_as_string(f))
+					meta = v if v is Dictionary else {}
+					break
+		_prop_meta_cache[id] = meta
+	return _prop_meta_cache[id]
+
+
+## footprint＝**素材層級**規格：同一素材擺到哪張圖都同一套碰撞（校正一次全域生效）。
+func _prop_footprint(prop: Dictionary) -> Vector2i:
+	var fp: Variant = _prop_meta(prop).get("footprint", null)
+	if fp is Array and (fp as Array).size() >= 2:
+		return Vector2i(maxi(1, int(fp[0])), maxi(1, int(fp[1])))
+	var raw: Variant = prop.get("footprint", [])
+	if raw is Array and (raw as Array).size() >= 2:
+		push_warning("素材庫查無 %s 的 meta.json，改用 map-def 的 footprint" % str(prop.get("id", "")))
+		return Vector2i(maxi(1, int(raw[0])), maxi(1, int(raw[1])))
+	return Vector2i(1, 1)
+
+
+## 物件是否可踩過：真相源＝素材的 meta.json `walkable`。讀不到時保守當作會擋。
+func _prop_is_walkable(prop: Dictionary) -> bool:
+	return bool(_prop_meta(prop).get("walkable", false))
 
 
 func _blocked_codes() -> Dictionary:

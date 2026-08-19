@@ -612,18 +612,18 @@ func _add_world_props(root: Node, ysort: Node, ground_props: Node, raw_props: Va
 			continue
 		var prop: Dictionary = raw
 		var cell: Variant = prop.get("cell", [])
-		var footprint: Variant = prop.get("footprint", [])
-		if not (cell is Array) or not (footprint is Array) or cell.size() < 2 or footprint.size() < 2:
-			push_warning("props[%d] 缺 cell 或 footprint，略過" % i)
+		if not (cell is Array) or cell.size() < 2:
+			push_warning("props[%d] 缺 cell，略過" % i)
 			continue
-		var w := maxi(1, int(footprint[0]))
-		var h := maxi(1, int(footprint[1]))
+		var fp := _prop_footprint(prop)              # 素材庫決定，不看 map-def
+		var w := fp.x
+		var h := fp.y
 		var asset_path := _prop_asset_path(prop, w, h)
 		var tex := load(asset_path) as Texture2D
 		if tex == null:
 			_report["props"].append("略過 %s（尚無素材 %s）" % [prop.get("id", "(未命名)"), asset_path])
 			continue
-		var is_ground: bool = _prop_layer(prop, w, h) == "ground"
+		var is_ground: bool = _prop_layer(prop) == "ground"
 		var holder := Node2D.new()
 		holder.name = "Prop_%s_%d" % [_node_safe_name(str(prop.get("id", "world"))), i]
 		# 身分標記：供 tools/scene_props_sync.py 把編輯器手調的位置寫回 map-def（節點名會被 _node_safe_name
@@ -645,34 +645,64 @@ func _add_world_props(root: Node, ysort: Node, ground_props: Node, raw_props: Va
 		_report["props"].append("%s @ [%d,%d] %dx%d%s" % [prop.get("id", "(未命名)"), int(cell[0]), int(cell[1]), w, h, tag])
 
 
-var _prop_meta_cache := {}
+var _prop_meta_cache := {}                # id → {"meta": Dictionary, "dir": String}
+
+
+## 素材庫 meta.json＝素材層級規格（footprint／walkable／layer）的真相源。
+## 用 type＋id **掃描** <footprint> 那層目錄找檔——不能反過來拿 map-def 的 footprint 去拼路徑，
+## 否則校正後改了 footprint 就再也找不到自己的 meta。目錄名只是歸檔，值以 meta.json 為準。
+func _prop_meta(prop: Dictionary) -> Dictionary:
+	var id := str(prop.get("id", ""))
+	if id == "":
+		return {}
+	if not _prop_meta_cache.has(id):
+		var base := ProjectSettings.globalize_path("res://").path_join(
+			"../assets-source/props/world/%s" % str(prop.get("type", "structure")))
+		var found := {"meta": {}, "dir": ""}
+		var da := DirAccess.open(base)
+		if da != null:
+			for sub in da.get_directories():
+				var f := base.path_join("%s/%s/meta.json" % [sub, id])
+				if FileAccess.file_exists(f):
+					var v: Variant = JSON.parse_string(FileAccess.get_file_as_string(f))
+					found = {"meta": (v if v is Dictionary else {}), "dir": sub}
+					break
+		_prop_meta_cache[id] = found
+	return _prop_meta_cache[id]["meta"]
+
+
+## footprint＝**素材層級**規格：同一素材擺到哪張圖都是同一套碰撞（校正一次全域生效）。
+## map-def 不再逐筆存；只有素材庫查不到時才退回用 map-def 那份。
+func _prop_footprint(prop: Dictionary) -> Vector2i:
+	var fp: Variant = _prop_meta(prop).get("footprint", null)
+	if fp is Array and (fp as Array).size() >= 2:
+		return Vector2i(maxi(1, int(fp[0])), maxi(1, int(fp[1])))
+	var raw: Variant = prop.get("footprint", [])
+	if raw is Array and (raw as Array).size() >= 2:
+		push_warning("素材庫查無 %s 的 meta.json，改用 map-def 的 footprint" % str(prop.get("id", "")))
+		return Vector2i(maxi(1, int(raw[0])), maxi(1, int(raw[1])))
+	push_warning("無法決定 %s 的 footprint，當 1x1" % str(prop.get("id", "")))
+	return Vector2i(1, 1)
 
 
 ## 素材的擺放層：`"ground"`＝平貼地面、掛 GroundProps 不進 YSort；缺欄＝`"object"`（一般高物件）。
-## 讀素材庫 meta.json（與 blueprint_to_paths.gd 的 walkable 同一份真相源），map-def 可用 layer 欄覆寫。
-func _prop_layer(prop: Dictionary, w: int, h: int) -> String:
+func _prop_layer(prop: Dictionary) -> String:
 	var override := str(prop.get("layer", ""))
 	if override != "":
 		return override
-	var id := str(prop.get("id", ""))
-	if id == "":
-		return "object"
-	if not _prop_meta_cache.has(id):
-		var rel := "../assets-source/props/world/%s/%dx%d/%s/meta.json" % [
-			str(prop.get("type", "structure")), w, h, id]
-		var abs_path := ProjectSettings.globalize_path("res://").path_join(rel)
-		var meta: Variant = null
-		if FileAccess.file_exists(abs_path):
-			meta = JSON.parse_string(FileAccess.get_file_as_string(abs_path))
-		_prop_meta_cache[id] = meta if meta is Dictionary else {}
-	return str((_prop_meta_cache[id] as Dictionary).get("layer", "object"))
+	return str(_prop_meta(prop).get("layer", "object"))
 
 
 func _prop_asset_path(prop: Dictionary, w: int, h: int) -> String:
 	var override := str(prop.get("asset", ""))
 	if override != "":
 		return override if override.begins_with("res://") else "res://assets/props/world/" + override
-	return "res://assets/props/world/%s/%dx%d/%s.png" % [str(prop.get("type", "structure")), w, h, str(prop.get("id", ""))]
+	var id := str(prop.get("id", ""))
+	_prop_meta(prop)                                 # 確保快取有值（順便拿到實際歸檔目錄）
+	var dir := str(_prop_meta_cache.get(id, {}).get("dir", ""))
+	if dir == "":
+		dir = "%dx%d" % [w, h]                       # 素材庫查不到就照 footprint 推（舊行為）
+	return "res://assets/props/world/%s/%s/%s.png" % [str(prop.get("type", "structure")), dir, id]
 
 
 func _node_safe_name(value: String) -> String:
