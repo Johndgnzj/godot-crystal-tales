@@ -1487,6 +1487,7 @@
       "file_prefix": "nfr",
       "scene_prefix": "NFR",
       "grid_size": 32,
+      "note": "產圖用氛圍／色調（c~i 必須逐字沿用，風格一致性靠這段）：明亮溫暖的春日草原；黃綠色草地散布細碎白色與淡紫野花，泥路為暖土黃並帶淺褐邊緣，岩壁為帶青的灰褐；柔和水彩筆觸與細膩顆粒質感，光線均勻、無長影，整體乾淨明快不灰暗。／畫風＝手繪水彩插畫，非像素藝術（模板見 docs/pipeline/地圖產圖流程.md v1.2）。",
       "maps": {
         "a": {
           "kind": "other",
@@ -1754,6 +1755,62 @@
             "........................................",
             "........................................",
             "..............................EEEEE....."
+          ],
+          "props": [
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                34,
+                15
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                11,
+                16
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                22,
+                18
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                32,
+                27
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                4,
+                30
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                21,
+                34
+              ],
+              "anchor": "bottom_center"
+            }
           ]
         },
         "c": {

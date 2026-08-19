@@ -58,6 +58,9 @@ const SCENE_PATHS := {
 	"NMD": "res://scenes/world/painted/nm_d.tscn",
 	"NME": "res://scenes/world/painted/nm_e.tscn",
 	"NMF": "res://scenes/world/painted/nm_f.tscn",
+	# M5 通往休斯的路：手繪畫面地圖
+	"NFRA": "res://scenes/world/painted/nfr_a.tscn",
+	"NFRB": "res://scenes/world/painted/nfr_b.tscn",
 	# M4 東之森深處：手繪畫面地圖（由 scripts/map/build_scenes.gd 依 map-def.json 生成）
 	"EFDA": "res://scenes/world/painted/efd_a.tscn",
 	"EFDB": "res://scenes/world/painted/efd_b.tscn",

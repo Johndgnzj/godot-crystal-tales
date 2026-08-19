@@ -152,6 +152,8 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
   AI 生成素材；M1 芳蕾鎮手繪畫面地圖。2026-07-20 已由 Godot runtime 的無箭頭版本回存為原圖；舊的含箭頭錯誤版本（1254）於 2026-07-21 統一命名時移至 `assets-source/map/floret/_backup/floret-town-1254-old.png`，不作為來源圖使用。2026-07-29 依 `map-def.json` 的 `M1/floret_v2` 40×40 地形藍圖重製，以 John 驗收的明亮像素手繪風格整合北側柱狀岩壁、正式礦山入口與已核可橡樹／松樹物件的森林外觀；OpenAI 內建 imagegen 生成，提示詞作者 John／協作 Agent。
 - `assets/map/new_floret_road/nfr_a.png`（素材源＝`assets-source/map/new_floret_road/nfr_a.png`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5「通往大都市的路」a 的草原手繪背景。已依 John 確認的 M1 北口、NFR-b 東口、NFR-d 南口 Y 字路徑配置繪製；同日將不可通行河流固定於左側邊界，未加橋或可涉水處。替換前版本保留於 `assets-source/map/new_floret_road/_backup/nfr_a_before_river-2026-07-24.png`；正式圖已機械縮放為 1280×1280，以對齊 32px 格。
+- `assets/map/new_floret_road/nfr_b.png`（素材源＝`assets-source/map/new_floret_road/nfr_b.png`）：
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-08-19）；M5「通往休斯的路」b 的春日草原地圖。John 核可畫風與岩壁配置後，僅將泥路的階梯狀邊緣修為自然曲線；正式圖機械縮放為 1280×1280，以對齊 32px 地格與既有 terrain／entrances 藍圖。
 - `assets/map/calib/calib_a.png`：
   **非美術素材**——由 `tools/`(PIL) 程式生成的 32px 棋盤底圖（每 5 格粗線＋座標刻度），供 MZ 碰撞校正場實機判讀格線用，無第三方素材、無授權問題。
 - `assets/props/m5_tree.png`（素材源＝`assets-source/props/m5_tree/m5_tree_{raw,alpha}.png`）：
