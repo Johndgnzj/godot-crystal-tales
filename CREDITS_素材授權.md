@@ -233,7 +233,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/ui/joybase/joyknob/btn_a/btn_menu/btn_back/pad_*/btn_s*`（觸控虛擬搖桿與按鈕）：
   程序化繪製（自製，build_cq2.py 內以 PIL 繪；力/敏/智 字用系統字體 STHeiti 烘入）。
 - 地牢地板圖磚（gravel 遇敵/cavedark，art_v2.py toroidal wrap_dither 無縫重繪）：自製像素，無授權限制。
-- **地牢主地板（rockfloor/cavefloor）與氛圍裝飾**（骷髏/顱堆/骨散/蜘蛛網/裂縫 `assets/props/dun_*.png`）：[**[LPC] Dungeon Elements**](https://opengameart.org/content/lpc-dungeon-elements)（`dungeonex.png` 的 cobblestone 與道具）—— CC-BY 4.0/3.0 / GPL / OGA-BY 3.0 —— Sharm（graphic artist）＋貢獻者。cobblestone 經 art_v2.py 去飽和套礦坑/洞穴灰階；原表存 `tools/lpc-dungeon/`。
+- **地牢主地板（rockfloor/cavefloor）與氛圍裝飾**（骷髏/顱堆/骨散/蜘蛛網/裂縫 `assets/props/dun_*.png`；**2026-08-19 隨舊 tile 場景 cave/mine 刪除，連同 `cavemouth`／`rubble`／`stal_*`**）：[**[LPC] Dungeon Elements**](https://opengameart.org/content/lpc-dungeon-elements)（`dungeonex.png` 的 cobblestone 與道具）—— CC-BY 4.0/3.0 / GPL / OGA-BY 3.0 —— Sharm（graphic artist）＋貢獻者。cobblestone 經 art_v2.py 去飽和套礦坑/洞穴灰階；原表存 `tools/lpc-dungeon/`。
 ## 敵人戰鬥圖（全部 LPC 重製，2026-07-12；取代原 16px 商店圖，來源 `assets/battle/lpc_src/`）
 
 **人形怪**（哥布林/獸人/哥布林頭目/骷髏/死靈術士/食人魔）：LPC 角色產生器圖層合成（`art_v8_foes.py`：body＋怪物頭＋衣物染色）。授權 **CC-BY-SA 3.0 / GPL 3.0**（同主角，LPC 貢獻者群）。
