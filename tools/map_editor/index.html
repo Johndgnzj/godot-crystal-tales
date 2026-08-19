@@ -460,7 +460,9 @@ function propsSvg(m){                                          // 高物件配�
       img='<image href="/assets/'+(item.render||item.preview)+'" x="'+((c+w/2)*TILE-cw/2)+'" y="'+((r+h)*TILE-ch)+'" width="'+cw+'" height="'+ch+'" opacity=".75" preserveAspectRatio="xMidYMax meet"/>';}
     const on=(i===S.propSel);
     const tiny=(w*h<=2);                                        // 小物件：編號縮小並壓在格底，別蓋住物件本體
-    s+='<g class="pprop">'+img+'<rect x="'+(c*TILE+2)+'" y="'+(r*TILE+2)+'" width="'+(w*TILE-4)+'" height="'+(h*TILE-4)+'" rx="4" fill="#a96eea" fill-opacity="'+(on?".3":".18")+'" stroke="'+(on?"#ffe066":"#d5a8ff")+'" stroke-width="'+(on?3:2)+'" vector-effect="non-scaling-stroke"/><text x="'+((c+w/2)*TILE)+'" y="'+(tiny?(r+h)*TILE-3:(r+h/2)*TILE)+'" text-anchor="middle" dominant-baseline="'+(tiny?"auto":"middle")+'" fill="#fff" font-size="'+(tiny?9:12)+'" stroke="#3d2357" stroke-width="3" paint-order="stroke">#'+(i+1)+(on?" "+esc(p.id||""):"")+'</text></g>';});   // 密集小物件只標編號，全名留給選取中的那個
+    const blocks=propBlocks(p);                                 // 擋人＝紫實框（會產生碰撞）／不擋人＝綠虛框（踩得過去）
+    const dash=blocks?"":' stroke-dasharray="6 4"';
+    s+='<g class="pprop">'+img+'<rect x="'+(c*TILE+2)+'" y="'+(r*TILE+2)+'" width="'+(w*TILE-4)+'" height="'+(h*TILE-4)+'" rx="4" fill="'+(blocks?"#a96eea":"#3fa96e")+'" fill-opacity="'+(on?".3":".18")+'" stroke="'+(on?"#ffe066":(blocks?"#d5a8ff":"#7ee2a8"))+'" stroke-width="'+(on?3:2)+'"'+dash+' vector-effect="non-scaling-stroke"/><text x="'+((c+w/2)*TILE)+'" y="'+(tiny?(r+h)*TILE-3:(r+h/2)*TILE)+'" text-anchor="middle" dominant-baseline="'+(tiny?"auto":"middle")+'" fill="#fff" font-size="'+(tiny?9:12)+'" stroke="#3d2357" stroke-width="3" paint-order="stroke">#'+(i+1)+(blocks?"":"·不擋")+(on?" "+esc(p.id||""):"")+'</text></g>';});   // 密集小物件只標編號，全名留給選取中的那個
   return s;
 }
 function propSizeText(v){return v[0]+"x"+v[1]+" 格";}
@@ -469,6 +471,10 @@ function propSizes(type){return [...new Set(propItems(type).map(p=>p.footprint.j
 function propById(type,size,id){return propItems(type,size).find(p=>p.id===id)||null;}
 function catalogItemForProp(p){const fp=Array.isArray(p.footprint)?p.footprint.join("x"):"";
   return propById(p.type,fp,p.id)||PROP_CATALOG.find(x=>x.id===p.id)||null;}   // footprint 與素材庫不一致時仍靠 id 找到圖，不要靜靜消失
+// 玩法旗標一律**從素材庫 catalog 查**（真相源＝meta.json，GDScript 也直讀那份），不寫進 map-def：
+// walkable=true → blueprint_to_paths.gd 不產生碰撞；layer="ground" → build_scenes.gd 掛 GroundProps 不進 YSort。
+function propBlocks(p){const it=(p&&p.walkable!==undefined)?p:catalogItemForProp(p);return !(it&&it.walkable===true);}
+function propLayer(p){const it=(p&&p.layer!==undefined)?p:catalogItemForProp(p);return (it&&it.layer)||"object";}
 function propPreviewSrc(p){return p?"/assets/"+p.preview:"";}
 function renderPropPicker(m){
   const box=$("#propPicker"); if(!S.paint||!m){box.style.display="none";return;}
@@ -479,7 +485,7 @@ function renderPropPicker(m){
   const sizes=propSizes(pick.type); if(!sizes.includes(pick.size))pick.size=sizes[0];
   const choices=propItems(pick.type,pick.size); if(!choices.some(p=>p.id===pick.id))pick.id=choices[0].id;
   const item=propById(pick.type,pick.size,pick.id), size=item.footprint, img=propPreviewSrc(item);
-  box.innerHTML='<h3>＋ 新增高物件</h3><div class="pickfield"><label>類型</label><select id="pickType">'+types.map(t=>'<option value="'+t+'"'+(t===pick.type?" selected":"")+'>'+t+'｜'+PROP_TYPE_LABEL[t]+'</option>').join("")+'</select></div><div class="pickfield"><label>大小／固定碰撞 footprint</label><select id="pickSize">'+sizes.map(v=>'<option value="'+v+'"'+(v===pick.size?" selected":"")+'>'+propSizeText(v.split("x").map(Number))+'</option>').join("")+'</select></div><div class="pickfield"><label>素材</label><select id="pickAsset">'+choices.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===pick.id?" selected":"")+'>'+esc(p.id)+'</option>').join("")+'</select></div><div id="propPreview" title="按住並拖到藍圖放置"><img src="'+img+'" alt="'+esc(item.id)+'"/><span class="footBadge">碰撞 '+size[0]+' × '+size[1]+' 格</span></div><p class="hint" style="margin:0 0 8px">拖曳預覽到藍圖；放下後可直接拖動紫色框調整位置。尺寸與類型會由素材鎖定。</p><button id="pickClose">完成</button>';
+  box.innerHTML='<h3>＋ 新增高物件</h3><div class="pickfield"><label>類型</label><select id="pickType">'+types.map(t=>'<option value="'+t+'"'+(t===pick.type?" selected":"")+'>'+t+'｜'+PROP_TYPE_LABEL[t]+'</option>').join("")+'</select></div><div class="pickfield"><label>大小／固定碰撞 footprint</label><select id="pickSize">'+sizes.map(v=>'<option value="'+v+'"'+(v===pick.size?" selected":"")+'>'+propSizeText(v.split("x").map(Number))+'</option>').join("")+'</select></div><div class="pickfield"><label>素材</label><select id="pickAsset">'+choices.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===pick.id?" selected":"")+'>'+esc(p.id)+'</option>').join("")+'</select></div><div id="propPreview" title="按住並拖到藍圖放置"><img src="'+img+'" alt="'+esc(item.id)+'"/><span class="footBadge">'+(propBlocks(item)?"碰撞 "+size[0]+" × "+size[1]+" 格":"不擋人・無碰撞")+(propLayer(item)==="ground"?"・地面層":"")+'</span></div><p class="hint" style="margin:0 0 8px">拖曳預覽到藍圖；放下後可直接拖動紫色框調整位置。尺寸與類型會由素材鎖定。</p><button id="pickClose">完成</button>';
   box.style.display="block"; box._pick=pick;
   $("#pickType").onchange=e=>{pick.type=e.target.value;pick.size="";pick.id="";renderPropPicker(m);};
   $("#pickSize").onchange=e=>{pick.size=e.target.value;pick.id="";renderPropPicker(m);};
@@ -883,10 +889,10 @@ function renderInspector(){
   h+=field("boss",'<input type="checkbox" id="f_boss" '+(m.boss?"checked":"")+'>');
   h+='<div style="margin:6px 0"><div style="color:var(--muted);font-size:12px;margin-bottom:3px">設計備註 note<span class="badge" style="margin-left:6px">給 agent 讀・非機器判定</span></div><textarea id="f_note" rows="2" placeholder="地圖設計意圖／任務條件，例：boss 後開放的獎勵捷徑">'+esc(m.note||"")+'</textarea></div>';
   const props=Array.isArray(m.props)?m.props:[];
-  h+='<h3 style="margin-top:14px">高物件配置 <span class="badge">'+props.length+'</span></h3><p class="hint" style="margin:2px 0 7px">cell＝footprint 左上格；碰撞會自動由 footprint 產生。物件以 bottom-center anchor 放進 YSort。</p><div class="exits">';
+  h+='<h3 style="margin-top:14px">高物件配置 <span class="badge">'+props.length+'</span></h3><p class="hint" style="margin:2px 0 7px">cell＝footprint 左上格；碰撞由 footprint 自動產生（紫實框）。素材庫標 <code>walkable:true</code> 者不產生碰撞（綠虛框）、<code>layer:&quot;ground&quot;</code> 者掛 GroundProps 不進 YSort；其餘以 bottom-center anchor 放進 YSort。</p><div class="exits">';
   props.forEach((p,i)=>{const cell=Array.isArray(p.cell)?p.cell:[0,0], fp=Array.isArray(p.footprint)?p.footprint:[1,1], item=catalogItemForProp(p), thumb=item?'<img src="'+propPreviewSrc(item)+'" alt="" style="width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-right:7px">':"";
     h+='<div class="exit'+(i===S.propSel?" propsel":"")+'" data-prop-row="'+i+'"><div class="row"><span class="id">#'+(i+1)+'</span><button class="del" data-prop-del="'+i+'">刪除</button></div>'+
-      '<div class="row" style="align-items:center">'+thumb+'<span><b>'+esc(p.id||"未辨識素材")+'</b><br><small>'+esc(PROP_TYPE_LABEL[p.type]||p.type)+'｜固定 footprint '+fp[0]+' × '+fp[1]+' 格</small></span></div>'+
+      '<div class="row" style="align-items:center">'+thumb+'<span><b>'+esc(p.id||"未辨識素材")+'</b><br><small>'+esc(PROP_TYPE_LABEL[p.type]||p.type)+'｜固定 footprint '+fp[0]+' × '+fp[1]+' 格｜'+(propBlocks(p)?"擋人":"不擋人")+(propLayer(p)==="ground"?"｜地面層":"")+'</small></span></div>'+
       '<div class="row"><label>cell</label><input type="number" min="0" max="39" data-prop-x="'+i+'" value="'+(parseInt(cell[0])||0)+'"> <span>×</span> <input type="number" min="0" max="39" data-prop-y="'+i+'" value="'+(parseInt(cell[1])||0)+'"></div></div>';});
   h+='</div><button id="addProp">＋ 新增高物件</button>';
   h+='<h3 style="margin-top:14px">出入口 <span class="badge">'+Object.keys(m.exits||{}).length+'</span></h3><div class="exits">';

@@ -17,6 +17,9 @@ extends SceneTree
 ##   - 待接整區（裸 Mx）或目標圖未就緒 → 該出口建成 disabled placeholder（enabled=false、無 to_scene）。
 ##   - 受保護場景（Town：含 NPC／門／過場／實例、且已符合 map-def）與既有含實例/Trigger/NPC/門的場景 → 完全不動。
 ##   - map 的 props 陣列可建立透明高物件：位置與 footprint 由同一筆資料定義；碰撞由 blueprint_to_paths.gd 消費。
+##     素材庫 meta.json 標 `layer:"ground"` 者（平貼地面的農作列等）掛進 `GroundProps`＝不參與 YSort、
+##     不會依 y 遮住玩家；其餘（缺欄＝`"object"`）掛進 `YSort` 與玩家一起排序。旗標讀法比照
+##     blueprint_to_paths.gd 的 walkable：直接讀素材庫 meta.json，不經 map-def（改素材不必回編輯器存檔）。
 ##   - 既有場景的 enc_group／cut_on_enter／落點座標／跨區落點名 → 用 SceneState 讀出保留（不硬編碼、不脫勾）。
 ##
 ## 執行：/Applications/Godot.app/Contents/MacOS/Godot --headless -s res://scripts/map/build_scenes.gd --path <godot-project>
@@ -488,11 +491,15 @@ func _build_scene(e: Dictionary) -> void:
 	for rex in e["resolved"]:
 		_add_exit(root, zones, rex)
 
+	var ground_props := Node2D.new()          # layer:"ground" 的 prop：疊在背景上、不進 YSort（不會遮玩家）
+	ground_props.name = "GroundProps"
+	_add(root, ground_props, root)
+
 	var ysort := Node2D.new()
 	ysort.name = "YSort"
 	ysort.y_sort_enabled = true
 	_add(root, ysort, root)
-	_add_world_props(root, ysort, e["map"].get("props", []))
+	_add_world_props(root, ysort, ground_props, e["map"].get("props", []))
 
 	var player := CharacterBody2D.new()
 	player.name = "Player"
@@ -523,7 +530,7 @@ func _build_scene(e: Dictionary) -> void:
 	root.free()
 
 
-func _add_world_props(root: Node, ysort: Node, raw_props: Variant) -> void:
+func _add_world_props(root: Node, ysort: Node, ground_props: Node, raw_props: Variant) -> void:
 	if not (raw_props is Array):
 		return
 	for i in (raw_props as Array).size():
@@ -544,16 +551,41 @@ func _add_world_props(root: Node, ysort: Node, raw_props: Variant) -> void:
 		if tex == null:
 			_report["props"].append("略過 %s（尚無素材 %s）" % [prop.get("id", "(未命名)"), asset_path])
 			continue
+		var is_ground: bool = _prop_layer(prop, w, h) == "ground"
 		var holder := Node2D.new()
 		holder.name = "Prop_%s_%d" % [_node_safe_name(str(prop.get("id", "world"))), i]
 		holder.position = Vector2((float(cell[0]) + float(w) * 0.5) * 32.0, (float(cell[1]) + float(h)) * 32.0)
-		_add(root, holder, ysort)
+		_add(root, holder, ground_props if is_ground else ysort)
 		var sprite := Sprite2D.new()
 		sprite.name = "Sprite"
 		sprite.texture = tex
 		sprite.position = Vector2(0.0, -float(tex.get_height()) * 0.5)
 		_add(root, sprite, holder)
-		_report["props"].append("%s @ [%d,%d] %dx%d" % [prop.get("id", "(未命名)"), int(cell[0]), int(cell[1]), w, h])
+		var tag := "　地面層" if is_ground else ""
+		_report["props"].append("%s @ [%d,%d] %dx%d%s" % [prop.get("id", "(未命名)"), int(cell[0]), int(cell[1]), w, h, tag])
+
+
+var _prop_meta_cache := {}
+
+
+## 素材的擺放層：`"ground"`＝平貼地面、掛 GroundProps 不進 YSort；缺欄＝`"object"`（一般高物件）。
+## 讀素材庫 meta.json（與 blueprint_to_paths.gd 的 walkable 同一份真相源），map-def 可用 layer 欄覆寫。
+func _prop_layer(prop: Dictionary, w: int, h: int) -> String:
+	var override := str(prop.get("layer", ""))
+	if override != "":
+		return override
+	var id := str(prop.get("id", ""))
+	if id == "":
+		return "object"
+	if not _prop_meta_cache.has(id):
+		var rel := "../assets-source/props/world/%s/%dx%d/%s/meta.json" % [
+			str(prop.get("type", "structure")), w, h, id]
+		var abs_path := ProjectSettings.globalize_path("res://").path_join(rel)
+		var meta: Variant = null
+		if FileAccess.file_exists(abs_path):
+			meta = JSON.parse_string(FileAccess.get_file_as_string(abs_path))
+		_prop_meta_cache[id] = meta if meta is Dictionary else {}
+	return str((_prop_meta_cache[id] as Dictionary).get("layer", "object"))
 
 
 func _prop_asset_path(prop: Dictionary, w: int, h: int) -> String:
