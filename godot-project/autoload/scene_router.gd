@@ -39,7 +39,7 @@ signal scene_change_requested(scene_path: String, spawn_id: String)
 const SCENE_PATHS := {
 	"CALA": "res://scenes/world/painted/calib_a.tscn",  # MZ 碰撞校正場（實機走一遍確認擋人範圍；非遊戲內容）
 	"Title": "res://scenes/title/title.tscn",
-	"Town": "res://scenes/world/painted/town.tscn",  # M1 芳蕾鎮手繪版（舊 tile 版封存於 scenes/world/town.tscn）
+	"Town": "res://scenes/world/painted/town.tscn",  # M1 芳蕾鎮手繪版（舊 tile 版已於 2026-08-19 刪除，見 TASKS/13 CH1-15）
 	"Forest": "res://scenes/world/forest.tscn",
 	"Forest2": "res://scenes/world/forest2.tscn",
 	"Mine": "res://scenes/world/mine.tscn",

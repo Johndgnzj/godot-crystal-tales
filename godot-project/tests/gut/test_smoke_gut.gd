@@ -26,7 +26,7 @@ extends GutTest
 const SCENES := {
 	"Title": "res://scenes/title/title.tscn",
 	"Battle": "res://scenes/battle/battle.tscn",
-	"Town": "res://scenes/world/town.tscn",
+	"Town": "res://scenes/world/painted/town.tscn",
 	"Forest": "res://scenes/world/forest.tscn",
 	"Forest2": "res://scenes/world/forest2.tscn",
 	"Mine": "res://scenes/world/mine.tscn",

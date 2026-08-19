@@ -21,9 +21,12 @@ func _run() -> void:
 	_expect(gs.party.size() == flow.START_PARTY.size(),
 		"新遊戲隊伍就緒（%d 人，期望 %d）" % [gs.party.size(), flow.START_PARTY.size()])
 
-	var packed: PackedScene = load("res://scenes/world/town.tscn")
+	# 2026-08-19：改讀 SceneRouter 對照表的 Town（＝手繪版 painted/town.tscn）。
+	# 先前寫死 res://scenes/world/town.tscn＝已封存的舊 tile 版，等於一直在測不是遊戲在跑的那張。
+	var town_path: String = SceneRouter.SCENE_PATHS.get("Town", "")
+	var packed: PackedScene = load(town_path) if town_path != "" else null
 	if packed == null:
-		print("  [FAIL] town.tscn 載入失敗"); _finish(); return
+		print("  [FAIL] Town 場景載入失敗（path=%s）" % town_path); _finish(); return
 	var town: Node = packed.instantiate()
 	if town == null:
 		print("  [FAIL] town 實例化回 null"); _finish(); return
@@ -36,17 +39,12 @@ func _run() -> void:
 	if player != null:
 		var pos: Vector2 = player.global_position
 		_expect(pos != Vector2.ZERO, "玩家有被定位到出生點（pos=%s）" % pos)
-	var tml := town.get_node_or_null("Ground")
-	if tml == null:
-		# TileMapLayer 名稱可能不同，找第一個 TileMapLayer
-		for c in town.get_children():
-			if c is TileMapLayer:
-				tml = c; break
-	if tml != null and tml is TileMapLayer:
-		var cells: int = (tml as TileMapLayer).get_used_cells().size()
-		_expect(cells > 0, "地圖有圖磚（used_cells=%d）" % cells)
-	else:
-		print("  [??]   找不到 TileMapLayer（名稱非 Ground？）")
+	# 手繪地圖沒有圖磚（Ground 是空層、畫面來自 Background 貼圖），改驗這兩樣：
+	var bg := town.get_node_or_null("Background") as Sprite2D
+	_expect(bg != null and bg.texture != null, "Background 有手繪底圖")
+	var col := town.get_node_or_null("CollisionPaint") as TileMapLayer
+	var walls: int = col.get_used_cells().size() if col != null else -1
+	_expect(walls > 0, "碰撞層已導出（CollisionPaint=%d 格）" % walls)
 
 	town.queue_free()
 	_finish()

@@ -213,7 +213,7 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets-source/props/building_ext/ext_*.png`（六棟建築外觀，洋紅底原圖；**2026-08-19 由 `godot-project/assets/props/` 移到素材源**——它是去背前的原圖，不該留在專案產物裡；專案實際使用的是去背版 `extc_*.png`）：AI 生成素材（Gemini gemini-2.5-flash-image，
   提示詞作者 John/協作 Agent，由 /gen-art skill 的 building type 生成）。2026-07-15 重生成為**正面平視、門在正面下緣**的日系像素風（取代原 2026-07-12 的 45° isometric 版，便於在正交地圖擺進入點）。
   2026-07-16 再把公會/旅店/鎮長宅/鐵匠鋪四棟重繪成**「正面朝前＋屋頂從上方可見」的俯視 45° 感**（比照原本就是此風的神殿/道具店，用 gen-art raw type＋以 extc_shrine/extc_shop 當風格參考圖 image-to-image 生成；門仍在正面下緣，不是舊的 isometric 側視）。
-  Godot 端去洋紅底（洋紅特徵 key，非 GDevelop 的 `_clean_ext` 石造重上色）＋裁透明邊產去背版 `extc_*.png`（town.tscn 實際使用；**維持暖色 JRPG 原色**，未套舊灰石調）。
+  Godot 端去洋紅底（洋紅特徵 key，非 GDevelop 的 `_clean_ext` 石造重上色）＋裁透明邊產去背版 `extc_*.png`（舊 tile 版 town.tscn 使用；**維持暖色 JRPG 原色**，未套舊灰石調）。**2026-08-19 隨舊 tile 場景一併刪除**——手繪版芳蕾鎮改用素材庫的 `building_*_floret_a`；原圖仍在素材源可隨時重出去背版。
 - ~~`assets/props/f_*.png`（室內家具）與 `assets/props/int_room_{wood,stone}.png`（室內房間外殼）~~：程序化像素繪製（自製，`art_v12_furniture.py` 以 PIL 繪，無授權限制）。**2026-08-19 已刪除**——室內改成整張手繪大圖 `intc_<key>` 後，這批家具拼貼素材全無引用。
 - `assets/props/int_<key>.png`（六棟室內大圖：公會/旅店/神殿/鎮長宅/道具店/鐵匠鋪）：AI 生成素材
   （Gemini gemini-2.5-flash-image，提示詞作者 John/協作 Agent，2026-07-13，由 /gen-art skill 的 interior type
