@@ -37,6 +37,9 @@ def prop_catalog(assets_root: Path):
                 # 顯示用旗標（真相源＝素材庫 meta.json，GDScript 也直接讀那份，不寫進 map-def）
                 "layer": str(meta.get("layer", "object")),        # "ground"＝平貼地面、build_scenes.gd 掛 GroundProps
                 "walkable": meta.get("walkable", False) is True,  # True＝踩得過去、blueprint_to_paths.gd 不生碰撞
+                # 實際擋人範圍（像素，可細到 16）；預設＝footprint×32。錨點＝footprint 底邊中央。
+                "collision_px": [int(v) for v in meta["collision_px"]] if isinstance(meta.get("collision_px"), list)
+                                else [footprint[0] * 32, footprint[1] * 32],
                 "preview": str(preview.relative_to(assets_root)).replace("\\", "/"),
                 "render": str(render.relative_to(assets_root)).replace("\\", "/"),
             })

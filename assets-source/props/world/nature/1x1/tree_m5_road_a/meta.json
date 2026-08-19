@@ -10,5 +10,9 @@
     230
   ],
   "anchor": "bottom_center",
-  "occludes_player": true
+  "occludes_player": true,
+  "collision_px": [
+    64,
+    32
+  ]
 }

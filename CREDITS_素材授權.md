@@ -273,3 +273,5 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/cg/cg_s1_bear.png`（亞倫救場）、`cg_s3_alan_fall.png`（亞倫斷後）、`cg_s6_curse.png`（黑水晶爆發／瑪琳中咒）、`cg_s6_report.png`（章末床邊）：**Gemini（gemini-2.5-flash-image）** 以 `menuart_alan/ludo/marin.png` 立繪為 `--ref-image` 參考生成，與角色立繪同款動漫賽璐璐風；經 John 驗收（2026-08-16）後去邊裁切 16:9 整合。原圖保存於 `assets-source/cg/`；提示詞作者 John／協作 Agent。規格見 `docs/design/事件演出規格.md`，由過場 `.tres` 的 `image` 欄位載入（dialogue_box 事件 CG 圖層顯示）。
 
 - **異變的魔影戰鬥圖重製（2026-08-16）**：`assets/battle/foe_demon_0..3.png`（91×128 透明四幀 idle 呼吸）為 **Gemini（gemini-2.5-flash-image）** image-to-image 生成（以 `portrait_shadow_demon.png` 為本體參考、依 `docs/pipeline/battle_art/prompts/descriptions/shadow_demon.md` v2 描述），經 John 驗收（seed D 案）後以色距鍵去背＋背景反混＋despill 產出；呼吸幀＝上身羽化位移＋煙尾底邊釘死＋胸口光核強弱（非整體縮放）。seed 原檔與四幀保存於 `assets-source/role/enemies/shadow_demon/`（`battle_seed_raw/alpha.png`、`combat_0..3.png`）；**匯入日起即錯置的舊 `foe_demon_*`（62×82 ＋ 36×40 兩套混用）備份於同目錄 `legacy/`**。提示詞作者 John／協作 Agent。
+
+- `assets/props/world/street/1x1/street_lamp_iron_a.png`、`assets/props/world/nature/1x1/scarecrow_field_a.png` **2026-08-19 微調**：John 實機校正後，於圖底各補 2px 透明容錯（僅加透明邊，未改繪製內容），畫布分別成為 22×103、65×98。

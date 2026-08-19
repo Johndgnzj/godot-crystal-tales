@@ -11,6 +11,10 @@ extends SceneTree
 ## **高物件另讀 map 的 props 陣列**：每筆 `{cell:[x,y]}` 的 footprint **由素材庫 meta.json 決定**（素材層級、
 ## 校正一次所有地圖生效），該範圍預設擋，
 ## 由物件配置與碰撞共用同一份資料；出入口格仍優先可走。
+## **擋人範圍可細到 16px**：素材 `meta.json` 的 `collision_px:[w,h]`（預設＝footprint×32）以 footprint
+## 底邊中央為錨點。整格被蓋滿→該格不刷 PathPaint32（全擋）；只蓋到一部分→改刷 PathPaint16 於仍可走的
+## 子格（invert_paths 會把未刷的子格做成 16px 牆）。路燈／稻草人這類「只擋腳下半格」就靠這個表達。
+##
 ## **例外**：素材 `meta.json` 標 `"walkable": true` 的物件不生碰撞（石階、低矮農作、開著的門）——
 ## 否則石階會把礦坑唯一通路封死。判定只看這一個旗標，讀不到 meta 時保守當作會擋。
 ##
@@ -77,11 +81,18 @@ func _apply(scene_name: String, terrain: Array, entrances: Variant, props: Varia
 		push_error("%s 缺 PathPaint32 層" % path)
 		root.free()
 		return false
+	var p16 := root.get_node_or_null("PathPaint16") as TileMapLayer
+	if p16 == null:
+		push_error("%s 缺 PathPaint16 層" % path)
+		root.free()
+		return false
 	p32.clear()                                             # 藍圖為可走區的新真相源，重寫整層
+	p16.clear()
 	var has_ent: bool = entrances is Array
-	var prop_blocks := _prop_blocks(props)
+	var prop_subs := _prop_block_subs(props)
 	var walk := 0
 	var block := 0
+	var partial := 0
 	for r in mini(terrain.size(), N32):
 		var row := str(terrain[r])
 		var erow := ""
@@ -89,20 +100,35 @@ func _apply(scene_name: String, terrain: Array, entrances: Variant, props: Varia
 			erow = str((entrances as Array)[r])
 		for c in mini(row.length(), N32):
 			var is_ent: bool = c < erow.length() and erow[c] == "E"   # 出入口格＝一律可走開口（覆蓋 terrain 的擋）
-			if not is_ent and (blocked.has(row[c]) or prop_blocks.has(Vector2i(c, r))):
+			if not is_ent and blocked.has(row[c]):
 				block += 1
 				continue
-			p32.set_cell(Vector2i(c, r), PATH_SRC, PATH_ATLAS)   # 可走(或出入口) → 刷 PathPaint32
-			walk += 1
+			var free_subs: Array[Vector2i] = []
+			if not is_ent:                                  # 出入口不受高物件影響
+				for s16 in _subs(Vector2i(c, r)):
+					if not prop_subs.has(s16):
+						free_subs.append(s16)
+			if is_ent or free_subs.size() == 4:
+				p32.set_cell(Vector2i(c, r), PATH_SRC, PATH_ATLAS)   # 整格可走 → PathPaint32
+				walk += 1
+			elif free_subs.is_empty():
+				block += 1                                  # 整格被高物件蓋滿
+			else:
+				for s16 in free_subs:                       # 部分可走 → 只刷剩下的 16 子格
+					p16.set_cell(s16, PATH_SRC, PATH_ATLAS)
+				partial += 1
 	var packed := PackedScene.new()
 	if packed.pack(root) == OK:
 		ResourceSaver.save(packed, path)
-	print("=== %s ===  可走 %d 格 / 擋 %d 格（高物件 %d）→ 已寫 PathPaint32" % [scene_name, walk, block, prop_blocks.size()])
+	print("=== %s ===  整格可走 %d / 部分可走 %d / 擋 %d（高物件佔 %d 個 16 子格）→ 已寫 PathPaint32+16"
+		% [scene_name, walk, partial, block, prop_subs.size()])
 	root.free()
 	return true
 
 
-func _prop_blocks(props: Variant) -> Dictionary:
+## 高物件的擋人範圍，以 **16px 子格** 表示（Vector2i 為 16 單位座標）。
+## 錨點＝footprint 底邊中央；範圍＝meta 的 collision_px，預設 footprint×32。
+func _prop_block_subs(props: Variant) -> Dictionary:
 	var out := {}
 	if not (props is Array):
 		return out
@@ -114,18 +140,35 @@ func _prop_blocks(props: Variant) -> Dictionary:
 		if not (cell is Array) or cell.size() < 2:
 			push_warning("props 缺 cell，略過：" + str(prop.get("id", "(未命名)")))
 			continue
-		var x := int(cell[0])
-		var y := int(cell[1])
-		var fp := _prop_footprint(prop)                     # 素材庫決定，不看 map-def
-		var w := fp.x
-		var h := fp.y
-		if _prop_is_walkable(prop):                         # 石階／低矮農作／開著的門＝踩得過去，不生碰撞
+		if _prop_is_walkable(prop):                         # 石階／低矮農作／開著的門＝踩得過去
 			continue
-		for r in range(y, y + h):
-			for c in range(x, x + w):
-				if c >= 0 and c < N32 and r >= 0 and r < N32:
-					out[Vector2i(c, r)] = true
+		var fp := _prop_footprint(prop)
+		var box := _prop_collision_px(prop, fp)
+		var cx := (float(cell[0]) + float(fp.x) * 0.5) * 32.0    # footprint 底邊中央（像素）
+		var by := (float(cell[1]) + float(fp.y)) * 32.0
+		var x0 := int(floor((cx - float(box.x) * 0.5) / 16.0))
+		var x1 := int(ceil((cx + float(box.x) * 0.5) / 16.0))
+		var y0 := int(floor((by - float(box.y)) / 16.0))
+		var y1 := int(ceil(by / 16.0))
+		for sy in range(y0, y1):
+			for sx in range(x0, x1):
+				if sx >= 0 and sx < N32 * 2 and sy >= 0 and sy < N32 * 2:
+					out[Vector2i(sx, sy)] = true
 	return out
+
+
+## 一個 32 格的四個 16 子格（座標為 16 單位；與 invert_paths.gd 的 _subs 慣例一致）。
+func _subs(c: Vector2i) -> Array[Vector2i]:
+	return [Vector2i(c.x * 2, c.y * 2), Vector2i(c.x * 2 + 1, c.y * 2),
+		Vector2i(c.x * 2, c.y * 2 + 1), Vector2i(c.x * 2 + 1, c.y * 2 + 1)]
+
+
+## 擋人範圍（像素）：meta 的 collision_px 優先，否則 footprint×32。
+func _prop_collision_px(prop: Dictionary, fp: Vector2i) -> Vector2i:
+	var v: Variant = _prop_meta(prop).get("collision_px", null)
+	if v is Array and (v as Array).size() >= 2:
+		return Vector2i(maxi(16, int(v[0])), maxi(16, int(v[1])))
+	return Vector2i(fp.x * 32, fp.y * 32)
 
 
 ## 素材庫 meta.json＝素材層級規格（footprint／walkable／layer）的真相源。
