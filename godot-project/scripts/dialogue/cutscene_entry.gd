@@ -14,7 +14,7 @@ extends Resource
 @export var lines: Array[CutsceneLine] = []   ## 有序台詞；元素 speaker 空＝旁白
 @export var battle: String = ""               ## 空字串＝播完不觸發戰鬥；見 encounter id
 @export var transfer: PackedStringArray = PackedStringArray()  ## [to_scene, spawn_id]，空＝不轉場
-@export var setstep: int = -1                 ## -1＝不改 step；>=0 時播完寫入 GameState.flags.step
+@export var setstep: int = -1                 ## -1＝不改 step；>=0 時播完寫入 GameState.flags["ch1_step"]（GDevelop 原名 step）
 @export var party: PackedStringArray = PackedStringArray()     ## 播完生效的隊伍組成，空＝不改隊伍
 @export var bgm: String = ""                  ## 空＝不動 BGM；非空＝過場開始時切到此 BGM（如 necro 對話）
 

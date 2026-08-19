@@ -10,6 +10,15 @@ extends RefCounted
 ## req 格式：`<flag><==|>=><num>`（見 build_cq2.py titleEarned() L1922-1928）。
 ## 註：原版的序章進度旗標叫 `step`（build_cq2.py L1761 `f4.step=c.setstep`），Godot 端統一改名為
 ## `ch1_step`（game_flow.gd／dialogue_system.gd），故 t_rookie 的 req 對應改寫成 `ch1_step>=3`。
+##
+## ⚠ 可達性現況（2026-08-19 追查，**條件本身沒錯，是內容還沒接上**，故未改動 req）：
+##   可達：t_rookie（小節1 `s1_bear` setstep=3）、t_f（小節4 action=register）。
+##   不可達：t_gob/t_pride 需 `ch1`，但 action `ch1_take`/`ch1_reward` 沒有任何對話資料引用，
+##           且新主線 boss 是 `eforest3_boss`（不寫 ch1），舊 forest2.tscn 的 BossMark 又要 `ch1==1`。
+##           t_miner 需 `ch2`，同理卡在 `ch2_take` 未被引用 → mine.tscn BossMark `ch2==1` 不成立。
+##           t_relic 需 `relic`，`relic_turnin` 未被引用、撿頭盔的 Pickup 又要 `ch2>=1`。
+##   新六小節主線只推進 `ch1_step` 0→13（見 docs/story/第一章任務攻略.md 三、旗標總表）。
+##   等第二章施工（TASKS/16）接上再回頭處理。
 
 const ALL: Array = [
 	{"id": "t_rookie", "name": "礦山生還者", "req": "ch1_step>=3", "desc": "歷經礦山的意外而歸來", "hint": "完成序章"},

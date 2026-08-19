@@ -14,8 +14,12 @@ func _run() -> void:
 	await process_frame
 	print("=== check_enter_town ===")
 	var gs: Node = root.get_node("/root/GameState")
-	load("res://scripts/game_flow.gd").new_game()
-	_expect(gs.party.size() == 2, "新遊戲隊伍就緒")
+	var flow: GDScript = load("res://scripts/game_flow.gd")   # runtime load：autoload 註冊後才編譯
+	flow.new_game()
+	# 2026-08-19：第一章重構後開場只有路德（亞倫小節3 guest 入隊、瑪琳小節4 入隊，見 TASKS/13 附錄A）；
+	# 對 flow.START_PARTY.size() 斷言，之後起始隊伍再改也不用回頭修這裡。
+	_expect(gs.party.size() == flow.START_PARTY.size(),
+		"新遊戲隊伍就緒（%d 人，期望 %d）" % [gs.party.size(), flow.START_PARTY.size()])
 
 	var packed: PackedScene = load("res://scenes/world/town.tscn")
 	if packed == null:

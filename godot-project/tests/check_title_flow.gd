@@ -26,7 +26,10 @@ func _run() -> void:
 
 	var cur: Node = current_scene
 	_expect(cur != null and cur.name == "Town", "已切到 Town（current_scene=%s）" % (cur.name if cur else "<null>"))
-	_expect(gs.party.size() == 2, "進城後隊伍就緒")
+	var flow: GDScript = load("res://scripts/game_flow.gd")
+	# 2026-08-19：同 check_enter_town，開場只有路德（見 TASKS/13 附錄A）；對 START_PARTY 斷言避免再度過時。
+	_expect(gs.party.size() == flow.START_PARTY.size(),
+		"進城後隊伍就緒（%d 人，期望 %d）" % [gs.party.size(), flow.START_PARTY.size()])
 	if cur != null:
 		var player: Node = cur.get_node_or_null("YSort/Player")
 		_expect(player != null and player.global_position != Vector2.ZERO,
