@@ -1909,6 +1909,86 @@
             "........................................",
             "........................................",
             "................EEEEEEE................."
+          ],
+          "props": [
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                5,
+                1
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                24,
+                4
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                11,
+                17
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                31,
+                12
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                7,
+                32
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                36,
+                29
+              ],
+              "footprint": [
+                1,
+                1
+              ],
+              "anchor": "bottom_center"
+            }
           ]
         },
         "b": {

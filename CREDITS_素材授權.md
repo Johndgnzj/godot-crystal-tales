@@ -153,7 +153,9 @@ LPC 角色產生器圖層合成（CC-BY-SA/GPL），圖層配方參考 overworld
 - `assets/map/new_floret_road/nfr_a.png`（素材源＝`assets-source/map/new_floret_road/nfr_a.png`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5「通往大都市的路」a 的草原手繪背景。已依 John 確認的 M1 北口、NFR-b 東口、NFR-d 南口 Y 字路徑配置繪製；同日將不可通行河流固定於左側邊界，未加橋或可涉水處。替換前版本保留於 `assets-source/map/new_floret_road/_backup/nfr_a_before_river-2026-07-24.png`；正式圖已機械縮放為 1280×1280，以對齊 32px 格。
 - `assets/props/m5_tree.png`（素材源＝`assets-source/props/m5_tree/m5_tree_{raw,alpha}.png`）：
-  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5-a 用的俯視手繪闊葉樹。John 驗收後以洋紅鍵去背，原始鍵圖與 alpha 版皆保留；正式場景以六個縮放／鏡像實例使用，碰撞只放在樹幹腳點，樹根節點直接位於 `YSort`，以腳點 y 座標決定角色遮擋。
+  OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-24）；M5-a 用的俯視手繪闊葉樹。John 驗收後以洋紅鍵去背，原始鍵圖與 alpha 版皆保留。**2026-08-19 已改由素材庫項目 `tree_m5_road_a` 取代**（見下一則），本檔在專案內已無引用、僅留作原始出處。
+- `assets/props/world/nature/1x1/tree_m5_road_a.png`（素材源＝`assets-source/props/world/nature/1x1/tree_m5_road_a/`）：
+  同上 `m5_tree` 的 alpha 版整理入庫（2026-08-19，John 驗收）；裁到 alpha 內容框讓樹幹底貼齊圖底（比照其他高物件的 bottom-center anchor 慣例），縮為 201×230（0.21 倍，落在原本六個手工實例的 0.20~0.22 之間）。1×1 footprint＝只擋樹幹腳點；原始 1024×1536 raw/alpha 保留為 `design_anchor_{raw,alpha}.png`。M5-a 六棵樹自此改由 `map-def.json` 的 `props` 驅動，位置與碰撞單一真相，不再是手工節點。
 - `assets/props/world/architecture/6x2/building_inn_floret_a.png`（素材源＝`assets-source/props/world/architecture/6x2/building_inn_floret_a/`）：
   OpenAI 內建 imagegen 生成（提示詞作者 John／協作 Agent，2026-07-26）；芳蕾鎮可重用旅店高物件。經 John 驗收後以洋紅鍵去背、正規化為 336×224 RGBA PNG；6×2 footprint（2026-07-28 由 6×4 縮為只擋建築底部），正面平行地圖底邊、入口貼齊底邊，並以 bottom-center anchor 在 `YSort` 處理角色遮擋。
 - `assets/props/world/architecture/{6x2/building_guild_floret_a,3x2/building_shrine_floret_a,5x2/building_mayor_floret_a,5x2/building_shop_floret_a,5x2/building_smithy_floret_a}.png`（素材源＝對應 `assets-source/props/world/architecture/<footprint>/<id>/`）：
