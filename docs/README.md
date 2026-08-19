@@ -51,10 +51,10 @@
 | [pipeline/battle_art/](pipeline/battle_art/workflow.md) | 戰鬥立繪**產線**（唯一入口，`gen-battle-prompt` skill 引用）：G0～G7 分階段 Gate（Seed 鍵色靜態→Seed Alpha→動作首幀→Strip 鍵色靜態→Alpha 靜態→GIF→整合）＋checklist 驗收＋`prompts/`（我方正式 `battle_role_hd_pixel_v5`、actions／sections／presets／descriptions）；待辦總表見 [`TASKS/17_戰鬥角色美術統一.md`](../TASKS/17_戰鬥角色美術統一.md) |
 | [pipeline/戰鬥背景流程.md](pipeline/戰鬥背景流程.md) | 戰鬥背景的產圖→預覽驗收→整合流程，含固定 prompt 核心與地面／腳點檢查清單 |
 | [pipeline/world_object_art/](pipeline/world_object_art/workflow.md) | 地圖互動物件**與道具/裝備圖示產線**：獨立 design anchor→狀態圖→固定命名→整合；類型 `chest`／`quest_item`／`icon`（圖示規格見 design/道具武器設計.md §三）|
-| [pipeline/world_object_art/遮擋物件資產架構.md](pipeline/world_object_art/遮擋物件資產架構.md) | 城鎮／野外高物件：滿版 Ground、透明遮擋物件、`YSort` 與類型→footprint 素材歸檔 |
+| [pipeline/world_object_art/遮擋物件資產架構.md](pipeline/world_object_art/遮擋物件資產架構.md) | 城鎮／野外高物件：滿版 Ground、透明遮擋物件、`YSort`／`GroundProps` 分層與類型→footprint 素材歸檔；`walkable`／`layer` 旗標語意 |
 | [pipeline/世界立繪流程.md](pipeline/世界立繪流程.md) | 世界 Sprite **W0～W7 產線**：需求→D1→D2→D3→完整 strip→Alpha→實景 runtime QA→整合 |
 | [pipeline/地圖產圖流程.md](pipeline/地圖產圖流程.md) | 畫一張手繪地圖 png：**prompt 固定開頭模板**＋交付檢查（`gen-map-prompt` skill 引用）|
-| [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋**40×40 地格藍圖（§2.5）**＋場景生成（塊 A/B/C）|
+| [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋**40×40 地格藍圖（§2.5）**＋場景生成（塊 A/B/C）；**既有地圖的重製待辦＝[`TASKS/22_地圖高物件重製.md`](../TASKS/22_地圖高物件重製.md)**（僅芳蕾鎮已對齊新機制）|
 | [pipeline/素材管理規範.md](pipeline/素材管理規範.md) | 素材放哪、進 Godot 後怎麼處理、授權標註規則、檢查清單 |
 | [pipeline/劇本寫作心法.md](pipeline/劇本寫作心法.md) | 劇本寫作教材（訪談整理，構思劇情時的方法論）|
 | [pipeline/prompt/](pipeline/prompt/) | 各資源「最後一版」產圖 prompt（role/enemies × portrait/world 四份；戰鬥 prompt 在 `battle_art/prompts/`）|
