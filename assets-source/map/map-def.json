@@ -16,7 +16,6 @@
         "town": {
           "scene": "Town",
           "scene_file": "town",
-          "props_collide_in_scene": true,
           "kind": "town",
           "floor": 0,
           "cell": [
