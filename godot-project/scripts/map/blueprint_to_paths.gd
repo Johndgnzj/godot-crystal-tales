@@ -86,10 +86,14 @@ func _apply(scene_name: String, terrain: Array, entrances: Variant, props: Varia
 		push_error("%s 缺 PathPaint16 層" % path)
 		root.free()
 		return false
-	p32.clear()                                             # 藍圖為可走區的新真相源，重寫整層
-	p16.clear()
-	var has_ent: bool = entrances is Array
 	var prop_subs := _prop_block_subs(props)
+	p32.clear()                                             # 藍圖為可走區的新真相源，重寫整層
+	# PathPaint16 **不整層清掉**：那層可能有設計員手刷的細部可走區（Town 就有 22 格）。
+	# 只把被高物件蓋住的子格擦掉，其餘保留；部分被擋的格子稍後再補刷。
+	for s16: Vector2i in p16.get_used_cells():
+		if prop_subs.has(s16):
+			p16.erase_cell(s16)
+	var has_ent: bool = entrances is Array
 	var walk := 0
 	var block := 0
 	var partial := 0
