@@ -11,22 +11,31 @@ extends RefCounted
 ## 註：原版的序章進度旗標叫 `step`（build_cq2.py L1761 `f4.step=c.setstep`），Godot 端統一改名為
 ## `ch1_step`（game_flow.gd／dialogue_system.gd），故 t_rookie 的 req 對應改寫成 `ch1_step>=3`。
 ##
-## ⚠ 可達性現況（2026-08-19 追查，**條件本身沒錯，是內容還沒接上**，故未改動 req）：
-##   可達：t_rookie（小節1 `s1_bear` setstep=3）、t_f（小節4 action=register）。
-##   不可達：t_gob/t_pride 需 `ch1`，但 action `ch1_take`/`ch1_reward` 沒有任何對話資料引用，
-##           且新主線 boss 是 `eforest3_boss`（不寫 ch1），舊 forest2.tscn 的 BossMark 又要 `ch1==1`。
-##           t_miner 需 `ch2`，同理卡在 `ch2_take` 未被引用 → mine.tscn BossMark `ch2==1` 不成立。
-##           t_relic 需 `relic`，`relic_turnin` 未被引用、撿頭盔的 Pickup 又要 `ch2>=1`。
-##   新六小節主線只推進 `ch1_step` 0→13（見 docs/story/第一章任務攻略.md 三、旗標總表）。
-##   等第二章施工（TASKS/16）接上再回頭處理。
+## 【2026-08-19 全表重新對映】原六個稱號有四個掛在 `ch1`/`ch2`/`relic` 上——那是**舊三段式 POC 的遺留
+## 旗標**：寫它們的 action（ch1_take／ch1_reward／ch2_take／ch2_report／relic_turnin）沒有任何對話資料
+## 引用；掛 ch1_boss／ch2_bear 的 BossMark 只存在於舊 tile 版場景（forest2／mine／eforest3.tscn），而新
+## 主線走 painted 版（EFA–EFI／NMA–NMF，見 SceneRouter），那些場景裡一個 BossMark 都沒有，boss 戰全由
+## 過場的 battle 欄觸發 → 那四個稱號恆為「未取得」。第二章亦已定案改用 `ch2_step`（TASKS/16 CH2-I5），
+## 舊旗標不會復活，故不修補而是把全表重新對映到新六小節主線的里程碑（John 2026-08-19 拍板）。
+##
+## 對映結果（依解鎖先後排列，全走新主線既有旗標、不新增 flag；劇情節點見 docs/story/第一章任務攻略.md）：
+##   小節3 收尾 `ch1_step>=8`   礦山生還者   ← 原 `step>=3`，時機挪到真正的「從礦山歸來」
+##   小節4     `reg>=1`         F級冒險者    ← 未動
+##   小節4.5   `fq>=3`          初出茅廬     ← 原 t_gob「哥布林剋星」，新第一章沒有哥布林頭目戰
+##   小節5     `got_honey>=1`   不屈的少年   ← 原 t_relic「故人之託」，阿吉頭盔支線新主線摸不到
+##   小節6     `marin_curse>=1` 礦山的見證者 ← 原 `ch2>=2`，desc 本就對應小節6 死靈術士那段
+##   小節6 完  `ch1_step>=13`   芳蕾鎮的驕傲 ← 原 `ch1>=3`
+##
+## id 一併改名（t_gob→t_fq、t_relic→t_rematch）：這兩個舊 id 沒有任何存檔拿得到（恆不可解鎖），改名
+## 不會讓既有存檔的 eqTitle 失效。
 
 const ALL: Array = [
-	{"id": "t_rookie", "name": "礦山生還者", "req": "ch1_step>=3", "desc": "歷經礦山的意外而歸來", "hint": "完成序章"},
+	{"id": "t_rookie", "name": "礦山生還者", "req": "ch1_step>=8", "desc": "歷經礦山的意外，活著回到芳蕾鎮", "hint": "從北方礦山平安歸來"},
 	{"id": "t_f", "name": "F級冒險者", "req": "reg>=1", "desc": "完成冒險者公會登錄", "hint": "到公會找緹娜登錄"},
-	{"id": "t_gob", "name": "哥布林剋星", "req": "ch1>=2", "desc": "討伐東之森的哥布林頭目", "hint": "完成第一章討伐委託"},
-	{"id": "t_pride", "name": "芳蕾鎮的驕傲", "req": "ch1>=3", "desc": "向公會回報討伐成果", "hint": "回公會領取委託報酬"},
-	{"id": "t_miner", "name": "礦山的見證者", "req": "ch2>=2", "desc": "揭開失蹤礦工的真相", "hint": "查明礦山外圍的異變"},
-	{"id": "t_relic", "name": "故人之託", "req": "relic>=2", "desc": "送還礦工阿吉的遺物", "hint": "在礦山深處找回並上繳頭盔"},
+	{"id": "t_fq", "name": "初出茅廬", "req": "fq>=3", "desc": "獨力辦妥了三件 F 級委託", "hint": "完成緹娜告示板上的三件委託"},
+	{"id": "t_rematch", "name": "不屈的少年", "req": "got_honey>=1", "desc": "再次面對曾經敗北的熊，這一次沒有逃", "hint": "在東之森的老樹旁了結那段舊帳"},
+	{"id": "t_miner", "name": "礦山的見證者", "req": "marin_curse>=1", "desc": "揭開失蹤礦工的真相", "hint": "查明礦山深處異變的源頭"},
+	{"id": "t_pride", "name": "芳蕾鎮的驕傲", "req": "ch1_step>=13", "desc": "帶著黑水晶的真相回到公會", "hint": "完成第一章"},
 ]
 
 
