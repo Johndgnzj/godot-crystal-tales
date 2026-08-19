@@ -20,13 +20,14 @@
 | `TASKS/` | 可執行任務清單，核心 CORE-* ＋ 模組 MOD-* |
 | `TASKS/17_戰鬥角色美術統一.md` | 我方戰鬥角色 3.5 頭身統一：路德／瑪琳全套重製、莉莉／潔絲補齊、實際身高正規化與全隊驗收 |
 | `TASKS/20_敵人戰鬥圖重製.md` | 敵人戰鬥圖 HD 重製：依放大倍率×曝光度排 P1~P3 優先序，逐隻走 battle_art 產線對齊 necro 品質基準 |
+| `TASKS/21_觸控支援.md` | 手機／平板觸控支援：階段 1 左下虛擬搖桿、階段 2 選項直接可點（標題／世界調查／戰鬥／商店／室內）皆已完成；階段 3 行動裝置適配出包待辦 |
 | `TASKS/22_地圖高物件重製.md` | 既有地圖對齊芳蕾鎮的高物件／碰撞新機制：各區盤點（M2/M3 手刷碰撞、M4 全空、M5 藍圖齊但缺 props）＋動工前要先解的生成器保護規則 |
 | `TASK/v2/` | v2 後續製作追蹤；目前入口為世界美術終版與芳蕾鎮垂直切片 |
 | `specs/` | 從 `build_cq2.py` 凍結抄錄的權威規格：存檔 schema、戰鬥公式、對話格式 |
 | `reference/gdevelop/` | 原 GDevelop 專案的凍結快照（`build_cq2.py`、`CONTENT.json`、`DEV_開發指南.md`），唯讀 |
 | `MIGRATION_OVERVIEW.md` | 可複用 vs 需重寫的盤點總表 |
 | `godot-project/` | Godot 專案本體（`autoload/` 全域單例、`scenes/` 場景、`scripts/` 模組、`resources/content/` 資料 .tres、`resources/shaders/` 畫面效果 shader、`assets/` 美術、`tests/` 測試）|
-| `tools/` | 開發輔助工具（非遊戲程式）。`map_editor/`：地圖連通維護＋**40×40 地格藍圖** paint 工具（真相＝`assets-source/map/map-def.json`；詞彙＝`terrain_palette.json`），啟動 `python3 tools/map_editor/serve.py`；`role_slicer/`：上傳一張全身圖 → 去螢光底＋框頭像(a)/半身(b) → 匯出 `face_/portrait_/menuart_` 到 `assets-source/role/<id>/` 暫存，啟動 `python3 tools/role_slicer/serve.py` |
+| `tools/` | 開發輔助工具（非遊戲程式）。`map_editor/`：地圖連通維護＋**40×40 地格藍圖** paint 工具（真相＝`assets-source/map/map-def.json`；詞彙＝`terrain_palette.json`），啟動 `python3 tools/map_editor/serve.py`；`scene_props_sync.py`：把 Godot 編輯器手調過的高物件位置反向寫回 `map-def.json`（`python3 tools/scene_props_sync.py <場景名>` 先預覽、加 `--write` 寫回）；`role_slicer/`：上傳一張全身圖 → 去螢光底＋框頭像(a)/半身(b) → 匯出 `face_/portrait_/menuart_` 到 `assets-source/role/<id>/` 暫存，啟動 `python3 tools/role_slicer/serve.py` |
 
 ## 怎麼開始
 

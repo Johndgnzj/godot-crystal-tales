@@ -20,6 +20,8 @@ extends SceneTree
 ##     手加的裝飾樹、Props 群組等）會原樣搬進新場景的同一個父節點下；名稱與生成節點衝突時以生成的為準
 ##     並在報告列出。之前這些節點會在重生成時整批消失（nfr_a 的 7 棵樹踩過）。
 ##   - map 的 props 陣列可建立透明高物件：位置與 footprint 由同一筆資料定義；碰撞由 blueprint_to_paths.gd 消費。
+##     prop 節點會帶 `prop_id`／`prop_type`／`prop_fp` metadata，供 `tools/scene_props_sync.py` 反向同步
+##     （在編輯器手調位置 → 寫回 map-def，之後重生成就重現，不必每張重調）。
 ##     素材庫 meta.json 標 `layer:"ground"` 者（平貼地面的農作列等）掛進 `GroundProps`＝不參與 YSort、
 ##     不會依 y 遮住玩家；其餘（缺欄＝`"object"`）掛進 `YSort` 與玩家一起排序。旗標讀法比照
 ##     blueprint_to_paths.gd 的 walkable：直接讀素材庫 meta.json，不經 map-def（改素材不必回編輯器存檔）。
@@ -624,6 +626,14 @@ func _add_world_props(root: Node, ysort: Node, ground_props: Node, raw_props: Va
 		var is_ground: bool = _prop_layer(prop, w, h) == "ground"
 		var holder := Node2D.new()
 		holder.name = "Prop_%s_%d" % [_node_safe_name(str(prop.get("id", "world"))), i]
+		# 身分標記：供 tools/scene_props_sync.py 把編輯器手調的位置寫回 map-def（節點名會被 _node_safe_name
+		# 洗掉數字等字元，認不回素材，故另存 meta）。
+		holder.set_meta("prop_id", str(prop.get("id", "")))
+		holder.set_meta("prop_type", str(prop.get("type", "structure")))
+		holder.set_meta("prop_fp", Vector2i(w, h))
+		var asset_override := str(prop.get("asset", ""))
+		if asset_override != "":
+			holder.set_meta("prop_asset", asset_override)
 		holder.position = Vector2((float(cell[0]) + float(w) * 0.5) * 32.0, (float(cell[1]) + float(h)) * 32.0)
 		_add(root, holder, ground_props if is_ground else ysort)
 		var sprite := Sprite2D.new()
