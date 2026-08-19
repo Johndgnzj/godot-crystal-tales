@@ -2571,6 +2571,390 @@
           "label": "休斯城"
         }
       }
+    },
+    "MZ": {
+      "name": "碰撞校正場",
+      "dir": "calib",
+      "file_prefix": "calib",
+      "scene_prefix": "CAL",
+      "grid_size": 32,
+      "note": "實機校正用：素材庫全部高物件排開，走一遍確認擋人範圍是否貼合視覺。碰撞規則屬素材層級（meta.json），這裡調好就全地圖生效。",
+      "maps": {
+        "a": {
+          "label": "碰撞校正場",
+          "kind": "other",
+          "floor": 0,
+          "note": "32px 棋盤底圖；每 5 格有粗線與座標刻度。物件依畫布高度排列，footprint 置中對齊視覺框底部。",
+          "terrain": [
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg",
+            "gggggggggggggggggggggggggggggggggggggggg"
+          ],
+          "props": [
+            {
+              "id": "tree_m5_road_a",
+              "type": "nature",
+              "cell": [
+                3,
+                7
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_guild_floret_a",
+              "type": "architecture",
+              "cell": [
+                10,
+                5
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_inn_floret_a",
+              "type": "architecture",
+              "cell": [
+                22,
+                5
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_shrine_floret_a",
+              "type": "architecture",
+              "cell": [
+                34,
+                5
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_smithy_floret_a",
+              "type": "architecture",
+              "cell": [
+                3,
+                14
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_mayor_floret_a",
+              "type": "architecture",
+              "cell": [
+                13,
+                13
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "building_shop_floret_a",
+              "type": "architecture",
+              "cell": [
+                22,
+                13
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "landmark_mine_entrance_floret_a",
+              "type": "landmark",
+              "cell": [
+                32,
+                12
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "stairs_stone_wide_a",
+              "type": "structure",
+              "cell": [
+                2,
+                20
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_oak_round_a",
+              "type": "nature",
+              "cell": [
+                11,
+                22
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "tree_pine_tall_a",
+              "type": "nature",
+              "cell": [
+                17,
+                22
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_straight_v_a",
+              "type": "structure",
+              "cell": [
+                21,
+                20
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "house_cottage_floret_a",
+              "type": "architecture",
+              "cell": [
+                25,
+                21
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "crop_field_rows_a",
+              "type": "nature",
+              "cell": [
+                30,
+                17
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_well_stone_a",
+              "type": "street",
+              "cell": [
+                36,
+                20
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "street_lamp_iron_a",
+              "type": "street",
+              "cell": [
+                0,
+                27
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_corner_a",
+              "type": "structure",
+              "cell": [
+                3,
+                26
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_gate_a",
+              "type": "structure",
+              "cell": [
+                7,
+                26
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_straight_a",
+              "type": "structure",
+              "cell": [
+                13,
+                26
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "haystack_small_a",
+              "type": "nature",
+              "cell": [
+                19,
+                26
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "scarecrow_field_a",
+              "type": "nature",
+              "cell": [
+                23,
+                26
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_bl_a",
+              "type": "structure",
+              "cell": [
+                26,
+                24
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_br_a",
+              "type": "structure",
+              "cell": [
+                28,
+                24
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_tl_a",
+              "type": "structure",
+              "cell": [
+                30,
+                24
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_corner_tr_a",
+              "type": "structure",
+              "cell": [
+                32,
+                24
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_gate_h_closed_a",
+              "type": "structure",
+              "cell": [
+                34,
+                24
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_gate_h_closed_top_a",
+              "type": "structure",
+              "cell": [
+                36,
+                24
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_gate_v_open_a",
+              "type": "structure",
+              "cell": [
+                38,
+                24
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_gate_v_open_left_a",
+              "type": "structure",
+              "cell": [
+                0,
+                29
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_a",
+              "type": "structure",
+              "cell": [
+                2,
+                29
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_h_bottom_a",
+              "type": "structure",
+              "cell": [
+                4,
+                29
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_a",
+              "type": "structure",
+              "cell": [
+                6,
+                29
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "fence_wood_tile_straight_v_right_a",
+              "type": "structure",
+              "cell": [
+                8,
+                29
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "ground_decor_grass_pebble_a",
+              "type": "nature",
+              "cell": [
+                10,
+                29
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "ground_decor_grass_pebble_b",
+              "type": "nature",
+              "cell": [
+                12,
+                29
+              ],
+              "anchor": "bottom_center"
+            },
+            {
+              "id": "ground_decor_grass_pebble_c",
+              "type": "nature",
+              "cell": [
+                14,
+                29
+              ],
+              "anchor": "bottom_center"
+            }
+          ]
+        }
+      }
     }
   }
 }
