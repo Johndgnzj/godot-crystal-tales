@@ -122,7 +122,7 @@ autoload 當「單一除錯查詢點」。自動化測試拿到 SceneTree 後透
 | E2E-2 | **Track A 完整委託線**：老葛雷 `ch1==3`→`ch2_take`(ch2=1)→`mine_truth` 過場→**bear_dire 精英戰**勝利→ch2=2＋掉疾風靴→Mine `mine_after`→`ch2_report`(ch2=3)＋150G＋藥水×2（`cq2_e2e.mjs`） | 對話/旗標機/CUTS/場景轉場/戰鬥結算/獎勵 | 待建 `tests/gut/test_track_a_quest.gd`：用 `DebugHooks.set_flags`+`force_encounter`+自動打法逐段驗旗標/獎勵 | 待建（骨架依賴就緒） |
 | E2E-3 | **戰鬥自動打法**：等 `__B.state=="menu"`→Enter（攻擊）→`state=="target"`→Enter；技能=Right+Enter；卡 skill/item 態→Escape（DEV 指南 L73-79 step 4） | 戰鬥狀態機/輸入 | 待建 `tests/gut/test_auto_battle.gd`：驅動 `DebugHooks.dump_battle().state` 狀態機 + `InputBridge.simulate_action_press("ui_accept")` | 待建（`dump_battle()` + `InputBridge` 已備） |
 | E2E-4 | **支線A 米拉鏡草×3**：`mira_start`(送凝神耳環+mira2=1)→東之森 3 個 Herb pickup→`mira_reward`(藥水×3) | 撿取觸發/背包/對話分支 | 待建 `tests/gut/test_mira_sidequest.gd` | 待建 |
-| E2E-5 | **支線B 阿吉頭盔**：礦山 `RelicHelmet` pickup(relic=1+miner_helmet)→老葛雷 `relic_turnin`(+100G) | 撿取觸發/旗標/對話 | 待建 `tests/gut/test_relic_sidequest.gd` | 待建 |
+| E2E-5 | ~~**支線B 阿吉頭盔**：礦山 `RelicHelmet` pickup(relic=1+miner_helmet)→老葛雷 `relic_turnin`(+100G)~~ ⚠ **新主線摸不到**（`show_when=ch2>=1` 恆不成立、`relic_turnin` 無對話引用）；2026-08-19 起稱號表也已不依賴 `relic`。要建此測試前得先讓支線在新主線可達 | 撿取觸發/旗標/對話 | 待建 `tests/gut/test_relic_sidequest.gd` | **擱置** |
 | E2E-6 | **存檔回歸**：存→重載→繼續狀態一致（Mine/gold777/ch2:1）；室內存門口外避免卡牆（ROADMAP Track G） | SaveManager/GameState/場景座標 | 待建 `tests/gut/test_save_load.gd`（對照 `specs/SAVE_SCHEMA.md`） | 待建 |
 | E2E-7 | **商店買賣**：買藥水/賣素材/金幣變動（ROADMAP D 驗證） | 商店/背包/gold | 待建 `tests/gut/test_shop.gd` | 待建 |
 | E2E-8 | **觸控 E2E**：搖桿右移實測位移、BtnMenu 開關選單、PadR 切分頁（ROADMAP B 驗證） | InputBridge/觸控合成鍵 | 待建 `tests/gut/test_touch_input.gd`（`InputBridge.simulate_action_*`） | 待建 |
