@@ -12,8 +12,8 @@ extends SceneTree
 ##
 ## ## 這支測什麼（對應 GDevelop 端 gdevelop-mcp `validate_project` + `preview_scene` 的最小等價）
 ##
-## 1. 七個 autoload 都掛上且型別正確（ContentDB/GameState/SceneRouter/DialogueSystem/InputBridge/
-##    SaveManager/DebugHooks）。
+## 1. 八個 autoload 都掛上且型別正確（ContentDB/GameState/SceneRouter/DialogueSystem/InputBridge/
+##    SaveManager/TouchControls/DebugHooks）。
 ## 2. 資料層載入成功：ContentDB.is_loaded、DialogueSystem.is_loaded，且抽查既有 id 查得到
 ##    （get_enemy("goblin_chief") 等——id 以 CONTENT.json 實際資料為準，見 CORE-2 驗收現況）。
 ## 3. 每個場景檔（title / battle / 五張 world / dialogue_box）能被 ResourceLoader 載入成合法 PackedScene
@@ -34,6 +34,7 @@ const AUTOLOADS := {
 	"DialogueSystem": "res://scripts/dialogue/dialogue_system.gd",
 	"InputBridge": "res://autoload/input_bridge.gd",
 	"SaveManager": "res://autoload/save_manager.gd",
+	"TouchControls": "res://autoload/touch_controls.gd",
 	"DebugHooks": "res://tests/debug_hooks.gd",
 }
 
@@ -42,14 +43,6 @@ const SCENES := {
 	"Title": "res://scenes/title/title.tscn",
 	"Battle": "res://scenes/battle/battle.tscn",
 	"Town": "res://scenes/world/painted/town.tscn",
-	"Forest": "res://scenes/world/forest.tscn",
-	"Forest2": "res://scenes/world/forest2.tscn",
-	"Mine": "res://scenes/world/mine.tscn",
-	"Cave": "res://scenes/world/cave.tscn",
-	"Hub": "res://scenes/world/hub.tscn",
-	"EForest1": "res://scenes/world/eforest1.tscn",
-	"EForest2": "res://scenes/world/eforest2.tscn",
-	"EForest3": "res://scenes/world/eforest3.tscn",
 	"EFA": "res://scenes/world/painted/ef_a.tscn",
 	"EFB": "res://scenes/world/painted/ef_b.tscn",
 	"EFC": "res://scenes/world/painted/ef_c.tscn",
