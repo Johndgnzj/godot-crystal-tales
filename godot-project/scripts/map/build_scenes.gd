@@ -16,6 +16,9 @@ extends SceneTree
 ##   - 落點：對每張圖，蒐集所有「指向我」的出口，在其相對邊建 from_<來源> 落點；既有手調座標優先保留。
 ##   - 待接整區（裸 Mx）或目標圖未就緒 → 該出口建成 disabled placeholder（enabled=false、無 to_scene）。
 ##   - 受保護場景（Town：含 NPC／門／過場／實例、且已符合 map-def）與既有含實例/Trigger/NPC/門的場景 → 完全不動。
+##   - **手工節點不會被清掉**（2026-08-19）：重生成時，舊場景中不屬於生成器骨架的節點（設計員在編輯器
+##     手加的裝飾樹、Props 群組等）會原樣搬進新場景的同一個父節點下；名稱與生成節點衝突時以生成的為準
+##     並在報告列出。之前這些節點會在重生成時整批消失（nfr_a 的 7 棵樹踩過）。
 ##   - map 的 props 陣列可建立透明高物件：位置與 footprint 由同一筆資料定義；碰撞由 blueprint_to_paths.gd 消費。
 ##     素材庫 meta.json 標 `layer:"ground"` 者（平貼地面的農作列等）掛進 `GroundProps`＝不參與 YSort、
 ##     不會依 y 遮住玩家；其餘（缺欄＝`"object"`）掛進 `YSort` 與玩家一起排序。旗標讀法比照
@@ -38,6 +41,12 @@ const PC := "res://scripts/world/player_controller.gd"
 ## 受保護：手工內容無法由 map-def 重現、且連通已符合 map-def，完全不重生。
 const PROTECTED := ["Town"]
 
+# 生成器自己會建的節點；不在這份名單裡的，一律視為設計員手加、重生成時要搬過去。
+const GEN_ROOT_CHILDREN := ["Background", "Ground", "GroundProps", "CollisionPaint", "CollisionDetail",
+	"PathPaint32", "PathPaint16", "Zones", "YSort"]
+const GEN_SUB_CHILDREN := {"YSort": ["Player"], "GroundProps": [], "Zones": []}   # Zones 子節點＝map-def 出口，逐張比對
+const GEN_PROP_PREFIX := "Prop_"                                                  # map-def props 生成的節點
+
 const OPP := {
 	"west": "east", "east": "west", "north": "south", "south": "north",
 	"up": "down", "down": "up", "interior": "interior",
@@ -51,7 +60,7 @@ var _generated_set: Dictionary = {}     # 已（重）生成的 scene_id
 var _only_scene_id := ""                # 可選：只生成一張，避免新素材同步時碰到其他地圖
 var _report := {
 	"generated": [], "preserved": [], "pending": [], "placeholders": [], "empty_regions": [], "props": [],
-	"resync": [], "cleared": [], "blueprint": [],
+	"resync": [], "cleared": [], "blueprint": [], "carried": [],
 }
 
 
@@ -417,6 +426,63 @@ func _check_preserved_sync(e: Dictionary) -> void:
 			_report["resync"].append("%s 多出口→%s（map-def 已無此連通）" % [sid, h])
 
 
+## 從舊場景撈出「不屬於生成器骨架」的節點（設計員手加的裝飾／群組），供重生成後原樣搬回。
+## 回傳 {父節點路徑: [Node,…]}，路徑 ""＝根；找不到舊場景或載入失敗回空（不阻擋生成）。
+func _collect_handmade(path: String) -> Dictionary:
+	var out := {}
+	if not _res_exists(path):
+		return out
+	var ps := ResourceLoader.load(path) as PackedScene
+	if ps == null:
+		return out
+	var old_root := ps.instantiate()          # 不掛進 SceneTree，_ready 不會跑
+	if old_root == null:
+		return out
+	for child in old_root.get_children():
+		if not GEN_ROOT_CHILDREN.has(child.name):
+			out.get_or_add("", []).append(child)
+			continue
+		if not GEN_SUB_CHILDREN.has(child.name):
+			continue
+		var known: Array = GEN_SUB_CHILDREN[child.name]
+		for sub in child.get_children():
+			if known.has(String(sub.name)) or String(sub.name).begins_with(GEN_PROP_PREFIX):
+				continue
+			if child.name == "Zones" and sub.get("to_scene") != null:
+				continue                      # 出口由 map-def 重建，不搬
+			out.get_or_add(String(child.name), []).append(sub)
+	if out.is_empty():
+		old_root.free()
+	else:
+		out["__root__"] = old_root            # 呼叫端搬完才 free（節點還掛在它底下）
+	return out
+
+
+## 把 _collect_handmade 撈到的節點複製進新場景的同一個父節點；名稱撞到生成節點就跳過並記錄。
+func _restore_handmade(root: Node, carry: Dictionary, sid: String) -> void:
+	for parent_path in carry:
+		if parent_path == "__root__":
+			continue
+		var parent: Node = root if parent_path == "" else root.get_node_or_null(NodePath(parent_path))
+		if parent == null:
+			_report["carried"].append("%s：找不到父節點 %s，未搬 %d 個手工節點" % [
+				sid, parent_path, (carry[parent_path] as Array).size()])
+			continue
+		for node: Node in carry[parent_path]:
+			if parent.get_node_or_null(NodePath(String(node.name))) != null:
+				_report["carried"].append("%s：%s/%s 與生成節點同名，保留生成的" % [sid, parent_path, node.name])
+				continue
+			var dup := node.duplicate()
+			parent.add_child(dup)
+			dup.owner = root
+			for d in dup.find_children("*", "", true, false):
+				d.owner = root
+			_report["carried"].append("%s：搬回 %s/%s" % [sid, parent_path, node.name])
+	var old_root: Variant = carry.get("__root__")
+	if old_root is Node:
+		(old_root as Node).free()
+
+
 func _build_scene(e: Dictionary) -> void:
 	var sid: String = e["scene_id"]
 	var f: Dictionary = _existing.get(sid, {}).get("fields", {})
@@ -424,6 +490,8 @@ func _build_scene(e: Dictionary) -> void:
 	if _existing.get(sid, {}).get("has_collision", false):
 		var old_col: String = _existing[sid].get("col_tileset", "")
 		_report["cleared"].append("%s（原 %s，塊 B 於 1280 重刷）" % [sid, old_col.get_file()])
+
+	var carry := _collect_handmade(OUT_DIR + _file_name(e))   # 舊場景的手工節點，pack 前搬回
 
 	var root := Node2D.new()
 	root.name = sid
@@ -517,6 +585,8 @@ func _build_scene(e: Dictionary) -> void:
 	var cam := Camera2D.new()
 	cam.name = "Camera2D"
 	_add(root, cam, player)
+
+	_restore_handmade(root, carry, sid)
 
 	var packed := PackedScene.new()
 	var err := packed.pack(root)
@@ -667,6 +737,9 @@ func _print_report() -> void:
 	print("藍圖出入口 %d：" % _report["blueprint"].size())
 	for b in _report["blueprint"]:
 		print("   ", b)
+	print("手工節點搬移 %d：" % _report["carried"].size())
+	for c in _report["carried"]:
+		print("   ", c)
 	print("世界物件 %d：" % _report["props"].size())
 	for p in _report["props"]:
 		print("   ", p)
