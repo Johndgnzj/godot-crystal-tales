@@ -352,20 +352,28 @@ func _process_skill() -> void:
 		AudioManager.sfx("return.mp3")
 		return
 	if InputBridge.is_action_hit("ui_accept") and s_sel < sl.size():
-		var sk: SkillDef = sl[s_sel]
-		if float(actor.get("mp", 0)) < float(sk.mp):
-			_banner("MP 不足！")
-			AudioManager.sfx("return.mp3")
-		else:
-			AudioManager.sfx("select.mp3")
-			pend = {"t": "skill", "sk": sk}
-			t_sel = 0
-			if sk.target == "enemy":
-				state = "target"
-			elif sk.target == "ally":
-				state = "target_ally"
-			else:
-				_apply_all(sk)
+		_confirm_skill()
+
+
+## 確定選用 s_sel 這個技能：鍵盤 ui_accept 與點擊技能列都走這裡（對應 build_cq2.py L2747-2765）。
+func _confirm_skill() -> void:
+	var sl := _skills_for(actor)
+	if s_sel >= sl.size():
+		return
+	var sk: SkillDef = sl[s_sel]
+	if float(actor.get("mp", 0)) < float(sk.mp):
+		_banner("MP 不足！")
+		AudioManager.sfx("return.mp3")
+		return
+	AudioManager.sfx("select.mp3")
+	pend = {"t": "skill", "sk": sk}
+	t_sel = 0
+	if sk.target == "enemy":
+		state = "target"
+	elif sk.target == "ally":
+		state = "target_ally"
+	else:
+		_apply_all(sk)
 
 
 func _skills_for(m: Dictionary) -> Array:
@@ -398,20 +406,28 @@ func _process_item() -> void:
 		AudioManager.sfx("return.mp3")
 		return
 	if InputBridge.is_action_hit("ui_accept"):
-		if items.is_empty():
-			_banner("沒有可用的道具！")
-			AudioManager.sfx("return.mp3")
-			return
-		var picked: Dictionary = items[i_sel]
-		var meta: ItemDef = picked["meta"]
-		if not DamageCalc.item_usable_in_battle(meta):
-			_banner(meta.display_name + " 無法在戰鬥中使用")
-			AudioManager.sfx("return.mp3")
-			return
-		AudioManager.sfx("select.mp3")
-		pend = {"t": "item", "item": picked["id"]}
-		state = "target_ally"
-		t_sel = 0
+		_confirm_item()
+
+
+## 確定使用 i_sel 這個道具：鍵盤 ui_accept 與點擊道具列都走這裡（對應 build_cq2.py L2766-2781）。
+func _confirm_item() -> void:
+	var items := _battle_items()
+	if items.is_empty():
+		_banner("沒有可用的道具！")
+		AudioManager.sfx("return.mp3")
+		return
+	if i_sel >= items.size():
+		return
+	var picked: Dictionary = items[i_sel]
+	var meta: ItemDef = picked["meta"]
+	if not DamageCalc.item_usable_in_battle(meta):
+		_banner(meta.display_name + " 無法在戰鬥中使用")
+		AudioManager.sfx("return.mp3")
+		return
+	AudioManager.sfx("select.mp3")
+	pend = {"t": "item", "item": picked["id"]}
+	state = "target_ally"
+	t_sel = 0
 
 
 func _battle_items() -> Array:
@@ -470,6 +486,62 @@ func _process_target_ally() -> void:
 	if InputBridge.is_action_hit("ui_accept"):
 		var chosen: Dictionary = alive[t_sel % alive.size()]
 		_apply_one([chosen])
+
+
+# =========================================================================
+# 觸控／滑鼠點選（TASKS/21 階段 2：指令／技能／道具／目標都能直接點）
+#
+# 一律「點下去＝選它＋確認」，等同鍵盤移游標再按 Enter；鍵盤流程原樣保留並存。
+# 指令 Label 與單位立繪都常駐畫面，故每個 handler 先檢查 state，避免非該階段被點到。
+# =========================================================================
+
+func _is_click(event: InputEvent) -> bool:
+	return event is InputEventMouseButton and event.pressed \
+			and event.button_index == MOUSE_BUTTON_LEFT
+
+
+func _on_cmd_gui_input(event: InputEvent, index: int) -> void:
+	if not _is_click(event) or state != "menu":
+		return
+	sel = index
+	AudioManager.sfx("select.mp3")
+	_pick_menu(index)
+
+
+func _on_skill_gui_input(event: InputEvent, index: int) -> void:
+	if not _is_click(event) or state != "skill":
+		return
+	if index >= _skills_for(actor).size():
+		return
+	s_sel = index
+	_confirm_skill()
+
+
+func _on_item_gui_input(event: InputEvent, index: int) -> void:
+	if not _is_click(event) or state != "item":
+		return
+	if index >= _battle_items().size():
+		return
+	i_sel = index
+	_confirm_item()
+
+
+## 點單位立繪＝選定該目標（敵方在 target、我方在 target_ally）。unit 的 slot 各不相同，
+## 故用 Array.find() 在存活名單裡定位安全。
+func _on_unit_gui_input(event: InputEvent, u: Dictionary) -> void:
+	if not _is_click(event) or not bool(u.get("alive", false)):
+		return
+	var pool: Array = []
+	if state == "target":
+		pool = foes
+	elif state == "target_ally":
+		pool = heroes
+	if not pool.has(u):
+		return
+	var alive: Array = pool.filter(func(x): return bool(x.get("alive", false)))
+	t_sel = maxi(0, alive.find(u))
+	AudioManager.sfx("select.mp3")
+	_apply_one([u])
 
 
 # =========================================================================
@@ -1606,7 +1678,8 @@ func _build_unit(u: Dictionary, is_hero: bool) -> Dictionary:
 	spr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	spr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	spr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	spr.mouse_filter = Control.MOUSE_FILTER_STOP   # TASKS/21 階段 2：選目標時直接點單位
+	spr.gui_input.connect(_on_unit_gui_input.bind(u))
 	spr.flip_h = false   # 都不翻轉：素材我方本就面朝左、敵方面朝右（John 回饋我方原本翻反了）
 	# 敵人走 _foe_fit 時，size/pos 是「整張畫布」等比放大後的值（KEEP_ASPECT 剛好填滿、不留白），
 	# 位移已把可見底邊推到 wrap 原點；其餘情況維持舊的固定框擺法。
@@ -1975,7 +2048,9 @@ func _build_action_panel() -> void:
 	grid.add_theme_constant_override("v_separation", 16)
 	for nm in ["攻擊", "技能", "道具", "逃跑"]:
 		var l := PixelUI.label(String(nm), 26, PixelUI.WHITE, 4)
-		l.custom_minimum_size = Vector2(64, 0)
+		l.custom_minimum_size = Vector2(64, 44)   # 高度撐到觸控目標尺寸（文字仍靠上，版面不變）
+		l.mouse_filter = Control.MOUSE_FILTER_STOP   # TASKS/21 階段 2：指令直接點
+		l.gui_input.connect(_on_cmd_gui_input.bind(_cmd_labels.size()))
 		grid.add_child(l)
 		_cmd_labels.append(l)
 	_root.add_child(grid)
@@ -1986,6 +2061,8 @@ func _build_action_panel() -> void:
 	_root.add_child(_skill_box)
 	for i in range(5):
 		var sl := PixelUI.label("", 15, PixelUI.WHITE, 3)
+		sl.mouse_filter = Control.MOUSE_FILTER_STOP   # TASKS/21 階段 2：技能列直接點
+		sl.gui_input.connect(_on_skill_gui_input.bind(i))
 		_skill_box.add_child(sl)
 		_skill_labels.append(sl)
 	_item_box = VBoxContainer.new()
@@ -1994,6 +2071,8 @@ func _build_action_panel() -> void:
 	_root.add_child(_item_box)
 	for i in range(5):
 		var il := PixelUI.label("", 15, PixelUI.WHITE, 3)
+		il.mouse_filter = Control.MOUSE_FILTER_STOP   # TASKS/21 階段 2：道具列直接點
+		il.gui_input.connect(_on_item_gui_input.bind(i))
 		_item_box.add_child(il)
 		_item_labels.append(il)
 

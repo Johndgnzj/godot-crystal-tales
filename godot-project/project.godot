@@ -28,6 +28,7 @@ SceneRouter="*res://autoload/scene_router.gd"
 DialogueSystem="*res://scripts/dialogue/dialogue_system.gd"
 InputBridge="*res://autoload/input_bridge.gd"
 SaveManager="*res://autoload/save_manager.gd"
+TouchControls="*res://autoload/touch_controls.gd"
 DebugHooks="*res://tests/debug_hooks.gd"
 
 [display]

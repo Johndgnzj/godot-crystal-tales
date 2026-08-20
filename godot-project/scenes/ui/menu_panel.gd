@@ -38,6 +38,8 @@ var col_mp: Color
 @onready var _bars_root: Control = $Bars
 
 var _row_nodes: Array[Label] = []
+var _row_clicks: Array = []          # 每列的點擊 Callable（TASKS/21 階段 2；null＝該列不可點）
+var _tab_click: Variant = null
 var _bar_nodes: Array = []   # 每格：{ "ctrl": Control, "bg": ColorRect, "fill": ColorRect }
 
 
@@ -61,8 +63,13 @@ func _ready() -> void:
 		var lbl := Label.new()
 		lbl.name = "MRow%d" % i
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lbl.gui_input.connect(_on_row_gui_input.bind(i))
 		_rows_root.add_child(lbl)
 		_row_nodes.append(lbl)
+		_row_clicks.append(null)
+
+	_tab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tab.gui_input.connect(_on_tab_gui_input)
 
 	for i in BAR_COUNT:
 		var ctrl := Control.new()
@@ -87,7 +94,10 @@ func _ready() -> void:
 ## rows：Array[Dictionary]，每列 {t:String, x?:float, y?:float, c?:Color, sel?:bool, hw?:float}。
 ##   省略 c → 用預設 text 色；sel==true → 用 accent 色並畫高亮列（只取第一個 sel 列）。
 ## bars：Array[Dictionary]，每條 {x,y,w,cur,max,kind("hp"/"mp")}。
-## opt：{title:String, tab?:String, hint:String}。
+## opt：{title:String, tab?:String, hint:String, tab_click?:Callable}。
+##
+## TASKS/21 階段 2（觸控／滑鼠直接點）：列資料可帶 `click:Callable`——該列即變成可點，命中框寬度取
+## `hw`（跟選取高亮同寬）、高度 26（＝原本的列距，版面不變）。`opt.tab_click` 讓頁籤文字可點切換。
 func render(rows: Array, bars: Array, opt: Dictionary) -> void:
 	visible = true
 	_title.text = String(opt.get("title", "選單"))
@@ -97,6 +107,8 @@ func render(rows: Array, bars: Array, opt: Dictionary) -> void:
 		_tab.text = String(opt["tab"])
 	else:
 		_tab.visible = false
+	_tab_click = opt.get("tab_click", null)
+	_tab.mouse_filter = Control.MOUSE_FILTER_STOP if _tab_click is Callable else Control.MOUSE_FILTER_IGNORE
 
 	_hint.text = String(opt.get("hint", "")) + "　　金幣 " + str(GameState.gold)
 
@@ -122,8 +134,17 @@ func render(rows: Array, bars: Array, opt: Dictionary) -> void:
 				hi_x = rx
 				hi_y = ry
 				hi_w = float(rd.get("hw", 640))
+			var click: Variant = rd.get("click", null)
+			_row_clicks[i] = click
+			if click is Callable:
+				lbl.mouse_filter = Control.MOUSE_FILTER_STOP
+				lbl.custom_minimum_size = Vector2(float(rd.get("hw", 640)), 26.0)
+			else:
+				lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				lbl.custom_minimum_size = Vector2.ZERO
 		else:
 			lbl.visible = false
+			_row_clicks[i] = null
 
 	_rowhi.visible = has_hi
 	if has_hi:
@@ -148,6 +169,26 @@ func render(rows: Array, bars: Array, opt: Dictionary) -> void:
 			slot["fill"].color = col_hp if String(bp.get("kind", "hp")) == "hp" else col_mp
 		else:
 			slot["ctrl"].visible = false
+
+
+func _on_row_gui_input(event: InputEvent, index: int) -> void:
+	if not _is_click(event):
+		return
+	var cb: Variant = _row_clicks[index]
+	if cb is Callable and (cb as Callable).is_valid():
+		(cb as Callable).call()
+
+
+func _on_tab_gui_input(event: InputEvent) -> void:
+	if not _is_click(event):
+		return
+	if _tab_click is Callable and (_tab_click as Callable).is_valid():
+		(_tab_click as Callable).call()
+
+
+func _is_click(event: InputEvent) -> bool:
+	return event is InputEventMouseButton and event.pressed \
+			and event.button_index == MOUSE_BUTTON_LEFT
 
 
 ## 收起整個面板（對應 build_cq2 選單/商店關閉時把 MenuPanel/MRow…全部 hide 的那段，L2231-2236）。

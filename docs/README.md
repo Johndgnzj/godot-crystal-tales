@@ -57,6 +57,7 @@
 | [pipeline/地圖製作流程.md](pipeline/地圖製作流程.md) | 地圖從連通到可玩：`map-def.json` schema＋網頁維護工具＋**40×40 地格藍圖（§2.5）**＋場景生成（塊 A/B/C）；**既有地圖的重製待辦＝[`TASKS/22_地圖高物件重製.md`](../TASKS/22_地圖高物件重製.md)**（僅芳蕾鎮已對齊新機制）|
 | [pipeline/素材管理規範.md](pipeline/素材管理規範.md) | 素材放哪、進 Godot 後怎麼處理、授權標註規則、檢查清單 |
 | [pipeline/劇本寫作心法.md](pipeline/劇本寫作心法.md) | 劇本寫作教材（訪談整理，構思劇情時的方法論）|
+| [pipeline/行動裝置出包.md](pipeline/行動裝置出包.md) | **手機／平板出包**：專案端已就緒的設定（orientation／stretch aspect=keep／安全區）、Android／iOS 步驟與憑證需求、觸控實機驗收清單（`TASKS/21` 階段 3）|
 | [pipeline/prompt/](pipeline/prompt/) | 各資源「最後一版」產圖 prompt（role/enemies × portrait/world 四份；戰鬥 prompt 在 `battle_art/prompts/`）|
 | [`../CREDITS_素材授權.md`](../CREDITS_素材授權.md) | 授權帳本（每個進遊戲的素材一條）|
 

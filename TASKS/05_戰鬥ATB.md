@@ -5,6 +5,9 @@
 - 對應 GDevelop 系統: BATTLE_JS 全部（DEV_開發指南.md L56-59）
 - 規格來源: `specs/BATTLE_FORMULAS.md` F-3~F-8、F-11（F-9 EXP 縮放已於 spec v4.2 移除）；本模組是 spec 的
   主要消費者，需要 MOD-F 的 `derive()` 等價物已就緒才能算出角色戰鬥數值
+- 觸控相關後續改動: `TASKS/21_觸控支援.md` 階段 2（2026-08-19）在 `scripts/battle/battle_state_machine.gd`
+  加了「選項直接可點」——指令 2×2／技能列／道具列可點、選目標直接點單位立繪，並把技能／道具確認抽成
+  `_confirm_skill()`／`_confirm_item()` 供鍵盤與點擊共用。改這支檔案前先看 TASKS/21。
 
 ## 目標
 

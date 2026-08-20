@@ -77,6 +77,37 @@ func _process(_delta: float) -> void:
 	var shop: ShopDef = ContentDB.get_shop(_shop_id)
 	var shop_name := shop.display_name if shop != null else "商店"
 
+	var lists := _build_lists(shop)
+	var buy_list: Array = lists["buy"]
+	var sell_list: Array = lists["sell"]
+
+	# ---- 輸入（L2184-2209）----
+	if _hit("move_left") or _hit("move_right"):
+		_tab = _tab ^ 1
+		_sel = 0
+		_msg = ""
+	var list: Array = buy_list if _tab == 0 else sell_list
+	if _sel >= list.size():
+		_sel = max(0, list.size() - 1)
+	if _hit("move_up") and _sel > 0:
+		_sel -= 1
+		_msg = ""
+	if _hit("move_down") and _sel < list.size() - 1:
+		_sel += 1
+		_msg = ""
+	if _hit("ui_cancel"):
+		_close_shop()
+		return
+	elif _hit("ui_accept") and _sel < list.size():
+		_do_transaction(list[_sel], list)
+
+	if not _open:
+		return
+	_render(buy_list, sell_list, shop_name)
+
+
+## 買/賣兩份清單（原本內嵌在 _process；抽出來讓「點商品列成交」的 handler 也拿得到同一份資料）。
+func _build_lists(shop: ShopDef) -> Dictionary:
 	# 買清單：shop.sell 的 id → 中繼資料；tier>=2 需 ch2（目前恆未進貨），對應 L2172-2175。
 	var buy_list: Array = []
 	if shop != null:
@@ -113,30 +144,27 @@ func _process(_delta: float) -> void:
 		if not sm2.is_empty() and int(sm2.get("sell", 0)) > 0:
 			sm2["count"] = int(ecnt[eid])
 			sell_list.append(sm2)
+	return {"buy": buy_list, "sell": sell_list}
 
-	# ---- 輸入（L2184-2209）----
-	if _hit("move_left") or _hit("move_right"):
-		_tab = _tab ^ 1
-		_sel = 0
-		_msg = ""
-	var list: Array = buy_list if _tab == 0 else sell_list
-	if _sel >= list.size():
-		_sel = max(0, list.size() - 1)
-	if _hit("move_up") and _sel > 0:
-		_sel -= 1
-		_msg = ""
-	if _hit("move_down") and _sel < list.size() - 1:
-		_sel += 1
-		_msg = ""
-	if _hit("ui_cancel"):
-		_close_shop()
-		return
-	elif _hit("ui_accept") and _sel < list.size():
-		_do_transaction(list[_sel], list)
 
-	if not _open:
+## 點商品列＝選它＋成交（等同鍵盤 ↑↓ 再 Enter）。TASKS/21 階段 2。
+func _on_row_clicked(index: int) -> void:
+	if not _open or not ContentDB.is_loaded:
 		return
-	_render(buy_list, sell_list, shop_name)
+	var lists := _build_lists(ContentDB.get_shop(_shop_id))
+	var list: Array = lists["buy"] if _tab == 0 else lists["sell"]
+	if index >= list.size():
+		return
+	_sel = index
+	_msg = ""
+	_do_transaction(list[index], list)
+
+
+## 點頁籤文字＝切換買/賣（只有兩頁，toggle 就夠）。
+func _on_tab_clicked() -> void:
+	_tab = _tab ^ 1
+	_sel = 0
+	_msg = ""
 
 
 ## 對應成交邏輯 L2192-2209。tr 是 _item_meta 產出的中繼資料，list 是成交當下的清單（供賣出後 sel 夾動）。
@@ -186,19 +214,19 @@ func _render(buy_list: Array, sell_list: Array, shop_name: String) -> void:
 			var owned := GameState.inv_get(String(vi["id"])) if String(vi.get("kind", "")) == "item" else 0
 			var afford := GameState.gold >= int(vi.get("buy", 0))
 			var owned_str := ("（持有 " + str(owned) + "）") if owned > 0 else ""
-			var row := {"t": ("▶ " if i == _sel else "　 ") + "［" + String(vi["label"]) + "］" + String(vi["name"]) + "　" + str(int(vi.get("buy", 0))) + "G" + owned_str, "sel": i == _sel, "x": 180, "y": 206 + (i - base) * 26, "hw": 920}
+			var row := {"t": ("▶ " if i == _sel else "　 ") + "［" + String(vi["label"]) + "］" + String(vi["name"]) + "　" + str(int(vi.get("buy", 0))) + "G" + owned_str, "sel": i == _sel, "x": 180, "y": 206 + (i - base) * 26, "hw": 920, "click": _on_row_clicked.bind(i)}
 			if not afford:
 				row["c"] = C_NO_AFFORD
 			rows.append(row)
 		else:
-			rows.append({"t": ("▶ " if i == _sel else "　 ") + "［" + String(vi["label"]) + "］" + String(vi["name"]) + "　×" + str(int(vi.get("count", 0))) + "　售 " + str(int(vi.get("sell", 0))) + "G", "sel": i == _sel, "x": 180, "y": 206 + (i - base) * 26, "hw": 920})
+			rows.append({"t": ("▶ " if i == _sel else "　 ") + "［" + String(vi["label"]) + "］" + String(vi["name"]) + "　×" + str(int(vi.get("count", 0))) + "　售 " + str(int(vi.get("sell", 0))) + "G", "sel": i == _sel, "x": 180, "y": 206 + (i - base) * 26, "hw": 920, "click": _on_row_clicked.bind(i)})
 		i += 1
 	if _sel < vlist.size():
 		var desc := String(vlist[_sel].get("desc", ""))
 		rows.append({"t": "　" + (desc if desc != "" else "（無說明）"), "c": _panel.col_accent, "x": 180, "y": 508, "hw": 960})
 	var tab_str := ("【購買】" if _tab == 0 else " 購買 ") + "　" + ("【販售】" if _tab == 1 else " 販售 ")
-	var hint := (_msg + "　　" if _msg != "" else "") + "←→ 買/賣　↑↓ 選　Enter 成交　Esc 離開"
-	_panel.render(rows, [], {"title": shop_name, "tab": tab_str, "hint": hint})
+	var hint := (_msg + "　　" if _msg != "" else "") + "←→ 買/賣　↑↓ 選　Enter 成交　Esc 離開（也可直接點商品／頁籤）"
+	_panel.render(rows, [], {"title": shop_name, "tab": tab_str, "hint": hint, "tab_click": _on_tab_clicked})
 
 
 ## 對應 itemMeta(id)（L1316-1322）：統一取任一 id（道具或裝備）的商店中繼資料。

@@ -211,12 +211,28 @@ func _render_menu() -> void:
 	panel.add_child(vb)
 	var title := PixelUI.label(str(_door.get("label", "")), PixelUI.F_NAME, PixelUI.GOLD)
 	vb.add_child(title)
-	for _i in _cmds.size():
+	for i in _cmds.size():
 		var lbl := PixelUI.label("", PixelUI.F_ROW)
+		lbl.mouse_filter = Control.MOUSE_FILTER_STOP   # TASKS/21 階段 2：室內指令直接點
+		lbl.gui_input.connect(_on_row_gui_input.bind(i))
 		vb.add_child(lbl)
 		_row_labels.append(lbl)
 	_menu.add_child(panel)
 	_render_cursor()
+
+
+## 點指令列＝選它＋執行（等同鍵盤 ↑↓ 再 Enter）。停手條件與 _process 一致，避免對話／商店開著時誤觸。
+func _on_row_gui_input(event: InputEvent, index: int) -> void:
+	if not (event is InputEventMouseButton and event.pressed \
+			and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	if not _active or DialogueSystem.is_busy() or _shop_open() or _menu_open():
+		return
+	if index >= _cmds.size():
+		return
+	_cursor = index
+	_render_cursor()
+	_run_cmd(_cmds[index])
 
 
 func _render_cursor() -> void:

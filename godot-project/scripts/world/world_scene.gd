@@ -149,15 +149,25 @@ func _ensure_prompt_ui() -> void:
 		hud.name = "HUD"
 		hud.layer = 5
 		add_child(hud)
-	if hud.get_node_or_null("Prompt") != null:
-		return
-	var prompt := Label.new()
-	prompt.name = "Prompt"
-	prompt.position = Vector2(240, 500)
-	prompt.size = Vector2(800, 32)
-	prompt.add_theme_font_size_override("font_size", 22)
-	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hud.add_child(prompt)
+	if hud.get_node_or_null("Prompt") == null:
+		var prompt := Label.new()
+		prompt.name = "Prompt"
+		prompt.position = Vector2(240, 500)
+		prompt.size = Vector2(800, 32)
+		prompt.add_theme_font_size_override("font_size", 22)
+		prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		hud.add_child(prompt)
+	# 觸控（TASKS/21 階段 2）：互動提示改成可點按鈕——手機上不必按鍵，直接點「交談／開啟寶箱／調查」。
+	# 舊 tile 場景的 Prompt 是 .tscn 內建的，這顆按鈕一律由程式補，兩者位置重疊、依模式只顯示一個。
+	if hud.get_node_or_null("PromptBtn") == null:
+		var btn := Button.new()
+		btn.name = "PromptBtn"
+		btn.visible = false
+		btn.focus_mode = Control.FOCUS_NONE
+		btn.theme = load("res://resources/ui_theme.tres")   # CJK 字型，否則按鈕文字是豆腐
+		btn.add_theme_font_size_override("font_size", 24)
+		btn.pressed.connect(_try_interact)
+		hud.add_child(btn)
 
 
 ## 手繪屋舍的門洞可能落在舊有的繪制碰撞格上。entry_pos/outside_pos 開出的直線通道
@@ -714,8 +724,9 @@ func _update_interactions(delta: float) -> void:
 	if _prompt_timer > 0.0:
 		_prompt_timer -= delta
 		if _prompt_timer <= 0.0:
-			$HUD/Prompt.text = ""
+			_clear_prompt()
 	if not world_state.is_gate_open():
+		_hide_prompt_button()   # 對話／過場中不讓觸控按鈕擋在畫面上
 		if _prompt_timer <= 0.0:
 			$HUD/Prompt.text = ""
 		return
@@ -734,24 +745,67 @@ func _update_interactions(delta: float) -> void:
 			_enter_building(near_door)
 			return
 	if not _accept_release_needed and InputBridge.is_action_hit("ui_accept"):
-		if near_npc != "":
-			DialogueSystem.open_npc_dialogue(near_npc)
-			return
-		if not near_chest.is_empty():
-			_open_chest(near_chest)
-			return
-		if near_pickup != null:
-			near_pickup.investigate()
+		if _do_interact(near_npc, near_chest, near_pickup):
 			return
 	if _prompt_timer <= 0.0:
+		var hint := ""
 		if near_npc != "":
-			$HUD/Prompt.text = "空白鍵：交談"
+			hint = "交談"
 		elif not near_chest.is_empty():
-			$HUD/Prompt.text = "空白鍵：開啟寶箱"
+			hint = "開啟寶箱"
 		elif near_pickup != null:
-			$HUD/Prompt.text = "空白鍵：調查"
-		else:
-			$HUD/Prompt.text = ""
+			hint = "調查"
+		_set_prompt_hint(hint)
+
+
+## 互動的唯一入口：鍵盤 ui_accept 與觸控的 $HUD/PromptBtn 都走這裡（按鈕 signal 直接接本函式）。
+func _try_interact() -> bool:
+	if not world_state.is_gate_open():
+		return false
+	return _do_interact(_find_near_npc(), _find_near_chest(), _find_near_pickup())
+
+
+func _do_interact(near_npc: String, near_chest: Dictionary, near_pickup: PickupZone) -> bool:
+	if near_npc != "":
+		DialogueSystem.open_npc_dialogue(near_npc)
+		return true
+	if not near_chest.is_empty():
+		_open_chest(near_chest)
+		return true
+	if near_pickup != null:
+		near_pickup.investigate()
+		return true
+	return false
+
+
+## 互動提示的兩種樣子：鍵盤＝「空白鍵：調查」文字列；觸控＝同位置的可點按鈕（去掉按鍵名）。
+func _set_prompt_hint(action_text: String) -> void:
+	var touch: bool = TouchControls.is_active()
+	$HUD/Prompt.text = "" if touch or action_text == "" else "空白鍵：" + action_text
+	if not touch or action_text == "":
+		_hide_prompt_button()
+		return
+	var btn := $HUD.get_node_or_null("PromptBtn") as Button
+	if btn == null:
+		return
+	if btn.text != action_text:
+		btn.text = action_text
+		btn.custom_minimum_size = Vector2(160, 52)   # 觸控目標尺寸（階段 3 會全面盤一次）
+		btn.reset_size()
+		btn.position = Vector2(640.0 - btn.size.x * 0.5, 486.0)
+	btn.visible = true
+
+
+func _hide_prompt_button() -> void:
+	var btn := $HUD.get_node_or_null("PromptBtn") as Button
+	if btn != null:
+		btn.visible = false
+
+
+## 清掉提示（文字列＋觸控按鈕）：轉場、進屋、對話開始等時機。
+func _clear_prompt() -> void:
+	$HUD/Prompt.text = ""
+	_hide_prompt_button()
 
 
 func _find_near_npc() -> String:
@@ -821,7 +875,7 @@ func _enter_building(door: Dictionary) -> void:
 	world_state.enter_building(door)
 	_player.global_position = _door_outside_pos(door)
 	_player.facing = "Down"
-	$HUD/Prompt.text = ""
+	_clear_prompt()
 	_interior.open(door)
 	AudioManager.sfx("select.mp3")
 
