@@ -39,6 +39,7 @@ const PATH_TILESET := "res://resources/map/path_tileset_32.tres"
 const PATH_DETAIL_TILESET := "res://resources/map/path_tileset_16.tres"
 const WS := "res://scripts/world/world_scene.gd"
 const EZ := "res://scripts/world/exit_zone.gd"
+const GB := "res://scripts/world/gated_blocker.gd"   # props 帶 gate 欄時改生成這個（碰撞可依旗標開關）
 const PC := "res://scripts/world/player_controller.gd"
 ## 受保護：手工內容無法由 map-def 重現、且連通已符合 map-def，完全不重生。
 const PROTECTED := ["Town"]
@@ -624,7 +625,14 @@ func _add_world_props(root: Node, ysort: Node, ground_props: Node, raw_props: Va
 			_report["props"].append("略過 %s（尚無素材 %s）" % [prop.get("id", "(未命名)"), asset_path])
 			continue
 		var is_ground: bool = _prop_layer(prop) == "ground"
-		var holder := Node2D.new()
+		var gate: Variant = prop.get("gate", null)             # 有 gate＝擋人與否隨旗標，碰撞掛節點自己
+		var is_gated: bool = gate is Dictionary
+		var holder: Node2D = StaticBody2D.new() if is_gated else Node2D.new()
+		if is_gated:
+			holder.set_script(load(GB))
+			holder.set("show_when", str((gate as Dictionary).get("show_when", "always")))
+			holder.set("hide_flag", str((gate as Dictionary).get("hide_flag", "")))
+			holder.set_meta("prop_gate", gate)                 # 供 scene_props_sync.py 原樣寫回 map-def
 		holder.name = "Prop_%s_%d" % [_node_safe_name(str(prop.get("id", "world"))), i]
 		# 身分標記：供 tools/scene_props_sync.py 把編輯器手調的位置寫回 map-def（節點名會被 _node_safe_name
 		# 洗掉數字等字元，認不回素材，故另存 meta）。
@@ -641,7 +649,20 @@ func _add_world_props(root: Node, ysort: Node, ground_props: Node, raw_props: Va
 		sprite.texture = tex
 		sprite.position = Vector2(0.0, -float(tex.get_height()) * 0.5)
 		_add(root, sprite, holder)
+		if is_gated:
+			# 擋人範圍與 blueprint_to_paths.gd 同一份規格（meta 的 collision_px，預設 footprint×32），
+			# 錨點同樣是 footprint 底邊中央——這樣「烘進 tilemap」與「掛在節點」兩條路擋的是同一塊。
+			var box := _prop_collision_px(prop, fp)
+			var shape := CollisionShape2D.new()
+			shape.name = "Shape"
+			var rect := RectangleShape2D.new()
+			rect.size = Vector2(box)
+			shape.shape = rect
+			shape.position = Vector2(0.0, -float(box.y) * 0.5)
+			_add(root, shape, holder)
 		var tag := "　地面層" if is_ground else ""
+		if is_gated:
+			tag += "　gated(%s)" % str((gate as Dictionary).get("show_when", "always"))
 		_report["props"].append("%s @ [%d,%d] %dx%d%s" % [prop.get("id", "(未命名)"), int(cell[0]), int(cell[1]), w, h, tag])
 
 
@@ -683,6 +704,14 @@ func _prop_footprint(prop: Dictionary) -> Vector2i:
 		return Vector2i(maxi(1, int(raw[0])), maxi(1, int(raw[1])))
 	push_warning("無法決定 %s 的 footprint，當 1x1" % str(prop.get("id", "")))
 	return Vector2i(1, 1)
+
+
+## 擋人範圍（像素）：meta 的 collision_px 優先，否則 footprint×32（與 blueprint_to_paths.gd 同規格）。
+func _prop_collision_px(prop: Dictionary, fp: Vector2i) -> Vector2i:
+	var v: Variant = _prop_meta(prop).get("collision_px", null)
+	if v is Array and (v as Array).size() >= 2:
+		return Vector2i(maxi(1, int(v[0])), maxi(1, int(v[1])))
+	return Vector2i(fp.x * 32, fp.y * 32)
 
 
 ## 素材的擺放層：`"ground"`＝平貼地面、掛 GroundProps 不進 YSort；缺欄＝`"object"`（一般高物件）。

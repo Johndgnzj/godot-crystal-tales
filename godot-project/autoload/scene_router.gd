@@ -76,7 +76,6 @@ const SCENE_PATHS := {
 	"EFDL": "res://scenes/world/painted/efd_l.tscn",
 	"EFDM": "res://scenes/world/painted/efd_m.tscn",
 	"EFDN": "res://scenes/world/painted/efd_n.tscn",
-	"EFDM2": "res://scenes/world/painted/efd_m2.tscn",
 }
 
 ## `back()` 的 fallback（build_cq2.py L2820：`g.get("g_returnScene").getAsString()||"Town"`）：

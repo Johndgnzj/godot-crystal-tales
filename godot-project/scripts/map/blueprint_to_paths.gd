@@ -17,6 +17,8 @@ extends SceneTree
 ##
 ## **例外**：素材 `meta.json` 標 `"walkable": true` 的物件不生碰撞（石階、低矮農作、開著的門）——
 ## 否則石階會把礦坑唯一通路封死。判定只看這一個旗標，讀不到 meta 時保守當作會擋。
+## **例外二**：prop 帶 `gate` 欄（路障／可開關的柵欄門）也不烘——它的碰撞由 `build_scenes.gd` 生成的
+## `GatedBlocker` 節點自己帶著、依旗標開關；烘進 tilemap 就變成拆不掉的永久牆。
 ##
 ## 執行：Godot --headless -s res://scripts/map/blueprint_to_paths.gd --path <proj> -- [場景名...]
 ##   不給名＝處理 map-def 內所有「有 terrain 藍圖」的圖。給名（如 nfr_a）＝只做那幾張。
@@ -145,6 +147,10 @@ func _prop_block_subs(props: Variant) -> Dictionary:
 			push_warning("props 缺 cell，略過：" + str(prop.get("id", "(未命名)")))
 			continue
 		if _prop_is_walkable(prop):                         # 石階／低矮農作／開著的門＝踩得過去
+			continue
+		if prop.get("gate", null) is Dictionary:
+			# gated 物件（路障／可開關的柵欄門）的碰撞掛在 GatedBlocker 節點上，依旗標開關。
+			# 烘進 CollisionPaint 會變成永久牆，旗標翻轉後也拆不掉——所以這裡一定要跳過。
 			continue
 		var fp := _prop_footprint(prop)
 		var box := _prop_collision_px(prop, fp)

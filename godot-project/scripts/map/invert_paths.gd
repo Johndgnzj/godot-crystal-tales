@@ -19,7 +19,7 @@ const OUT_DIR := "res://scenes/world/painted/"
 const COL_SRC := 0
 const COL_ATLAS := Vector2i(0, 0)
 const ALL := ["ef_a","ef_b","ef_c","ef_d","ef_e","ef_f","ef_g","ef_h","ef_i",
-	"efd_a","efd_b","efd_c","efd_d","efd_e","efd_f","efd_g","efd_h","efd_i","efd_j","efd_k","efd_l","efd_m","efd_n","efd_m2",
+	"efd_a","efd_b","efd_c","efd_d","efd_e","efd_f","efd_g","efd_h","efd_i","efd_j","efd_k","efd_l","efd_m","efd_n",
 	"nm_a","nm_b","nm_c","nm_d","nm_e","nm_f"]
 
 

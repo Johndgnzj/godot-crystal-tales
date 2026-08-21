@@ -21,6 +21,7 @@ hub 一個入口用漢堡選單整合下面四個網頁工具，同一視窗切�
 | `stickman_animator/` | 火柴人骨架動畫：動作參考 | `python3 tools/stickman_animator/serve.py` → `:8778` |
 | `codex/` | 設定集 codex（push 後 CI 自動發佈 GitHub Pages）| 見 [`codex/README.md`](codex/README.md) |
 | `map_terrain_audit.py` | 比對手繪成圖與 map-def 地格，抓出「產圖沒照藍圖」的偏差（偏差要回寫 map-def，不可手刷碰撞）| `python3 tools/map_terrain_audit.py M1 town --out /tmp/a.png` |
+| `blueprint_from_image.py` | **反向**：從已定稿的手繪成圖逆推 40×40 藍圖（藍圖機制之前產的圖用）。`--full-bleed` 另做滿版化（留白／邊界石牆填森林、走廊接到畫布邊緣並統一開口帶、走廊分泥徑核心＋草地邊緣）；預設只印統計，`--write` 才寫回 map-def | `python3 tools/blueprint_from_image.py M4 --all --full-bleed --preview /tmp/bp` |
 | `githooks/` | git pre-commit hook | — |
 | `compose_map_overviews.py` | 舊地圖總覽拼圖腳本（**已過時**）| — |
 

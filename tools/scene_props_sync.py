@@ -20,6 +20,8 @@
   - **不寫 footprint**：那是素材層級規格，真相在素材庫 `meta.json`（校正一次、所有地圖生效）。
   - 掛在 `GroundProps` 但素材庫沒標 `layer:"ground"`（或反之）時，在該筆 prop 寫明 `layer` 覆寫。
   - 場景中被刪掉的 prop 會一併從 map-def 移除；帶 metadata 的新增節點會被收進來。
+  - **`gate`（可依旗標開關的路障／柵欄門）沿用 map-def 舊值**：那是資料層設定、場景讀不回來。
+    在編輯器新增的 gated 物件同步後只會是普通 prop，`gate` 欄要自己補回 map-def。
 """
 
 import argparse
@@ -157,6 +159,9 @@ def sync_scene(path: Path, mapdef: dict, catalog: dict, write: bool):
         new.append(rec)
 
     new, pairs, removed, added = reorder_like(old, new)   # 場景節點順序≠map-def 陣列順序，先對齊避免假差異
+    for o, n in pairs:
+        if "gate" in o:                                   # gate 只存在 map-def，場景讀不回來→沿用舊值
+            n["gate"] = o["gate"]
     changed = new != old
     print(f"\n=== {scene_id}（{rid}:{key}）prop {len(old)} → {len(new)} ===")
     for n in notes:
